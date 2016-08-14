@@ -32,7 +32,7 @@ export async function handleMessage(message, oldMessage = null) {
 	if(command) {
 		if(!oldMessage || oldResult) result = makeResultObject(await run(command, args, fromPattern, message));
 	} else if(isCommandMessage) {
-		result = { reply: `Unknown command. Use ${usage('help', message.server)} to view the list of all commands.`, editable: true };
+		result = { reply: [`Unknown command. Use ${usage('help', message.server)} to view the list of all commands.`], editable: true };
 	} else if(config.nonCommandEdit) {
 		result = {};
 	}
@@ -47,9 +47,9 @@ export async function handleMessage(message, oldMessage = null) {
 
 		// Update old messages or send new ones
 		if(oldResult && (oldResult.plain || oldResult.reply || oldResult.direct)) {
-			await updateMessages(message, result, oldResult);
+			await updateMessagesForResult(message, result, oldResult);
 		} else {
-			await sendMessages(message, result);
+			await sendMessagesForResult(message, result);
 		}
 
 		// Cache the result
@@ -104,37 +104,69 @@ export async function run(command, args, fromPattern, message) {
 
 // Get a result object from running a command
 export function makeResultObject(result) {
-	if(typeof result !== 'object') result = { reply: result };
+	if(typeof result !== 'object' || Array.isArray(result)) result = { reply: result };
 	if(!('editable' in result)) result.editable = true;
 	if(result.plain && result.reply) throw new Error('The command result may contain either "plain" or "reply", not both.');
+	if(result.plain && !Array.isArray(result.plain)) result.plain = [result.plain];
+	if(result.reply && !Array.isArray(result.reply)) result.reply = [result.reply];
+	if(result.direct && !Array.isArray(result.direct)) result.direct = [result.direct];
 	return result;
 }
 
-// Send messages for a result
-export async function sendMessages(message, result) {
+// Send messages for a result object
+export async function sendMessagesForResult(message, result) {
 	const messages = await Promise.all([
-		result.plain ? message.client.sendMessage(message, result.plain) : null,
-		result.reply ? message.reply(result.reply) : null,
-		result.direct ? message.client.sendMessage(message.author, result.direct) : null
+		result.plain ? sendMessages(message, result.plain, 'plain') : null,
+		result.reply ? sendMessages(message, result.reply, 'reply') : null,
+		result.direct ? sendMessages(message, result.direct, 'direct') : null
 	]);
-	if(result.plain) result.normalMessage = messages[0];
-	else if(result.reply) result.normalMessage = messages[1];
-	if(result.direct) result.directMessage = messages[2];
+	if(result.plain) result.normalMessages = messages[0];
+	else if(result.reply) result.normalMessages = messages[1];
+	if(result.direct) result.directMessages = messages[2];
+}
+
+// Send messages in response to a message
+export async function sendMessages(message, contents, type) {
+	const sentMessages = [];
+	for(const content of contents) {
+		if(type === 'plain') sentMessages.push(await message.client.sendMessage(message, content));
+		else if(type === 'reply') sentMessages.push(await message.reply(content));
+		else if(type === 'direct') sentMessages.push(await message.client.sendMessage(message.author, content));
+	}
+	return sentMessages;
 }
 
 // Update old messages to reflect a new result
-export async function updateMessages(message, result, oldResult) {
+export async function updateMessagesForResult(message, result, oldResult) {
 	// Update the messages
 	const messages = await Promise.all([
-		result.plain || result.reply ? oldResult.normalMessage.update(result.plain ? result.plain : `${message.author}, ${result.reply}`) : null,
-		result.direct ? oldResult.direct ? oldResult.directMessage.update(result.direct) : message.client.sendMessage(message.author, result.direct) : null
+		result.plain || result.reply ? updateMessages(message, oldResult.normalMessages, result.plain ? result.plain : result.reply, result.plain ? 'plain' : 'reply') : null,
+		result.direct ? oldResult.direct ? updateMessages(message, oldResult.directMessages, result.direct, 'direct') : sendMessages(message, result.direct, 'direct') : null
 	]);
-	if(result.plain || result.reply) result.normalMessage = messages[0];
-	if(result.direct) result.directMessage = messages[1];
+	if(result.plain || result.reply) result.normalMessages = messages[0];
+	if(result.direct) result.directMessages = messages[1];
 
 	// Delete old messages if we're not using them
-	if(!result.plain && !result.reply && (oldResult.plain || oldResult.reply)) oldResult.normalMessage.delete();
-	if(!result.direct && oldResult.direct) oldResult.directMessage.delete();
+	if(!result.plain && !result.reply && (oldResult.plain || oldResult.reply)) for(const msg of oldResult.normalMessages) msg.delete();
+	if(!result.direct && oldResult.direct) for(const msg of oldResult.directMessages) msg.delete();
+}
+
+// Update messages in response to a message
+export async function updateMessages(message, oldMessages, contents, type) {
+	const updatedMessages = [];
+
+	// Delete extra old messages
+	if(oldMessages.length > contents.length) {
+		for(let i = oldMessages.length - 1; i >= contents.length; i--) oldMessages[i].delete();
+	}
+
+	// Update/send messages
+	for(let i = 0; i < contents.length; i++) {
+		if(i < oldMessages.length) updatedMessages.push(await oldMessages[i].update(type === 'reply' ? `${message.author}, ${contents[i]}` : contents[i]));
+		else updatedMessages.push((await sendMessages(message, [contents[i]], type))[0]);
+	}
+
+	return updatedMessages;
 }
 
 // Get an array of metadata for a command in a message
