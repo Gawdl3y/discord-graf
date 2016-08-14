@@ -2,7 +2,7 @@
 'use strict';
 
 import { stripIndents } from 'common-tags';
-import { groups, find as findCommands, isUsable } from '..';
+import { groups, find as findCommands, isUsable } from '../registry';
 import disambiguation from '../../util/disambiguation';
 import usage from '../../util/command-usage';
 

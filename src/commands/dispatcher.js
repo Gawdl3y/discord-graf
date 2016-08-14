@@ -3,8 +3,8 @@
 
 import stringArgv from 'string-argv';
 import { stripIndents } from 'common-tags';
-import bot from '../';
-import * as registry from './';
+import bot from '..';
+import * as registry from './registry';
 import config from '../config';
 import UsableChannel from '../database/usable-channel';
 import * as permissions from '../util/permissions';

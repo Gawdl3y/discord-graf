@@ -6,7 +6,7 @@ import { LocalStorage } from 'node-localstorage';
 import winston from 'winston';
 import config from './config';
 import version from './version';
-import * as registry from './commands';
+import * as registry from './commands/registry';
 import * as dispatcher from './commands/dispatcher';
 import Setting from './database/setting';
 import ModRole from './database/mod-role';

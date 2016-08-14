@@ -2,8 +2,6 @@
 'use strict';
 
 export default {
-
-
 	yargs(yargs) {
 		Object.assign(this, yargs
 			// Authentication

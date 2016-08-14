@@ -4,10 +4,10 @@
 /* eslint-disable no-unused-vars */
 import util from 'util';
 import stringArgv from 'string-argv';
-import * as bot from '../../';
+import * as bot from '../..';
 import config from '../../config';
 import version from '../../version';
-import * as commands from '..';
+import * as registry from '../registry';
 import * as dispatcher from '../dispatcher';
 import Setting from '../../database/setting';
 import ModRole from '../../database/mod-role';
