@@ -1,9 +1,9 @@
 # Discord GRAF
 [![Discord](https://discordapp.com/api/servers/214147099133083659/widget.png)](https://discord.gg/a5ZD9n7)
-[![Downloads](https://img.shields.io/npm/dt/discord-bot-framework.svg)](https://www.npmjs.com/package/discord-bot-framework)
-[![Version](https://img.shields.io/npm/v/discord-bot-framework.svg)](https://www.npmjs.com/package/discord-bot-framework)
-[![Dependency status](https://david-dm.org/Gawdl3y/discord-bot-framework.svg)](https://david-dm.org/Gawdl3y/discord-bot-framework)
-[![License](https://img.shields.io/npm/l/discord-bot-framework.svg)](LICENSE)
+[![Downloads](https://img.shields.io/npm/dt/discord-graf.svg)](https://www.npmjs.com/package/discord-graf)
+[![Version](https://img.shields.io/npm/v/discord-graf.svg)](https://www.npmjs.com/package/discord-graf)
+[![Dependency status](https://david-dm.org/Gawdl3y/discord-graf.svg)](https://david-dm.org/Gawdl3y/discord-graf)
+[![License](https://img.shields.io/npm/l/discord-graf.svg)](LICENSE)
 
 **GRAF:** Great Rad-Ass Framework
 
