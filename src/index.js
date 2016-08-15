@@ -42,7 +42,6 @@ export const unprefixedCommandPattern = /^([^\s]+)/i;
 
 export const graf = {
 	client: null,
-	config: config,
 	version: version,
 	registry: registry,
 	dispatcher: dispatcher,
@@ -153,6 +152,14 @@ export const graf = {
 			['roles', 'Roles'],
 			['channels', 'Channels']
 		]);
+	},
+
+	get config() {
+		if(!this._config) {
+			config.setDefaults();
+			this._config = config;
+		}
+		return this._config;
 	},
 
 	get logger() {

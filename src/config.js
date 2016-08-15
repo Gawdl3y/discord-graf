@@ -21,7 +21,17 @@ export const defaults = {
 };
 
 export function setValues(configObj) {
-	Object.assign(values, defaults, values, configObj);
+	Object.assign(values, configObj);
+}
+
+export function setDefaults(overwrite = false) {
+	if(overwrite) {
+		Object.assign(values, defaults);
+	} else {
+		for(const key of Object.keys(defaults)) {
+			if(!(key in values)) values[key] = defaults[key];
+		}
+	}
 }
 
 export function loadYargs(yargs) {
