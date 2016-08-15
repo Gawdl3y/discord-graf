@@ -6,6 +6,8 @@ import bot from '../';
 import config from '../config';
 import Setting from '../database/setting';
 
+/** @module util/command-pattern */
+
 /**
  * Creates a regular expression to match the command prefix and name in a message
  * @param {Server|null} server - A Discord.js Server instance of the server that the message is from
