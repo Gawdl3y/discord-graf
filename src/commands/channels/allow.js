@@ -2,11 +2,9 @@
 'use strict';
 
 import UsableChannel from '../../database/usable-channel';
-import search from '../../util/search';
-import disambiguation from '../../util/disambiguation';
-import * as permissions from '../../util/permissions';
-import CommandFormatError from '../../util/errors/command-format';
-import { channelID } from '../../util/patterns';
+import * as permissions from '../../permissions';
+import CommandFormatError from '../../errors/command-format';
+import Util from '../../util';
 
 export default {
 	name: 'allowchannel',
@@ -25,10 +23,10 @@ export default {
 
 	async run(message, args) {
 		if(!args[0]) throw new CommandFormatError(this, message.server);
-		const matches = channelID.exec(args[0]);
+		const matches = Util.patterns.channelID.exec(args[0]);
 		let channels;
 		const idChannel = message.server.channels.get('id', matches[1]);
-		if(idChannel) channels = [idChannel]; else channels = search(message.server.channels.getAll('type', 'text'), matches[1]);
+		if(idChannel) channels = [idChannel]; else channels = Util.search(message.server.channels.getAll('type', 'text'), matches[1]);
 
 		if(channels.length === 1) {
 			if(UsableChannel.save(channels[0])) {
@@ -37,7 +35,7 @@ export default {
 				return `Operation is already allowed in ${channels[0]}.`;
 			}
 		} else if(channels.length > 1) {
-			return disambiguation(channels, 'channels');
+			return Util.disambiguation(channels, 'channels');
 		} else {
 			return 'Unable to identify channel.';
 		}

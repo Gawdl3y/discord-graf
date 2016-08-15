@@ -1,0 +1,507 @@
+{
+  "type": "Program",
+  "start": 0,
+  "end": 212,
+  "loc": {
+    "start": {
+      "line": 1,
+      "column": 0
+    },
+    "end": {
+      "line": 11,
+      "column": 0
+    }
+  },
+  "sourceType": "module",
+  "body": [
+    {
+      "type": "ExpressionStatement",
+      "start": 0,
+      "end": 12,
+      "loc": {
+        "start": {
+          "line": 1,
+          "column": 0
+        },
+        "end": {
+          "line": 1,
+          "column": 12
+        }
+      },
+      "expression": {
+        "type": "Literal",
+        "start": 0,
+        "end": 11,
+        "loc": {
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 11
+          }
+        },
+        "value": "use babel",
+        "rawValue": "use babel",
+        "raw": "'use babel'"
+      }
+    },
+    {
+      "type": "ExpressionStatement",
+      "start": 14,
+      "end": 27,
+      "loc": {
+        "start": {
+          "line": 2,
+          "column": 0
+        },
+        "end": {
+          "line": 2,
+          "column": 13
+        }
+      },
+      "expression": {
+        "type": "Literal",
+        "start": 14,
+        "end": 26,
+        "loc": {
+          "start": {
+            "line": 2,
+            "column": 0
+          },
+          "end": {
+            "line": 2,
+            "column": 12
+          }
+        },
+        "value": "use strict",
+        "rawValue": "use strict",
+        "raw": "'use strict'"
+      }
+    },
+    {
+      "type": "ExportNamedDeclaration",
+      "start": 31,
+      "end": 63,
+      "loc": {
+        "start": {
+          "line": 4,
+          "column": 0
+        },
+        "end": {
+          "line": 4,
+          "column": 32
+        }
+      },
+      "declaration": {
+        "type": "VariableDeclaration",
+        "start": 38,
+        "end": 63,
+        "loc": {
+          "start": {
+            "line": 4,
+            "column": 7
+          },
+          "end": {
+            "line": 4,
+            "column": 32
+          }
+        },
+        "declarations": [
+          {
+            "type": "VariableDeclarator",
+            "start": 44,
+            "end": 62,
+            "loc": {
+              "start": {
+                "line": 4,
+                "column": 13
+              },
+              "end": {
+                "line": 4,
+                "column": 31
+              }
+            },
+            "id": {
+              "type": "Identifier",
+              "start": 44,
+              "end": 53,
+              "loc": {
+                "start": {
+                  "line": 4,
+                  "column": 13
+                },
+                "end": {
+                  "line": 4,
+                  "column": 22
+                }
+              },
+              "name": "character"
+            },
+            "init": {
+              "type": "Literal",
+              "start": 56,
+              "end": 62,
+              "loc": {
+                "start": {
+                  "line": 4,
+                  "column": 25
+                },
+                "end": {
+                  "line": 4,
+                  "column": 31
+                }
+              },
+              "value": " ",
+              "rawValue": " ",
+              "raw": "'\\xa0'"
+            }
+          }
+        ],
+        "kind": "const",
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "specifiers": [],
+      "source": null
+    },
+    {
+      "type": "VariableDeclaration",
+      "start": 65,
+      "end": 91,
+      "loc": {
+        "start": {
+          "line": 5,
+          "column": 0
+        },
+        "end": {
+          "line": 5,
+          "column": 26
+        }
+      },
+      "declarations": [
+        {
+          "type": "VariableDeclarator",
+          "start": 71,
+          "end": 90,
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 6
+            },
+            "end": {
+              "line": 5,
+              "column": 25
+            }
+          },
+          "id": {
+            "type": "Identifier",
+            "start": 71,
+            "end": 83,
+            "loc": {
+              "start": {
+                "line": 5,
+                "column": 6
+              },
+              "end": {
+                "line": 5,
+                "column": 18
+              }
+            },
+            "name": "spacePattern"
+          },
+          "init": {
+            "type": "Literal",
+            "start": 86,
+            "end": 90,
+            "loc": {
+              "start": {
+                "line": 5,
+                "column": 21
+              },
+              "end": {
+                "line": 5,
+                "column": 25
+              }
+            },
+            "value": {},
+            "rawValue": {},
+            "raw": "/ /g",
+            "regex": {
+              "pattern": " ",
+              "flags": "g"
+            }
+          }
+        }
+      ],
+      "kind": "const"
+    },
+    {
+      "type": "ExportNamedDeclaration",
+      "start": 95,
+      "end": 185,
+      "loc": {
+        "start": {
+          "line": 7,
+          "column": 0
+        },
+        "end": {
+          "line": 9,
+          "column": 1
+        }
+      },
+      "declaration": {
+        "type": "FunctionDeclaration",
+        "start": 102,
+        "end": 185,
+        "loc": {
+          "start": {
+            "line": 7,
+            "column": 7
+          },
+          "end": {
+            "line": 9,
+            "column": 1
+          }
+        },
+        "id": {
+          "type": "Identifier",
+          "start": 111,
+          "end": 118,
+          "loc": {
+            "start": {
+              "line": 7,
+              "column": 16
+            },
+            "end": {
+              "line": 7,
+              "column": 23
+            }
+          },
+          "name": "convert"
+        },
+        "generator": false,
+        "expression": false,
+        "async": false,
+        "params": [
+          {
+            "type": "Identifier",
+            "start": 119,
+            "end": 123,
+            "loc": {
+              "start": {
+                "line": 7,
+                "column": 24
+              },
+              "end": {
+                "line": 7,
+                "column": 28
+              }
+            },
+            "name": "text"
+          }
+        ],
+        "body": {
+          "type": "BlockStatement",
+          "start": 125,
+          "end": 185,
+          "loc": {
+            "start": {
+              "line": 7,
+              "column": 30
+            },
+            "end": {
+              "line": 9,
+              "column": 1
+            }
+          },
+          "body": [
+            {
+              "type": "ReturnStatement",
+              "start": 129,
+              "end": 182,
+              "loc": {
+                "start": {
+                  "line": 8,
+                  "column": 1
+                },
+                "end": {
+                  "line": 8,
+                  "column": 54
+                }
+              },
+              "argument": {
+                "type": "CallExpression",
+                "start": 136,
+                "end": 181,
+                "loc": {
+                  "start": {
+                    "line": 8,
+                    "column": 8
+                  },
+                  "end": {
+                    "line": 8,
+                    "column": 53
+                  }
+                },
+                "callee": {
+                  "type": "MemberExpression",
+                  "start": 136,
+                  "end": 156,
+                  "loc": {
+                    "start": {
+                      "line": 8,
+                      "column": 8
+                    },
+                    "end": {
+                      "line": 8,
+                      "column": 28
+                    }
+                  },
+                  "object": {
+                    "type": "CallExpression",
+                    "start": 136,
+                    "end": 148,
+                    "loc": {
+                      "start": {
+                        "line": 8,
+                        "column": 8
+                      },
+                      "end": {
+                        "line": 8,
+                        "column": 20
+                      }
+                    },
+                    "callee": {
+                      "type": "Identifier",
+                      "start": 136,
+                      "end": 142,
+                      "loc": {
+                        "start": {
+                          "line": 8,
+                          "column": 8
+                        },
+                        "end": {
+                          "line": 8,
+                          "column": 14
+                        }
+                      },
+                      "name": "String"
+                    },
+                    "arguments": [
+                      {
+                        "type": "Identifier",
+                        "start": 143,
+                        "end": 147,
+                        "loc": {
+                          "start": {
+                            "line": 8,
+                            "column": 15
+                          },
+                          "end": {
+                            "line": 8,
+                            "column": 19
+                          }
+                        },
+                        "name": "text"
+                      }
+                    ]
+                  },
+                  "property": {
+                    "type": "Identifier",
+                    "start": 149,
+                    "end": 156,
+                    "loc": {
+                      "start": {
+                        "line": 8,
+                        "column": 21
+                      },
+                      "end": {
+                        "line": 8,
+                        "column": 28
+                      }
+                    },
+                    "name": "replace"
+                  },
+                  "computed": false
+                },
+                "arguments": [
+                  {
+                    "type": "Identifier",
+                    "start": 157,
+                    "end": 169,
+                    "loc": {
+                      "start": {
+                        "line": 8,
+                        "column": 29
+                      },
+                      "end": {
+                        "line": 8,
+                        "column": 41
+                      }
+                    },
+                    "name": "spacePattern"
+                  },
+                  {
+                    "type": "Identifier",
+                    "start": 171,
+                    "end": 180,
+                    "loc": {
+                      "start": {
+                        "line": 8,
+                        "column": 43
+                      },
+                      "end": {
+                        "line": 8,
+                        "column": 52
+                      }
+                    },
+                    "name": "character"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "leadingComments": [],
+        "trailingComments": []
+      },
+      "specifiers": [],
+      "source": null
+    },
+    {
+      "type": "ExportDefaultDeclaration",
+      "start": 187,
+      "end": 210,
+      "loc": {
+        "start": {
+          "line": 10,
+          "column": 0
+        },
+        "end": {
+          "line": 10,
+          "column": 23
+        }
+      },
+      "declaration": {
+        "type": "Identifier",
+        "start": 202,
+        "end": 209,
+        "loc": {
+          "start": {
+            "line": 10,
+            "column": 15
+          },
+          "end": {
+            "line": 10,
+            "column": 22
+          }
+        },
+        "name": "convert",
+        "leadingComments": [],
+        "trailingComments": []
+      }
+    }
+  ]
+}

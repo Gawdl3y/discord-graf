@@ -2,7 +2,7 @@
 'use strict';
 
 import * as bot from '../';
-import search from '../util/search';
+import Util from '../util';
 
 export default class ModRole {
 	static loadDatabase() {
@@ -64,8 +64,8 @@ export default class ModRole {
 		if(!this.serversMap[server.id]) return [];
 
 		// Find all of the server's roles that match, and filter them to ones that are mod roles
-		const roles = search(server.roles, searchString, { searchExact: false }).filter(role => this.serversMap[server.id].includes(role.id));
-		return search(roles, searchString, { searchInexact: false });
+		const roles = Util.search(server.roles, searchString, { searchExact: false }).filter(role => this.serversMap[server.id].includes(role.id));
+		return Util.search(roles, searchString, { searchInexact: false });
 	}
 
 	static serverHasAny(server) {

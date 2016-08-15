@@ -3,9 +3,7 @@
 
 import { stripIndents } from 'common-tags';
 import { groups, find as findCommands, isUsable } from '../registry';
-import disambiguation from '../../util/disambiguation';
-import usage from '../../util/command-usage';
-import splitMessage from '../../util/split-message';
+import Util from '../../util';
 
 export default {
 	name: 'help',
@@ -25,25 +23,25 @@ export default {
 				let help = stripIndents`
 					__Command **${commands[0].name}**:__ ${commands[0].description}${commands[0].serverOnly ? ' (Usable only in servers)' : ''}
 
-					**Usage:** ${usage(commands[0].usage ? commands[0].usage : commands[0].name, message.server)}
+					**Usage:** ${Util.usage(commands[0].usage ? commands[0].usage : commands[0].name, message.server)}
 				`;
 				if(commands[0].aliases) help += `\n**Aliases:** ${commands[0].aliases.join(', ')}`;
 				if(commands[0].details) help += `\n**Details:** ${commands[0].details}`;
 				if(commands[0].examples) help += `\n**Examples:**\n${commands[0].examples.join('\n')}`;
 				return { direct: help, reply: 'Sent a DM to you with information.' };
 			} else if(commands.length > 1) {
-				return disambiguation(commands, 'commands');
+				return Util.disambiguation(commands, 'commands');
 			} else {
-				return `Unable to identify command. Use ${usage('help', message.server)} to view the list of all commands.`;
+				return `Unable to identify command. Use ${Util.usage('help', message.server)} to view the list of all commands.`;
 			}
 		} else {
 			return {
-				direct: splitMessage(stripIndents`
-					To run a command in ${message.server ? message.server : 'any server'}, use ${usage('command', message.server, !message.server)}. For example, ${usage('roll d20', message.server, !message.server)}.
-					To run a command in this DM, simply use ${usage('command')} with no prefix. For example, ${usage('roll d20')}.
+				direct: Util.split(stripIndents`
+					To run a command in ${message.server ? message.server : 'any server'}, use ${Util.usage('command', message.server, !message.server)}. For example, ${Util.usage('roll d20', message.server, !message.server)}.
+					To run a command in this DM, simply use ${Util.usage('command')} with no prefix. For example, ${Util.usage('roll d20')}.
 
-					Use ${usage('help <command>')} to view detailed information about a specific command.
-					Use ${usage('help all')} to view a list of *all* commands, not just available ones.
+					Use ${Util.usage('help <command>')} to view detailed information about a specific command.
+					Use ${Util.usage('help all')} to view a list of *all* commands, not just available ones.
 
 					__**${showAll ? 'All commands' : `Available commands in ${message.server ? `${message.server}` : 'this DM'}`}**__
 

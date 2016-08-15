@@ -7,10 +7,9 @@ import bot from '..';
 import * as registry from './registry';
 import config from '../config';
 import UsableChannel from '../database/usable-channel';
-import * as permissions from '../util/permissions';
-import buildCommandPattern from '../util/command-pattern';
-import usage from '../util/command-usage';
-import FriendlyError from '../util/errors/friendly';
+import * as permissions from '../permissions';
+import FriendlyError from '../errors/friendly';
+import Util from '../util';
 
 export const serverCommandPatterns = {};
 export const unprefixedCommandPattern = /^([^\s]+)/i;
@@ -32,7 +31,7 @@ export async function handleMessage(message, oldMessage = null) {
 	if(command) {
 		if(!oldMessage || oldResult) result = makeResultObject(await run(command, args, fromPattern, message));
 	} else if(isCommandMessage) {
-		result = { reply: [`Unknown command. Use ${usage('help', message.server)} to view the list of all commands.`], editable: true };
+		result = { reply: [`Unknown command. Use ${Util.usage('help', message.server)} to view the list of all commands.`], editable: true };
 	} else if(config.nonCommandEdit) {
 		result = {};
 	}
@@ -182,7 +181,7 @@ export function parseMessage(message) {
 
 	// Find the command to run with default command handling
 	const patternIndex = message.server ? message.server.id : '-';
-	if(!serverCommandPatterns[patternIndex]) serverCommandPatterns[patternIndex] = buildCommandPattern(message.server, message.client.user);
+	if(!serverCommandPatterns[patternIndex]) serverCommandPatterns[patternIndex] = Util._buildCommandPattern(message.server, message.client.user);
 	let [command, args, isCommandMessage] = matchDefault(message, serverCommandPatterns[patternIndex], 2);
 	if(!command && !message.server) [command, args, isCommandMessage] = matchDefault(message, unprefixedCommandPattern);
 	if(command) return [command, args, false, true];

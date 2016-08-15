@@ -13,3 +13,5 @@ It is written in ES7/ES2016 using Babel, and is built with [discord.js](https://
 ## Installation
 **Requires Node.js 6.0.0 or newer.**
 `npm install --save discord-graf`
+
+## Usage

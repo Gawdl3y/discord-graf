@@ -3,12 +3,9 @@
 
 import { stripIndents } from 'common-tags';
 import UsableChannel from '../../database/usable-channel';
-import * as permissions from '../../util/permissions';
-import search from '../../util/search';
-import disambiguation from '../../util/disambiguation';
-import usage from '../../util/command-usage';
-import CommandFormatError from '../../util/errors/command-format';
-import { channelID } from '../../util/patterns';
+import * as permissions from '../../permissions';
+import CommandFormatError from '../../errors/command-format';
+import Util from '../../util';
 
 export default {
 	name: 'disallowchannel',
@@ -27,7 +24,7 @@ export default {
 
 	async run(message, args) {
 		if(!args[0]) throw new CommandFormatError(this, message.server);
-		const matches = channelID.exec(args[0]);
+		const matches = Util.patterns.channelID.exec(args[0]);
 		const idChannel = message.server.channels.get('id', matches[1]);
 		const allowedChannels = UsableChannel.findInServer(message.server);
 		if(allowedChannels.length > 0) {
@@ -42,13 +39,13 @@ export default {
 					return `Operation is already not allowed in ${channels[0]}.`;
 				}
 			} else if(channels.length > 1) {
-				return disambiguation(channels, 'channels');
+				return Util.disambiguation(channels, 'channels');
 			} else {
-				return `Unable to identify channel. Use ${usage('allowedchannels', message.server)} to view the allowed channels.`;
+				return `Unable to identify channel. Use ${Util.usage('allowedchannels', message.server)} to view the allowed channels.`;
 			}
 		} else {
 			const serverChannels = message.server.channels.getAll('type', 'text');
-			const channels = idChannel ? [idChannel] : search(serverChannels, args[0]);
+			const channels = idChannel ? [idChannel] : Util.search(serverChannels, args[0]);
 			if(channels.length === 1) {
 				const index = serverChannels.indexOf(channels[0]);
 				serverChannels.splice(index, 1);
@@ -58,9 +55,9 @@ export default {
 					Since there were no allowed channels already, all other channels have been allowed.
 				`;
 			} else if(channels.length > 1) {
-				return disambiguation(channels, 'channels');
+				return Util.disambiguation(channels, 'channels');
 			} else {
-				return `Unable to identify channel. Use ${usage('allowedchannels', message.server)} to view the allowed channels.`;
+				return `Unable to identify channel. Use ${Util.usage('allowedchannels', message.server)} to view the allowed channels.`;
 			}
 		}
 	}

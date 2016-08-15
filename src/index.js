@@ -11,17 +11,10 @@ import * as dispatcher from './commands/dispatcher';
 import Setting from './database/setting';
 import ModRole from './database/mod-role';
 import UsableChannel from './database/usable-channel';
-import * as permissions from './util/permissions';
-import usage from './util/command-usage';
-import disambiguation from './util/disambiguation';
-import paginate from './util/pagination';
-import search from './util/search';
-import splitMessage from './util/split-message';
-import nbsp from './util/nbsp';
-import * as patterns from './util/patterns';
-import checkForUpdate from './util/update-check';
-import FriendlyError from './util/errors/friendly';
-import CommandFormatError from './util/errors/command-format';
+import * as permissions from './permissions';
+import FriendlyError from './errors/friendly';
+import CommandFormatError from './errors/command-format';
+import Util from './util';
 
 import HelpCommand from './commands/general/help';
 import AboutCommand from './commands/general/about';
@@ -46,15 +39,7 @@ export const graf = {
 	registry: registry,
 	dispatcher: dispatcher,
 	permissions: permissions,
-	util: {
-		usage: usage,
-		disambiguation: disambiguation,
-		paginate: paginate,
-		search: search,
-		nbsp: nbsp,
-		splitMessage: splitMessage,
-		patterns: patterns
-	},
+	util: Util,
 	errors: {
 		FriendlyError: FriendlyError,
 		CommandFormatError: CommandFormatError
@@ -115,8 +100,8 @@ export const graf = {
 
 		// Check for updates now and at an interval
 		if(config.values.updatePackageURL) {
-			checkForUpdate();
-			if(config.values.updateCheck > 0) setInterval(checkForUpdate, config.values.updateCheck * 60 * 1000);
+			Util._checkForUpdate();
+			if(config.values.updateCheck > 0) setInterval(Util._checkForUpdate, config.values.updateCheck * 60 * 1000);
 		}
 
 		this.client = client;

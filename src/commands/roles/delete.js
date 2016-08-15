@@ -3,11 +3,9 @@
 
 import { stripIndents } from 'common-tags';
 import ModRole from '../../database/mod-role';
-import disambiguation from '../../util/disambiguation';
-import usage from '../../util/command-usage';
-import * as permissions from '../../util/permissions';
-import CommandFormatError from '../../util/errors/command-format';
-import { roleID } from '../../util/patterns';
+import * as permissions from '../../permissions';
+import CommandFormatError from '../../errors/command-format';
+import Util from '../../util';
 
 export default {
 	name: 'deletemodrole',
@@ -26,7 +24,7 @@ export default {
 
 	async run(message, args) {
 		if(!args[0]) throw new CommandFormatError(this, message.server);
-		const matches = roleID.exec(args[0]);
+		const matches = Util.patterns.roleID.exec(args[0]);
 		let roles;
 		const idRole = message.server.roles.get('id', matches[1]);
 		if(idRole) roles = [idRole]; else roles = ModRole.findInServer(message.server, matches[1]);
@@ -41,9 +39,9 @@ export default {
 				return `Unable to remove "${roles[0].name}" from the moderator roles. It isn\'t one.`;
 			}
 		} else if(roles.length > 1) {
-			return disambiguation(roles, 'roles');
+			return Util.disambiguation(roles, 'roles');
 		} else {
-			return `Unable to identify role. Use ${usage('modroles', message.server)} to view the moderator roles, and ${usage('roles', message.server)} to view all of the server roles.`;
+			return `Unable to identify role. Use ${Util.usage('modroles', message.server)} to view the moderator roles, and ${Util.usage('roles', message.server)} to view all of the server roles.`;
 		}
 	}
 };

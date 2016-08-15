@@ -1,0 +1,3629 @@
+[
+  {
+    "__docId__": 0,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/commands/channels/allow.js",
+    "memberof": null,
+    "longname": "src/commands/channels/allow.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport UsableChannel from '../../database/usable-channel';\r\nimport * as permissions from '../../permissions';\r\nimport CommandFormatError from '../../errors/command-format';\r\nimport Util from '../../util';\r\n\r\nexport default {\r\n\tname: 'allowchannel',\r\n\taliases: ['allowchan', 'addchannel', 'addchan'],\r\n\tgroup: 'channels',\r\n\tgroupName: 'add',\r\n\tdescription: 'Allows command operation in a channel.',\r\n\tusage: 'allowchannel <channel>',\r\n\tdetails: 'The channel must be the name or ID of a channel, or a channel mention. Only administrators may use this command.',\r\n\texamples: ['allowchannel #CoolChannel', 'allowchannel cool', 'allowchannel 205536402341888001'],\r\n\tserverOnly: true,\r\n\r\n\tisRunnable(message) {\r\n\t\treturn permissions.isAdmin(message.server, message.author);\r\n\t},\r\n\r\n\tasync run(message, args) {\r\n\t\tif(!args[0]) throw new CommandFormatError(this, message.server);\r\n\t\tconst matches = Util.patterns.channelID.exec(args[0]);\r\n\t\tlet channels;\r\n\t\tconst idChannel = message.server.channels.get('id', matches[1]);\r\n\t\tif(idChannel) channels = [idChannel]; else channels = Util.search(message.server.channels.getAll('type', 'text'), matches[1]);\r\n\r\n\t\tif(channels.length === 1) {\r\n\t\t\tif(UsableChannel.save(channels[0])) {\r\n\t\t\t\treturn `Allowed operation in ${channels[0]}.`;\r\n\t\t\t} else {\r\n\t\t\t\treturn `Operation is already allowed in ${channels[0]}.`;\r\n\t\t\t}\r\n\t\t} else if(channels.length > 1) {\r\n\t\t\treturn Util.disambiguation(channels, 'channels');\r\n\t\t} else {\r\n\t\t\treturn 'Unable to identify channel.';\r\n\t\t}\r\n\t}\r\n};\r\n"
+  },
+  {
+    "__docId__": 1,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/commands/channels/clear.js",
+    "memberof": null,
+    "longname": "src/commands/channels/clear.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport UsableChannel from '../../database/usable-channel';\r\nimport * as permissions from '../../permissions';\r\nimport Util from '../../util';\r\n\r\nlet lastUser;\r\nlet timeout;\r\n\r\nexport default {\r\n\tname: 'clearallowedchannels',\r\n\taliases: ['clearallowedchans', 'clearchannels', 'clearchans'],\r\n\tgroup: 'channels',\r\n\tgroupName: 'clear',\r\n\tdescription: 'Clears all of the allowed channels.',\r\n\tdetails: 'Only administrators may use this command.',\r\n\tserverOnly: true,\r\n\r\n\tisRunnable(message) {\r\n\t\treturn permissions.isAdmin(message.server, message.author);\r\n\t},\r\n\r\n\tasync run(message, args) {\r\n\t\tif(message.author.equals(lastUser) && args[0] && args[0].toLowerCase() === 'confirm') {\r\n\t\t\tUsableChannel.clearServer(message.server);\r\n\t\t\tclearTimeout(timeout);\r\n\t\t\tlastUser = null;\r\n\t\t\ttimeout = null;\r\n\t\t\treturn 'Cleared the server\\'s allowed channels. Operation is now allowed in all channels.';\r\n\t\t} else {\r\n\t\t\tif(timeout) {\r\n\t\t\t\tclearTimeout(timeout);\r\n\t\t\t\ttimeout = null;\r\n\t\t\t}\r\n\t\t\tlastUser = message.author;\r\n\t\t\ttimeout = setTimeout(() => { lastUser = null; }, 30000);\r\n\t\t\treturn `Are you sure you want to clear all of the allowed channels? Operation will be permitted in all channels. Use ${Util.usage('clearallowedchannels confirm', message.server)} to continue.`;\r\n\t\t}\r\n\t}\r\n};\r\n"
+  },
+  {
+    "__docId__": 2,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/commands/channels/disallow.js",
+    "memberof": null,
+    "longname": "src/commands/channels/disallow.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport { stripIndents } from 'common-tags';\r\nimport UsableChannel from '../../database/usable-channel';\r\nimport * as permissions from '../../permissions';\r\nimport CommandFormatError from '../../errors/command-format';\r\nimport Util from '../../util';\r\n\r\nexport default {\r\n\tname: 'disallowchannel',\r\n\taliases: ['disallowchan', 'deletechannel', 'deletechan', 'delchan', 'removechannel', 'removechan'],\r\n\tgroup: 'channels',\r\n\tgroupName: 'disallow',\r\n\tdescription: 'Disallows command operation in a channel.',\r\n\tusage: 'disallowchannel <channel>',\r\n\tdetails: 'The channel must be the name or ID of a channel, or a channel mention. Only administrators may use this command.',\r\n\texamples: ['disallowchannel #CoolChannel', 'disallowchannel cool', 'disallowchannel 205536402341888001'],\r\n\tserverOnly: true,\r\n\r\n\tisRunnable(message) {\r\n\t\treturn permissions.isAdmin(message.server, message.author);\r\n\t},\r\n\r\n\tasync run(message, args) {\r\n\t\tif(!args[0]) throw new CommandFormatError(this, message.server);\r\n\t\tconst matches = Util.patterns.channelID.exec(args[0]);\r\n\t\tconst idChannel = message.server.channels.get('id', matches[1]);\r\n\t\tconst allowedChannels = UsableChannel.findInServer(message.server);\r\n\t\tif(allowedChannels.length > 0) {\n\t\t\tconst channels = idChannel ? [idChannel] : UsableChannel.findInServer(message.server, matches[1]);\r\n\t\t\tif(channels.length === 1) {\r\n\t\t\t\tif(UsableChannel.delete(channels[0])) {\r\n\t\t\t\t\treturn stripIndents`\r\n\t\t\t\t\t\tDisallowed operation in ${channels[0]}.\r\n\t\t\t\t\t\t${UsableChannel.findInServer(message.server).length === 0 ? 'Since there are no longer any allowed channels, operation is now allowed in all channels.' : ''}\r\n\t\t\t\t\t`;\r\n\t\t\t\t} else {\r\n\t\t\t\t\treturn `Operation is already not allowed in ${channels[0]}.`;\r\n\t\t\t\t}\r\n\t\t\t} else if(channels.length > 1) {\r\n\t\t\t\treturn Util.disambiguation(channels, 'channels');\r\n\t\t\t} else {\r\n\t\t\t\treturn `Unable to identify channel. Use ${Util.usage('allowedchannels', message.server)} to view the allowed channels.`;\r\n\t\t\t}\r\n\t\t} else {\r\n\t\t\tconst serverChannels = message.server.channels.getAll('type', 'text');\r\n\t\t\tconst channels = idChannel ? [idChannel] : Util.search(serverChannels, args[0]);\r\n\t\t\tif(channels.length === 1) {\r\n\t\t\t\tconst index = serverChannels.indexOf(channels[0]);\r\n\t\t\t\tserverChannels.splice(index, 1);\r\n\t\t\t\tfor(const chn of serverChannels) UsableChannel.save(chn);\r\n\t\t\t\treturn stripIndents`\r\n\t\t\t\t\tDisallowed operation in ${channels[0]}.\r\n\t\t\t\t\tSince there were no allowed channels already, all other channels have been allowed.\r\n\t\t\t\t`;\r\n\t\t\t} else if(channels.length > 1) {\r\n\t\t\t\treturn Util.disambiguation(channels, 'channels');\r\n\t\t\t} else {\r\n\t\t\t\treturn `Unable to identify channel. Use ${Util.usage('allowedchannels', message.server)} to view the allowed channels.`;\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n};\r\n"
+  },
+  {
+    "__docId__": 3,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/commands/channels/list.js",
+    "memberof": null,
+    "longname": "src/commands/channels/list.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport { stripIndents } from 'common-tags';\r\nimport UsableChannel from '../../database/usable-channel';\r\n\r\nexport default {\r\n\tname: 'allowedchannels',\r\n\taliases: ['allowedchans', 'channels', 'chans'],\r\n\tgroup: 'channels',\r\n\tgroupName: 'list',\r\n\tdescription: 'Lists all channels command operation is allowed in.',\r\n\tserverOnly: true,\r\n\r\n\tasync run(message) {\r\n\t\tconst channels = UsableChannel.findInServer(message.server);\r\n\t\tif(channels.length > 0) {\r\n\t\t\treturn stripIndents`\r\n\t\t\t\t__**Allowed channels:**__\r\n\t\t\t\t${channels.map(channel => `**-** ${channel}`).join('\\n')}\r\n\t\t\t`;\r\n\t\t} else {\r\n\t\t\treturn 'There are no channels specifically allowed, therefore operation is allowed in any channel.';\r\n\t\t}\r\n\t}\r\n};\r\n"
+  },
+  {
+    "__docId__": 4,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/commands/dispatcher.js",
+    "memberof": null,
+    "longname": "src/commands/dispatcher.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport stringArgv from 'string-argv';\r\nimport { stripIndents } from 'common-tags';\r\nimport bot from '..';\r\nimport * as registry from './registry';\r\nimport config from '../config';\r\nimport UsableChannel from '../database/usable-channel';\r\nimport * as permissions from '../permissions';\r\nimport FriendlyError from '../errors/friendly';\r\nimport Util from '../util';\r\n\r\nexport const serverCommandPatterns = {};\r\nexport const unprefixedCommandPattern = /^([^\\s]+)/i;\r\nexport const commandResults = {};\r\n\r\n// Handle a raw message\r\nexport async function handleMessage(message, oldMessage = null) {\r\n\t// Make sure the bot is allowed to run in the channel, or the user is an admin\r\n\tif(message.server && UsableChannel.serverHasAny(message.server)\r\n\t\t&& !UsableChannel.serverHas(message.server, message.channel)\r\n\t\t&& !permissions.isAdmin(message.server, message.author)) return;\r\n\r\n\t// Parse the message, and get the old result if it exists\r\n\tconst [command, args, fromPattern, isCommandMessage] = parseMessage(message);\r\n\tconst oldResult = oldMessage ? commandResults[oldMessage.id] : null;\r\n\r\n\t// Run the command, or make an error message result\r\n\tlet result;\r\n\tif(command) {\r\n\t\tif(!oldMessage || oldResult) result = makeResultObject(await run(command, args, fromPattern, message));\r\n\t} else if(isCommandMessage) {\r\n\t\tresult = { reply: [`Unknown command. Use ${Util.usage('help', message.server)} to view the list of all commands.`], editable: true };\r\n\t} else if(config.nonCommandEdit) {\r\n\t\tresult = {};\r\n\t}\r\n\r\n\tif(result) {\r\n\t\t// Change a plain or reply response into direct if there isn't a server\r\n\t\tif(!message.server) {\r\n\t\t\tif(!result.direct) result.direct = result.plain || result.reply;\r\n\t\t\tdelete result.plain;\r\n\t\t\tdelete result.reply;\r\n\t\t}\r\n\r\n\t\t// Update old messages or send new ones\r\n\t\tif(oldResult && (oldResult.plain || oldResult.reply || oldResult.direct)) {\r\n\t\t\tawait updateMessagesForResult(message, result, oldResult);\r\n\t\t} else {\r\n\t\t\tawait sendMessagesForResult(message, result);\r\n\t\t}\r\n\r\n\t\t// Cache the result\r\n\t\tif(config.commandEditable > 0) {\r\n\t\t\tif(result.editable) {\r\n\t\t\t\tresult.timeout = oldResult && oldResult.timeout ? oldResult.timeout : setTimeout(() => { delete commandResults[message.id]; }, config.commandEditable * 1000);\r\n\t\t\t\tcommandResults[message.id] = result;\r\n\t\t\t} else {\r\n\t\t\t\tdelete commandResults[message.id];\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n}\r\n\r\n// Run a command\r\nexport async function run(command, args, fromPattern, message) {\r\n\tconst logInfo = {\r\n\t\targs: String(args),\r\n\t\tuser: `${message.author.username}#${message.author.discriminator}`,\r\n\t\tuserID: message.author.id,\r\n\t\tserver: message.server ? message.server.name : null,\r\n\t\tserverID: message.server ? message.server.id : null\r\n\t};\r\n\r\n\t// Make sure the command is usable\r\n\tif(command.serverOnly && !message.server) {\r\n\t\tbot.logger.info(`Not running ${command.group}:${command.groupName}; server only.`, logInfo);\r\n\t\treturn `The \\`${command.name}\\` command must be used in a server channel.`;\r\n\t}\r\n\tif(command.isRunnable && !command.isRunnable(message)) {\r\n\t\tbot.logger.info(`Not running ${command.group}:${command.groupName}; not runnable.`, logInfo);\r\n\t\treturn `You do not have permission to use the \\`${command.name}\\` command.`;\r\n\t}\r\n\r\n\t// Run the command\r\n\tbot.logger.info(`Running ${command.group}:${command.groupName}.`, logInfo);\r\n\ttry {\r\n\t\treturn await command.run(message, args, fromPattern);\r\n\t} catch(err) {\r\n\t\tif(err instanceof FriendlyError) {\r\n\t\t\treturn err.message;\r\n\t\t} else {\r\n\t\t\tbot.logger.error(err);\r\n\t\t\tconst owner = config.owner ? message.client.users.get('id', config.owner) : null;\r\n\t\t\treturn stripIndents`\r\n\t\t\t\tAn error occurred while running the command: \\`${err.name}: ${err.message}\\`\r\n\t\t\t\t${owner ? `Please contact ${owner.name}#${owner.discriminator}${config.invite ? ` in this server: ${config.invite}` : '.'}` : ''}\r\n\t\t\t`;\r\n\t\t}\r\n\t}\r\n}\r\n\r\n// Get a result object from running a command\r\nexport function makeResultObject(result) {\r\n\tif(typeof result !== 'object' || Array.isArray(result)) result = { reply: result };\r\n\tif(!('editable' in result)) result.editable = true;\r\n\tif(result.plain && result.reply) throw new Error('The command result may contain either \"plain\" or \"reply\", not both.');\r\n\tif(result.plain && !Array.isArray(result.plain)) result.plain = [result.plain];\r\n\tif(result.reply && !Array.isArray(result.reply)) result.reply = [result.reply];\r\n\tif(result.direct && !Array.isArray(result.direct)) result.direct = [result.direct];\r\n\treturn result;\r\n}\r\n\r\n// Send messages for a result object\r\nexport async function sendMessagesForResult(message, result) {\r\n\tconst messages = await Promise.all([\r\n\t\tresult.plain ? sendMessages(message, result.plain, 'plain') : null,\r\n\t\tresult.reply ? sendMessages(message, result.reply, 'reply') : null,\r\n\t\tresult.direct ? sendMessages(message, result.direct, 'direct') : null\r\n\t]);\r\n\tif(result.plain) result.normalMessages = messages[0];\r\n\telse if(result.reply) result.normalMessages = messages[1];\r\n\tif(result.direct) result.directMessages = messages[2];\r\n}\r\n\r\n// Send messages in response to a message\r\nexport async function sendMessages(message, contents, type) {\r\n\tconst sentMessages = [];\r\n\tfor(const content of contents) {\r\n\t\tif(type === 'plain') sentMessages.push(await message.client.sendMessage(message, content));\r\n\t\telse if(type === 'reply') sentMessages.push(await message.reply(content));\r\n\t\telse if(type === 'direct') sentMessages.push(await message.client.sendMessage(message.author, content));\r\n\t}\r\n\treturn sentMessages;\r\n}\r\n\r\n// Update old messages to reflect a new result\r\nexport async function updateMessagesForResult(message, result, oldResult) {\r\n\t// Update the messages\r\n\tconst messages = await Promise.all([\r\n\t\tresult.plain || result.reply ? updateMessages(message, oldResult.normalMessages, result.plain ? result.plain : result.reply, result.plain ? 'plain' : 'reply') : null,\r\n\t\tresult.direct ? oldResult.direct ? updateMessages(message, oldResult.directMessages, result.direct, 'direct') : sendMessages(message, result.direct, 'direct') : null\r\n\t]);\r\n\tif(result.plain || result.reply) result.normalMessages = messages[0];\r\n\tif(result.direct) result.directMessages = messages[1];\r\n\r\n\t// Delete old messages if we're not using them\r\n\tif(!result.plain && !result.reply && (oldResult.plain || oldResult.reply)) for(const msg of oldResult.normalMessages) msg.delete();\r\n\tif(!result.direct && oldResult.direct) for(const msg of oldResult.directMessages) msg.delete();\r\n}\r\n\r\n// Update messages in response to a message\r\nexport async function updateMessages(message, oldMessages, contents, type) {\r\n\tconst updatedMessages = [];\r\n\r\n\t// Update/send messages\r\n\tfor(let i = 0; i < contents.length; i++) {\r\n\t\tif(i < oldMessages.length) updatedMessages.push(await oldMessages[i].update(type === 'reply' ? `${message.author}, ${contents[i]}` : contents[i]));\r\n\t\telse updatedMessages.push((await sendMessages(message, [contents[i]], type))[0]);\r\n\t}\r\n\r\n\t// Delete extra old messages\r\n\tif(oldMessages.length > contents.length) {\r\n\t\tfor(let i = oldMessages.length - 1; i >= contents.length; i--) oldMessages[i].delete();\r\n\t}\r\n\r\n\treturn updatedMessages;\r\n}\r\n\r\n// Get an array of metadata for a command in a message\r\nexport function parseMessage(message) {\r\n\t// Find the command to run by patterns\r\n\tfor(const command of registry.commands) {\r\n\t\tif(!command.patterns) continue;\r\n\t\tfor(const pattern of command.patterns) {\r\n\t\t\tconst matches = pattern.exec(message.content);\r\n\t\t\tif(matches) return [command, matches, true, true];\r\n\t\t}\r\n\t}\r\n\r\n\t// Find the command to run with default command handling\r\n\tconst patternIndex = message.server ? message.server.id : '-';\r\n\tif(!serverCommandPatterns[patternIndex]) serverCommandPatterns[patternIndex] = Util._buildCommandPattern(message.server, message.client.user);\r\n\tlet [command, args, isCommandMessage] = matchDefault(message, serverCommandPatterns[patternIndex], 2);\r\n\tif(!command && !message.server) [command, args, isCommandMessage] = matchDefault(message, unprefixedCommandPattern);\r\n\tif(command) return [command, args, false, true];\r\n\r\n\treturn [null, null, false, isCommandMessage];\r\n}\r\n\r\n// Find the command and arguments from a default matches pattern\r\nconst newlinesPattern = /\\n/g;\r\nconst newlinesReplacement = '{!~NL~!}';\r\nconst newlinesReplacementPattern = new RegExp(newlinesReplacement, 'g');\r\nconst extraNewlinesPattern = /\\n{3,}/g;\r\nexport function matchDefault(message, pattern, commandNameIndex = 1) {\r\n\tconst matches = pattern.exec(message.content);\r\n\tif(!matches) return [null, null, false];\r\n\r\n\tconst commandName = matches[commandNameIndex].toLowerCase();\r\n\tconst command = registry.commands.find(cmd => cmd.name === commandName || (cmd.aliases && cmd.aliases.some(alias => alias === commandName)));\r\n\tif(!command || command.disableDefault) return [null, null, true];\r\n\r\n\tconst argString = message.content.substring(matches[1].length + (matches[2] ? matches[2].length : 0));\r\n\tlet args;\r\n\tif(!('argsType' in command) || command.argsType === 'single') {\r\n\t\targs = [argString.trim()];\r\n\t} else if(command.argsType === 'multiple') {\r\n\t\tif('argsCount' in command) {\r\n\t\t\tif(command.argsCount < 2) throw new RangeError(`Command ${command.group}:${command.groupName} argsCount must be at least 2.`);\r\n\t\t\targs = [];\r\n\t\t\tconst newlinesReplaced = argString.trim().replace(newlinesPattern, newlinesReplacement);\r\n\t\t\tconst argv = stringArgv(newlinesReplaced);\r\n\t\t\tif(argv.length > 0) {\r\n\t\t\t\tfor(let i = 0; i < command.argsCount - 1; i++) args.push(argv.shift());\r\n\t\t\t\tif(argv.length > 0) args.push(argv.join(' ').replace(newlinesReplacementPattern, '\\n').replace(extraNewlinesPattern, '\\n\\n'));\r\n\t\t\t}\r\n\t\t} else {\r\n\t\t\targs = stringArgv(argString);\r\n\t\t}\r\n\t} else {\r\n\t\tthrow new Error(`Command ${command.group}:${command.groupName} argsType is not one of 'single' or 'multiple'.`);\r\n\t}\r\n\r\n\treturn [command, args, true];\r\n}\r\n"
+  },
+  {
+    "__docId__": 5,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "serverCommandPatterns",
+    "memberof": "src/commands/dispatcher.js",
+    "longname": "src/commands/dispatcher.js~serverCommandPatterns",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/commands/dispatcher.js",
+    "importStyle": "{serverCommandPatterns}",
+    "description": null,
+    "lineNumber": 14,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 6,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "unprefixedCommandPattern",
+    "memberof": "src/commands/dispatcher.js",
+    "longname": "src/commands/dispatcher.js~unprefixedCommandPattern",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/commands/dispatcher.js",
+    "importStyle": "{unprefixedCommandPattern}",
+    "description": null,
+    "lineNumber": 15,
+    "undocument": true,
+    "type": {
+      "types": [
+        "object"
+      ]
+    }
+  },
+  {
+    "__docId__": 7,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "commandResults",
+    "memberof": "src/commands/dispatcher.js",
+    "longname": "src/commands/dispatcher.js~commandResults",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/commands/dispatcher.js",
+    "importStyle": "{commandResults}",
+    "description": null,
+    "lineNumber": 16,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 8,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "handleMessage",
+    "memberof": "src/commands/dispatcher.js",
+    "longname": "src/commands/dispatcher.js~handleMessage",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/commands/dispatcher.js",
+    "importStyle": "{handleMessage}",
+    "description": null,
+    "lineNumber": 19,
+    "undocument": true,
+    "params": [
+      {
+        "name": "message",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "oldMessage",
+        "optional": true,
+        "types": [
+          "*"
+        ],
+        "defaultRaw": null,
+        "defaultValue": "null"
+      }
+    ],
+    "generator": false
+  },
+  {
+    "__docId__": 9,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "run",
+    "memberof": "src/commands/dispatcher.js",
+    "longname": "src/commands/dispatcher.js~run",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/commands/dispatcher.js",
+    "importStyle": "{run}",
+    "description": null,
+    "lineNumber": 67,
+    "undocument": true,
+    "params": [
+      {
+        "name": "command",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "args",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "fromPattern",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "message",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 10,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "makeResultObject",
+    "memberof": "src/commands/dispatcher.js",
+    "longname": "src/commands/dispatcher.js~makeResultObject",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/commands/dispatcher.js",
+    "importStyle": "{makeResultObject}",
+    "description": null,
+    "lineNumber": 105,
+    "undocument": true,
+    "params": [
+      {
+        "name": "result",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 11,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "sendMessagesForResult",
+    "memberof": "src/commands/dispatcher.js",
+    "longname": "src/commands/dispatcher.js~sendMessagesForResult",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/commands/dispatcher.js",
+    "importStyle": "{sendMessagesForResult}",
+    "description": null,
+    "lineNumber": 116,
+    "undocument": true,
+    "params": [
+      {
+        "name": "message",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "result",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "generator": false
+  },
+  {
+    "__docId__": 12,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "sendMessages",
+    "memberof": "src/commands/dispatcher.js",
+    "longname": "src/commands/dispatcher.js~sendMessages",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/commands/dispatcher.js",
+    "importStyle": "{sendMessages}",
+    "description": null,
+    "lineNumber": 128,
+    "undocument": true,
+    "params": [
+      {
+        "name": "message",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "contents",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "type",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 13,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "updateMessagesForResult",
+    "memberof": "src/commands/dispatcher.js",
+    "longname": "src/commands/dispatcher.js~updateMessagesForResult",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/commands/dispatcher.js",
+    "importStyle": "{updateMessagesForResult}",
+    "description": null,
+    "lineNumber": 139,
+    "undocument": true,
+    "params": [
+      {
+        "name": "message",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "result",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "oldResult",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "generator": false
+  },
+  {
+    "__docId__": 14,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "updateMessages",
+    "memberof": "src/commands/dispatcher.js",
+    "longname": "src/commands/dispatcher.js~updateMessages",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/commands/dispatcher.js",
+    "importStyle": "{updateMessages}",
+    "description": null,
+    "lineNumber": 154,
+    "undocument": true,
+    "params": [
+      {
+        "name": "message",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "oldMessages",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "contents",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "type",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 15,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "parseMessage",
+    "memberof": "src/commands/dispatcher.js",
+    "longname": "src/commands/dispatcher.js~parseMessage",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/commands/dispatcher.js",
+    "importStyle": "{parseMessage}",
+    "description": null,
+    "lineNumber": 172,
+    "undocument": true,
+    "params": [
+      {
+        "name": "message",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 16,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "newlinesPattern",
+    "memberof": "src/commands/dispatcher.js",
+    "longname": "src/commands/dispatcher.js~newlinesPattern",
+    "access": null,
+    "export": false,
+    "importPath": "discord-graf/src/commands/dispatcher.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 193,
+    "undocument": true,
+    "type": {
+      "types": [
+        "object"
+      ]
+    }
+  },
+  {
+    "__docId__": 17,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "newlinesReplacement",
+    "memberof": "src/commands/dispatcher.js",
+    "longname": "src/commands/dispatcher.js~newlinesReplacement",
+    "access": null,
+    "export": false,
+    "importPath": "discord-graf/src/commands/dispatcher.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 194,
+    "undocument": true,
+    "type": {
+      "types": [
+        "string"
+      ]
+    }
+  },
+  {
+    "__docId__": 18,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "newlinesReplacementPattern",
+    "memberof": "src/commands/dispatcher.js",
+    "longname": "src/commands/dispatcher.js~newlinesReplacementPattern",
+    "access": null,
+    "export": false,
+    "importPath": "discord-graf/src/commands/dispatcher.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 195,
+    "undocument": true,
+    "type": {
+      "types": [
+        "RegExp"
+      ]
+    }
+  },
+  {
+    "__docId__": 19,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "extraNewlinesPattern",
+    "memberof": "src/commands/dispatcher.js",
+    "longname": "src/commands/dispatcher.js~extraNewlinesPattern",
+    "access": null,
+    "export": false,
+    "importPath": "discord-graf/src/commands/dispatcher.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 196,
+    "undocument": true,
+    "type": {
+      "types": [
+        "object"
+      ]
+    }
+  },
+  {
+    "__docId__": 20,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "matchDefault",
+    "memberof": "src/commands/dispatcher.js",
+    "longname": "src/commands/dispatcher.js~matchDefault",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/commands/dispatcher.js",
+    "importStyle": "{matchDefault}",
+    "description": null,
+    "lineNumber": 197,
+    "undocument": true,
+    "params": [
+      {
+        "name": "message",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "pattern",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "commandNameIndex",
+        "optional": true,
+        "types": [
+          "number"
+        ],
+        "defaultRaw": 1,
+        "defaultValue": "1"
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 21,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/commands/general/about.js",
+    "memberof": null,
+    "longname": "src/commands/general/about.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport { stripIndents } from 'common-tags';\r\nimport config from '../../config';\r\n\r\nexport default {\r\n\tname: 'about',\r\n\tgroup: 'general',\r\n\tgroupName: 'about',\r\n\tdescription: 'Displays information about the bot.',\r\n\r\n\tasync run(message) {\r\n\t\tconst owner = message.client.users.get('id', config.owner);\r\n\t\tconst servers = message.client.servers.length.toLocaleString(), users = message.client.users.length.toLocaleString();\r\n\t\tconst serversLabel = servers !== 1 ? 'servers' : 'server', usersLabel = users !== 1 ? 'users' : 'user';\r\n\t\tconst uptime = process.uptime();\r\n\t\tconst days = Math.floor(uptime / 60 / 60 / 24), hours = Math.floor(uptime / 60 / 60 % 24), minutes = Math.floor(uptime / 60 % 60);\r\n\t\tconst daysLabel = days !== 1 ? 'days' : 'day', hoursLabel = hours !== 1 ? 'hours' : 'hour', minutesLabel = minutes !== 1 ? 'minutes' : 'minute';\r\n\t\tconst daysStr = `${days.toLocaleString()} ${daysLabel}`, hoursStr = `${hours.toLocaleString()} ${hoursLabel}`, minutesStr = `${minutes.toLocaleString()} ${minutesLabel}`;\r\n\t\treturn {\r\n\t\t\tdirect: stripIndents`\r\n\t\t\t\t${config.botAbout ? config.botAbout : ''}\r\n\r\n\t\t\t\tThis bot ${owner ? `is owned by ${owner.name}#${owner.discriminator}, and ` : ''}is serving ${users} ${usersLabel} across ${servers} ${serversLabel}.\r\n\t\t\t\tIt has been running without interruption for ${days > 0 ? `${daysStr} ` : ''}${hours > 0 ? `${hoursStr} ` : ''}${minutesStr}.\r\n\t\t\t\t${config.invite ? `For bot feedback/help, use this invite: ${config.invite}` : ''}\r\n\t\t\t\tBased on Discord GRAF: https://github.com/Gawdl3y/discord-graf\r\n\t\t\t`,\r\n\t\t\treply: 'Sent a DM to you with information.'\r\n\t\t};\r\n\t}\r\n};\r\n"
+  },
+  {
+    "__docId__": 22,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/commands/general/eval.js",
+    "memberof": null,
+    "longname": "src/commands/general/eval.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "'use babel';\r\n'use strict';\r\n\r\n/* eslint-disable no-unused-vars */\r\nimport util from 'util';\r\nimport stringArgv from 'string-argv';\r\nimport * as bot from '../..';\r\nimport config from '../../config';\r\nimport version from '../../version';\r\nimport * as registry from '../registry';\r\nimport * as dispatcher from '../dispatcher';\r\nimport Setting from '../../database/setting';\r\nimport ModRole from '../../database/mod-role';\r\nimport FriendlyError from '../../errors/friendly';\r\nimport CommandFormatError from '../../errors/command-format';\r\nimport Util from '../../util';\r\n/* eslint-enable no-unused-vars */\r\n\r\nlet lastResult;\r\n\r\nexport default {\r\n\tname: 'eval',\r\n\tgroup: 'general',\r\n\tgroupName: 'eval',\r\n\tdescription: 'Evaluates input as JavaScript.',\r\n\tusage: 'eval <script>',\r\n\tdetails: 'Only the bot owner may use this command.',\r\n\r\n\tisRunnable(message) {\r\n\t\treturn message.author.id === config.owner;\r\n\t},\r\n\r\n\tasync run(message, args) {\r\n\t\tif(!args[0]) throw new CommandFormatError(this, message.server);\r\n\t\tconst msg = message; // eslint-disable-line no-unused-vars\r\n\t\ttry {\r\n\t\t\tlastResult = eval(args[0]);\r\n\t\t\treturn `Result: \\`${util.inspect(lastResult, { depth: 0 })}\\``;\r\n\t\t} catch(err) {\r\n\t\t\treturn `Error while evaluating: ${err}`;\r\n\t\t}\r\n\t}\r\n};\r\n"
+  },
+  {
+    "__docId__": 23,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/commands/general/help.js",
+    "memberof": null,
+    "longname": "src/commands/general/help.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport { stripIndents } from 'common-tags';\r\nimport { groups, find as findCommands, isUsable } from '../registry';\r\nimport Util from '../../util';\r\n\r\nexport default {\r\n\tname: 'help',\r\n\tgroup: 'general',\r\n\tgroupName: 'help',\r\n\taliases: ['commands'],\r\n\tdescription: 'Displays a list of available commands, or detailed information for a specified command.',\r\n\tusage: 'help [command]',\r\n\tdetails: 'The command may be part of a command name or a whole command name. If it isn\\'t specified, all available commands will be listed.',\r\n\texamples: ['help', 'help roll'],\r\n\r\n\tasync run(message, args) {\r\n\t\tconst commands = findCommands(args[0], message);\r\n\t\tconst showAll = args[0] && args[0].toLowerCase() === 'all';\r\n\t\tif(args[0] && !showAll) {\r\n\t\t\tif(commands.length === 1) {\r\n\t\t\t\tlet help = stripIndents`\r\n\t\t\t\t\t__Command **${commands[0].name}**:__ ${commands[0].description}${commands[0].serverOnly ? ' (Usable only in servers)' : ''}\r\n\r\n\t\t\t\t\t**Usage:** ${Util.usage(commands[0].usage ? commands[0].usage : commands[0].name, message.server)}\r\n\t\t\t\t`;\r\n\t\t\t\tif(commands[0].aliases) help += `\\n**Aliases:** ${commands[0].aliases.join(', ')}`;\r\n\t\t\t\tif(commands[0].details) help += `\\n**Details:** ${commands[0].details}`;\r\n\t\t\t\tif(commands[0].examples) help += `\\n**Examples:**\\n${commands[0].examples.join('\\n')}`;\r\n\t\t\t\treturn { direct: help, reply: 'Sent a DM to you with information.' };\r\n\t\t\t} else if(commands.length > 1) {\r\n\t\t\t\treturn Util.disambiguation(commands, 'commands');\r\n\t\t\t} else {\r\n\t\t\t\treturn `Unable to identify command. Use ${Util.usage('help', message.server)} to view the list of all commands.`;\r\n\t\t\t}\r\n\t\t} else {\r\n\t\t\treturn {\r\n\t\t\t\tdirect: Util.split(stripIndents`\r\n\t\t\t\t\tTo run a command in ${message.server ? message.server : 'any server'}, use ${Util.usage('command', message.server, !message.server)}. For example, ${Util.usage('roll d20', message.server, !message.server)}.\r\n\t\t\t\t\tTo run a command in this DM, simply use ${Util.usage('command')} with no prefix. For example, ${Util.usage('roll d20')}.\r\n\r\n\t\t\t\t\tUse ${Util.usage('help <command>')} to view detailed information about a specific command.\r\n\t\t\t\t\tUse ${Util.usage('help all')} to view a list of *all* commands, not just available ones.\r\n\r\n\t\t\t\t\t__**${showAll ? 'All commands' : `Available commands in ${message.server ? `${message.server}` : 'this DM'}`}**__\r\n\r\n\t\t\t\t\t${(showAll ? groups : groups.filter(grp => grp.commands.some(cmd => isUsable(cmd, message)))).map(grp => stripIndents`\r\n\t\t\t\t\t\t__${grp.name}__\r\n\t\t\t\t\t\t${(showAll ? grp.commands : grp.commands.filter(cmd => isUsable(cmd, message))).map(cmd => `**${cmd.name}:** ${cmd.description}`).join('\\n')}\r\n\t\t\t\t\t`).join('\\n\\n')}\r\n\t\t\t\t`),\r\n\t\t\t\treply: message.server ? 'Sent a DM to you with information.' : null\r\n\t\t\t};\r\n\t\t}\r\n\t}\r\n};\r\n"
+  },
+  {
+    "__docId__": 24,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/commands/general/list-roles.js",
+    "memberof": null,
+    "longname": "src/commands/general/list-roles.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport { stripIndents } from 'common-tags';\r\nimport * as permissions from '../../permissions';\r\n\r\nexport default {\r\n\tname: 'roles',\r\n\taliases: ['listroles'],\r\n\tgroup: 'general',\r\n\tgroupName: 'list-roles',\r\n\tdescription: 'Lists all server roles.',\r\n\tdetails: 'Only administrators may use this command.',\r\n\tserverOnly: true,\r\n\r\n\tisRunnable(message) {\r\n\t\treturn permissions.isAdmin(message.server, message.author);\r\n\t},\r\n\r\n\tasync run(message) {\r\n\t\treturn stripIndents`\r\n\t\t\t__**Server roles:**__\r\n\t\t\t${message.server.roles.map(role => `**-** ${role.name} (ID: ${role.id})`).join('\\n')}\r\n\t\t`;\r\n\t}\r\n};\r\n"
+  },
+  {
+    "__docId__": 25,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/commands/general/prefix.js",
+    "memberof": null,
+    "longname": "src/commands/general/prefix.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport bot, { serverCommandPatterns } from '../../';\r\nimport config from '../../config';\r\nimport * as permissions from '../../permissions';\r\nimport Setting from '../../database/setting';\r\nimport Util from '../../util';\r\n\r\nexport default {\r\n\tname: 'prefix',\r\n\tgroup: 'general',\r\n\tgroupName: 'prefix',\r\n\tdescription: 'Shows or sets the command prefix.',\r\n\tusage: 'prefix [prefix|\"default\"|\"none\"]',\r\n\tdetails: 'If no prefix is provided, the current prefix will be shown. If the prefix is \"default\", the prefix will be reset to the bot\\'s default prefix. If the prefix is \"none\", the prefix will be removed entirely, only allowing mentions to run commands. Only administrators may change the prefix.',\r\n\texamples: ['prefix', 'prefix -', 'prefix rp!', 'prefix default', 'prefix none'],\r\n\r\n\tasync run(message, args) {\r\n\t\tif(args[0] && message.server) {\r\n\t\t\tif(!permissions.isAdmin(message.server, message.author)) return 'Only administrators may change the command prefix.';\r\n\r\n\t\t\t// Save the prefix\r\n\t\t\tconst lowercase = args[0].toLowerCase();\r\n\t\t\tconst prefix = lowercase === 'none' ? '' : args[0];\r\n\t\t\tlet response;\r\n\t\t\tif(lowercase === 'default') {\r\n\t\t\t\tSetting.delete('command-prefix', message.server);\r\n\t\t\t\tresponse = `Reset the command prefix to default (currently \"${config.commandPrefix}\").`;\r\n\t\t\t} else {\r\n\t\t\t\tSetting.save(new Setting(message.server, 'command-prefix', prefix));\r\n\t\t\t\tresponse = prefix ? `Set the command prefix to \"${args[0]}\".` : 'Removed the command prefix entirely.';\r\n\t\t\t}\r\n\r\n\t\t\t// Build the pattern\r\n\t\t\tconst pattern = Util._buildCommandPattern(message.server, bot.client.user);\r\n\t\t\tserverCommandPatterns[message.server.id] = pattern;\r\n\r\n\t\t\treturn `${response} To run commands, use ${Util.usage('command', message.server)}.`;\r\n\t\t} else {\r\n\t\t\tconst prefix = message.server ? Setting.getValue('command-prefix', config.commandPrefix, message.server) : config.commandPrefix;\r\n\t\t\treturn `${prefix ? `The command prefix is \"${prefix}\".` : 'There is no command prefix.'} To run commands, use ${Util.usage('command', message.server)}.`;\r\n\t\t}\r\n\t}\r\n};\r\n"
+  },
+  {
+    "__docId__": 26,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/commands/general/test.js",
+    "memberof": null,
+    "longname": "src/commands/general/test.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport splitMessage from '../../util/split-message';\r\n\r\nexport default {\r\n\tname: 'test',\r\n\tgroup: 'general',\r\n\tgroupName: 'test',\r\n\tdescription: 'Tests stuff.',\r\n\targsType: 'single',\r\n\r\n\tasync run(message, args) {\r\n\t\tlet text = '';\r\n\t\tfor(let i = 0; i < parseInt(args[0]); i++) text += 'This is a line of text, that is kind of long, but not really. Yeeeeeeaaaaaaah.\\n';\r\n\t\treturn splitMessage(text);\r\n\t}\r\n};\r\n"
+  },
+  {
+    "__docId__": 27,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/commands/registry.js",
+    "memberof": null,
+    "longname": "src/commands/registry.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport bot from '../';\r\n\r\nexport const commands = [];\r\nexport const groups = [];\r\n\r\n// Register a command\r\nexport function register(command) {\r\n\tif(commands.some(cmd => cmd.name === command.name)) throw new Error(`A command with the name \"${command.name}\"\" is already registered.`);\r\n\tcommands.push(command);\r\n\tlet group = groups.find(grp => grp.id === command.group);\r\n\tif(group) {\r\n\t\tgroup.commands.push(command);\r\n\t} else {\r\n\t\tgroup = {\r\n\t\t\tid: command.group,\r\n\t\t\tname: command.group,\r\n\t\t\tcommands: [command]\r\n\t\t};\r\n\t\tgroups.push(group);\r\n\t}\r\n\tbot.logger.verbose(`Registered command ${command.group}:${command.groupName}.`);\r\n}\r\n\r\n// Name a group\r\nexport function nameGroup(id, name) {\r\n\tgroups.find(grp => grp.id === id).name = name;\r\n\tbot.logger.verbose(`Named group ${id} \"${name}\".`);\r\n}\r\n\r\n// Find all commands, or commands that match a search string\r\nexport function find(searchString = null, message = null) {\r\n\tif(!searchString) return message ? commands.filter(cmd => isUsable(cmd, message)) : commands;\r\n\r\n\t// Find all matches\r\n\tconst lowercaseSearch = searchString.toLowerCase();\r\n\tconst matchedCommands = commands.filter(cmd => cmd.name.includes(lowercaseSearch) || (cmd.aliases && cmd.aliases.some(ali => ali.includes(lowercaseSearch))));\r\n\r\n\t// See if there's an exact match\r\n\tfor(const command of matchedCommands) {\r\n\t\tif(command.name === lowercaseSearch || (command.aliases && command.aliases.some(ali => ali === lowercaseSearch))) return [command];\r\n\t}\r\n\r\n\treturn matchedCommands;\r\n}\r\n\r\n// Check to make sure a command is runnable\r\nexport function isUsable(command, message = null) {\r\n\tif(command.serverOnly && message && !message.server) return false;\r\n\treturn !command.isRunnable || !message || command.isRunnable(message);\r\n}\r\n"
+  },
+  {
+    "__docId__": 28,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "commands",
+    "memberof": "src/commands/registry.js",
+    "longname": "src/commands/registry.js~commands",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/commands/registry.js",
+    "importStyle": "{commands}",
+    "description": null,
+    "lineNumber": 6,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 29,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "groups",
+    "memberof": "src/commands/registry.js",
+    "longname": "src/commands/registry.js~groups",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/commands/registry.js",
+    "importStyle": "{groups}",
+    "description": null,
+    "lineNumber": 7,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 30,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "register",
+    "memberof": "src/commands/registry.js",
+    "longname": "src/commands/registry.js~register",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/commands/registry.js",
+    "importStyle": "{register}",
+    "description": null,
+    "lineNumber": 10,
+    "undocument": true,
+    "params": [
+      {
+        "name": "command",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "generator": false
+  },
+  {
+    "__docId__": 31,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "nameGroup",
+    "memberof": "src/commands/registry.js",
+    "longname": "src/commands/registry.js~nameGroup",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/commands/registry.js",
+    "importStyle": "{nameGroup}",
+    "description": null,
+    "lineNumber": 28,
+    "undocument": true,
+    "params": [
+      {
+        "name": "id",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "name",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "generator": false
+  },
+  {
+    "__docId__": 32,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "find",
+    "memberof": "src/commands/registry.js",
+    "longname": "src/commands/registry.js~find",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/commands/registry.js",
+    "importStyle": "{find}",
+    "description": null,
+    "lineNumber": 34,
+    "undocument": true,
+    "params": [
+      {
+        "name": "searchString",
+        "optional": true,
+        "types": [
+          "*"
+        ],
+        "defaultRaw": null,
+        "defaultValue": "null"
+      },
+      {
+        "name": "message",
+        "optional": true,
+        "types": [
+          "*"
+        ],
+        "defaultRaw": null,
+        "defaultValue": "null"
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 33,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "isUsable",
+    "memberof": "src/commands/registry.js",
+    "longname": "src/commands/registry.js~isUsable",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/commands/registry.js",
+    "importStyle": "{isUsable}",
+    "description": null,
+    "lineNumber": 50,
+    "undocument": true,
+    "params": [
+      {
+        "name": "command",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "message",
+        "optional": true,
+        "types": [
+          "*"
+        ],
+        "defaultRaw": null,
+        "defaultValue": "null"
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 34,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/commands/roles/add.js",
+    "memberof": null,
+    "longname": "src/commands/roles/add.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport ModRole from '../../database/mod-role';\r\nimport * as permissions from '../../permissions';\r\nimport CommandFormatError from '../../errors/command-format';\r\nimport Util from '../../util';\r\n\r\nexport default {\r\n\tname: 'addmodrole',\r\n\taliases: ['addmod'],\r\n\tgroup: 'roles',\r\n\tgroupName: 'add',\r\n\tdescription: 'Adds a moderator role.',\r\n\tusage: 'addmodrole <role>',\r\n\tdetails: 'The role must be the name or ID of a role, or a role mention. Only administrators may use this command.',\r\n\texamples: ['addmodrole cool', 'addmodrole 205536402341888001', 'addmodrole @CoolPeopleRole'],\r\n\tserverOnly: true,\r\n\r\n\tisRunnable(message) {\r\n\t\treturn permissions.isAdmin(message.server, message.author);\r\n\t},\r\n\r\n\tasync run(message, args) {\r\n\t\tif(!args[0]) throw new CommandFormatError(this, message.server);\r\n\t\tconst matches = Util.patterns.roleID.exec(args[0]);\r\n\t\tlet roles;\r\n\t\tconst idRole = message.server.roles.get('id', matches[1]);\r\n\t\tif(idRole) roles = [idRole]; else roles = Util.search(message.server.roles, matches[1]);\r\n\r\n\t\tif(roles.length === 1) {\r\n\t\t\tif(ModRole.save(roles[0])) {\r\n\t\t\t\treturn `Added \"${roles[0].name}\" to the moderator roles.`;\r\n\t\t\t} else {\r\n\t\t\t\treturn `Unable to add \"${roles[0].name}\" to the moderator roles. It already is one.`;\r\n\t\t\t}\r\n\t\t} else if(roles.length > 1) {\r\n\t\t\treturn Util.disambiguation(roles, 'roles');\r\n\t\t} else {\r\n\t\t\treturn `Unable to identify role. Use ${Util.usage('roles', message.server)} to view all of the server roles.`;\r\n\t\t}\r\n\t}\r\n};\r\n"
+  },
+  {
+    "__docId__": 35,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/commands/roles/clear.js",
+    "memberof": null,
+    "longname": "src/commands/roles/clear.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport ModRole from '../../database/mod-role';\r\nimport * as permissions from '../../permissions';\r\nimport Util from '../../util';\r\n\r\nlet lastUser;\r\nlet timeout;\r\n\r\nexport default {\r\n\tname: 'clearmodroles',\r\n\taliases: ['clearmods'],\r\n\tgroup: 'roles',\r\n\tgroupName: 'clear',\r\n\tdescription: 'Clears all of the moderator roles.',\r\n\tdetails: 'Only administrators may use this command.',\r\n\tserverOnly: true,\r\n\r\n\tisRunnable(message) {\r\n\t\treturn permissions.isAdmin(message.server, message.author);\r\n\t},\r\n\r\n\tasync run(message, args) {\r\n\t\tif(message.author.equals(lastUser) && args[0] && args[0].toLowerCase() === 'confirm') {\r\n\t\t\tModRole.clearServer(message.server);\r\n\t\t\tclearTimeout(timeout);\r\n\t\t\tlastUser = null;\r\n\t\t\ttimeout = null;\r\n\t\t\treturn 'Cleared the server\\'s moderator roles. Moderators will be determined by the \"Manage messages\" permission.';\r\n\t\t} else {\r\n\t\t\tif(timeout) {\r\n\t\t\t\tclearTimeout(timeout);\r\n\t\t\t\ttimeout = null;\r\n\t\t\t}\r\n\t\t\tlastUser = message.author;\r\n\t\t\ttimeout = setTimeout(() => { lastUser = null; }, 30000);\r\n\t\t\treturn `Are you sure you want to clear all of the moderator roles? Use ${Util.usage('clearmodroles confirm', message.server)} within the next 30 seconds to continue.`;\r\n\t\t}\r\n\t}\r\n};\r\n"
+  },
+  {
+    "__docId__": 36,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/commands/roles/delete.js",
+    "memberof": null,
+    "longname": "src/commands/roles/delete.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport { stripIndents } from 'common-tags';\r\nimport ModRole from '../../database/mod-role';\r\nimport * as permissions from '../../permissions';\r\nimport CommandFormatError from '../../errors/command-format';\r\nimport Util from '../../util';\r\n\r\nexport default {\r\n\tname: 'deletemodrole',\r\n\taliases: ['removemodrole', 'delmodrole', 'removemod', 'deletemod', 'delmod'],\r\n\tgroup: 'roles',\r\n\tgroupName: 'delete',\r\n\tdescription: 'Deletes a moderator role.',\r\n\tusage: 'deletemodrole <role>',\r\n\tdetails: 'The role must be the name or ID of a role, or a role mention. Only administrators may use this command.',\r\n\texamples: ['deletemodrole cool', 'deletemodrole 205536402341888001', 'deletemodrole @CoolPeopleRole'],\r\n\tserverOnly: true,\r\n\r\n\tisRunnable(message) {\r\n\t\treturn permissions.isAdmin(message.server, message.author);\r\n\t},\r\n\r\n\tasync run(message, args) {\r\n\t\tif(!args[0]) throw new CommandFormatError(this, message.server);\r\n\t\tconst matches = Util.patterns.roleID.exec(args[0]);\r\n\t\tlet roles;\r\n\t\tconst idRole = message.server.roles.get('id', matches[1]);\r\n\t\tif(idRole) roles = [idRole]; else roles = ModRole.findInServer(message.server, matches[1]);\r\n\r\n\t\tif(roles.length === 1) {\r\n\t\t\tif(ModRole.delete(roles[0])) {\r\n\t\t\t\treturn stripIndents`\r\n\t\t\t\t\tRemoved \"${roles[0].name}\" from the moderator roles.\r\n\t\t\t\t\t${ModRole.findInServer(message.server).length === 0 ? 'Since there are no longer any moderator roles, moderators will be determined by the \"Manage messages\" permission.' : ''}\r\n\t\t\t\t`;\r\n\t\t\t} else {\r\n\t\t\t\treturn `Unable to remove \"${roles[0].name}\" from the moderator roles. It isn\\'t one.`;\r\n\t\t\t}\r\n\t\t} else if(roles.length > 1) {\r\n\t\t\treturn Util.disambiguation(roles, 'roles');\r\n\t\t} else {\r\n\t\t\treturn `Unable to identify role. Use ${Util.usage('modroles', message.server)} to view the moderator roles, and ${Util.usage('roles', message.server)} to view all of the server roles.`;\r\n\t\t}\r\n\t}\r\n};\r\n"
+  },
+  {
+    "__docId__": 37,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/commands/roles/list.js",
+    "memberof": null,
+    "longname": "src/commands/roles/list.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport { stripIndents } from 'common-tags';\r\nimport ModRole from '../../database/mod-role';\r\nimport * as permissions from '../../permissions';\r\n\r\nexport default {\r\n\tname: 'modroles',\r\n\taliases: ['listmodroles', 'mods'],\r\n\tgroup: 'roles',\r\n\tgroupName: 'list',\r\n\tdescription: 'Lists all moderator roles.',\r\n\tdetails: 'Only administrators may use this command.',\r\n\tserverOnly: true,\r\n\r\n\tisRunnable(message) {\r\n\t\treturn permissions.isAdmin(message.server, message.author);\r\n\t},\r\n\r\n\tasync run(message) {\r\n\t\tconst roles = ModRole.findInServer(message.server);\r\n\t\tif(roles.length > 0) {\r\n\t\t\treturn stripIndents`\r\n\t\t\t\t__**Moderator roles:**__\r\n\t\t\t\t${roles.map(role => `**-** ${role.name} (ID: ${role.id})`).join('\\n')}\r\n\t\t\t`;\r\n\t\t} else {\r\n\t\t\treturn 'There are no moderator roles, therefore moderators are determined by the \"Manage messages\" permission.';\r\n\t\t}\r\n\t}\r\n};\r\n"
+  },
+  {
+    "__docId__": 38,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/config.js",
+    "memberof": null,
+    "longname": "src/config.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "'use babel';\r\n'use strict';\r\n\r\nexport const values = {};\r\nexport default values;\r\n\r\nexport const defaults = {\r\n\tplayingGame: 'Message for help',\r\n\tpaginationItems: 10,\r\n\tautoReconnect: true,\r\n\tstorage: 'bot-storage',\r\n\tupdateCheck: 60,\r\n\tcommandPrefix: '!',\r\n\tcommandEditable: 30,\r\n\tnonCommandEdit: true,\r\n\tlog: 'bot.log',\r\n\tlogMaxSize: 5242880,\r\n\tlogMaxFiles: 5,\r\n\tlogLevel: 'info',\r\n\tconsoleLevel: 'info'\r\n};\r\n\r\nexport function setValues(configObj) {\r\n\tObject.assign(values, configObj);\r\n}\r\n\r\nexport function setDefaults(overwrite = false) {\r\n\tif(overwrite) {\r\n\t\tObject.assign(values, defaults);\r\n\t} else {\r\n\t\tfor(const key of Object.keys(defaults)) {\r\n\t\t\tif(!(key in values)) values[key] = defaults[key];\r\n\t\t}\r\n\t}\r\n}\r\n\r\nexport function loadYargs(yargs) {\r\n\tObject.assign(values, yargs\r\n\t\t// Authentication\r\n\t\t.option('token', {\r\n\t\t\ttype: 'string',\r\n\t\t\talias: 't',\r\n\t\t\tdescribe: 'API token for the bot account',\r\n\t\t\tgroup: 'Authentication:'\r\n\t\t})\r\n\t\t.option('email', {\r\n\t\t\ttype: 'string',\r\n\t\t\talias: 'e',\r\n\t\t\tdescribe: 'Email of the Discord account for the bot to use',\r\n\t\t\tgroup: 'Authentication:'\r\n\t\t})\r\n\t\t.option('password', {\r\n\t\t\ttype: 'string',\r\n\t\t\talias: 'p',\r\n\t\t\tdescribe: 'Password of the Discord account for the bot to use',\r\n\t\t\tgroup: 'Authentication:'\r\n\t\t})\r\n\t\t.implies({ email: 'password', password: 'email' })\r\n\r\n\t\t// General\r\n\t\t.option('owner', {\r\n\t\t\ttype: 'string',\r\n\t\t\talias: 'o',\r\n\t\t\tdescribe: 'Discord user ID of the bot owner',\r\n\t\t\tgroup: 'General:'\r\n\t\t})\r\n\t\t.option('invite', {\r\n\t\t\ttype: 'string',\r\n\t\t\talias: 'i',\r\n\t\t\tdescribe: 'Discord instant invite to a server to contact the owner',\r\n\t\t\tgroup: 'General:'\r\n\t\t})\r\n\t\t.option('playing-game', {\r\n\t\t\ttype: 'string',\r\n\t\t\tdefault: defaults.playingGame,\r\n\t\t\talias: 'g',\r\n\t\t\tdescribe: 'Text to show in the \"Playing...\" status',\r\n\t\t\tgroup: 'General:'\r\n\t\t})\r\n\t\t.option('pagination-items', {\r\n\t\t\ttype: 'number',\r\n\t\t\tdefault: defaults.paginationItems,\r\n\t\t\talias: 'I',\r\n\t\t\tdescribe: 'Number of items per page in paginated commands',\r\n\t\t\tgroup: 'General:'\r\n\t\t})\r\n\t\t.option('auto-reconnect', {\r\n\t\t\ttype: 'boolean',\r\n\t\t\tdefault: defaults.autoReconnect,\r\n\t\t\talias: 'a',\r\n\t\t\tdescribe: 'Whether or not the bot should automatically reconnect when disconnected',\r\n\t\t\tgroup: 'General:'\r\n\t\t})\r\n\t\t.option('storage', {\r\n\t\t\ttype: 'string',\r\n\t\t\tdefault: defaults.storage,\r\n\t\t\talias: 's',\r\n\t\t\tdescribe: 'Path to storage directory',\r\n\t\t\tgroup: 'General:',\r\n\t\t\tnormalize: true\r\n\t\t})\r\n\t\t.option('update-check', {\r\n\t\t\ttype: 'number',\r\n\t\t\tdefault: defaults.updateCheck,\r\n\t\t\talias: 'U',\r\n\t\t\tdescribe: 'How frequently to check for an update (in minutes, use 0 to disable)',\r\n\t\t\tgroup: 'General:'\r\n\t\t})\r\n\r\n\t\t// Commands\r\n\t\t.option('command-prefix', {\r\n\t\t\ttype: 'string',\r\n\t\t\tdefault: defaults.commandPrefix,\r\n\t\t\talias: 'P',\r\n\t\t\tdescribe: 'Default command prefix (blank to use only mentions)',\r\n\t\t\tgroup: 'Commands:'\r\n\t\t})\r\n\t\t.option('command-editable', {\r\n\t\t\ttype: 'number',\r\n\t\t\tdefault: defaults.commandEditable,\r\n\t\t\talias: 'E',\r\n\t\t\tdescribe: 'How long a command message is editable (in seconds, use 0 to disable)',\r\n\t\t\tgroup: 'Commands:'\r\n\t\t})\r\n\t\t.option('non-command-edit', {\r\n\t\t\ttype: 'boolean',\r\n\t\t\tdefault: defaults.nonCommandEdit,\r\n\t\t\talias: 'N',\r\n\t\t\tdescribe: 'Whether or not a non-command message can be edited into a command',\r\n\t\t\tgroup: 'Commands:'\r\n\t\t})\r\n\r\n\t\t// Logging\r\n\t\t.option('log', {\r\n\t\t\ttype: 'string',\r\n\t\t\tdefault: defaults.log,\r\n\t\t\talias: 'l',\r\n\t\t\tdescribe: 'Path to log file',\r\n\t\t\tgroup: 'Logging:',\r\n\t\t\tnormalize: true\r\n\t\t})\r\n\t\t.option('log-max-size', {\r\n\t\t\ttype: 'number',\r\n\t\t\tdefault: defaults.logMaxSize,\r\n\t\t\tdefaultDescription: '5MB',\r\n\t\t\talias: 'S',\r\n\t\t\tdescribe: 'Maximum size of single log file (in bytes)',\r\n\t\t\tgroup: 'Logging:'\r\n\t\t})\r\n\t\t.option('log-max-files', {\r\n\t\t\ttype: 'number',\r\n\t\t\tdefault: defaults.logMaxFiles,\r\n\t\t\talias: 'F',\r\n\t\t\tdescribe: 'Maximum amount of log files to keep',\r\n\t\t\tgroup: 'Logging:'\r\n\t\t})\r\n\t\t.option('log-level', {\r\n\t\t\ttype: 'string',\r\n\t\t\tdefault: defaults.logLevel,\r\n\t\t\talias: 'L',\r\n\t\t\tdescribe: 'Log level to output to the log file (error, warn, info, verbose, debug)',\r\n\t\t\tgroup: 'Logging:'\r\n\t\t})\r\n\t\t.option('console-level', {\r\n\t\t\ttype: 'string',\r\n\t\t\tdefault: defaults.consoleLevel,\r\n\t\t\talias: 'C',\r\n\t\t\tdescribe: 'Log level to output to the console (error, warn, info, verbose, debug)',\r\n\t\t\tgroup: 'Logging:'\r\n\t\t})\r\n\t\t.option('config', {\r\n\t\t\ttype: 'string',\r\n\t\t\talias: 'c',\r\n\t\t\tdescribe: 'Path to JSON/YAML config file',\r\n\t\t\tgroup: 'Special:',\r\n\t\t\tnormalize: true,\r\n\t\t\tconfig: true,\r\n\t\t\tconfigParser: configFile => {\r\n\t\t\t\tconst extension = require('path').extname(configFile).toLowerCase();\r\n\t\t\t\tif(extension === '.json') {\r\n\t\t\t\t\treturn JSON.parse(require('fs').readFileSync(configFile));\r\n\t\t\t\t} else if(extension === '.yml' || extension === '.yaml') {\r\n\t\t\t\t\treturn require('js-yaml').safeLoad(require('fs').readFileSync(configFile));\r\n\t\t\t\t}\r\n\t\t\t\tthrow new Error('Unknown config file type.');\r\n\t\t\t}\r\n\t\t})\r\n\t.argv);\r\n\treturn yargs;\r\n}\r\n"
+  },
+  {
+    "__docId__": 39,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "values",
+    "memberof": "src/config.js",
+    "longname": "src/config.js~values",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/config.js",
+    "importStyle": "{values}",
+    "description": null,
+    "lineNumber": 4,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 40,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "defaults",
+    "memberof": "src/config.js",
+    "longname": "src/config.js~defaults",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/config.js",
+    "importStyle": "{defaults}",
+    "description": null,
+    "lineNumber": 7,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 41,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "setValues",
+    "memberof": "src/config.js",
+    "longname": "src/config.js~setValues",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/config.js",
+    "importStyle": "{setValues}",
+    "description": null,
+    "lineNumber": 23,
+    "undocument": true,
+    "params": [
+      {
+        "name": "configObj",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "generator": false
+  },
+  {
+    "__docId__": 42,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "setDefaults",
+    "memberof": "src/config.js",
+    "longname": "src/config.js~setDefaults",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/config.js",
+    "importStyle": "{setDefaults}",
+    "description": null,
+    "lineNumber": 27,
+    "undocument": true,
+    "params": [
+      {
+        "name": "overwrite",
+        "optional": true,
+        "types": [
+          "boolean"
+        ],
+        "defaultRaw": false,
+        "defaultValue": "false"
+      }
+    ],
+    "generator": false
+  },
+  {
+    "__docId__": 43,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "loadYargs",
+    "memberof": "src/config.js",
+    "longname": "src/config.js~loadYargs",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/config.js",
+    "importStyle": "{loadYargs}",
+    "description": null,
+    "lineNumber": 37,
+    "undocument": true,
+    "params": [
+      {
+        "name": "yargs",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 44,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/database/mod-role.js",
+    "memberof": null,
+    "longname": "src/database/mod-role.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport * as bot from '../';\r\nimport Util from '../util';\r\n\r\nexport default class ModRole {\r\n\tstatic loadDatabase() {\r\n\t\tthis.serversMap = JSON.parse(bot.storage.getItem('mod-roles'));\r\n\t\tif(!this.serversMap) this.serversMap = {};\r\n\t}\r\n\r\n\tstatic saveDatabase() {\r\n\t\tbot.logger.debug('Saving mod roles storage...', this.serversMap);\r\n\t\tbot.storage.setItem('mod-roles', JSON.stringify(this.serversMap));\r\n\t}\r\n\r\n\tstatic save(role) {\r\n\t\tif(!role) throw new Error('A role must be specified.');\r\n\t\tif(!this.serversMap) this.loadDatabase();\r\n\t\tif(!this.serversMap[role.server.id]) this.serversMap[role.server.id] = [];\r\n\t\tconst serverRoles = this.serversMap[role.server.id];\r\n\r\n\t\tif(!serverRoles.includes(role.id)) {\r\n\t\t\tserverRoles.push(role.id);\r\n\t\t\tbot.logger.info('Added new mod role.', this.basicInfo(role));\r\n\t\t\tthis.saveDatabase();\r\n\t\t\treturn true;\r\n\t\t} else {\r\n\t\t\tbot.logger.info('Not adding mod role, because it already exists.', this.basicInfo(role));\r\n\t\t\treturn false;\r\n\t\t}\r\n\t}\r\n\r\n\tstatic delete(role) {\r\n\t\tif(!role) throw new Error('A role must be specified.');\r\n\t\tif(!this.serversMap) this.loadDatabase();\r\n\t\tif(!this.serversMap[role.server.id]) return false;\r\n\t\tconst serverRoles = this.serversMap[role.server.id];\r\n\r\n\t\tconst roleIndex = serverRoles.findIndex(element => element === role.id);\r\n\t\tif(roleIndex >= 0) {\r\n\t\t\tserverRoles.splice(roleIndex, 1);\r\n\t\t\tbot.logger.info('Deleted mod role.', this.basicInfo(role));\r\n\t\t\tthis.saveDatabase();\r\n\t\t\treturn true;\r\n\t\t} else {\r\n\t\t\tbot.logger.info('Not deleting mod role, because it doesn\\'t exist.', this.basicInfo(role));\r\n\t\t\treturn false;\r\n\t\t}\r\n\t}\r\n\r\n\tstatic clearServer(server) {\r\n\t\tif(!server) throw new Error('A server must be specified.');\r\n\t\tif(!this.serversMap) this.loadDatabase();\r\n\t\tdelete this.serversMap[server.id];\r\n\t\tbot.logger.info('Cleared mod roles.', { server: server.name, serverID: server.id });\r\n\t\tthis.saveDatabase();\r\n\t}\r\n\r\n\tstatic findInServer(server, searchString = null) {\r\n\t\tif(!server) throw new Error('A server must be specified.');\r\n\t\tif(!this.serversMap) this.loadDatabase();\r\n\t\tif(!this.serversMap[server.id]) return [];\r\n\r\n\t\t// Find all of the server's roles that match, and filter them to ones that are mod roles\r\n\t\tconst roles = Util.search(server.roles, searchString, { searchExact: false }).filter(role => this.serversMap[server.id].includes(role.id));\r\n\t\treturn Util.search(roles, searchString, { searchInexact: false });\r\n\t}\r\n\r\n\tstatic serverHasAny(server) {\r\n\t\tif(!server) throw new Error('A server must be specified.');\r\n\t\tif(!this.serversMap) this.loadDatabase();\r\n\t\treturn this.serversMap[server.id] && this.serversMap[server.id].length > 0;\r\n\t}\r\n\r\n\tstatic basicInfo(role) {\r\n\t\treturn { id: role.id, name: role.name, server: role.server.name, serverID: role.server.id };\r\n\t}\r\n}\r\n"
+  },
+  {
+    "__docId__": 45,
+    "kind": "class",
+    "static": true,
+    "variation": null,
+    "name": "ModRole",
+    "memberof": "src/database/mod-role.js",
+    "longname": "src/database/mod-role.js~ModRole",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/database/mod-role.js",
+    "importStyle": "ModRole",
+    "description": null,
+    "lineNumber": 7,
+    "undocument": true,
+    "interface": false
+  },
+  {
+    "__docId__": 46,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "loadDatabase",
+    "memberof": "src/database/mod-role.js~ModRole",
+    "longname": "src/database/mod-role.js~ModRole.loadDatabase",
+    "access": null,
+    "description": null,
+    "lineNumber": 8,
+    "undocument": true,
+    "params": [],
+    "generator": false
+  },
+  {
+    "__docId__": 47,
+    "kind": "member",
+    "static": true,
+    "variation": null,
+    "name": "serversMap",
+    "memberof": "src/database/mod-role.js~ModRole",
+    "longname": "src/database/mod-role.js~ModRole.serversMap",
+    "access": null,
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 48,
+    "kind": "member",
+    "static": true,
+    "variation": null,
+    "name": "serversMap",
+    "memberof": "src/database/mod-role.js~ModRole",
+    "longname": "src/database/mod-role.js~ModRole.serversMap",
+    "access": null,
+    "description": null,
+    "lineNumber": 10,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 49,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "saveDatabase",
+    "memberof": "src/database/mod-role.js~ModRole",
+    "longname": "src/database/mod-role.js~ModRole.saveDatabase",
+    "access": null,
+    "description": null,
+    "lineNumber": 13,
+    "undocument": true,
+    "params": [],
+    "generator": false
+  },
+  {
+    "__docId__": 50,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "save",
+    "memberof": "src/database/mod-role.js~ModRole",
+    "longname": "src/database/mod-role.js~ModRole.save",
+    "access": null,
+    "description": null,
+    "lineNumber": 18,
+    "undocument": true,
+    "params": [
+      {
+        "name": "role",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "boolean"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 51,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "delete",
+    "memberof": "src/database/mod-role.js~ModRole",
+    "longname": "src/database/mod-role.js~ModRole.delete",
+    "access": null,
+    "description": null,
+    "lineNumber": 35,
+    "undocument": true,
+    "params": [
+      {
+        "name": "role",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "boolean"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 52,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "clearServer",
+    "memberof": "src/database/mod-role.js~ModRole",
+    "longname": "src/database/mod-role.js~ModRole.clearServer",
+    "access": null,
+    "description": null,
+    "lineNumber": 53,
+    "undocument": true,
+    "params": [
+      {
+        "name": "server",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "generator": false
+  },
+  {
+    "__docId__": 53,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "findInServer",
+    "memberof": "src/database/mod-role.js~ModRole",
+    "longname": "src/database/mod-role.js~ModRole.findInServer",
+    "access": null,
+    "description": null,
+    "lineNumber": 61,
+    "undocument": true,
+    "params": [
+      {
+        "name": "server",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "searchString",
+        "optional": true,
+        "types": [
+          "*"
+        ],
+        "defaultRaw": null,
+        "defaultValue": "null"
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 54,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "serverHasAny",
+    "memberof": "src/database/mod-role.js~ModRole",
+    "longname": "src/database/mod-role.js~ModRole.serverHasAny",
+    "access": null,
+    "description": null,
+    "lineNumber": 71,
+    "undocument": true,
+    "params": [
+      {
+        "name": "server",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 55,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "basicInfo",
+    "memberof": "src/database/mod-role.js~ModRole",
+    "longname": "src/database/mod-role.js~ModRole.basicInfo",
+    "access": null,
+    "description": null,
+    "lineNumber": 77,
+    "undocument": true,
+    "params": [
+      {
+        "name": "role",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 56,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/database/setting.js",
+    "memberof": null,
+    "longname": "src/database/setting.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport bot from '../';\r\n\r\nexport default class Setting {\r\n\tconstructor(server, key, value) {\r\n\t\tif(!key) throw new Error('Setting key must be specified.');\r\n\t\tthis.key = key;\r\n\t\tthis.value = value;\r\n\t\tthis.server = server ? server.id ? server.id : server : 'global';\r\n\t}\r\n\r\n\tstatic loadDatabase() {\r\n\t\tthis.serversMap = JSON.parse(bot.storage.getItem('settings'));\r\n\t\tif(!this.serversMap) this.serversMap = {};\r\n\t}\r\n\r\n\tstatic saveDatabase() {\r\n\t\tbot.logger.debug('Saving settings storage...', this.serversMap);\r\n\t\tbot.storage.setItem('settings', JSON.stringify(this.serversMap));\r\n\t}\r\n\r\n\tstatic save(setting) {\r\n\t\tif(!setting) throw new Error('A setting must be specified.');\r\n\t\tif(!this.serversMap) this.loadDatabase();\r\n\t\tif(!this.serversMap[setting.server]) this.serversMap[setting.server] = {};\r\n\t\tthis.serversMap[setting.server][setting.key] = setting.value;\r\n\t\tbot.logger.info('Saved setting.', setting);\r\n\t\tthis.saveDatabase();\r\n\t\treturn true;\r\n\t}\r\n\r\n\tstatic delete(setting, server = null) {\r\n\t\t[setting, server] = this.getSettingKeyAndServer(setting, server);\r\n\t\tif(!this.serversMap) this.loadDatabase();\r\n\t\tif(!this.serversMap[server]) return false;\r\n\t\tif(typeof this.serversMap[server][setting] === 'undefined') return false;\r\n\t\tdelete this.serversMap[server][setting];\r\n\t\tbot.logger.info('Deleted setting.', { key: setting, server: server });\r\n\t\tthis.saveDatabase();\r\n\t\treturn true;\r\n\t}\r\n\r\n\tstatic get(setting, server = null) {\r\n\t\t[setting, server] = this.getSettingKeyAndServer(setting, server);\r\n\t\tif(!this.serversMap) this.loadDatabase();\r\n\t\tif(!this.serversMap[server]) return null;\r\n\t\treturn new Setting(server, setting, this.serversMap[server][setting]);\r\n\t}\r\n\r\n\tstatic getValue(setting, defaultValue = null, server = null) {\r\n\t\t[setting, server] = this.getSettingKeyAndServer(setting, server);\r\n\t\tif(!this.serversMap) this.loadDatabase();\r\n\t\tif(!this.serversMap[server]) return defaultValue;\r\n\t\treturn setting in this.serversMap[server] ? this.serversMap[server][setting] : defaultValue;\r\n\t}\r\n\r\n\r\n\tstatic getSettingKeyAndServer(setting, server) {\r\n\t\tif(setting instanceof Setting) {\r\n\t\t\treturn [setting.key, !server ? setting.server : server.id ? server.id : server];\r\n\t\t} else {\r\n\t\t\tif(!setting) throw new Error('A setting or a key must be specified.');\r\n\t\t\treturn [setting, server ? server.id ? server.id : server : 'global'];\r\n\t\t}\r\n\t}\r\n}\r\n"
+  },
+  {
+    "__docId__": 57,
+    "kind": "class",
+    "static": true,
+    "variation": null,
+    "name": "Setting",
+    "memberof": "src/database/setting.js",
+    "longname": "src/database/setting.js~Setting",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/database/setting.js",
+    "importStyle": "Setting",
+    "description": null,
+    "lineNumber": 6,
+    "undocument": true,
+    "interface": false
+  },
+  {
+    "__docId__": 58,
+    "kind": "constructor",
+    "static": false,
+    "variation": null,
+    "name": "constructor",
+    "memberof": "src/database/setting.js~Setting",
+    "longname": "src/database/setting.js~Setting#constructor",
+    "access": null,
+    "description": null,
+    "lineNumber": 7,
+    "undocument": true,
+    "params": [
+      {
+        "name": "server",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "key",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "value",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "generator": false
+  },
+  {
+    "__docId__": 59,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "key",
+    "memberof": "src/database/setting.js~Setting",
+    "longname": "src/database/setting.js~Setting#key",
+    "access": null,
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 60,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "value",
+    "memberof": "src/database/setting.js~Setting",
+    "longname": "src/database/setting.js~Setting#value",
+    "access": null,
+    "description": null,
+    "lineNumber": 10,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 61,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "server",
+    "memberof": "src/database/setting.js~Setting",
+    "longname": "src/database/setting.js~Setting#server",
+    "access": null,
+    "description": null,
+    "lineNumber": 11,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 62,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "loadDatabase",
+    "memberof": "src/database/setting.js~Setting",
+    "longname": "src/database/setting.js~Setting.loadDatabase",
+    "access": null,
+    "description": null,
+    "lineNumber": 14,
+    "undocument": true,
+    "params": [],
+    "generator": false
+  },
+  {
+    "__docId__": 63,
+    "kind": "member",
+    "static": true,
+    "variation": null,
+    "name": "serversMap",
+    "memberof": "src/database/setting.js~Setting",
+    "longname": "src/database/setting.js~Setting.serversMap",
+    "access": null,
+    "description": null,
+    "lineNumber": 15,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 64,
+    "kind": "member",
+    "static": true,
+    "variation": null,
+    "name": "serversMap",
+    "memberof": "src/database/setting.js~Setting",
+    "longname": "src/database/setting.js~Setting.serversMap",
+    "access": null,
+    "description": null,
+    "lineNumber": 16,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 65,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "saveDatabase",
+    "memberof": "src/database/setting.js~Setting",
+    "longname": "src/database/setting.js~Setting.saveDatabase",
+    "access": null,
+    "description": null,
+    "lineNumber": 19,
+    "undocument": true,
+    "params": [],
+    "generator": false
+  },
+  {
+    "__docId__": 66,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "save",
+    "memberof": "src/database/setting.js~Setting",
+    "longname": "src/database/setting.js~Setting.save",
+    "access": null,
+    "description": null,
+    "lineNumber": 24,
+    "undocument": true,
+    "params": [
+      {
+        "name": "setting",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "boolean"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 67,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "delete",
+    "memberof": "src/database/setting.js~Setting",
+    "longname": "src/database/setting.js~Setting.delete",
+    "access": null,
+    "description": null,
+    "lineNumber": 34,
+    "undocument": true,
+    "params": [
+      {
+        "name": "setting",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "server",
+        "optional": true,
+        "types": [
+          "*"
+        ],
+        "defaultRaw": null,
+        "defaultValue": "null"
+      }
+    ],
+    "return": {
+      "types": [
+        "boolean"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 68,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "get",
+    "memberof": "src/database/setting.js~Setting",
+    "longname": "src/database/setting.js~Setting.get",
+    "access": null,
+    "description": null,
+    "lineNumber": 45,
+    "undocument": true,
+    "params": [
+      {
+        "name": "setting",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "server",
+        "optional": true,
+        "types": [
+          "*"
+        ],
+        "defaultRaw": null,
+        "defaultValue": "null"
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 69,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "getValue",
+    "memberof": "src/database/setting.js~Setting",
+    "longname": "src/database/setting.js~Setting.getValue",
+    "access": null,
+    "description": null,
+    "lineNumber": 52,
+    "undocument": true,
+    "params": [
+      {
+        "name": "setting",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "defaultValue",
+        "optional": true,
+        "types": [
+          "*"
+        ],
+        "defaultRaw": null,
+        "defaultValue": "null"
+      },
+      {
+        "name": "server",
+        "optional": true,
+        "types": [
+          "*"
+        ],
+        "defaultRaw": null,
+        "defaultValue": "null"
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 70,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "getSettingKeyAndServer",
+    "memberof": "src/database/setting.js~Setting",
+    "longname": "src/database/setting.js~Setting.getSettingKeyAndServer",
+    "access": null,
+    "description": null,
+    "lineNumber": 60,
+    "undocument": true,
+    "params": [
+      {
+        "name": "setting",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "server",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 71,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/database/usable-channel.js",
+    "memberof": null,
+    "longname": "src/database/usable-channel.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport bot from '../';\r\nimport Util from '../util';\r\n\r\nexport default class UsableChannel {\r\n\tstatic loadDatabase() {\r\n\t\tthis.serversMap = JSON.parse(bot.storage.getItem('allowed-channels'));\r\n\t\tif(!this.serversMap) this.serversMap = {};\r\n\t}\r\n\r\n\tstatic saveDatabase() {\r\n\t\tbot.logger.debug('Saving channels storage...', this.serversMap);\r\n\t\tbot.storage.setItem('allowed-channels', JSON.stringify(this.serversMap));\r\n\t}\r\n\r\n\tstatic save(channel) {\r\n\t\tif(!channel) throw new Error('A channel must be specified.');\r\n\t\tif(!this.serversMap) this.loadDatabase();\r\n\t\tif(!this.serversMap[channel.server.id]) this.serversMap[channel.server.id] = [];\r\n\t\tconst serverChannels = this.serversMap[channel.server.id];\r\n\r\n\t\tif(!serverChannels.includes(channel.id)) {\r\n\t\t\tserverChannels.push(channel.id);\r\n\t\t\tbot.logger.info('Added new channel.', this.basicInfo(channel));\r\n\t\t\tthis.saveDatabase();\r\n\t\t\treturn true;\r\n\t\t} else {\r\n\t\t\tbot.logger.info('Not adding channel, because it already exists.', this.basicInfo(channel));\r\n\t\t\treturn false;\r\n\t\t}\r\n\t}\r\n\r\n\tstatic delete(channel) {\r\n\t\tif(!channel) throw new Error('A channel must be specified.');\r\n\t\tif(!this.serversMap) this.loadDatabase();\r\n\t\tif(!this.serversMap[channel.server.id]) return false;\r\n\t\tconst serverChannels = this.serversMap[channel.server.id];\r\n\r\n\t\tconst roleIndex = serverChannels.findIndex(element => element === channel.id);\r\n\t\tif(roleIndex >= 0) {\r\n\t\t\tserverChannels.splice(roleIndex, 1);\r\n\t\t\tbot.logger.info('Deleted channel.', this.basicInfo(channel));\r\n\t\t\tthis.saveDatabase();\r\n\t\t\treturn true;\r\n\t\t} else {\r\n\t\t\tbot.logger.info('Not deleting channel, because it doesn\\'t exist.', this.basicInfo(channel));\r\n\t\t\treturn false;\r\n\t\t}\r\n\t}\r\n\r\n\tstatic clearServer(server) {\r\n\t\tif(!server) throw new Error('A server must be specified.');\r\n\t\tif(!this.serversMap) this.loadDatabase();\r\n\t\tdelete this.serversMap[server.id];\r\n\t\tbot.logger.info('Cleared channels.', { server: server.name, serverID: server.id });\r\n\t\tthis.saveDatabase();\r\n\t}\r\n\r\n\tstatic findInServer(server, searchString = null) {\r\n\t\tif(!server) throw new Error('A server must be specified.');\r\n\t\tif(!this.serversMap) this.loadDatabase();\r\n\t\tif(!this.serversMap[server.id]) return [];\r\n\r\n\t\t// Find all of the server's channels that match, and filter them to ones that are usable channels\r\n\t\tconst channels = Util.search(server.channels.getAll('type', 'text'), searchString, { searchExact: false }).filter(channel => this.serversMap[server.id].includes(channel.id));\r\n\t\treturn Util.search(channels, searchString, { searchInexact: false });\r\n\t}\r\n\r\n\tstatic serverHasAny(server) {\r\n\t\tif(!server) throw new Error('A server must be specified.');\r\n\t\tif(!this.serversMap) this.loadDatabase();\r\n\t\treturn this.serversMap[server.id] && this.serversMap[server.id].length > 0;\r\n\t}\r\n\r\n\tstatic serverHas(server, channel) {\r\n\t\tif(!server || !channel) throw new Error('A server and channel must be specified.');\r\n\t\tif(!this.serversMap) this.loadDatabase();\r\n\t\treturn this.serversMap[server.id] && this.serversMap[server.id].includes(channel.id);\r\n\t}\r\n\r\n\tstatic basicInfo(channel) {\r\n\t\treturn { id: channel.id, name: channel.name, server: channel.server.name, serverID: channel.server.id };\r\n\t}\r\n}\r\n"
+  },
+  {
+    "__docId__": 72,
+    "kind": "class",
+    "static": true,
+    "variation": null,
+    "name": "UsableChannel",
+    "memberof": "src/database/usable-channel.js",
+    "longname": "src/database/usable-channel.js~UsableChannel",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/database/usable-channel.js",
+    "importStyle": "UsableChannel",
+    "description": null,
+    "lineNumber": 7,
+    "undocument": true,
+    "interface": false
+  },
+  {
+    "__docId__": 73,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "loadDatabase",
+    "memberof": "src/database/usable-channel.js~UsableChannel",
+    "longname": "src/database/usable-channel.js~UsableChannel.loadDatabase",
+    "access": null,
+    "description": null,
+    "lineNumber": 8,
+    "undocument": true,
+    "params": [],
+    "generator": false
+  },
+  {
+    "__docId__": 74,
+    "kind": "member",
+    "static": true,
+    "variation": null,
+    "name": "serversMap",
+    "memberof": "src/database/usable-channel.js~UsableChannel",
+    "longname": "src/database/usable-channel.js~UsableChannel.serversMap",
+    "access": null,
+    "description": null,
+    "lineNumber": 9,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 75,
+    "kind": "member",
+    "static": true,
+    "variation": null,
+    "name": "serversMap",
+    "memberof": "src/database/usable-channel.js~UsableChannel",
+    "longname": "src/database/usable-channel.js~UsableChannel.serversMap",
+    "access": null,
+    "description": null,
+    "lineNumber": 10,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 76,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "saveDatabase",
+    "memberof": "src/database/usable-channel.js~UsableChannel",
+    "longname": "src/database/usable-channel.js~UsableChannel.saveDatabase",
+    "access": null,
+    "description": null,
+    "lineNumber": 13,
+    "undocument": true,
+    "params": [],
+    "generator": false
+  },
+  {
+    "__docId__": 77,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "save",
+    "memberof": "src/database/usable-channel.js~UsableChannel",
+    "longname": "src/database/usable-channel.js~UsableChannel.save",
+    "access": null,
+    "description": null,
+    "lineNumber": 18,
+    "undocument": true,
+    "params": [
+      {
+        "name": "channel",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "boolean"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 78,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "delete",
+    "memberof": "src/database/usable-channel.js~UsableChannel",
+    "longname": "src/database/usable-channel.js~UsableChannel.delete",
+    "access": null,
+    "description": null,
+    "lineNumber": 35,
+    "undocument": true,
+    "params": [
+      {
+        "name": "channel",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "boolean"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 79,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "clearServer",
+    "memberof": "src/database/usable-channel.js~UsableChannel",
+    "longname": "src/database/usable-channel.js~UsableChannel.clearServer",
+    "access": null,
+    "description": null,
+    "lineNumber": 53,
+    "undocument": true,
+    "params": [
+      {
+        "name": "server",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "generator": false
+  },
+  {
+    "__docId__": 80,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "findInServer",
+    "memberof": "src/database/usable-channel.js~UsableChannel",
+    "longname": "src/database/usable-channel.js~UsableChannel.findInServer",
+    "access": null,
+    "description": null,
+    "lineNumber": 61,
+    "undocument": true,
+    "params": [
+      {
+        "name": "server",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "searchString",
+        "optional": true,
+        "types": [
+          "*"
+        ],
+        "defaultRaw": null,
+        "defaultValue": "null"
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 81,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "serverHasAny",
+    "memberof": "src/database/usable-channel.js~UsableChannel",
+    "longname": "src/database/usable-channel.js~UsableChannel.serverHasAny",
+    "access": null,
+    "description": null,
+    "lineNumber": 71,
+    "undocument": true,
+    "params": [
+      {
+        "name": "server",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 82,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "serverHas",
+    "memberof": "src/database/usable-channel.js~UsableChannel",
+    "longname": "src/database/usable-channel.js~UsableChannel.serverHas",
+    "access": null,
+    "description": null,
+    "lineNumber": 77,
+    "undocument": true,
+    "params": [
+      {
+        "name": "server",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "channel",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 83,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "basicInfo",
+    "memberof": "src/database/usable-channel.js~UsableChannel",
+    "longname": "src/database/usable-channel.js~UsableChannel.basicInfo",
+    "access": null,
+    "description": null,
+    "lineNumber": 83,
+    "undocument": true,
+    "params": [
+      {
+        "name": "channel",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 84,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/errors/command-format.js",
+    "memberof": null,
+    "longname": "src/errors/command-format.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport FriendlyError from './friendly';\r\nimport Util from '../util';\r\n\r\nexport default class CommandFormatError extends FriendlyError {\r\n\tconstructor(command, server = null) {\r\n\t\tsuper(`Invalid command format. Use ${Util.usage(`help ${command.name}`, server)} for information.`);\r\n\t\tthis.name = 'CommandFormatError';\r\n\t}\r\n}\r\n"
+  },
+  {
+    "__docId__": 85,
+    "kind": "class",
+    "static": true,
+    "variation": null,
+    "name": "CommandFormatError",
+    "memberof": "src/errors/command-format.js",
+    "longname": "src/errors/command-format.js~CommandFormatError",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/errors/command-format.js",
+    "importStyle": "CommandFormatError",
+    "description": null,
+    "lineNumber": 7,
+    "undocument": true,
+    "interface": false,
+    "extends": [
+      "src/errors/friendly.js~FriendlyError"
+    ]
+  },
+  {
+    "__docId__": 86,
+    "kind": "constructor",
+    "static": false,
+    "variation": null,
+    "name": "constructor",
+    "memberof": "src/errors/command-format.js~CommandFormatError",
+    "longname": "src/errors/command-format.js~CommandFormatError#constructor",
+    "access": null,
+    "description": null,
+    "lineNumber": 8,
+    "undocument": true,
+    "params": [
+      {
+        "name": "command",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "server",
+        "optional": true,
+        "types": [
+          "*"
+        ],
+        "defaultRaw": null,
+        "defaultValue": "null"
+      }
+    ],
+    "generator": false
+  },
+  {
+    "__docId__": 87,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "name",
+    "memberof": "src/errors/command-format.js~CommandFormatError",
+    "longname": "src/errors/command-format.js~CommandFormatError#name",
+    "access": null,
+    "description": null,
+    "lineNumber": 10,
+    "undocument": true,
+    "type": {
+      "types": [
+        "string"
+      ]
+    }
+  },
+  {
+    "__docId__": 88,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/errors/friendly.js",
+    "memberof": null,
+    "longname": "src/errors/friendly.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "'use babel';\r\n'use strict';\r\n\r\nexport default class FriendlyError extends Error {\r\n\tconstructor(message) {\r\n\t\tsuper(message);\r\n\t\tthis.name = 'FriendlyError';\r\n\t}\r\n}\r\n"
+  },
+  {
+    "__docId__": 89,
+    "kind": "class",
+    "static": true,
+    "variation": null,
+    "name": "FriendlyError",
+    "memberof": "src/errors/friendly.js",
+    "longname": "src/errors/friendly.js~FriendlyError",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/errors/friendly.js",
+    "importStyle": "FriendlyError",
+    "description": null,
+    "lineNumber": 4,
+    "undocument": true,
+    "interface": false,
+    "extends": [
+      "Error"
+    ]
+  },
+  {
+    "__docId__": 90,
+    "kind": "constructor",
+    "static": false,
+    "variation": null,
+    "name": "constructor",
+    "memberof": "src/errors/friendly.js~FriendlyError",
+    "longname": "src/errors/friendly.js~FriendlyError#constructor",
+    "access": null,
+    "description": null,
+    "lineNumber": 5,
+    "undocument": true,
+    "params": [
+      {
+        "name": "message",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "generator": false
+  },
+  {
+    "__docId__": 91,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "name",
+    "memberof": "src/errors/friendly.js~FriendlyError",
+    "longname": "src/errors/friendly.js~FriendlyError#name",
+    "access": null,
+    "description": null,
+    "lineNumber": 7,
+    "undocument": true,
+    "type": {
+      "types": [
+        "string"
+      ]
+    }
+  },
+  {
+    "__docId__": 92,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/index.js",
+    "memberof": null,
+    "longname": "src/index.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport Discord from 'discord.js';\r\nimport { LocalStorage } from 'node-localstorage';\r\nimport winston from 'winston';\r\nimport * as config from './config';\r\nimport version from './version';\r\nimport * as registry from './commands/registry';\r\nimport * as dispatcher from './commands/dispatcher';\r\nimport Setting from './database/setting';\r\nimport ModRole from './database/mod-role';\r\nimport UsableChannel from './database/usable-channel';\r\nimport * as permissions from './permissions';\r\nimport FriendlyError from './errors/friendly';\r\nimport CommandFormatError from './errors/command-format';\r\nimport Util from './util';\r\n\r\nimport HelpCommand from './commands/general/help';\r\nimport AboutCommand from './commands/general/about';\r\nimport PrefixCommand from './commands/general/prefix';\r\nimport EvalCommand from './commands/general/eval';\r\nimport ListRolesCommand from './commands/general/list-roles';\r\nimport ListModRolesCommand from './commands/roles/list';\r\nimport AddModRoleCommand from './commands/roles/add';\r\nimport DeleteModRoleCommand from './commands/roles/delete';\r\nimport ClearModRolesCommand from './commands/roles/clear';\r\nimport ListAllowedChannelsCommand from './commands/channels/list';\r\nimport AllowChannelCommand from './commands/channels/allow';\r\nimport DisallowChannelCommand from './commands/channels/disallow';\r\nimport ClearAllowedChannelsCommand from './commands/channels/clear';\r\n\r\nexport const serverCommandPatterns = {};\r\nexport const unprefixedCommandPattern = /^([^\\s]+)/i;\r\n\r\nexport const graf = {\r\n\tclient: null,\r\n\tversion: version,\r\n\tregistry: registry,\r\n\tdispatcher: dispatcher,\r\n\tpermissions: permissions,\r\n\tutil: Util,\r\n\terrors: {\r\n\t\tFriendlyError: FriendlyError,\r\n\t\tCommandFormatError: CommandFormatError\r\n\t},\r\n\r\n\tSetting: Setting,\r\n\tModRole: ModRole,\r\n\tUsableChannel: UsableChannel,\r\n\r\n\tcreateClient(configObj) {\r\n\t\tconfig.setValues(configObj);\r\n\r\n\t\t// Output safe config\r\n\t\tconst debugConfig = Object.assign({}, config.values);\r\n\t\tif(debugConfig.email) debugConfig.email = '--snip--';\r\n\t\tif(debugConfig.password) debugConfig.password = '--snip--';\r\n\t\tif(debugConfig.token) debugConfig.token = '--snip--';\r\n\t\tfor(const key of Object.keys(debugConfig)) if(key.length === 1 || key.includes('-')) delete debugConfig[key];\r\n\t\tthis.logger.debug('Configuration:', debugConfig);\r\n\r\n\t\t// Verify some stuff\r\n\t\tif(!config.values.token && (!config.values.email || !config.values.password)) throw new Error('Invalid credentials; either \"token\" or both \"email\" and \"password\" must be specified on the config.');\r\n\t\tif(!config.values.botName) throw new Error('\"botName\" must be specified on the config.');\r\n\t\tif(!config.values.botVersion) throw new Error('\"botVersion\" must be specified on the config.');\r\n\r\n\t\t// Create client\r\n\t\tconst clientOptions = { autoReconnect: config.values.autoReconnect, forceFetchUsers: true, disableEveryone: config.values.disableEveryone };\r\n\t\tconst client = new Discord.Client(clientOptions);\r\n\t\tthis.logger.info('Client created.', clientOptions);\r\n\t\tclient.on('error', err => { this.logger.error(err); });\r\n\t\tclient.on('warn', err => { this.logger.warn(err); });\r\n\t\tclient.on('debug', err => { this.logger.debug(err); });\r\n\t\tclient.on('disconnected', () => { this.logger.error('Disconnected.'); });\r\n\t\tclient.on('ready', () => {\r\n\t\t\tthis.logger.info(`Bot is ready; logged in as ${client.user.username}#${client.user.discriminator} (ID: ${client.user.id})`);\r\n\t\t\tif(config.values.playingGame) client.setPlayingGame(config.values.playingGame);\r\n\t\t});\r\n\r\n\t\t// Set up command handling\r\n\t\tclient.on('message', message => {\r\n\t\t\tif(message.author.equals(client.user)) return;\r\n\t\t\tdispatcher.handleMessage(message).catch(err => { this.logger.error(err); });\r\n\t\t});\r\n\t\tclient.on('messageUpdated', (oldMessage, newMessage) => {\r\n\t\t\tif(newMessage.author.equals(client.user)) return;\r\n\t\t\tdispatcher.handleMessage(newMessage, oldMessage).catch(err => { this.logger.error(err); });\r\n\t\t});\r\n\r\n\t\t// Log in\r\n\t\tconst loginCallback = err => { if(err) this.logger.error('Failed to login.', err); };\r\n\t\tif(config.values.token) {\r\n\t\t\tthis.logger.info('Logging in with token...');\r\n\t\t\tclient.loginWithToken(config.values.token, config.values.email, config.values.password, loginCallback);\r\n\t\t} else {\r\n\t\t\tthis.logger.info('Logging in with email and password...');\r\n\t\t\tclient.login(config.values.email, config.values.password, loginCallback);\r\n\t\t}\r\n\r\n\t\t// Check for updates now and at an interval\r\n\t\tif(config.values.updatePackageURL) {\r\n\t\t\tUtil._checkForUpdate();\r\n\t\t\tif(config.values.updateCheck > 0) setInterval(Util._checkForUpdate, config.values.updateCheck * 60 * 1000);\r\n\t\t}\r\n\r\n\t\tthis.client = client;\r\n\t\treturn client;\r\n\t},\r\n\r\n\tregisterCommands(commands) {\r\n\t\tfor(const command of commands) this.registry.register(command);\r\n\t},\r\n\r\n\tnameGroups(groups) {\r\n\t\tfor(const group of groups) this.registry.nameGroup(...group);\r\n\t},\r\n\r\n\tregisterDefaultCommands() {\r\n\t\tthis.registerCommands([\r\n\t\t\tHelpCommand,\r\n\t\t\tAboutCommand,\r\n\t\t\tPrefixCommand,\r\n\t\t\tEvalCommand,\r\n\t\t\tListRolesCommand,\r\n\t\t\tListModRolesCommand,\r\n\t\t\tAddModRoleCommand,\r\n\t\t\tDeleteModRoleCommand,\r\n\t\t\tClearModRolesCommand,\r\n\t\t\tListAllowedChannelsCommand,\r\n\t\t\tAllowChannelCommand,\r\n\t\t\tDisallowChannelCommand,\r\n\t\t\tClearAllowedChannelsCommand\r\n\t\t]);\r\n\t\tthis.nameGroups([\r\n\t\t\t['general', 'General'],\r\n\t\t\t['roles', 'Roles'],\r\n\t\t\t['channels', 'Channels']\r\n\t\t]);\r\n\t},\r\n\r\n\tget config() {\r\n\t\tif(!this._config) {\r\n\t\t\tconfig.setDefaults();\r\n\t\t\tthis._config = config;\r\n\t\t}\r\n\t\treturn this._config;\r\n\t},\r\n\r\n\tget logger() {\r\n\t\tif(!this._logger) {\r\n\t\t\tthis._logger = new winston.Logger({\r\n\t\t\t\ttransports: [\r\n\t\t\t\t\tnew winston.transports.Console({\r\n\t\t\t\t\t\tlevel: config.values.consoleLevel,\r\n\t\t\t\t\t\tcolorize: true,\r\n\t\t\t\t\t\ttimestamp: true,\r\n\t\t\t\t\t\thandleExceptions: true,\r\n\t\t\t\t\t\thumanReadableUnhandledException: true\r\n\t\t\t\t\t})\r\n\t\t\t\t]\r\n\t\t\t});\r\n\t\t\tif(config.values.log) {\r\n\t\t\t\tthis._logger.add(winston.transports.File, {\r\n\t\t\t\t\tlevel: config.values.logLevel,\r\n\t\t\t\t\tfilename: config.values.log,\r\n\t\t\t\t\tmaxsize: config.values.logMaxSize,\r\n\t\t\t\t\tmaxFiles: config.values.logMaxFiles,\r\n\t\t\t\t\ttailable: true,\r\n\t\t\t\t\tjson: false,\r\n\t\t\t\t\thandleExceptions: true,\r\n\t\t\t\t\thumanReadableUnhandledException: true\r\n\t\t\t\t});\r\n\t\t\t}\r\n\t\t}\r\n\r\n\t\treturn this._logger;\r\n\t},\r\n\r\n\tget storage() {\r\n\t\tif(!this._storage) this._storage = new LocalStorage(config.values.storage);\r\n\t\treturn this._storage;\r\n\t}\r\n};\r\nexport default graf;\r\n"
+  },
+  {
+    "__docId__": 93,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "serverCommandPatterns",
+    "memberof": "src/index.js",
+    "longname": "src/index.js~serverCommandPatterns",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/index.js",
+    "importStyle": "{serverCommandPatterns}",
+    "description": null,
+    "lineNumber": 33,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 94,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "unprefixedCommandPattern",
+    "memberof": "src/index.js",
+    "longname": "src/index.js~unprefixedCommandPattern",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/index.js",
+    "importStyle": "{unprefixedCommandPattern}",
+    "description": null,
+    "lineNumber": 34,
+    "undocument": true,
+    "type": {
+      "types": [
+        "object"
+      ]
+    }
+  },
+  {
+    "__docId__": 95,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "graf",
+    "memberof": "src/index.js",
+    "longname": "src/index.js~graf",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/index.js",
+    "importStyle": "{graf}",
+    "description": null,
+    "lineNumber": 36,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 96,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/permissions.js",
+    "memberof": null,
+    "longname": "src/permissions.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport bot from '../';\r\nimport config from './config';\r\nimport ModRole from './database/mod-role';\r\n\r\nexport function isMod(server, user) {\r\n\t[server, user] = resolve(server, user);\r\n\tif(user.id === config.owner) return true;\r\n\tconst userRoles = server.rolesOfUser(user);\r\n\tif(userRoles.some(role => role.hasPermission('administrator'))) return true;\r\n\tif(!ModRole.serverHasAny(server)) return userRoles.some(role => role.hasPermission('manageMessages'));\r\n\treturn ModRole.findInServer(server).some(element => userRoles.some(element2 => element.id === element2.id));\r\n}\r\n\r\nexport function isAdmin(server, user) {\r\n\t[server, user] = resolve(server, user);\r\n\tif(user.id === config.owner) return true;\r\n\treturn server.rolesOfUser(user).some(role => role.hasPermission('administrator'));\r\n}\r\n\r\nfunction resolve(server, user) {\r\n\tif(!server || !user) throw new Error('A server and a user must be specified.');\r\n\tif(typeof server === 'string') server = bot.client.servers.get('id', server);\r\n\tif(!server || !server.id) throw new Error('Unable to identify server.');\r\n\tif(typeof user === 'string') user = server.members.get('id', user);\r\n\tif(!user || !user.id) throw new Error('Unable to identify user.');\r\n\treturn [server, user];\r\n}\r\n"
+  },
+  {
+    "__docId__": 97,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "isMod",
+    "memberof": "src/permissions.js",
+    "longname": "src/permissions.js~isMod",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/permissions.js",
+    "importStyle": "{isMod}",
+    "description": null,
+    "lineNumber": 8,
+    "undocument": true,
+    "params": [
+      {
+        "name": "server",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "user",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 98,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "isAdmin",
+    "memberof": "src/permissions.js",
+    "longname": "src/permissions.js~isAdmin",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/permissions.js",
+    "importStyle": "{isAdmin}",
+    "description": null,
+    "lineNumber": 17,
+    "undocument": true,
+    "params": [
+      {
+        "name": "server",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "user",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 99,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "resolve",
+    "memberof": "src/permissions.js",
+    "longname": "src/permissions.js~resolve",
+    "access": null,
+    "export": false,
+    "importPath": "discord-graf/src/permissions.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 23,
+    "undocument": true,
+    "params": [
+      {
+        "name": "server",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "user",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 100,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/util.js",
+    "memberof": null,
+    "longname": "src/util.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport escapeRegex from 'escape-string-regexp';\r\nimport request from 'request';\r\nimport semver from 'semver';\r\nimport bot from '.';\r\nimport config from './config';\r\nimport Setting from './database/setting';\r\n\r\nconst nbsp = '\\xa0';\r\nconst spacePattern = / /g;\r\nconst patterns = {\r\n\tuserID: /^(?:<@!?)?([0-9]+)>?$/,\r\n\troleID: /^(?:<@&)?([0-9]+)>?$/,\r\n\tchannelID: /^(?:<#)?([0-9]+)>?$/\r\n};\r\n\r\nexport default class Util {\r\n\t/**\r\n\t * Build a command usage string\r\n\t * @param {string} command - The short command string (ex. \"roll d20\")\r\n\t * @param {?Server} [server=null] - The Discord.js Server instance of the server to use the prefix of\r\n\t * @param {boolean} [onlyMention=false] - Whether or not the usage string should only show the mention form\r\n\t * @return {string} The command usage string\r\n\t */\r\n\tstatic usage(command, server = null, onlyMention = false) {\r\n\t\tconst nbcmd = this.nbsp(command);\r\n\t\tif(!server && !onlyMention) return `\\`${nbcmd}\\``;\r\n\t\tlet prefixAddon;\r\n\t\tif(!onlyMention) {\r\n\t\t\tlet prefix = this.nbsp(Setting.getValue('command-prefix', config.commandPrefix, server));\r\n\t\t\tif(prefix.length > 1) prefix += '\\xa0';\r\n\t\t\tprefixAddon = prefix ? `\\`${prefix}${nbcmd}\\` or ` : '';\r\n\t\t}\r\n\t\treturn `${prefixAddon ? prefixAddon : ''}\\`@${this.nbsp(bot.client.user.name)}#${bot.client.user.discriminator}\\xa0${nbcmd}\\``;\r\n\t}\r\n\r\n\t/**\r\n\t * Build a disambiguation list - useful for telling a user to be more specific when finding partial matches from a command\r\n\t * @param {Object[]} items - An array of items to make the disambiguation list for\r\n\t * @param {string} label - The text to refer to the items as (ex. \"characters\")\r\n\t * @param {string} [property=name] - The property on items to display in the list\r\n\t * @return {string} The disambiguation list\r\n\t */\r\n\tstatic disambiguation(items, label, property = 'name') {\r\n\t\tconst itemList = items.map(item => `\"${this.nbsp(property ? item[property] : item)}\"`).join(',   ');\r\n\t\treturn `Multiple ${label} found, please be more specific: ${itemList}`;\r\n\t}\r\n\r\n\t/**\r\n\t * Paginate an array of items\r\n\t * @param {Object[]} items - An array of items to paginate\r\n\t * @param {number} [page=1] - The page to select\r\n\t * @param {number} [pageLength=10] - The number of items per page\r\n\t * @return {Object} The resulting paginated object\r\n\t * @property {Object[]} items - The chunk of items for the current page\r\n\t * @property {number} page - The current page\r\n\t * @property {number} maxPage - The maximum page\r\n\t * @property {number} pageLength - The numer of items per page\r\n\t * @property {string} pageText - The current page string (\"page x of y\")\r\n\t */\r\n\tstatic paginate(items, page = 1, pageLength = 10) {\r\n\t\tconst maxPage = Math.ceil(items.length / pageLength);\r\n\t\tif(page < 1) page = 1;\r\n\t\tif(page > maxPage) page = maxPage;\r\n\t\tlet startIndex = (page - 1) * pageLength;\r\n\t\treturn {\r\n\t\t\titems: items.length > pageLength ? items.slice(startIndex, startIndex + pageLength) : items,\r\n\t\t\tpage: page,\r\n\t\t\tmaxPage: maxPage,\r\n\t\t\tpageLength: pageLength,\r\n\t\t\tpageText: `page ${page} of ${maxPage}`\r\n\t\t};\r\n\t}\r\n\r\n\t/**\r\n\t * Search for matches in a list of items\r\n\t * @param {Object[]} items - An array of items to search in\r\n\t * @param {string} searchString - The string to search for\r\n\t * @param {Object} options - An options object\r\n\t * @param {string} [options.property=name] - The property on items to search against\r\n\t * @param {boolean} [options.searchInexact=true] - Whether or not to search for inexact matches\r\n\t * @param {boolean} [options.searchExact=true] - Whether or not to search for exact matches (will narrow down inexact matches if applicable)\r\n\t * @param {boolean} [options.useStartsWith=false] - Whether or not to search inexact by checking to see if the item starts with the search string rather than contains\r\n\t * @return {Object[]} The matched items\r\n\t */\r\n\tstatic search(items, searchString, { property = 'name', searchInexact = true, searchExact = true, useStartsWith = false } = {}) {\r\n\t\tif(!items || items.length === 0) return [];\r\n\t\tif(!searchString) return items;\r\n\r\n\t\tconst lowercaseSearch = searchString.toLowerCase();\r\n\t\tlet matchedItems;\r\n\r\n\t\t// Find all items that start with or include the search string\r\n\t\tif(searchInexact) {\r\n\t\t\tif(useStartsWith && searchString.length === 1) {\r\n\t\t\t\tmatchedItems = items.filter(element => String(property ? element[property] : element)\r\n\t\t\t\t\t.normalize('NFKD')\r\n\t\t\t\t\t.toLowerCase()\r\n\t\t\t\t\t.startsWith(lowercaseSearch)\r\n\t\t\t\t);\r\n\t\t\t} else {\r\n\t\t\t\tmatchedItems = items.filter(element => String(property ? element[property] : element)\r\n\t\t\t\t\t.normalize('NFKD')\r\n\t\t\t\t\t.toLowerCase()\r\n\t\t\t\t\t.includes(lowercaseSearch)\r\n\t\t\t\t);\r\n\t\t\t}\r\n\t\t} else {\r\n\t\t\tmatchedItems = items;\r\n\t\t}\r\n\r\n\t\t// See if any are an exact match\r\n\t\tif(searchExact && matchedItems.length > 1) {\r\n\t\t\tconst exactItems = matchedItems.filter(element => String(property ? element[property] : element).normalize('NFKD').toLowerCase() === lowercaseSearch);\r\n\t\t\tif(exactItems.length > 0) return exactItems;\r\n\t\t}\r\n\r\n\t\treturn matchedItems;\r\n\t}\r\n\r\n\t/**\r\n\t * Splits a string using specified characters into multiple strings of a maximum length\r\n\t * @param {string} text - The string to split\r\n\t * @param {number} [maxLength=1925] - The maximum length of each split string\r\n\t * @param {string} [splitOn=\\n] - The characters to split the string with\r\n\t * @return {string[]} The split strings\r\n\t */\r\n\tstatic split(text, maxLength = 1925, splitOn = '\\n') {\r\n\t\tconst splitText = text.split(splitOn);\r\n\t\tif(splitText.length === 1 && text.length > maxLength) throw new Error('Message exceeds the max length and contains no split characters.');\r\n\t\tconst messages = [''];\r\n\t\tlet msg = 0;\r\n\t\tfor(let i = 0; i < splitText.length; i++) {\r\n\t\t\tif(messages[msg].length + splitText[i].length + 1 > maxLength) {\r\n\t\t\t\tmessages.push('');\r\n\t\t\t\tmsg++;\r\n\t\t\t}\r\n\t\t\tmessages[msg] += (messages[msg].length > 0 ? '\\n' : '') + splitText[i];\r\n\t\t}\r\n\t\treturn messages;\r\n\t}\r\n\r\n\t/**\r\n\t * Convert spaces to non-breaking spaces\r\n\t * @param {string} text - The text to convert\r\n\t * @return {string} The converted text\r\n\t */\r\n\tstatic nbsp(text) {\r\n\t\treturn String(text).replace(spacePattern, nbsp);\r\n\t}\r\n\r\n\t/**\r\n\t * Useful pattern constants\r\n\t * @type {Object}\r\n\t */\r\n\tstatic get patterns() {\r\n\t\treturn patterns;\r\n\t}\r\n\r\n\t/**\r\n\t * Creates a regular expression to match the command prefix and name in a message\r\n\t * @param {?Server} server - A Discord.js Server instance of the server that the message is from\r\n\t * @param {User} user - The Discord.js User instance of the bot\r\n\t * @return {RegExp} Regular expression that matches a command prefix and name\r\n\t */\r\n\tstatic _buildCommandPattern(server, user) {\r\n\t\tlet prefix = server ? Setting.getValue('command-prefix', config.commandPrefix, server) : config.commandPrefix;\r\n\t\tif(prefix === 'none') prefix = '';\r\n\t\tconst escapedPrefix = escapeRegex(prefix);\r\n\t\tconst prefixPatternPiece = prefix ? `${escapedPrefix}\\\\s*|` : '';\r\n\t\tconst pattern = new RegExp(`^(${prefixPatternPiece}<@!?${user.id}>\\\\s+(?:${escapedPrefix})?)([^\\\\s]+)`, 'i');\r\n\t\tbot.logger.info(`Server command pattern built.`, { server: server ? server.name : null, serverID: server ? server.id : null, prefix: prefix, pattern: pattern.source });\r\n\t\treturn pattern;\r\n\t}\r\n\r\n\t/**\r\n\t * Checks for an update for the bot\r\n\t * @return {void}\r\n\t */\r\n\tstatic _checkForUpdate() {\r\n\t\trequest(config.updatePackageURL, (error, response, body) => {\r\n\t\t\tif(error) {\r\n\t\t\t\tbot.logger.warn('Error while checking for update', error);\r\n\t\t\t\treturn;\r\n\t\t\t}\r\n\t\t\tif(response.statusCode !== 200) {\r\n\t\t\t\tbot.logger.warn('Error while checking for update', { statusCode: response.statusCode });\r\n\t\t\t\treturn;\r\n\t\t\t}\r\n\r\n\t\t\tconst masterVersion = JSON.parse(body).version;\r\n\t\t\tif(!semver.gt(masterVersion, config.botVersion)) return;\r\n\t\t\tconst message = `An update for ${config.botName} is available! Current version is ${config.botVersion}, latest available is ${masterVersion}.`;\r\n\t\t\tbot.logger.warn(message);\r\n\t\t\tconst savedVersion = Setting.getValue('notified-version');\r\n\t\t\tif(savedVersion !== masterVersion && bot.client && config.owner) {\r\n\t\t\t\tbot.client.sendMessage(config.owner, message);\r\n\t\t\t\tSetting.save(new Setting(null, 'notified-version', masterVersion));\r\n\t\t\t}\r\n\t\t});\r\n\t}\r\n}\r\n"
+  },
+  {
+    "__docId__": 101,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "nbsp",
+    "memberof": "src/util.js",
+    "longname": "src/util.js~nbsp",
+    "access": null,
+    "export": false,
+    "importPath": "discord-graf/src/util.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 11,
+    "undocument": true,
+    "type": {
+      "types": [
+        "string"
+      ]
+    }
+  },
+  {
+    "__docId__": 102,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "spacePattern",
+    "memberof": "src/util.js",
+    "longname": "src/util.js~spacePattern",
+    "access": null,
+    "export": false,
+    "importPath": "discord-graf/src/util.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 12,
+    "undocument": true,
+    "type": {
+      "types": [
+        "object"
+      ]
+    }
+  },
+  {
+    "__docId__": 103,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "patterns",
+    "memberof": "src/util.js",
+    "longname": "src/util.js~patterns",
+    "access": null,
+    "export": false,
+    "importPath": "discord-graf/src/util.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 13,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 104,
+    "kind": "class",
+    "static": true,
+    "variation": null,
+    "name": "Util",
+    "memberof": "src/util.js",
+    "longname": "src/util.js~Util",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/util.js",
+    "importStyle": "Util",
+    "description": null,
+    "lineNumber": 19,
+    "undocument": true,
+    "interface": false
+  },
+  {
+    "__docId__": 105,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "usage",
+    "memberof": "src/util.js~Util",
+    "longname": "src/util.js~Util.usage",
+    "access": null,
+    "description": "Build a command usage string",
+    "lineNumber": 27,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "command",
+        "description": "The short command string (ex. \"roll d20\")"
+      },
+      {
+        "nullable": true,
+        "types": [
+          "Server"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "null",
+        "defaultRaw": null,
+        "name": "server",
+        "description": "The Discord.js Server instance of the server to use the prefix of"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "boolean"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "false",
+        "defaultRaw": false,
+        "name": "onlyMention",
+        "description": "Whether or not the usage string should only show the mention form"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "string"
+      ],
+      "spread": false,
+      "description": "The command usage string"
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 106,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "disambiguation",
+    "memberof": "src/util.js~Util",
+    "longname": "src/util.js~Util.disambiguation",
+    "access": null,
+    "description": "Build a disambiguation list - useful for telling a user to be more specific when finding partial matches from a command",
+    "lineNumber": 46,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object[]"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "items",
+        "description": "An array of items to make the disambiguation list for"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "label",
+        "description": "The text to refer to the items as (ex. \"characters\")"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "name",
+        "defaultRaw": "name",
+        "name": "property",
+        "description": "The property on items to display in the list"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "string"
+      ],
+      "spread": false,
+      "description": "The disambiguation list"
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 107,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "paginate",
+    "memberof": "src/util.js~Util",
+    "longname": "src/util.js~Util.paginate",
+    "access": null,
+    "description": "Paginate an array of items",
+    "lineNumber": 63,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object[]"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "items",
+        "description": "An array of items to paginate"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "1",
+        "defaultRaw": 1,
+        "name": "page",
+        "description": "The page to select"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "10",
+        "defaultRaw": 10,
+        "name": "pageLength",
+        "description": "The number of items per page"
+      }
+    ],
+    "properties": [
+      {
+        "nullable": null,
+        "types": [
+          "Object[]"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "items",
+        "description": "The chunk of items for the current page"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "page",
+        "description": "The current page"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "maxPage",
+        "description": "The maximum page"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "pageLength",
+        "description": "The numer of items per page"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "pageText",
+        "description": "The current page string (\"page x of y\")"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Object"
+      ],
+      "spread": false,
+      "description": "The resulting paginated object"
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 108,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "search",
+    "memberof": "src/util.js~Util",
+    "longname": "src/util.js~Util.search",
+    "access": null,
+    "description": "Search for matches in a list of items",
+    "lineNumber": 88,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Object[]"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "items",
+        "description": "An array of items to search in"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "searchString",
+        "description": "The string to search for"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "options",
+        "description": "An options object"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "name",
+        "defaultRaw": "name",
+        "name": "options.property",
+        "description": "The property on items to search against"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "boolean"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "true",
+        "defaultRaw": true,
+        "name": "options.searchInexact",
+        "description": "Whether or not to search for inexact matches"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "boolean"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "true",
+        "defaultRaw": true,
+        "name": "options.searchExact",
+        "description": "Whether or not to search for exact matches (will narrow down inexact matches if applicable)"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "boolean"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "false",
+        "defaultRaw": false,
+        "name": "options.useStartsWith",
+        "description": "Whether or not to search inexact by checking to see if the item starts with the search string rather than contains"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Object[]"
+      ],
+      "spread": false,
+      "description": "The matched items"
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 109,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "split",
+    "memberof": "src/util.js~Util",
+    "longname": "src/util.js~Util.split",
+    "access": null,
+    "description": "Splits a string using specified characters into multiple strings of a maximum length",
+    "lineNumber": 130,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "text",
+        "description": "The string to split"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "number"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "1925",
+        "defaultRaw": 1925,
+        "name": "maxLength",
+        "description": "The maximum length of each split string"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "\\n",
+        "defaultRaw": "\\n",
+        "name": "splitOn",
+        "description": "The characters to split the string with"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "string[]"
+      ],
+      "spread": false,
+      "description": "The split strings"
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 110,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "nbsp",
+    "memberof": "src/util.js~Util",
+    "longname": "src/util.js~Util.nbsp",
+    "access": null,
+    "description": "Convert spaces to non-breaking spaces",
+    "lineNumber": 150,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "text",
+        "description": "The text to convert"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "string"
+      ],
+      "spread": false,
+      "description": "The converted text"
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 111,
+    "kind": "get",
+    "static": true,
+    "variation": null,
+    "name": "patterns",
+    "memberof": "src/util.js~Util",
+    "longname": "src/util.js~Util.patterns",
+    "access": null,
+    "description": "Useful pattern constants",
+    "lineNumber": 158,
+    "type": {
+      "nullable": null,
+      "types": [
+        "Object"
+      ],
+      "spread": false,
+      "description": null
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 112,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "_buildCommandPattern",
+    "memberof": "src/util.js~Util",
+    "longname": "src/util.js~Util._buildCommandPattern",
+    "access": null,
+    "description": "Creates a regular expression to match the command prefix and name in a message",
+    "lineNumber": 168,
+    "params": [
+      {
+        "nullable": true,
+        "types": [
+          "Server"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "server",
+        "description": "A Discord.js Server instance of the server that the message is from"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "User"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "user",
+        "description": "The Discord.js User instance of the bot"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "RegExp"
+      ],
+      "spread": false,
+      "description": "Regular expression that matches a command prefix and name"
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 113,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "_checkForUpdate",
+    "memberof": "src/util.js~Util",
+    "longname": "src/util.js~Util._checkForUpdate",
+    "access": null,
+    "description": "Checks for an update for the bot",
+    "lineNumber": 182,
+    "params": [],
+    "return": {
+      "nullable": null,
+      "types": [
+        "void"
+      ],
+      "spread": false,
+      "description": ""
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 114,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/version.js",
+    "memberof": null,
+    "longname": "src/version.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport { readFileSync } from 'fs';\r\nimport { join as pathJoin } from 'path';\r\n\r\nexport const version = JSON.parse(readFileSync(pathJoin(__dirname, '../package.json'))).version;\r\nexport default version;\r\n"
+  },
+  {
+    "__docId__": 115,
+    "kind": "variable",
+    "static": true,
+    "variation": null,
+    "name": "version",
+    "memberof": "src/version.js",
+    "longname": "src/version.js~version",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/version.js",
+    "importStyle": "{version}",
+    "description": null,
+    "lineNumber": 7,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 117,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Infinity",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Infinity",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Infinity",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 118,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "NaN",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NaN",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~NaN",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 119,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "undefined",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/undefined",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~undefined",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 120,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "null",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/null",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~null",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 121,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Object",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Object",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 122,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "object",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~object",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 123,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Function",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Function",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 124,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "function",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~function",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 125,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Boolean",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Boolean",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 126,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "boolean",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~boolean",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 127,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Symbol",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Symbol",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 128,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Error",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Error",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 129,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "EvalError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/EvalError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~EvalError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 130,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "InternalError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/InternalError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~InternalError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 131,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "RangeError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RangeError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~RangeError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 132,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "ReferenceError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ReferenceError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~ReferenceError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 133,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "SyntaxError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SyntaxError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~SyntaxError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 134,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "TypeError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~TypeError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 135,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "URIError",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/URIError",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~URIError",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 136,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Number",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Number",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 137,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "number",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~number",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 138,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Date",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Date",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 139,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "String",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~String",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 140,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "string",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~string",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 141,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "RegExp",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~RegExp",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 142,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 143,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Int8Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int8Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Int8Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 144,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Uint8Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint8Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 145,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Uint8ClampedArray",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint8ClampedArray",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint8ClampedArray",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 146,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Int16Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int16Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Int16Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 147,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Uint16Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint16Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint16Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 148,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Int32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Int32Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 149,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Uint32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Uint32Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 150,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Float32Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Float32Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 151,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Float64Array",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float64Array",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Float64Array",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 152,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Map",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Map",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 153,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Set",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Set",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 154,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "WeakMap",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~WeakMap",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 155,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "WeakSet",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~WeakSet",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 156,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "ArrayBuffer",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~ArrayBuffer",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 157,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "DataView",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~DataView",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 158,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "JSON",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~JSON",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 159,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Promise",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Promise",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 160,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Generator",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Generator",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Generator",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 161,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "GeneratorFunction",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/GeneratorFunction",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~GeneratorFunction",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 162,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Reflect",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Reflect",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Reflect",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 163,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Proxy",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy",
+    "memberof": "BuiltinExternal/ECMAScriptExternal.js",
+    "longname": "BuiltinExternal/ECMAScriptExternal.js~Proxy",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 165,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "CanvasRenderingContext2D",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~CanvasRenderingContext2D",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 166,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "DocumentFragment",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~DocumentFragment",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 167,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Element",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Element",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~Element",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 168,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Event",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Event",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~Event",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 169,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "Node",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/Node",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~Node",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 170,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "NodeList",
+    "externalLink": "https://developer.mozilla.org/en-US/docs/Web/API/NodeList",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~NodeList",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 171,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "XMLHttpRequest",
+    "externalLink": "https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~XMLHttpRequest",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  },
+  {
+    "__docId__": 172,
+    "kind": "external",
+    "static": true,
+    "variation": null,
+    "name": "AudioContext",
+    "externalLink": "https://developer.mozilla.org/en/docs/Web/API/AudioContext",
+    "memberof": "BuiltinExternal/WebAPIExternal.js",
+    "longname": "BuiltinExternal/WebAPIExternal.js~AudioContext",
+    "access": null,
+    "description": "",
+    "builtinExternal": true
+  }
+]

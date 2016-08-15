@@ -2,7 +2,7 @@
 'use strict';
 
 import bot from '../';
-import search from '../util/search';
+import Util from '../util';
 
 export default class UsableChannel {
 	static loadDatabase() {
@@ -64,8 +64,8 @@ export default class UsableChannel {
 		if(!this.serversMap[server.id]) return [];
 
 		// Find all of the server's channels that match, and filter them to ones that are usable channels
-		const channels = search(server.channels.getAll('type', 'text'), searchString, { searchExact: false }).filter(channel => this.serversMap[server.id].includes(channel.id));
-		return search(channels, searchString, { searchInexact: false });
+		const channels = Util.search(server.channels.getAll('type', 'text'), searchString, { searchExact: false }).filter(channel => this.serversMap[server.id].includes(channel.id));
+		return Util.search(channels, searchString, { searchInexact: false });
 	}
 
 	static serverHasAny(server) {

@@ -3,10 +3,9 @@
 
 import bot, { serverCommandPatterns } from '../../';
 import config from '../../config';
-import buildCommandPattern from '../../util/command-pattern';
-import * as permissions from '../../util/permissions';
-import usage from '../../util/command-usage';
+import * as permissions from '../../permissions';
 import Setting from '../../database/setting';
+import Util from '../../util';
 
 export default {
 	name: 'prefix',
@@ -34,13 +33,13 @@ export default {
 			}
 
 			// Build the pattern
-			const pattern = buildCommandPattern(message.server, bot.client.user);
+			const pattern = Util._buildCommandPattern(message.server, bot.client.user);
 			serverCommandPatterns[message.server.id] = pattern;
 
-			return `${response} To run commands, use ${usage('command', message.server)}.`;
+			return `${response} To run commands, use ${Util.usage('command', message.server)}.`;
 		} else {
 			const prefix = message.server ? Setting.getValue('command-prefix', config.commandPrefix, message.server) : config.commandPrefix;
-			return `${prefix ? `The command prefix is "${prefix}".` : 'There is no command prefix.'} To run commands, use ${usage('command', message.server)}.`;
+			return `${prefix ? `The command prefix is "${prefix}".` : 'There is no command prefix.'} To run commands, use ${Util.usage('command', message.server)}.`;
 		}
 	}
 };

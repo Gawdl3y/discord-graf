@@ -2,8 +2,8 @@
 'use strict';
 
 import UsableChannel from '../../database/usable-channel';
-import * as permissions from '../../util/permissions';
-import usage from '../../util/command-usage';
+import * as permissions from '../../permissions';
+import Util from '../../util';
 
 let lastUser;
 let timeout;
@@ -35,7 +35,7 @@ export default {
 			}
 			lastUser = message.author;
 			timeout = setTimeout(() => { lastUser = null; }, 30000);
-			return `Are you sure you want to clear all of the allowed channels? Operation will be permitted in all channels. Use ${usage('clearallowedchannels confirm', message.server)} to continue.`;
+			return `Are you sure you want to clear all of the allowed channels? Operation will be permitted in all channels. Use ${Util.usage('clearallowedchannels confirm', message.server)} to continue.`;
 		}
 	}
 };

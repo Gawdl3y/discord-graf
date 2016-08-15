@@ -3,7 +3,7 @@
 
 import { stripIndents } from 'common-tags';
 import ModRole from '../../database/mod-role';
-import * as permissions from '../../util/permissions';
+import * as permissions from '../../permissions';
 
 export default {
 	name: 'modroles',

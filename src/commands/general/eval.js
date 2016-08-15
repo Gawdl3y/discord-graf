@@ -11,16 +11,9 @@ import * as registry from '../registry';
 import * as dispatcher from '../dispatcher';
 import Setting from '../../database/setting';
 import ModRole from '../../database/mod-role';
-import search from '../../util/search';
-import disambiguation from '../../util/disambiguation';
-import pagination from '../../util/pagination';
-import buildCommandPattern from '../../util/command-pattern';
-import * as permissions from '../../util/permissions';
-import * as usage from '../../util/command-usage';
-import * as nbsp from '../../util/nbsp';
-import * as patterns from '../../util/patterns';
-import FriendlyError from '../../util/errors/friendly';
-import CommandFormatError from '../../util/errors/command-format';
+import FriendlyError from '../../errors/friendly';
+import CommandFormatError from '../../errors/command-format';
+import Util from '../../util';
 /* eslint-enable no-unused-vars */
 
 let lastResult;

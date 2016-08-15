@@ -2,7 +2,7 @@
 'use strict';
 
 import { stripIndents } from 'common-tags';
-import * as permissions from '../../util/permissions';
+import * as permissions from '../../permissions';
 
 export default {
 	name: 'roles',
