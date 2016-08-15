@@ -47,8 +47,6 @@ export const graf = {
 	registry: registry,
 	dispatcher: dispatcher,
 	permissions: permissions,
-	storage: null,
-	logger: null,
 	util: {
 		usage: usage,
 		disambiguation: disambiguation,
@@ -69,8 +67,6 @@ export const graf = {
 
 	createClient(configObj) {
 		config.setValues(configObj);
-		this.createLogger();
-		this.createStorage();
 
 		// Output safe config
 		const debugConfig = Object.assign({}, config.values);
@@ -159,9 +155,9 @@ export const graf = {
 		]);
 	},
 
-	createLogger() {
-		if(!this.logger) {
-			this.logger = new winston.Logger({
+	get logger() {
+		if(!this._logger) {
+			this._logger = new winston.Logger({
 				transports: [
 					new winston.transports.Console({
 						level: config.values.consoleLevel,
@@ -173,7 +169,7 @@ export const graf = {
 				]
 			});
 			if(config.values.log) {
-				this.logger.add(winston.transports.File, {
+				this._logger.add(winston.transports.File, {
 					level: config.values.logLevel,
 					filename: config.values.log,
 					maxsize: config.values.logMaxSize,
@@ -184,14 +180,14 @@ export const graf = {
 					humanReadableUnhandledException: true
 				});
 			}
-		} else {
-			this.logger.debug('Not recreating logger.');
 		}
+
+		return this._logger;
 	},
 
-	createStorage() {
-		if(!this.storage) this.storage = new LocalStorage(config.values.storage);
-		else if(this.logger) this.logger.debug('Not recreating storage.');
+	get storage() {
+		if(!this._storage) this._storage = new LocalStorage(config.values.storage);
+		return this._storage;
 	}
 };
 export default graf;
