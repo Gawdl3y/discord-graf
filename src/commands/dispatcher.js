@@ -155,15 +155,15 @@ export async function updateMessagesForResult(message, result, oldResult) {
 export async function updateMessages(message, oldMessages, contents, type) {
 	const updatedMessages = [];
 
-	// Delete extra old messages
-	if(oldMessages.length > contents.length) {
-		for(let i = oldMessages.length - 1; i >= contents.length; i--) oldMessages[i].delete();
-	}
-
 	// Update/send messages
 	for(let i = 0; i < contents.length; i++) {
 		if(i < oldMessages.length) updatedMessages.push(await oldMessages[i].update(type === 'reply' ? `${message.author}, ${contents[i]}` : contents[i]));
 		else updatedMessages.push((await sendMessages(message, [contents[i]], type))[0]);
+	}
+
+	// Delete extra old messages
+	if(oldMessages.length > contents.length) {
+		for(let i = oldMessages.length - 1; i >= contents.length; i--) oldMessages[i].delete();
 	}
 
 	return updatedMessages;
