@@ -4,7 +4,7 @@
 import Discord from 'discord.js';
 import { LocalStorage } from 'node-localstorage';
 import winston from 'winston';
-import config from './config';
+import * as config from './config';
 import version from './version';
 import * as registry from './commands/registry';
 import * as dispatcher from './commands/dispatcher';
@@ -39,7 +39,7 @@ import ClearAllowedChannelsCommand from './commands/channels/clear';
 export const serverCommandPatterns = {};
 export const unprefixedCommandPattern = /^([^\s]+)/i;
 
-const bot = {
+const graf = {
 	client: null,
 	config: config,
 	version: version,
@@ -65,13 +65,13 @@ const bot = {
 	ModRole: ModRole,
 	UsableChannel: UsableChannel,
 
-	createClient(configObj = null) {
-		if(configObj) Object.assign(config, configObj);
+	createClient(configObj) {
+		config.setValues(configObj);
 		this.createLogger();
 		this.createStorage();
 
 		// Output safe config
-		const debugConfig = Object.assign({}, config);
+		const debugConfig = Object.assign({}, config.values);
 		if(debugConfig.email) debugConfig.email = '--snip--';
 		if(debugConfig.password) debugConfig.password = '--snip--';
 		if(debugConfig.token) debugConfig.token = '--snip--';
@@ -79,12 +79,12 @@ const bot = {
 		this.logger.debug('Configuration:', debugConfig);
 
 		// Verify some stuff
-		if(!config.token && (!config.email || !config.password)) throw new Error('Invalid credentials; either "token" or both "email" and "password" must be specified on the config.');
-		if(!config.botName) throw new Error('"botName" must be specified on the config.');
-		if(!config.botVersion) throw new Error('"botVersion" must be specified on the config.');
+		if(!config.values.token && (!config.values.email || !config.values.password)) throw new Error('Invalid credentials; either "token" or both "email" and "password" must be specified on the config.');
+		if(!config.values.botName) throw new Error('"botName" must be specified on the config.');
+		if(!config.values.botVersion) throw new Error('"botVersion" must be specified on the config.');
 
 		// Create client
-		const clientOptions = { autoReconnect: config.autoReconnect, forceFetchUsers: true, disableEveryone: true };
+		const clientOptions = { autoReconnect: config.values.autoReconnect, forceFetchUsers: true, disableEveryone: config.values.disableEveryone };
 		const client = new Discord.Client(clientOptions);
 		this.logger.info('Client created.', clientOptions);
 		client.on('error', err => { this.logger.error(err); });
@@ -93,7 +93,7 @@ const bot = {
 		client.on('disconnected', () => { this.logger.error('Disconnected.'); });
 		client.on('ready', () => {
 			this.logger.info(`Bot is ready; logged in as ${client.user.username}#${client.user.discriminator} (ID: ${client.user.id})`);
-			if(config.playingGame) client.setPlayingGame(config.playingGame);
+			if(config.values.playingGame) client.setPlayingGame(config.values.playingGame);
 		});
 
 		// Set up command handling
@@ -108,12 +108,18 @@ const bot = {
 
 		// Log in
 		const loginCallback = err => { if(err) this.logger.error('Failed to login.', err); };
-		if(config.token) {
+		if(config.values.token) {
 			this.logger.info('Logging in with token...');
-			client.loginWithToken(config.token, config.email, config.password, loginCallback);
+			client.loginWithToken(config.values.token, config.values.email, config.values.password, loginCallback);
 		} else {
 			this.logger.info('Logging in with email and password...');
-			client.login(config.email, config.password, loginCallback);
+			client.login(config.values.email, config.values.password, loginCallback);
+		}
+
+		// Check for updates now and at an interval
+		if(config.values.updatePackageURL) {
+			checkForUpdate();
+			if(config.values.updateCheck > 0) setInterval(checkForUpdate, config.values.updateCheck * 60 * 1000);
 		}
 
 		this.client = client;
@@ -151,18 +157,12 @@ const bot = {
 		]);
 	},
 
-	checkForUpdate(packageURL) {
-		config.updatePackageURL = packageURL;
-		checkForUpdate();
-		if(config.updateCheck > 0) setInterval(checkForUpdate, config.updateCheck * 60 * 1000);
-	},
-
 	createLogger() {
 		if(!this.logger) {
 			this.logger = new winston.Logger({
 				transports: [
 					new winston.transports.Console({
-						level: config.consoleLevel,
+						level: config.values.consoleLevel,
 						colorize: true,
 						timestamp: true,
 						handleExceptions: true,
@@ -170,12 +170,12 @@ const bot = {
 					})
 				]
 			});
-			if(config.log) {
+			if(config.values.log) {
 				this.logger.add(winston.transports.File, {
-					level: config.logLevel,
-					filename: config.log,
-					maxsize: config.logMaxSize,
-					maxFiles: config.logMaxFiles,
+					level: config.values.logLevel,
+					filename: config.values.log,
+					maxsize: config.values.logMaxSize,
+					maxFiles: config.values.logMaxFiles,
 					tailable: true,
 					json: false,
 					handleExceptions: true,
@@ -188,8 +188,8 @@ const bot = {
 	},
 
 	createStorage() {
-		if(!this.storage) this.storage = new LocalStorage(config.storage);
+		if(!this.storage) this.storage = new LocalStorage(config.values.storage);
 		else if(this.logger) this.logger.debug('Not recreating storage.');
 	}
 };
-export default bot;
+export default graf;
