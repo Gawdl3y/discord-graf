@@ -28,7 +28,7 @@ gulp.task('default', gulp.parallel('lint', 'rebuild'));
 
 gulp.task('docs', () =>
 	gulp.src(['./src/**/*.js'])
-		.pipe(esdoc({ source: './src', destination: './docs', plugins: [{ name: 'esdoc-es7-plugin' }] }))
+		.pipe(esdoc())
 );
 
 gulp.task('publish', gulp.series('default', 'docs', () => {
