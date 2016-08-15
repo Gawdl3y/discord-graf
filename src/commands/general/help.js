@@ -5,6 +5,7 @@ import { stripIndents } from 'common-tags';
 import { groups, find as findCommands, isUsable } from '../registry';
 import disambiguation from '../../util/disambiguation';
 import usage from '../../util/command-usage';
+import splitMessage from '../../util/split-message';
 
 export default {
 	name: 'help',
@@ -37,7 +38,7 @@ export default {
 			}
 		} else {
 			return {
-				direct: stripIndents`
+				direct: splitMessage(stripIndents`
 					To run a command in ${message.server ? message.server : 'any server'}, use ${usage('command', message.server, !message.server)}. For example, ${usage('roll d20', message.server, !message.server)}.
 					To run a command in this DM, simply use ${usage('command')} with no prefix. For example, ${usage('roll d20')}.
 
@@ -50,7 +51,7 @@ export default {
 						__${grp.name}__
 						${(showAll ? grp.commands : grp.commands.filter(cmd => isUsable(cmd, message))).map(cmd => `**${cmd.name}:** ${cmd.description}`).join('\n')}
 					`).join('\n\n')}
-				`,
+				`),
 				reply: message.server ? 'Sent a DM to you with information.' : null
 			};
 		}

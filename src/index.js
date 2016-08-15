@@ -16,6 +16,7 @@ import usage from './util/command-usage';
 import disambiguation from './util/disambiguation';
 import paginate from './util/pagination';
 import search from './util/search';
+import splitMessage from './util/split-message';
 import nbsp from './util/nbsp';
 import * as patterns from './util/patterns';
 import checkForUpdate from './util/update-check';
@@ -39,7 +40,7 @@ import ClearAllowedChannelsCommand from './commands/channels/clear';
 export const serverCommandPatterns = {};
 export const unprefixedCommandPattern = /^([^\s]+)/i;
 
-const graf = {
+export const graf = {
 	client: null,
 	config: config,
 	version: version,
@@ -54,6 +55,7 @@ const graf = {
 		paginate: paginate,
 		search: search,
 		nbsp: nbsp,
+		splitMessage: splitMessage,
 		patterns: patterns
 	},
 	errors: {
