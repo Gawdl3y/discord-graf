@@ -1,9 +1,9 @@
 'use babel';
 'use strict';
 
-export default function splitMessage(text, maxLength = 1925) {
-	const splitText = text.split('\n');
-	if(splitText.length === 1 && text.length > maxLength) throw new Error('Message exceeds the max length and has no newlines.');
+export default function splitMessage(text, maxLength = 1925, splitOn = '\n') {
+	const splitText = text.split(splitOn);
+	if(splitText.length === 1 && text.length > maxLength) throw new Error('Message exceeds the max length and contains no split characters.');
 	const messages = [''];
 	let msg = 0;
 	for(let i = 0; i < splitText.length; i++) {
