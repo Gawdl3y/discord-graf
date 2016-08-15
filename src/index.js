@@ -67,7 +67,8 @@ const bot = {
 
 	createClient(configObj = null) {
 		if(configObj) Object.assign(config, configObj);
-		if(!this.logger) this.createLogger();
+		this.createLogger();
+		this.createStorage();
 
 		// Output safe config
 		const debugConfig = Object.assign({}, config);
@@ -82,8 +83,7 @@ const bot = {
 		if(!config.botName) throw new Error('"botName" must be specified on the config.');
 		if(!config.botVersion) throw new Error('"botVersion" must be specified on the config.');
 
-		// Create client and storage
-		if(!this.storage) this.createStorage();
+		// Create client
 		const clientOptions = { autoReconnect: config.autoReconnect, forceFetchUsers: true, disableEveryone: true };
 		const client = new Discord.Client(clientOptions);
 		this.logger.info('Client created.', clientOptions);
@@ -158,33 +158,38 @@ const bot = {
 	},
 
 	createLogger() {
-		this.logger = new winston.Logger({
-			transports: [
-				new winston.transports.Console({
-					level: config.consoleLevel,
-					colorize: true,
-					timestamp: true,
+		if(!this.logger) {
+			this.logger = new winston.Logger({
+				transports: [
+					new winston.transports.Console({
+						level: config.consoleLevel,
+						colorize: true,
+						timestamp: true,
+						handleExceptions: true,
+						humanReadableUnhandledException: true
+					})
+				]
+			});
+			if(config.log) {
+				this.logger.add(winston.transports.File, {
+					level: config.logLevel,
+					filename: config.log,
+					maxsize: config.logMaxSize,
+					maxFiles: config.logMaxFiles,
+					tailable: true,
+					json: false,
 					handleExceptions: true,
 					humanReadableUnhandledException: true
-				})
-			]
-		});
-		if(config.log) {
-			this.logger.add(winston.transports.File, {
-				level: config.logLevel,
-				filename: config.log,
-				maxsize: config.logMaxSize,
-				maxFiles: config.logMaxFiles,
-				tailable: true,
-				json: false,
-				handleExceptions: true,
-				humanReadableUnhandledException: true
-			});
+				});
+			}
+		} else {
+			this.logger.debug('Not recreating logger.');
 		}
 	},
 
 	createStorage() {
-		this.storage = new LocalStorage(config.storage);
+		if(!this.storage) this.storage = new LocalStorage(config.storage);
+		else if(this.logger) this.logger.debug('Not recreating storage.');
 	}
 };
 export default bot;
