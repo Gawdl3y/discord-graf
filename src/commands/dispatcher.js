@@ -1,14 +1,15 @@
 'use babel';
 'use strict';
 
+import EventEmitter from 'events';
 import stringArgv from 'string-argv';
 import { stripIndents } from 'common-tags';
 import escapeRegex from 'escape-string-regexp';
-import Command from './command';
 import FriendlyError from '../errors/friendly';
 
-export default class CommandDispatcher {
+export default class CommandDispatcher extends EventEmitter {
 	constructor(bot) {
+		super();
 		if(!bot) throw new Error('A bot must be specified.');
 		this.bot = bot;
 		this._serverCommandPatterns = {};
@@ -86,9 +87,9 @@ export default class CommandDispatcher {
 		// Run the command
 		this.bot.logger.info(`Running ${command.group}:${command.groupName}.`, logInfo);
 		try {
-			const runArgs = [message, args, fromPattern];
-			if(!(command instanceof Command)) runArgs.unshift(this.bot);
-			return await command.run(...runArgs);
+			const result = await command.run(message, args, fromPattern, this.bot);
+			this.emit('commandRun', command, message, args, fromPattern, this.bot);
+			return result;
 		} catch(err) {
 			if(err instanceof FriendlyError) {
 				return err.message;

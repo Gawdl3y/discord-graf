@@ -1,8 +1,11 @@
 'use babel';
 'use strict';
 
-export default class CommandRegistry {
+import EventEmitter from 'events';
+
+export default class CommandRegistry extends EventEmitter {
 	constructor(logger) {
+		super();
 		this.logger = logger;
 		this.commands = [];
 		this.groups = [];
@@ -24,6 +27,7 @@ export default class CommandRegistry {
 				};
 				this.groups.push(group);
 			}
+			this.emit('commandRegister', command, this);
 			if(this.logger) this.logger.verbose(`Registered command ${command.group}:${command.groupName}.`);
 		}
 	}
