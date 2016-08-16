@@ -4,13 +4,15 @@
 import stringArgv from 'string-argv';
 import { stripIndents } from 'common-tags';
 import escapeRegex from 'escape-string-regexp';
+import Command from './command';
 import FriendlyError from '../errors/friendly';
 
 export default class CommandDispatcher {
-	constructor(client, registry, settings, config, logger) {
-		if(!client || !registry || !config || !settings) throw new Error('client, registry, settings, and config must be specified.');
+	constructor(client, registry, bot, settings, config, logger) {
+		if(!client || !registry || !bot || !config || !settings) throw new Error('client, registry, bot, settings, and config must be specified.');
 		this.client = client;
 		this.registry = registry;
+		this.bot = bot;
 		this.settings = settings;
 		this.config = config;
 		this.logger = logger;
@@ -89,7 +91,9 @@ export default class CommandDispatcher {
 		// Run the command
 		if(this.logger) this.logger.info(`Running ${command.group}:${command.groupName}.`, logInfo);
 		try {
-			return await command.run(message, args, fromPattern);
+			const runArgs = [message, args, fromPattern];
+			if(!(command instanceof Command)) runArgs.unshift(this.bot);
+			return await command.run(...runArgs);
 		} catch(err) {
 			if(err instanceof FriendlyError) {
 				return err.message;
