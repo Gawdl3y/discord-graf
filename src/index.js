@@ -1,55 +1,63 @@
 'use babel';
 'use strict';
 
+import { readFileSync } from 'fs';
+import { join as pathJoin } from 'path';
 import Discord from 'discord.js';
 import { LocalStorage } from 'node-localstorage';
 import winston from 'winston';
-import request from 'request';
+import request from 'request-promise-native';
 import semver from 'semver';
-import version from './version';
 import Config from './config';
-import Permissions from './permissions';
 import Registry from './commands/registry';
 import Dispatcher from './commands/dispatcher';
-import Command from './commands/command';
-import Util from './util';
-import Setting from './data/models/setting';
+import BotCommand from './commands/command';
+import BotPermissions from './permissions';
+import BotUtil from './util';
+import SettingModel from './data/models/setting';
+import BaseStorage from './data/storage';
 import SettingStorage from './data/settings';
 import ModRoleStorage from './data/mod-roles';
 import AllowedChannelStorage from './data/allowed-channels';
 import FriendlyError from './errors/friendly';
 import CommandFormatError from './errors/command-format';
 
-// import HelpCommand from './commands/general/help';
-// import AboutCommand from './commands/general/about';
-// import PrefixCommand from './commands/general/prefix';
-// import EvalCommand from './commands/general/eval';
-// import ListRolesCommand from './commands/general/list-roles';
-// import ListModRolesCommand from './commands/roles/list';
-// import AddModRoleCommand from './commands/roles/add';
-// import DeleteModRoleCommand from './commands/roles/delete';
-// import ClearModRolesCommand from './commands/roles/clear';
-// import ListAllowedChannelsCommand from './commands/channels/list';
-// import AllowChannelCommand from './commands/channels/allow';
-// import DisallowChannelCommand from './commands/channels/disallow';
-// import ClearAllowedChannelsCommand from './commands/channels/clear';
+import HelpCommand from './commands/general/help';
+import AboutCommand from './commands/general/about';
+import PrefixCommand from './commands/general/prefix';
+import EvalCommand from './commands/general/eval';
+import ListRolesCommand from './commands/roles/list';
+import ListModRolesCommand from './commands/roles/list-mods';
+import AddModRoleCommand from './commands/roles/add-mod';
+import DeleteModRoleCommand from './commands/roles/delete-mod';
+import ClearModRolesCommand from './commands/roles/clear-mods';
+import ListAllowedChannelsCommand from './commands/channels/list-allowed';
+import AllowChannelCommand from './commands/channels/allow';
+import DisallowChannelCommand from './commands/channels/disallow';
+import ClearAllowedChannelsCommand from './commands/channels/clear-allowed';
 
-export default class GrafBot {
+export const version = JSON.parse(readFileSync(pathJoin(__dirname, '../package.json'))).version;
+export const Command = BotCommand;
+export const Permissions = BotPermissions;
+export const Util = BotUtil;
+export const Setting = SettingModel;
+export const Storage = BaseStorage;
+export const errors = {
+	FriendlyError: FriendlyError,
+	CommandFormatError: CommandFormatError
+};
+
+export default class Bot {
 	constructor(config) {
-		this.version = version;
 		this.config = new Config(config);
 		this.registry = null;
 		this.permissions = null;
 		this.util = null;
 		this.localStorage = null;
-		this.data = {
+		this.storage = {
 			settings: null,
 			modRoles: null,
 			allowedChannels: null
-		};
-		this.errors = {
-			FriendlyError: FriendlyError,
-			CommandFormatError: CommandFormatError
 		};
 	}
 
@@ -71,20 +79,20 @@ export default class GrafBot {
 		this.logger.debug('Configuration:', debugConfig);
 
 		// Create client and bot classes
-		const clientOptions = { autoReconnect: config.autoReconnect, forceFetchUsers: true, disableEveryone: config.disableEveryone };
+		const clientOptions = { autoReconnect: config.autoReconnect, forceFetchUsers: true, disableEveryone: config.disableEveryone, bot: true };
 		const client = new Discord.Client(clientOptions);
 		this.client = client;
 		this.localStorage = new LocalStorage(config.storage);
-		this.data.settings = new SettingStorage(this.localStorage, this.logger);
-		this.data.modRoles = new ModRoleStorage(this.localStorage, this.logger);
-		this.data.allowedChannels = new AllowedChannelStorage(this.localStorage, this.logger);
+		this.storage.settings = new SettingStorage(this.localStorage, this.logger);
+		this.storage.modRoles = new ModRoleStorage(this.localStorage, this.logger);
+		this.storage.allowedChannels = new AllowedChannelStorage(this.localStorage, this.logger);
 		this.registry = new Registry(this.logger);
-		this.dispatcher = new Dispatcher(client, this.registry, this.data.settings, this.config);
-		this.permissions = new Permissions(client, this.data.modRoles, this.config);
-		this.util = new Util(client, this.data.settings, this.config);
+		this.dispatcher = new Dispatcher(this);
+		this.permissions = new Permissions(client, this.storage.modRoles, this.config);
+		this.util = new Util(client, this.storage.settings, this.config);
 		this.logger.info('Client created.', clientOptions);
 
-		// Set up logging and the playing game text
+		// Set up logging, playing game text, and update checking
 		client.on('error', err => { this.logger.error(err); });
 		client.on('warn', err => { this.logger.warn(err); });
 		client.on('debug', err => { this.logger.debug(err); });
@@ -92,6 +100,10 @@ export default class GrafBot {
 		client.on('ready', () => {
 			this.logger.info(`Bot is ready; logged in as ${client.user.username}#${client.user.discriminator} (ID: ${client.user.id})`);
 			if(config.playingGame) client.setPlayingGame(config.playingGame);
+			if(config.botUpdateURL) {
+				this._checkForUpdate();
+				if(config.updateCheck > 0) setInterval(this._checkForUpdate, config.updateCheck * 60 * 1000);
+			}
 		});
 
 		// Set up command handling
@@ -111,15 +123,11 @@ export default class GrafBot {
 			this.logger.info('Logging in with email and password...');
 			client.login(config.email, config.password, loginCallback);
 		}
-
-		// Check for updates now and at an interval
-		if(config.botUpdateURL) {
-			this._checkForUpdate();
-			if(config.updateCheck > 0) setInterval(() => this._checkForUpdate, config.updateCheck * 60 * 1000);
-		}
 	}
 
 	registerCommands(commands) {
+		if(!Array.isArray(commands)) commands = [commands];
+		for(let i = 0; i < commands.length; i++) if(typeof commands[i] === 'function') commands[i] = new commands[i](this);
 		this.registry.register(commands);
 	}
 
@@ -129,19 +137,19 @@ export default class GrafBot {
 
 	registerDefaultCommands() {
 		this.registerCommands([
-			// HelpCommand,
-			// AboutCommand,
-			// PrefixCommand,
-			// EvalCommand,
-			// ListRolesCommand,
-			// ListModRolesCommand,
-			// AddModRoleCommand,
-			// DeleteModRoleCommand,
-			// ClearModRolesCommand,
-			// ListAllowedChannelsCommand,
-			// AllowChannelCommand,
-			// DisallowChannelCommand,
-			// ClearAllowedChannelsCommand
+			HelpCommand,
+			AboutCommand,
+			PrefixCommand,
+			EvalCommand,
+			ListRolesCommand,
+			ListModRolesCommand,
+			AddModRoleCommand,
+			DeleteModRoleCommand,
+			ClearModRolesCommand,
+			ListAllowedChannelsCommand,
+			AllowChannelCommand,
+			DisallowChannelCommand,
+			ClearAllowedChannelsCommand
 		]);
 		this.nameGroups([
 			['general', 'General'],
@@ -186,29 +194,18 @@ export default class GrafBot {
 	 */
 	_checkForUpdate() {
 		const config = this.config.values;
-		request(config.botUpdateURL, (error, response, body) => {
-			if(error) {
-				this.logger.warn('Error while checking for update', error);
-				return;
-			}
-			if(response.statusCode !== 200) {
-				this.logger.warn('Error while checking for update', { statusCode: response.statusCode });
-				return;
-			}
-
+		request(config.botUpdateURL).then(body => {
 			const masterVersion = JSON.parse(body).version;
 			if(!semver.gt(masterVersion, config.botVersion)) return;
-			const message = `An update for ${config.values.botName} is available! Current version is ${config.botVersion}, latest available is ${masterVersion}.`;
-			if(this.logger) this.logger.warn(message);
-			const savedVersion = this.data.settings.getValue('notified-version');
+			const message = `An update for ${config.botName} is available! Current version is ${config.botVersion}, latest available is ${masterVersion}.`;
+			this.logger.warn(message);
+			const savedVersion = this.storage.settings.getValue(null, 'notified-version');
 			if(savedVersion !== masterVersion && this.client && config.owner) {
 				this.client.sendMessage(config.owner, message);
-				this.data.settings.save(new Setting(null, 'notified-version', masterVersion));
+				this.storage.settings.save(new Setting(null, 'notified-version', masterVersion));
 			}
+		}).catch(err => {
+			this.logger.error(err);
 		});
-	}
-
-	static get Command() {
-		return Command;
 	}
 }

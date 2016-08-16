@@ -2,31 +2,28 @@
 'use strict';
 
 import { stripIndents } from 'common-tags';
-import ModRole from '../../database/mod-role';
-import * as permissions from '../../permissions';
+import Command from '../command';
 
-export default {
-	name: 'modroles',
-	aliases: ['listmodroles', 'mods'],
-	group: 'roles',
-	groupName: 'list',
-	description: 'Lists all moderator roles.',
-	details: 'Only administrators may use this command.',
-	serverOnly: true,
+export default class ListRolesCommand extends Command {
+	constructor(bot) {
+		super(bot);
+		this.name = 'roles';
+		this.aliases = ['listroles'];
+		this.group = 'roles';
+		this.groupName = 'list';
+		this.description = 'Lists all server roles.';
+		this.details = 'Only administrators may use this command.';
+		this.serverOnly = true;
+	}
 
 	isRunnable(message) {
-		return permissions.isAdmin(message.server, message.author);
-	},
+		return this.bot.permissions.isAdmin(message.server, message.author);
+	}
 
 	async run(message) {
-		const roles = ModRole.findInServer(message.server);
-		if(roles.length > 0) {
-			return stripIndents`
-				__**Moderator roles:**__
-				${roles.map(role => `**-** ${role.name} (ID: ${role.id})`).join('\n')}
-			`;
-		} else {
-			return 'There are no moderator roles, therefore moderators are determined by the "Manage messages" permission.';
-		}
+		return stripIndents`
+			__**Server roles:**__
+			${message.server.roles.map(role => `**-** ${role.name} (ID: ${role.id})`).join('\n')}
+		`;
 	}
-};
+}

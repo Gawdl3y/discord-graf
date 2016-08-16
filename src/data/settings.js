@@ -6,42 +6,44 @@ import Setting from './models/setting';
 
 export default class SettingStorage extends Storage {
 	constructor(localStorage, logger) {
-		super('settings', localStorage, logger);
+		super('settings', localStorage, logger, true);
 	}
 
 	save(setting) {
-		return super.save(setting.server, setting, entry => entry.key === setting.key);
+		const server = setting.server;
+		delete setting.server;
+		return super.save(server, setting);
 	}
 
-	delete(setting) {
-		return super.delete(setting.server, setting, entry => entry.key === setting.key);
+	delete(server, setting) {
+		[server, setting] = this.getSettingServerAndKey(setting, server);
+		return super.delete(server, setting);
 	}
 
-	find(setting, server = null, searchOptions = {}) {
-		[setting, server] = this.getSettingKeyAndServer(setting, server);
-		return super.find(server, setting, Object.assign(searchOptions, { property: 'key', searchInexact: false }));
+	find(server, setting) {
+		[server, setting] = this.getSettingServerAndKey(setting, server);
+		return super.find(server, setting);
 	}
 
-	exists(setting, server = null) {
-		[setting, server] = this.getSettingKeyAndServer(setting, server);
-		return super.exists(server, setting, entry => entry.key === setting);
+	exists(server, setting) {
+		[server, setting] = this.getSettingServerAndKey(setting, server);
+		return super.exists(server, setting);
 	}
 
-	getValue(setting, defaultValue = null, server = null) {
-		[setting, server] = this.getSettingKeyAndServer(setting, server);
+	getValue(server, setting, defaultValue = null) {
+		[server, setting] = this.getSettingServerAndKey(setting, server);
 		if(!this.serversMap) this.loadStorage();
 		if(!this.serversMap[server]) return defaultValue;
-		const settings = this.find(server, setting);
-		if(settings.length === 0) return defaultValue;
-		return settings[0].value;
+		if(typeof this.serversMap[server][setting] === 'undefined') return defaultValue;
+		return this.serversMap[server][setting];
 	}
 
-	getSettingKeyAndServer(setting, server) {
+	getSettingServerAndKey(setting, server) {
 		if(setting instanceof Setting) {
-			return [setting.key, !server ? setting.server : server.id ? server.id : server];
+			return [!server ? setting.server : server.id ? server.id : server, setting.key];
 		} else {
 			if(!setting) throw new Error('A setting or a key must be specified.');
-			return [setting, server ? server.id ? server.id : server : 'global'];
+			return [server ? server.id ? server.id : server : 'global', setting];
 		}
 	}
 }

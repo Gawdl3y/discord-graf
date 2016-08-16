@@ -2,16 +2,20 @@
 'use strict';
 
 import { stripIndents } from 'common-tags';
-import config from '../../config';
+import Command from '../command';
 
-export default {
-	name: 'about',
-	group: 'general',
-	groupName: 'about',
-	description: 'Displays information about the bot.',
+export default class AboutCommand extends Command {
+	constructor(bot) {
+		super(bot);
+		this.name = 'about';
+		this.group = 'general';
+		this.groupName = 'about';
+		this.description = 'Displays information about the bot.';
+	}
 
 	async run(message) {
-		const owner = message.client.users.get('id', config.owner);
+		const config = this.bot.config.values;
+		const owner = message.client.users.get('id', this.bot.config.values.owner);
 		const servers = message.client.servers.length.toLocaleString(), users = message.client.users.length.toLocaleString();
 		const serversLabel = servers !== 1 ? 'servers' : 'server', usersLabel = users !== 1 ? 'users' : 'user';
 		const uptime = process.uptime();
@@ -30,4 +34,4 @@ export default {
 			reply: 'Sent a DM to you with information.'
 		};
 	}
-};
+}

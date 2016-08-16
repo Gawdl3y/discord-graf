@@ -66,7 +66,7 @@ export default class BotUtil {
 		if(!server && !onlyMention) return `\`${nbcmd}\``;
 		let prefixAddon;
 		if(!onlyMention) {
-			let prefix = this.nbsp(settings.getValue('command-prefix', config.commandPrefix, server));
+			let prefix = this.nbsp(settings.getValue(server, 'command-prefix', config.values.commandPrefix));
 			if(prefix.length > 1) prefix += '\xa0';
 			prefixAddon = prefix ? `\`${prefix}${nbcmd}\` or ` : '';
 		}

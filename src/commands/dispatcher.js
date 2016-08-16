@@ -8,37 +8,32 @@ import Command from './command';
 import FriendlyError from '../errors/friendly';
 
 export default class CommandDispatcher {
-	constructor(client, registry, bot, settings, config, logger) {
-		if(!client || !registry || !bot || !config || !settings) throw new Error('client, registry, bot, settings, and config must be specified.');
-		this.client = client;
-		this.registry = registry;
+	constructor(bot) {
+		if(!bot) throw new Error('A bot must be specified.');
 		this.bot = bot;
-		this.settings = settings;
-		this.config = config;
-		this.logger = logger;
 		this._serverCommandPatterns = {};
 		this._results = {};
 	}
 
 	async handleMessage(message, oldMessage = null) {
-		if(message.author.equals(this.client.user)) return;
+		if(message.author.equals(this.bot.client.user)) return;
 
 		// Make sure the bot is allowed to run in the channel, or the user is an admin
-		if(message.server && !this.settings.isEmpty(message.server)
-			&& !this.settings.exists(message.server, message.channel)
-			&& !this.permissions.isAdmin(message.server, message.author)) return;
+		if(message.server && !this.bot.storage.settings.isEmpty(message.server)
+			&& !this.bot.storage.settings.exists(message.server, message.channel)
+			&& !this.bot.permissions.isAdmin(message.server, message.author)) return;
 
 		// Parse the message, and get the old result if it exists
 		const [command, args, fromPattern, isCommandMessage] = this.parseMessage(message);
-		const oldResult = oldMessage ? this.results[oldMessage.id] : null;
+		const oldResult = oldMessage ? this._results[oldMessage.id] : null;
 
 		// Run the command, or make an error message result
 		let result;
 		if(command) {
 			if(!oldMessage || oldResult) result = this.constructor.makeResultObject(await this.run(command, args, fromPattern, message));
 		} else if(isCommandMessage) {
-			result = { reply: [`Unknown command. Use ${this.util.usage('help', message.server)} to view the list of all commands.`], editable: true };
-		} else if(this.config.nonCommandEdit) {
+			result = { reply: [`Unknown command. Use ${this.bot.util.usage('help', message.server)} to view the list of all commands.`], editable: true };
+		} else if(this.bot.config.values.nonCommandEdit) {
 			result = {};
 		}
 
@@ -58,12 +53,12 @@ export default class CommandDispatcher {
 			}
 
 			// Cache the result
-			if(this.config.values.commandEditable > 0) {
+			if(this.bot.config.values.commandEditable > 0) {
 				if(result.editable) {
-					result.timeout = oldResult && oldResult.timeout ? oldResult.timeout : setTimeout(() => { delete this.results[message.id]; }, this.config.values.commandEditable * 1000);
-					this.results[message.id] = result;
+					result.timeout = oldResult && oldResult.timeout ? oldResult.timeout : setTimeout(() => { delete this._results[message.id]; }, this.bot.config.values.commandEditable * 1000);
+					this._results[message.id] = result;
 				} else {
-					delete this.results[message.id];
+					delete this._results[message.id];
 				}
 			}
 		}
@@ -80,16 +75,16 @@ export default class CommandDispatcher {
 
 		// Make sure the command is usable
 		if(command.serverOnly && !message.server) {
-			if(this.logger) this.logger.info(`Not running ${command.group}:${command.groupName}; server only.`, logInfo);
+			this.bot.logger.info(`Not running ${command.group}:${command.groupName}; server only.`, logInfo);
 			return `The \`${command.name}\` command must be used in a server channel.`;
 		}
 		if(command.isRunnable && !command.isRunnable(message)) {
-			if(this.logger) this.logger.info(`Not running ${command.group}:${command.groupName}; not runnable.`, logInfo);
+			this.bot.logger.info(`Not running ${command.group}:${command.groupName}; not runnable.`, logInfo);
 			return `You do not have permission to use the \`${command.name}\` command.`;
 		}
 
 		// Run the command
-		if(this.logger) this.logger.info(`Running ${command.group}:${command.groupName}.`, logInfo);
+		this.bot.logger.info(`Running ${command.group}:${command.groupName}.`, logInfo);
 		try {
 			const runArgs = [message, args, fromPattern];
 			if(!(command instanceof Command)) runArgs.unshift(this.bot);
@@ -98,11 +93,11 @@ export default class CommandDispatcher {
 			if(err instanceof FriendlyError) {
 				return err.message;
 			} else {
-				if(this.logger) this.logger.error(err);
-				const owner = this.config.values.owner ? message.client.users.get('id', this.config.values.owner) : null;
+				this.bot.logger.error(err);
+				const owner = this.bot.config.values.owner ? message.client.users.get('id', this.bot.config.values.owner) : null;
 				return stripIndents`
 					An error occurred while running the command: \`${err.name}: ${err.message}\`
-					${owner ? `Please contact ${owner.name}#${owner.discriminator}${this.config.values.invite ? ` in this server: ${this.config.values.invite}` : '.'}` : ''}
+					${owner ? `Please contact ${owner.name}#${owner.discriminator}${this.bot.config.values.invite ? ` in this server: ${this.bot.config.values.invite}` : '.'}` : ''}
 				`;
 			}
 		}
@@ -162,7 +157,7 @@ export default class CommandDispatcher {
 
 	parseMessage(message) {
 		// Find the command to run by patterns
-		for(const command of this.registry.commands) {
+		for(const command of this.bot.registry.commands) {
 			if(!command.patterns) continue;
 			for(const pattern of command.patterns) {
 				const matches = pattern.exec(message.content);
@@ -185,7 +180,7 @@ export default class CommandDispatcher {
 		if(!matches) return [null, null, false];
 
 		const commandName = matches[commandNameIndex].toLowerCase();
-		const command = this.registry.commands.find(cmd => cmd.name === commandName || (cmd.aliases && cmd.aliases.some(alias => alias === commandName)));
+		const command = this.bot.registry.commands.find(cmd => cmd.name === commandName || (cmd.aliases && cmd.aliases.some(alias => alias === commandName)));
 		if(!command || command.disableDefault) return [null, null, true];
 
 		const argString = message.content.substring(matches[1].length + (matches[2] ? matches[2].length : 0));
@@ -229,18 +224,16 @@ export default class CommandDispatcher {
 	 * @return {RegExp} Regular expression that matches a command prefix and name
 	 */
 	_buildCommandPattern(server, user) {
-		let prefix = server ? this.settings.getValue('command-prefix', this.config.commandPrefix, server) : this.config.commandPrefix;
+		let prefix = server ? this.bot.storage.settings.getValue(server, 'command-prefix', this.bot.config.values.commandPrefix) : this.bot.config.values.commandPrefix;
 		if(prefix === 'none') prefix = '';
 		const escapedPrefix = escapeRegex(prefix);
 		const prefixPatternPiece = prefix ? `${escapedPrefix}\\s*|` : '';
 		const pattern = new RegExp(`^(${prefixPatternPiece}<@!?${user.id}>\\s+(?:${escapedPrefix})?)([^\\s]+)`, 'i');
-		if(this.logger) {
-			this.logger.info(`Server command pattern built.`, {
-				server: server ? server.name : null,
-				serverID: server ? server.id : null,
-				prefix: prefix, pattern: pattern.source
-			});
-		}
+		this.bot.logger.info(`Server command pattern built.`, {
+			server: server ? server.name : null,
+			serverID: server ? server.id : null,
+			prefix: prefix, pattern: pattern.source
+		});
 		return pattern;
 	}
 }

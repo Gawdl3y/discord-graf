@@ -4,31 +4,28 @@
 /* eslint-disable no-unused-vars */
 import util from 'util';
 import stringArgv from 'string-argv';
-import * as bot from '../..';
-import config from '../../config';
-import version from '../../version';
-import * as registry from '../registry';
-import * as dispatcher from '../dispatcher';
-import Setting from '../../database/setting';
-import ModRole from '../../database/mod-role';
+import * as graf from '../..';
+import Command from '../command';
 import FriendlyError from '../../errors/friendly';
 import CommandFormatError from '../../errors/command-format';
-import Util from '../../util';
 /* eslint-enable no-unused-vars */
 
 let lastResult;
 
-export default {
-	name: 'eval',
-	group: 'general',
-	groupName: 'eval',
-	description: 'Evaluates input as JavaScript.',
-	usage: 'eval <script>',
-	details: 'Only the bot owner may use this command.',
+export default class EvalCommand extends Command {
+	constructor(bot) {
+		super(bot);
+		this.name = 'eval';
+		this.group = 'general';
+		this.groupName = 'eval';
+		this.description = 'Evaluates input as JavaScript.';
+		this.usage = 'eval <script>';
+		this.details = 'Only the bot owner may use this command.';
+	}
 
 	isRunnable(message) {
-		return message.author.id === config.owner;
-	},
+		return message.author.id === this.bot.config.values.owner;
+	}
 
 	async run(message, args) {
 		if(!args[0]) throw new CommandFormatError(this, message.server);
@@ -40,4 +37,4 @@ export default {
 			return `Error while evaluating: ${err}`;
 		}
 	}
-};
+}
