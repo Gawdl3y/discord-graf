@@ -6,6 +6,7 @@ const eslint = require('gulp-eslint');
 const esdoc = require('gulp-esdoc');
 const del = require('del');
 
+// Build scripts
 gulp.task('build', () =>
 	gulp.src('src/**/*.js')
 		.pipe(sourcemaps.init())
@@ -14,8 +15,13 @@ gulp.task('build', () =>
 		.pipe(gulp.dest('lib'))
 );
 
+// Clean built scripts
 gulp.task('clean', () => del('lib/**'));
 
+// Clean then build
+gulp.task('rebuild', gulp.series('clean', 'build'));
+
+// Lint scripts
 gulp.task('lint', () =>
 	gulp.src('src/**/*.js')
 		.pipe(eslint())
@@ -23,19 +29,20 @@ gulp.task('lint', () =>
 		.pipe(eslint.failAfterError())
 );
 
-gulp.task('rebuild', gulp.series('clean', 'build'));
-gulp.task('default', gulp.parallel('lint', 'rebuild'));
-
+// Build documentation
 gulp.task('docs', () =>
 	gulp.src(['./src/**/*.js'])
 		.pipe(esdoc())
 );
 
-gulp.task('publish', gulp.series('default', 'docs', () => {
+// Commit & tag with Git and publish to NPM
+gulp.task('publish', gulp.parallel('lint', 'docs', gulp.series('rebuild', () => {
 	const version = require('./package.json').version;
 	return gulp.src('.')
 		.pipe(exec(`git commit -am "Prepare ${version} release"`))
 		.pipe(exec(`git tag v${version}`))
 		.pipe(exec(`git push origin : v${version}`))
 		.pipe(exec('npm publish'));
-}));
+})));
+
+gulp.task('default', gulp.parallel('lint', 'rebuild'));

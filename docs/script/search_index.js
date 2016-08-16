@@ -1,8 +1,50 @@
 window.esdocSearchIndex = [
   [
+    "discord-graf/src/data/allowed-channels.js~allowedchannelstorage",
+    "class/src/data/allowed-channels.js~AllowedChannelStorage.html",
+    "<span>AllowedChannelStorage</span> <span class=\"search-result-import-path\">discord-graf/src/data/allowed-channels.js</span>",
+    "class"
+  ],
+  [
+    "discord-graf/src/config.js~botconfig",
+    "class/src/config.js~BotConfig.html",
+    "<span>BotConfig</span> <span class=\"search-result-import-path\">discord-graf/src/config.js</span>",
+    "class"
+  ],
+  [
+    "discord-graf/src/permissions.js~botpermissions",
+    "class/src/permissions.js~BotPermissions.html",
+    "<span>BotPermissions</span> <span class=\"search-result-import-path\">discord-graf/src/permissions.js</span>",
+    "class"
+  ],
+  [
+    "discord-graf/src/util.js~botutil",
+    "class/src/util.js~BotUtil.html",
+    "<span>BotUtil</span> <span class=\"search-result-import-path\">discord-graf/src/util.js</span>",
+    "class"
+  ],
+  [
+    "discord-graf/src/commands/command.js~command",
+    "class/src/commands/command.js~Command.html",
+    "<span>Command</span> <span class=\"search-result-import-path\">discord-graf/src/commands/command.js</span>",
+    "class"
+  ],
+  [
+    "discord-graf/src/commands/dispatcher.js~commanddispatcher",
+    "class/src/commands/dispatcher.js~CommandDispatcher.html",
+    "<span>CommandDispatcher</span> <span class=\"search-result-import-path\">discord-graf/src/commands/dispatcher.js</span>",
+    "class"
+  ],
+  [
     "discord-graf/src/errors/command-format.js~commandformaterror",
     "class/src/errors/command-format.js~CommandFormatError.html",
     "<span>CommandFormatError</span> <span class=\"search-result-import-path\">discord-graf/src/errors/command-format.js</span>",
+    "class"
+  ],
+  [
+    "discord-graf/src/commands/registry.js~commandregistry",
+    "class/src/commands/registry.js~CommandRegistry.html",
+    "<span>CommandRegistry</span> <span class=\"search-result-import-path\">discord-graf/src/commands/registry.js</span>",
     "class"
   ],
   [
@@ -12,196 +54,34 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
-    "discord-graf/src/database/mod-role.js~modrole",
-    "class/src/database/mod-role.js~ModRole.html",
-    "<span>ModRole</span> <span class=\"search-result-import-path\">discord-graf/src/database/mod-role.js</span>",
+    "discord-graf/src/index.js~grafbot",
+    "class/src/index.js~GrafBot.html",
+    "<span>GrafBot</span> <span class=\"search-result-import-path\">discord-graf/src/index.js</span>",
     "class"
   ],
   [
-    "discord-graf/src/database/setting.js~setting",
-    "class/src/database/setting.js~Setting.html",
-    "<span>Setting</span> <span class=\"search-result-import-path\">discord-graf/src/database/setting.js</span>",
+    "discord-graf/src/data/mod-roles.js~modrolestorage",
+    "class/src/data/mod-roles.js~ModRoleStorage.html",
+    "<span>ModRoleStorage</span> <span class=\"search-result-import-path\">discord-graf/src/data/mod-roles.js</span>",
     "class"
   ],
   [
-    "discord-graf/src/database/usable-channel.js~usablechannel",
-    "class/src/database/usable-channel.js~UsableChannel.html",
-    "<span>UsableChannel</span> <span class=\"search-result-import-path\">discord-graf/src/database/usable-channel.js</span>",
+    "discord-graf/src/data/models/setting.js~setting",
+    "class/src/data/models/setting.js~Setting.html",
+    "<span>Setting</span> <span class=\"search-result-import-path\">discord-graf/src/data/models/setting.js</span>",
     "class"
   ],
   [
-    "discord-graf/src/util.js~util",
-    "class/src/util.js~Util.html",
-    "<span>Util</span> <span class=\"search-result-import-path\">discord-graf/src/util.js</span>",
+    "discord-graf/src/data/settings.js~settingstorage",
+    "class/src/data/settings.js~SettingStorage.html",
+    "<span>SettingStorage</span> <span class=\"search-result-import-path\">discord-graf/src/data/settings.js</span>",
     "class"
   ],
   [
-    "discord-graf/src/commands/dispatcher.js~commandresults",
-    "variable/index.html#static-variable-commandResults",
-    "<span>commandResults</span> <span class=\"search-result-import-path\">discord-graf/src/commands/dispatcher.js</span>",
-    "variable"
-  ],
-  [
-    "discord-graf/src/commands/registry.js~commands",
-    "variable/index.html#static-variable-commands",
-    "<span>commands</span> <span class=\"search-result-import-path\">discord-graf/src/commands/registry.js</span>",
-    "variable"
-  ],
-  [
-    "discord-graf/src/config.js~defaults",
-    "variable/index.html#static-variable-defaults",
-    "<span>defaults</span> <span class=\"search-result-import-path\">discord-graf/src/config.js</span>",
-    "variable"
-  ],
-  [
-    "discord-graf/src/commands/registry.js~find",
-    "function/index.html#static-function-find",
-    "<span>find</span> <span class=\"search-result-import-path\">discord-graf/src/commands/registry.js</span>",
-    "function"
-  ],
-  [
-    "discord-graf/src/index.js~graf",
-    "variable/index.html#static-variable-graf",
-    "<span>graf</span> <span class=\"search-result-import-path\">discord-graf/src/index.js</span>",
-    "variable"
-  ],
-  [
-    "discord-graf/src/commands/registry.js~groups",
-    "variable/index.html#static-variable-groups",
-    "<span>groups</span> <span class=\"search-result-import-path\">discord-graf/src/commands/registry.js</span>",
-    "variable"
-  ],
-  [
-    "discord-graf/src/commands/dispatcher.js~handlemessage",
-    "function/index.html#static-function-handleMessage",
-    "<span>handleMessage</span> <span class=\"search-result-import-path\">discord-graf/src/commands/dispatcher.js</span>",
-    "function"
-  ],
-  [
-    "discord-graf/src/permissions.js~isadmin",
-    "function/index.html#static-function-isAdmin",
-    "<span>isAdmin</span> <span class=\"search-result-import-path\">discord-graf/src/permissions.js</span>",
-    "function"
-  ],
-  [
-    "discord-graf/src/permissions.js~ismod",
-    "function/index.html#static-function-isMod",
-    "<span>isMod</span> <span class=\"search-result-import-path\">discord-graf/src/permissions.js</span>",
-    "function"
-  ],
-  [
-    "discord-graf/src/commands/registry.js~isusable",
-    "function/index.html#static-function-isUsable",
-    "<span>isUsable</span> <span class=\"search-result-import-path\">discord-graf/src/commands/registry.js</span>",
-    "function"
-  ],
-  [
-    "discord-graf/src/config.js~loadyargs",
-    "function/index.html#static-function-loadYargs",
-    "<span>loadYargs</span> <span class=\"search-result-import-path\">discord-graf/src/config.js</span>",
-    "function"
-  ],
-  [
-    "discord-graf/src/commands/dispatcher.js~makeresultobject",
-    "function/index.html#static-function-makeResultObject",
-    "<span>makeResultObject</span> <span class=\"search-result-import-path\">discord-graf/src/commands/dispatcher.js</span>",
-    "function"
-  ],
-  [
-    "discord-graf/src/commands/dispatcher.js~matchdefault",
-    "function/index.html#static-function-matchDefault",
-    "<span>matchDefault</span> <span class=\"search-result-import-path\">discord-graf/src/commands/dispatcher.js</span>",
-    "function"
-  ],
-  [
-    "discord-graf/src/commands/registry.js~namegroup",
-    "function/index.html#static-function-nameGroup",
-    "<span>nameGroup</span> <span class=\"search-result-import-path\">discord-graf/src/commands/registry.js</span>",
-    "function"
-  ],
-  [
-    "discord-graf/src/commands/dispatcher.js~parsemessage",
-    "function/index.html#static-function-parseMessage",
-    "<span>parseMessage</span> <span class=\"search-result-import-path\">discord-graf/src/commands/dispatcher.js</span>",
-    "function"
-  ],
-  [
-    "discord-graf/src/commands/registry.js~register",
-    "function/index.html#static-function-register",
-    "<span>register</span> <span class=\"search-result-import-path\">discord-graf/src/commands/registry.js</span>",
-    "function"
-  ],
-  [
-    "discord-graf/src/commands/dispatcher.js~run",
-    "function/index.html#static-function-run",
-    "<span>run</span> <span class=\"search-result-import-path\">discord-graf/src/commands/dispatcher.js</span>",
-    "function"
-  ],
-  [
-    "discord-graf/src/commands/dispatcher.js~sendmessages",
-    "function/index.html#static-function-sendMessages",
-    "<span>sendMessages</span> <span class=\"search-result-import-path\">discord-graf/src/commands/dispatcher.js</span>",
-    "function"
-  ],
-  [
-    "discord-graf/src/commands/dispatcher.js~sendmessagesforresult",
-    "function/index.html#static-function-sendMessagesForResult",
-    "<span>sendMessagesForResult</span> <span class=\"search-result-import-path\">discord-graf/src/commands/dispatcher.js</span>",
-    "function"
-  ],
-  [
-    "discord-graf/src/commands/dispatcher.js~servercommandpatterns",
-    "variable/index.html#static-variable-serverCommandPatterns",
-    "<span>serverCommandPatterns</span> <span class=\"search-result-import-path\">discord-graf/src/commands/dispatcher.js</span>",
-    "variable"
-  ],
-  [
-    "discord-graf/src/index.js~servercommandpatterns",
-    "variable/index.html#static-variable-serverCommandPatterns",
-    "<span>serverCommandPatterns</span> <span class=\"search-result-import-path\">discord-graf/src/index.js</span>",
-    "variable"
-  ],
-  [
-    "discord-graf/src/config.js~setdefaults",
-    "function/index.html#static-function-setDefaults",
-    "<span>setDefaults</span> <span class=\"search-result-import-path\">discord-graf/src/config.js</span>",
-    "function"
-  ],
-  [
-    "discord-graf/src/config.js~setvalues",
-    "function/index.html#static-function-setValues",
-    "<span>setValues</span> <span class=\"search-result-import-path\">discord-graf/src/config.js</span>",
-    "function"
-  ],
-  [
-    "discord-graf/src/commands/dispatcher.js~unprefixedcommandpattern",
-    "variable/index.html#static-variable-unprefixedCommandPattern",
-    "<span>unprefixedCommandPattern</span> <span class=\"search-result-import-path\">discord-graf/src/commands/dispatcher.js</span>",
-    "variable"
-  ],
-  [
-    "discord-graf/src/index.js~unprefixedcommandpattern",
-    "variable/index.html#static-variable-unprefixedCommandPattern",
-    "<span>unprefixedCommandPattern</span> <span class=\"search-result-import-path\">discord-graf/src/index.js</span>",
-    "variable"
-  ],
-  [
-    "discord-graf/src/commands/dispatcher.js~updatemessages",
-    "function/index.html#static-function-updateMessages",
-    "<span>updateMessages</span> <span class=\"search-result-import-path\">discord-graf/src/commands/dispatcher.js</span>",
-    "function"
-  ],
-  [
-    "discord-graf/src/commands/dispatcher.js~updatemessagesforresult",
-    "function/index.html#static-function-updateMessagesForResult",
-    "<span>updateMessagesForResult</span> <span class=\"search-result-import-path\">discord-graf/src/commands/dispatcher.js</span>",
-    "function"
-  ],
-  [
-    "discord-graf/src/config.js~values",
-    "variable/index.html#static-variable-values",
-    "<span>values</span> <span class=\"search-result-import-path\">discord-graf/src/config.js</span>",
-    "variable"
+    "discord-graf/src/data/storage.js~storage",
+    "class/src/data/storage.js~Storage.html",
+    "<span>Storage</span> <span class=\"search-result-import-path\">discord-graf/src/data/storage.js</span>",
+    "class"
   ],
   [
     "discord-graf/src/version.js~version",
@@ -564,10 +444,184 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "src/commands/command.js",
+    "file/src/commands/command.js.html",
+    "src/commands/command.js",
+    "file"
+  ],
+  [
+    "src/commands/command.js~command#aliases",
+    "class/src/commands/command.js~Command.html#instance-member-aliases",
+    "src/commands/command.js~Command#aliases",
+    "member"
+  ],
+  [
+    "src/commands/command.js~command#argscount",
+    "class/src/commands/command.js~Command.html#instance-member-argsCount",
+    "src/commands/command.js~Command#argsCount",
+    "member"
+  ],
+  [
+    "src/commands/command.js~command#argstype",
+    "class/src/commands/command.js~Command.html#instance-member-argsType",
+    "src/commands/command.js~Command#argsType",
+    "member"
+  ],
+  [
+    "src/commands/command.js~command#constructor",
+    "class/src/commands/command.js~Command.html#instance-constructor-constructor",
+    "src/commands/command.js~Command#constructor",
+    "method"
+  ],
+  [
+    "src/commands/command.js~command#description",
+    "class/src/commands/command.js~Command.html#instance-member-description",
+    "src/commands/command.js~Command#description",
+    "member"
+  ],
+  [
+    "src/commands/command.js~command#details",
+    "class/src/commands/command.js~Command.html#instance-member-details",
+    "src/commands/command.js~Command#details",
+    "member"
+  ],
+  [
+    "src/commands/command.js~command#examples",
+    "class/src/commands/command.js~Command.html#instance-member-examples",
+    "src/commands/command.js~Command#examples",
+    "member"
+  ],
+  [
+    "src/commands/command.js~command#group",
+    "class/src/commands/command.js~Command.html#instance-member-group",
+    "src/commands/command.js~Command#group",
+    "member"
+  ],
+  [
+    "src/commands/command.js~command#groupname",
+    "class/src/commands/command.js~Command.html#instance-member-groupName",
+    "src/commands/command.js~Command#groupName",
+    "member"
+  ],
+  [
+    "src/commands/command.js~command#isrunnable",
+    "class/src/commands/command.js~Command.html#instance-method-isRunnable",
+    "src/commands/command.js~Command#isRunnable",
+    "method"
+  ],
+  [
+    "src/commands/command.js~command#name",
+    "class/src/commands/command.js~Command.html#instance-member-name",
+    "src/commands/command.js~Command#name",
+    "member"
+  ],
+  [
+    "src/commands/command.js~command#serveronly",
+    "class/src/commands/command.js~Command.html#instance-member-serverOnly",
+    "src/commands/command.js~Command#serverOnly",
+    "member"
+  ],
+  [
+    "src/commands/command.js~command#usage",
+    "class/src/commands/command.js~Command.html#instance-member-usage",
+    "src/commands/command.js~Command#usage",
+    "member"
+  ],
+  [
     "src/commands/dispatcher.js",
     "file/src/commands/dispatcher.js.html",
     "src/commands/dispatcher.js",
     "file"
+  ],
+  [
+    "src/commands/dispatcher.js~commanddispatcher#client",
+    "class/src/commands/dispatcher.js~CommandDispatcher.html#instance-member-client",
+    "src/commands/dispatcher.js~CommandDispatcher#client",
+    "member"
+  ],
+  [
+    "src/commands/dispatcher.js~commanddispatcher#config",
+    "class/src/commands/dispatcher.js~CommandDispatcher.html#instance-member-config",
+    "src/commands/dispatcher.js~CommandDispatcher#config",
+    "member"
+  ],
+  [
+    "src/commands/dispatcher.js~commanddispatcher#constructor",
+    "class/src/commands/dispatcher.js~CommandDispatcher.html#instance-constructor-constructor",
+    "src/commands/dispatcher.js~CommandDispatcher#constructor",
+    "method"
+  ],
+  [
+    "src/commands/dispatcher.js~commanddispatcher#handlemessage",
+    "class/src/commands/dispatcher.js~CommandDispatcher.html#instance-method-handleMessage",
+    "src/commands/dispatcher.js~CommandDispatcher#handleMessage",
+    "method"
+  ],
+  [
+    "src/commands/dispatcher.js~commanddispatcher#logger",
+    "class/src/commands/dispatcher.js~CommandDispatcher.html#instance-member-logger",
+    "src/commands/dispatcher.js~CommandDispatcher#logger",
+    "member"
+  ],
+  [
+    "src/commands/dispatcher.js~commanddispatcher#matchdefault",
+    "class/src/commands/dispatcher.js~CommandDispatcher.html#instance-method-matchDefault",
+    "src/commands/dispatcher.js~CommandDispatcher#matchDefault",
+    "method"
+  ],
+  [
+    "src/commands/dispatcher.js~commanddispatcher#parsemessage",
+    "class/src/commands/dispatcher.js~CommandDispatcher.html#instance-method-parseMessage",
+    "src/commands/dispatcher.js~CommandDispatcher#parseMessage",
+    "method"
+  ],
+  [
+    "src/commands/dispatcher.js~commanddispatcher#registry",
+    "class/src/commands/dispatcher.js~CommandDispatcher.html#instance-member-registry",
+    "src/commands/dispatcher.js~CommandDispatcher#registry",
+    "member"
+  ],
+  [
+    "src/commands/dispatcher.js~commanddispatcher#run",
+    "class/src/commands/dispatcher.js~CommandDispatcher.html#instance-method-run",
+    "src/commands/dispatcher.js~CommandDispatcher#run",
+    "method"
+  ],
+  [
+    "src/commands/dispatcher.js~commanddispatcher#sendmessages",
+    "class/src/commands/dispatcher.js~CommandDispatcher.html#instance-method-sendMessages",
+    "src/commands/dispatcher.js~CommandDispatcher#sendMessages",
+    "method"
+  ],
+  [
+    "src/commands/dispatcher.js~commanddispatcher#sendmessagesforresult",
+    "class/src/commands/dispatcher.js~CommandDispatcher.html#instance-method-sendMessagesForResult",
+    "src/commands/dispatcher.js~CommandDispatcher#sendMessagesForResult",
+    "method"
+  ],
+  [
+    "src/commands/dispatcher.js~commanddispatcher#settings",
+    "class/src/commands/dispatcher.js~CommandDispatcher.html#instance-member-settings",
+    "src/commands/dispatcher.js~CommandDispatcher#settings",
+    "member"
+  ],
+  [
+    "src/commands/dispatcher.js~commanddispatcher#updatemessages",
+    "class/src/commands/dispatcher.js~CommandDispatcher.html#instance-method-updateMessages",
+    "src/commands/dispatcher.js~CommandDispatcher#updateMessages",
+    "method"
+  ],
+  [
+    "src/commands/dispatcher.js~commanddispatcher#updatemessagesforresult",
+    "class/src/commands/dispatcher.js~CommandDispatcher.html#instance-method-updateMessagesForResult",
+    "src/commands/dispatcher.js~CommandDispatcher#updateMessagesForResult",
+    "method"
+  ],
+  [
+    "src/commands/dispatcher.js~commanddispatcher.makeresultobject",
+    "class/src/commands/dispatcher.js~CommandDispatcher.html#static-method-makeResultObject",
+    "src/commands/dispatcher.js~CommandDispatcher.makeResultObject",
+    "method"
   ],
   [
     "src/commands/general/about.js",
@@ -612,6 +666,54 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "src/commands/registry.js~commandregistry#commands",
+    "class/src/commands/registry.js~CommandRegistry.html#instance-member-commands",
+    "src/commands/registry.js~CommandRegistry#commands",
+    "member"
+  ],
+  [
+    "src/commands/registry.js~commandregistry#constructor",
+    "class/src/commands/registry.js~CommandRegistry.html#instance-constructor-constructor",
+    "src/commands/registry.js~CommandRegistry#constructor",
+    "method"
+  ],
+  [
+    "src/commands/registry.js~commandregistry#find",
+    "class/src/commands/registry.js~CommandRegistry.html#instance-method-find",
+    "src/commands/registry.js~CommandRegistry#find",
+    "method"
+  ],
+  [
+    "src/commands/registry.js~commandregistry#groups",
+    "class/src/commands/registry.js~CommandRegistry.html#instance-member-groups",
+    "src/commands/registry.js~CommandRegistry#groups",
+    "member"
+  ],
+  [
+    "src/commands/registry.js~commandregistry#logger",
+    "class/src/commands/registry.js~CommandRegistry.html#instance-member-logger",
+    "src/commands/registry.js~CommandRegistry#logger",
+    "member"
+  ],
+  [
+    "src/commands/registry.js~commandregistry#namegroup",
+    "class/src/commands/registry.js~CommandRegistry.html#instance-method-nameGroup",
+    "src/commands/registry.js~CommandRegistry#nameGroup",
+    "method"
+  ],
+  [
+    "src/commands/registry.js~commandregistry#register",
+    "class/src/commands/registry.js~CommandRegistry.html#instance-method-register",
+    "src/commands/registry.js~CommandRegistry#register",
+    "method"
+  ],
+  [
+    "src/commands/registry.js~commandregistry.isusable",
+    "class/src/commands/registry.js~CommandRegistry.html#static-method-isUsable",
+    "src/commands/registry.js~CommandRegistry.isUsable",
+    "method"
+  ],
+  [
     "src/commands/roles/add.js",
     "file/src/commands/roles/add.js.html",
     "src/commands/roles/add.js",
@@ -642,207 +744,273 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "src/database/mod-role.js",
-    "file/src/database/mod-role.js.html",
-    "src/database/mod-role.js",
+    "src/config.js~botconfig#constructor",
+    "class/src/config.js~BotConfig.html#instance-constructor-constructor",
+    "src/config.js~BotConfig#constructor",
+    "method"
+  ],
+  [
+    "src/config.js~botconfig#defaults",
+    "class/src/config.js~BotConfig.html#instance-member-defaults",
+    "src/config.js~BotConfig#defaults",
+    "member"
+  ],
+  [
+    "src/config.js~botconfig#loaddefaults",
+    "class/src/config.js~BotConfig.html#instance-method-loadDefaults",
+    "src/config.js~BotConfig#loadDefaults",
+    "method"
+  ],
+  [
+    "src/config.js~botconfig#values",
+    "class/src/config.js~BotConfig.html#instance-get-values",
+    "src/config.js~BotConfig#values",
+    "member"
+  ],
+  [
+    "src/config.js~botconfig#values",
+    "class/src/config.js~BotConfig.html#instance-set-values",
+    "src/config.js~BotConfig#values",
+    "member"
+  ],
+  [
+    "src/config.js~botconfig#yargs",
+    "class/src/config.js~BotConfig.html#instance-method-yargs",
+    "src/config.js~BotConfig#yargs",
+    "method"
+  ],
+  [
+    "src/config.js~configobject",
+    "typedef/index.html#static-typedef-ConfigObject",
+    "src/config.js~ConfigObject",
+    "typedef"
+  ],
+  [
+    "src/data/allowed-channels.js",
+    "file/src/data/allowed-channels.js.html",
+    "src/data/allowed-channels.js",
     "file"
   ],
   [
-    "src/database/mod-role.js~modrole.basicinfo",
-    "class/src/database/mod-role.js~ModRole.html#static-method-basicInfo",
-    "src/database/mod-role.js~ModRole.basicInfo",
+    "src/data/allowed-channels.js~allowedchannelstorage#constructor",
+    "class/src/data/allowed-channels.js~AllowedChannelStorage.html#instance-constructor-constructor",
+    "src/data/allowed-channels.js~AllowedChannelStorage#constructor",
     "method"
   ],
   [
-    "src/database/mod-role.js~modrole.clearserver",
-    "class/src/database/mod-role.js~ModRole.html#static-method-clearServer",
-    "src/database/mod-role.js~ModRole.clearServer",
+    "src/data/allowed-channels.js~allowedchannelstorage#delete",
+    "class/src/data/allowed-channels.js~AllowedChannelStorage.html#instance-method-delete",
+    "src/data/allowed-channels.js~AllowedChannelStorage#delete",
     "method"
   ],
   [
-    "src/database/mod-role.js~modrole.delete",
-    "class/src/database/mod-role.js~ModRole.html#static-method-delete",
-    "src/database/mod-role.js~ModRole.delete",
+    "src/data/allowed-channels.js~allowedchannelstorage#find",
+    "class/src/data/allowed-channels.js~AllowedChannelStorage.html#instance-method-find",
+    "src/data/allowed-channels.js~AllowedChannelStorage#find",
     "method"
   ],
   [
-    "src/database/mod-role.js~modrole.findinserver",
-    "class/src/database/mod-role.js~ModRole.html#static-method-findInServer",
-    "src/database/mod-role.js~ModRole.findInServer",
+    "src/data/allowed-channels.js~allowedchannelstorage#save",
+    "class/src/data/allowed-channels.js~AllowedChannelStorage.html#instance-method-save",
+    "src/data/allowed-channels.js~AllowedChannelStorage#save",
     "method"
   ],
   [
-    "src/database/mod-role.js~modrole.loaddatabase",
-    "class/src/database/mod-role.js~ModRole.html#static-method-loadDatabase",
-    "src/database/mod-role.js~ModRole.loadDatabase",
-    "method"
-  ],
-  [
-    "src/database/mod-role.js~modrole.save",
-    "class/src/database/mod-role.js~ModRole.html#static-method-save",
-    "src/database/mod-role.js~ModRole.save",
-    "method"
-  ],
-  [
-    "src/database/mod-role.js~modrole.savedatabase",
-    "class/src/database/mod-role.js~ModRole.html#static-method-saveDatabase",
-    "src/database/mod-role.js~ModRole.saveDatabase",
-    "method"
-  ],
-  [
-    "src/database/mod-role.js~modrole.serverhasany",
-    "class/src/database/mod-role.js~ModRole.html#static-method-serverHasAny",
-    "src/database/mod-role.js~ModRole.serverHasAny",
-    "method"
-  ],
-  [
-    "src/database/mod-role.js~modrole.serversmap",
-    "class/src/database/mod-role.js~ModRole.html#static-member-serversMap",
-    "src/database/mod-role.js~ModRole.serversMap",
-    "member"
-  ],
-  [
-    "src/database/setting.js",
-    "file/src/database/setting.js.html",
-    "src/database/setting.js",
+    "src/data/mod-roles.js",
+    "file/src/data/mod-roles.js.html",
+    "src/data/mod-roles.js",
     "file"
   ],
   [
-    "src/database/setting.js~setting#constructor",
-    "class/src/database/setting.js~Setting.html#instance-constructor-constructor",
-    "src/database/setting.js~Setting#constructor",
+    "src/data/mod-roles.js~modrolestorage#constructor",
+    "class/src/data/mod-roles.js~ModRoleStorage.html#instance-constructor-constructor",
+    "src/data/mod-roles.js~ModRoleStorage#constructor",
     "method"
   ],
   [
-    "src/database/setting.js~setting#key",
-    "class/src/database/setting.js~Setting.html#instance-member-key",
-    "src/database/setting.js~Setting#key",
-    "member"
-  ],
-  [
-    "src/database/setting.js~setting#server",
-    "class/src/database/setting.js~Setting.html#instance-member-server",
-    "src/database/setting.js~Setting#server",
-    "member"
-  ],
-  [
-    "src/database/setting.js~setting#value",
-    "class/src/database/setting.js~Setting.html#instance-member-value",
-    "src/database/setting.js~Setting#value",
-    "member"
-  ],
-  [
-    "src/database/setting.js~setting.delete",
-    "class/src/database/setting.js~Setting.html#static-method-delete",
-    "src/database/setting.js~Setting.delete",
+    "src/data/mod-roles.js~modrolestorage#delete",
+    "class/src/data/mod-roles.js~ModRoleStorage.html#instance-method-delete",
+    "src/data/mod-roles.js~ModRoleStorage#delete",
     "method"
   ],
   [
-    "src/database/setting.js~setting.get",
-    "class/src/database/setting.js~Setting.html#static-method-get",
-    "src/database/setting.js~Setting.get",
+    "src/data/mod-roles.js~modrolestorage#find",
+    "class/src/data/mod-roles.js~ModRoleStorage.html#instance-method-find",
+    "src/data/mod-roles.js~ModRoleStorage#find",
     "method"
   ],
   [
-    "src/database/setting.js~setting.getsettingkeyandserver",
-    "class/src/database/setting.js~Setting.html#static-method-getSettingKeyAndServer",
-    "src/database/setting.js~Setting.getSettingKeyAndServer",
+    "src/data/mod-roles.js~modrolestorage#save",
+    "class/src/data/mod-roles.js~ModRoleStorage.html#instance-method-save",
+    "src/data/mod-roles.js~ModRoleStorage#save",
     "method"
   ],
   [
-    "src/database/setting.js~setting.getvalue",
-    "class/src/database/setting.js~Setting.html#static-method-getValue",
-    "src/database/setting.js~Setting.getValue",
-    "method"
-  ],
-  [
-    "src/database/setting.js~setting.loaddatabase",
-    "class/src/database/setting.js~Setting.html#static-method-loadDatabase",
-    "src/database/setting.js~Setting.loadDatabase",
-    "method"
-  ],
-  [
-    "src/database/setting.js~setting.save",
-    "class/src/database/setting.js~Setting.html#static-method-save",
-    "src/database/setting.js~Setting.save",
-    "method"
-  ],
-  [
-    "src/database/setting.js~setting.savedatabase",
-    "class/src/database/setting.js~Setting.html#static-method-saveDatabase",
-    "src/database/setting.js~Setting.saveDatabase",
-    "method"
-  ],
-  [
-    "src/database/setting.js~setting.serversmap",
-    "class/src/database/setting.js~Setting.html#static-member-serversMap",
-    "src/database/setting.js~Setting.serversMap",
-    "member"
-  ],
-  [
-    "src/database/usable-channel.js",
-    "file/src/database/usable-channel.js.html",
-    "src/database/usable-channel.js",
+    "src/data/models/setting.js",
+    "file/src/data/models/setting.js.html",
+    "src/data/models/setting.js",
     "file"
   ],
   [
-    "src/database/usable-channel.js~usablechannel.basicinfo",
-    "class/src/database/usable-channel.js~UsableChannel.html#static-method-basicInfo",
-    "src/database/usable-channel.js~UsableChannel.basicInfo",
+    "src/data/models/setting.js~setting#constructor",
+    "class/src/data/models/setting.js~Setting.html#instance-constructor-constructor",
+    "src/data/models/setting.js~Setting#constructor",
     "method"
   ],
   [
-    "src/database/usable-channel.js~usablechannel.clearserver",
-    "class/src/database/usable-channel.js~UsableChannel.html#static-method-clearServer",
-    "src/database/usable-channel.js~UsableChannel.clearServer",
+    "src/data/models/setting.js~setting#key",
+    "class/src/data/models/setting.js~Setting.html#instance-member-key",
+    "src/data/models/setting.js~Setting#key",
+    "member"
+  ],
+  [
+    "src/data/models/setting.js~setting#server",
+    "class/src/data/models/setting.js~Setting.html#instance-member-server",
+    "src/data/models/setting.js~Setting#server",
+    "member"
+  ],
+  [
+    "src/data/models/setting.js~setting#value",
+    "class/src/data/models/setting.js~Setting.html#instance-member-value",
+    "src/data/models/setting.js~Setting#value",
+    "member"
+  ],
+  [
+    "src/data/settings.js",
+    "file/src/data/settings.js.html",
+    "src/data/settings.js",
+    "file"
+  ],
+  [
+    "src/data/settings.js~settingstorage#constructor",
+    "class/src/data/settings.js~SettingStorage.html#instance-constructor-constructor",
+    "src/data/settings.js~SettingStorage#constructor",
     "method"
   ],
   [
-    "src/database/usable-channel.js~usablechannel.delete",
-    "class/src/database/usable-channel.js~UsableChannel.html#static-method-delete",
-    "src/database/usable-channel.js~UsableChannel.delete",
+    "src/data/settings.js~settingstorage#delete",
+    "class/src/data/settings.js~SettingStorage.html#instance-method-delete",
+    "src/data/settings.js~SettingStorage#delete",
     "method"
   ],
   [
-    "src/database/usable-channel.js~usablechannel.findinserver",
-    "class/src/database/usable-channel.js~UsableChannel.html#static-method-findInServer",
-    "src/database/usable-channel.js~UsableChannel.findInServer",
+    "src/data/settings.js~settingstorage#exists",
+    "class/src/data/settings.js~SettingStorage.html#instance-method-exists",
+    "src/data/settings.js~SettingStorage#exists",
     "method"
   ],
   [
-    "src/database/usable-channel.js~usablechannel.loaddatabase",
-    "class/src/database/usable-channel.js~UsableChannel.html#static-method-loadDatabase",
-    "src/database/usable-channel.js~UsableChannel.loadDatabase",
+    "src/data/settings.js~settingstorage#find",
+    "class/src/data/settings.js~SettingStorage.html#instance-method-find",
+    "src/data/settings.js~SettingStorage#find",
     "method"
   ],
   [
-    "src/database/usable-channel.js~usablechannel.save",
-    "class/src/database/usable-channel.js~UsableChannel.html#static-method-save",
-    "src/database/usable-channel.js~UsableChannel.save",
+    "src/data/settings.js~settingstorage#getsettingkeyandserver",
+    "class/src/data/settings.js~SettingStorage.html#instance-method-getSettingKeyAndServer",
+    "src/data/settings.js~SettingStorage#getSettingKeyAndServer",
     "method"
   ],
   [
-    "src/database/usable-channel.js~usablechannel.savedatabase",
-    "class/src/database/usable-channel.js~UsableChannel.html#static-method-saveDatabase",
-    "src/database/usable-channel.js~UsableChannel.saveDatabase",
+    "src/data/settings.js~settingstorage#getvalue",
+    "class/src/data/settings.js~SettingStorage.html#instance-method-getValue",
+    "src/data/settings.js~SettingStorage#getValue",
     "method"
   ],
   [
-    "src/database/usable-channel.js~usablechannel.serverhas",
-    "class/src/database/usable-channel.js~UsableChannel.html#static-method-serverHas",
-    "src/database/usable-channel.js~UsableChannel.serverHas",
+    "src/data/settings.js~settingstorage#save",
+    "class/src/data/settings.js~SettingStorage.html#instance-method-save",
+    "src/data/settings.js~SettingStorage#save",
     "method"
   ],
   [
-    "src/database/usable-channel.js~usablechannel.serverhasany",
-    "class/src/database/usable-channel.js~UsableChannel.html#static-method-serverHasAny",
-    "src/database/usable-channel.js~UsableChannel.serverHasAny",
+    "src/data/storage.js",
+    "file/src/data/storage.js.html",
+    "src/data/storage.js",
+    "file"
+  ],
+  [
+    "src/data/storage.js~storage#clear",
+    "class/src/data/storage.js~Storage.html#instance-method-clear",
+    "src/data/storage.js~Storage#clear",
     "method"
   ],
   [
-    "src/database/usable-channel.js~usablechannel.serversmap",
-    "class/src/database/usable-channel.js~UsableChannel.html#static-member-serversMap",
-    "src/database/usable-channel.js~UsableChannel.serversMap",
+    "src/data/storage.js~storage#clearall",
+    "class/src/data/storage.js~Storage.html#instance-method-clearAll",
+    "src/data/storage.js~Storage#clearAll",
+    "method"
+  ],
+  [
+    "src/data/storage.js~storage#constructor",
+    "class/src/data/storage.js~Storage.html#instance-constructor-constructor",
+    "src/data/storage.js~Storage#constructor",
+    "method"
+  ],
+  [
+    "src/data/storage.js~storage#delete",
+    "class/src/data/storage.js~Storage.html#instance-method-delete",
+    "src/data/storage.js~Storage#delete",
+    "method"
+  ],
+  [
+    "src/data/storage.js~storage#exists",
+    "class/src/data/storage.js~Storage.html#instance-method-exists",
+    "src/data/storage.js~Storage#exists",
+    "method"
+  ],
+  [
+    "src/data/storage.js~storage#find",
+    "class/src/data/storage.js~Storage.html#instance-method-find",
+    "src/data/storage.js~Storage#find",
+    "method"
+  ],
+  [
+    "src/data/storage.js~storage#isempty",
+    "class/src/data/storage.js~Storage.html#instance-method-isEmpty",
+    "src/data/storage.js~Storage#isEmpty",
+    "method"
+  ],
+  [
+    "src/data/storage.js~storage#key",
+    "class/src/data/storage.js~Storage.html#instance-member-key",
+    "src/data/storage.js~Storage#key",
+    "member"
+  ],
+  [
+    "src/data/storage.js~storage#loadstorage",
+    "class/src/data/storage.js~Storage.html#instance-method-loadStorage",
+    "src/data/storage.js~Storage#loadStorage",
+    "method"
+  ],
+  [
+    "src/data/storage.js~storage#localstorage",
+    "class/src/data/storage.js~Storage.html#instance-member-localStorage",
+    "src/data/storage.js~Storage#localStorage",
+    "member"
+  ],
+  [
+    "src/data/storage.js~storage#logger",
+    "class/src/data/storage.js~Storage.html#instance-member-logger",
+    "src/data/storage.js~Storage#logger",
+    "member"
+  ],
+  [
+    "src/data/storage.js~storage#save",
+    "class/src/data/storage.js~Storage.html#instance-method-save",
+    "src/data/storage.js~Storage#save",
+    "method"
+  ],
+  [
+    "src/data/storage.js~storage#savestorage",
+    "class/src/data/storage.js~Storage.html#instance-method-saveStorage",
+    "src/data/storage.js~Storage#saveStorage",
+    "method"
+  ],
+  [
+    "src/data/storage.js~storage#serversmap",
+    "class/src/data/storage.js~Storage.html#instance-member-serversMap",
+    "src/data/storage.js~Storage#serversMap",
     "member"
   ],
   [
@@ -888,10 +1056,172 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "src/index.js~grafbot#client",
+    "class/src/index.js~GrafBot.html#instance-member-client",
+    "src/index.js~GrafBot#client",
+    "member"
+  ],
+  [
+    "src/index.js~grafbot#config",
+    "class/src/index.js~GrafBot.html#instance-member-config",
+    "src/index.js~GrafBot#config",
+    "member"
+  ],
+  [
+    "src/index.js~grafbot#constructor",
+    "class/src/index.js~GrafBot.html#instance-constructor-constructor",
+    "src/index.js~GrafBot#constructor",
+    "method"
+  ],
+  [
+    "src/index.js~grafbot#createclient",
+    "class/src/index.js~GrafBot.html#instance-method-createClient",
+    "src/index.js~GrafBot#createClient",
+    "method"
+  ],
+  [
+    "src/index.js~grafbot#data",
+    "class/src/index.js~GrafBot.html#instance-member-data",
+    "src/index.js~GrafBot#data",
+    "member"
+  ],
+  [
+    "src/index.js~grafbot#dispatcher",
+    "class/src/index.js~GrafBot.html#instance-member-dispatcher",
+    "src/index.js~GrafBot#dispatcher",
+    "member"
+  ],
+  [
+    "src/index.js~grafbot#errors",
+    "class/src/index.js~GrafBot.html#instance-member-errors",
+    "src/index.js~GrafBot#errors",
+    "member"
+  ],
+  [
+    "src/index.js~grafbot#localstorage",
+    "class/src/index.js~GrafBot.html#instance-member-localStorage",
+    "src/index.js~GrafBot#localStorage",
+    "member"
+  ],
+  [
+    "src/index.js~grafbot#logger",
+    "class/src/index.js~GrafBot.html#instance-get-logger",
+    "src/index.js~GrafBot#logger",
+    "member"
+  ],
+  [
+    "src/index.js~grafbot#namegroups",
+    "class/src/index.js~GrafBot.html#instance-method-nameGroups",
+    "src/index.js~GrafBot#nameGroups",
+    "method"
+  ],
+  [
+    "src/index.js~grafbot#permissions",
+    "class/src/index.js~GrafBot.html#instance-member-permissions",
+    "src/index.js~GrafBot#permissions",
+    "member"
+  ],
+  [
+    "src/index.js~grafbot#registercommands",
+    "class/src/index.js~GrafBot.html#instance-method-registerCommands",
+    "src/index.js~GrafBot#registerCommands",
+    "method"
+  ],
+  [
+    "src/index.js~grafbot#registerdefaultcommands",
+    "class/src/index.js~GrafBot.html#instance-method-registerDefaultCommands",
+    "src/index.js~GrafBot#registerDefaultCommands",
+    "method"
+  ],
+  [
+    "src/index.js~grafbot#registry",
+    "class/src/index.js~GrafBot.html#instance-member-registry",
+    "src/index.js~GrafBot#registry",
+    "member"
+  ],
+  [
+    "src/index.js~grafbot#util",
+    "class/src/index.js~GrafBot.html#instance-member-util",
+    "src/index.js~GrafBot#util",
+    "member"
+  ],
+  [
+    "src/index.js~grafbot#version",
+    "class/src/index.js~GrafBot.html#instance-member-version",
+    "src/index.js~GrafBot#version",
+    "member"
+  ],
+  [
+    "src/index.js~grafbot.command",
+    "class/src/index.js~GrafBot.html#static-get-Command",
+    "src/index.js~GrafBot.Command",
+    "member"
+  ],
+  [
     "src/permissions.js",
     "file/src/permissions.js.html",
     "src/permissions.js",
     "file"
+  ],
+  [
+    "src/permissions.js~botpermissions#client",
+    "class/src/permissions.js~BotPermissions.html#instance-member-client",
+    "src/permissions.js~BotPermissions#client",
+    "member"
+  ],
+  [
+    "src/permissions.js~botpermissions#config",
+    "class/src/permissions.js~BotPermissions.html#instance-member-config",
+    "src/permissions.js~BotPermissions#config",
+    "member"
+  ],
+  [
+    "src/permissions.js~botpermissions#constructor",
+    "class/src/permissions.js~BotPermissions.html#instance-constructor-constructor",
+    "src/permissions.js~BotPermissions#constructor",
+    "method"
+  ],
+  [
+    "src/permissions.js~botpermissions#isadmin",
+    "class/src/permissions.js~BotPermissions.html#instance-method-isAdmin",
+    "src/permissions.js~BotPermissions#isAdmin",
+    "method"
+  ],
+  [
+    "src/permissions.js~botpermissions#ismod",
+    "class/src/permissions.js~BotPermissions.html#instance-method-isMod",
+    "src/permissions.js~BotPermissions#isMod",
+    "method"
+  ],
+  [
+    "src/permissions.js~botpermissions#modroles",
+    "class/src/permissions.js~BotPermissions.html#instance-member-modRoles",
+    "src/permissions.js~BotPermissions#modRoles",
+    "member"
+  ],
+  [
+    "src/permissions.js~botpermissions#resolve",
+    "class/src/permissions.js~BotPermissions.html#instance-method-resolve",
+    "src/permissions.js~BotPermissions#resolve",
+    "method"
+  ],
+  [
+    "src/permissions.js~botpermissions.isadmin",
+    "class/src/permissions.js~BotPermissions.html#static-method-isAdmin",
+    "src/permissions.js~BotPermissions.isAdmin",
+    "method"
+  ],
+  [
+    "src/permissions.js~botpermissions.ismod",
+    "class/src/permissions.js~BotPermissions.html#static-method-isMod",
+    "src/permissions.js~BotPermissions.isMod",
+    "method"
+  ],
+  [
+    "src/permissions.js~botpermissions.resolve",
+    "class/src/permissions.js~BotPermissions.html#static-method-resolve",
+    "src/permissions.js~BotPermissions.resolve",
+    "method"
   ],
   [
     "src/util.js",
@@ -900,46 +1230,118 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "src/util.js~util.disambiguation",
-    "class/src/util.js~Util.html#static-method-disambiguation",
-    "src/util.js~Util.disambiguation",
-    "method"
-  ],
-  [
-    "src/util.js~util.nbsp",
-    "class/src/util.js~Util.html#static-method-nbsp",
-    "src/util.js~Util.nbsp",
-    "method"
-  ],
-  [
-    "src/util.js~util.paginate",
-    "class/src/util.js~Util.html#static-method-paginate",
-    "src/util.js~Util.paginate",
-    "method"
-  ],
-  [
-    "src/util.js~util.patterns",
-    "class/src/util.js~Util.html#static-get-patterns",
-    "src/util.js~Util.patterns",
+    "src/util.js~botutil#client",
+    "class/src/util.js~BotUtil.html#instance-member-client",
+    "src/util.js~BotUtil#client",
     "member"
   ],
   [
-    "src/util.js~util.search",
-    "class/src/util.js~Util.html#static-method-search",
-    "src/util.js~Util.search",
+    "src/util.js~botutil#config",
+    "class/src/util.js~BotUtil.html#instance-member-config",
+    "src/util.js~BotUtil#config",
+    "member"
+  ],
+  [
+    "src/util.js~botutil#constructor",
+    "class/src/util.js~BotUtil.html#instance-constructor-constructor",
+    "src/util.js~BotUtil#constructor",
     "method"
   ],
   [
-    "src/util.js~util.split",
-    "class/src/util.js~Util.html#static-method-split",
-    "src/util.js~Util.split",
+    "src/util.js~botutil#disambiguation",
+    "class/src/util.js~BotUtil.html#instance-method-disambiguation",
+    "src/util.js~BotUtil#disambiguation",
     "method"
   ],
   [
-    "src/util.js~util.usage",
-    "class/src/util.js~Util.html#static-method-usage",
-    "src/util.js~Util.usage",
+    "src/util.js~botutil#nbsp",
+    "class/src/util.js~BotUtil.html#instance-method-nbsp",
+    "src/util.js~BotUtil#nbsp",
     "method"
+  ],
+  [
+    "src/util.js~botutil#paginate",
+    "class/src/util.js~BotUtil.html#instance-method-paginate",
+    "src/util.js~BotUtil#paginate",
+    "method"
+  ],
+  [
+    "src/util.js~botutil#patterns",
+    "class/src/util.js~BotUtil.html#instance-member-patterns",
+    "src/util.js~BotUtil#patterns",
+    "member"
+  ],
+  [
+    "src/util.js~botutil#search",
+    "class/src/util.js~BotUtil.html#instance-method-search",
+    "src/util.js~BotUtil#search",
+    "method"
+  ],
+  [
+    "src/util.js~botutil#settings",
+    "class/src/util.js~BotUtil.html#instance-member-settings",
+    "src/util.js~BotUtil#settings",
+    "member"
+  ],
+  [
+    "src/util.js~botutil#split",
+    "class/src/util.js~BotUtil.html#instance-method-split",
+    "src/util.js~BotUtil#split",
+    "method"
+  ],
+  [
+    "src/util.js~botutil#usage",
+    "class/src/util.js~BotUtil.html#instance-method-usage",
+    "src/util.js~BotUtil#usage",
+    "method"
+  ],
+  [
+    "src/util.js~botutil.disambiguation",
+    "class/src/util.js~BotUtil.html#static-method-disambiguation",
+    "src/util.js~BotUtil.disambiguation",
+    "method"
+  ],
+  [
+    "src/util.js~botutil.nbsp",
+    "class/src/util.js~BotUtil.html#static-method-nbsp",
+    "src/util.js~BotUtil.nbsp",
+    "method"
+  ],
+  [
+    "src/util.js~botutil.paginate",
+    "class/src/util.js~BotUtil.html#static-method-paginate",
+    "src/util.js~BotUtil.paginate",
+    "method"
+  ],
+  [
+    "src/util.js~botutil.patterns",
+    "class/src/util.js~BotUtil.html#static-get-patterns",
+    "src/util.js~BotUtil.patterns",
+    "member"
+  ],
+  [
+    "src/util.js~botutil.search",
+    "class/src/util.js~BotUtil.html#static-method-search",
+    "src/util.js~BotUtil.search",
+    "method"
+  ],
+  [
+    "src/util.js~botutil.split",
+    "class/src/util.js~BotUtil.html#static-method-split",
+    "src/util.js~BotUtil.split",
+    "method"
+  ],
+  [
+    "src/util.js~botutil.usage",
+    "class/src/util.js~BotUtil.html#static-method-usage",
+    "src/util.js~BotUtil.usage",
+    "method"
+  ],
+  [
+    "src/util.js~patternconstants",
+    "typedef/index.html#static-typedef-PatternConstants",
+    "src/util.js~PatternConstants",
+    "typedef"
   ],
   [
     "src/version.js",
