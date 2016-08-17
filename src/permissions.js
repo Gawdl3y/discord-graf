@@ -56,7 +56,7 @@ export default class BotPermissions {
 	 */
 	static isMod(client, config, server, user) {
 		[server, user] = this.resolve(client, server, user);
-		if(user.id === config.owner) return true;
+		if(user.id === config.values.owner) return true;
 		const userRoles = server.rolesOfUser(user);
 		if(userRoles.some(role => role.hasPermission('administrator'))) return true;
 		if(this.modRoles.isEmpty(server)) return userRoles.some(role => role.hasPermission('manageMessages'));
@@ -85,7 +85,7 @@ export default class BotPermissions {
 	 */
 	static isAdmin(client, config, server, user) {
 		[server, user] = this.resolve(client, server, user);
-		if(user.id === config.owner) return true;
+		if(user.id === config.values.owner) return true;
 		return server.rolesOfUser(user).some(role => role.hasPermission('administrator'));
 	}
 
