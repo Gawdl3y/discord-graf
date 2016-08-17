@@ -88,7 +88,7 @@ export default class CommandDispatcher extends EventEmitter {
 		this.bot.logger.info(`Running ${command.group}:${command.groupName}.`, logInfo);
 		try {
 			const result = await command.run(message, args, fromPattern);
-			this.emit('commandRun', command, message, args, fromPattern, this.bot);
+			this.emit('commandRun', command, this.bot, message, args, fromPattern);
 			return result;
 		} catch(err) {
 			if(err instanceof FriendlyError) {
