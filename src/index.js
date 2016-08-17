@@ -100,7 +100,7 @@ export class Bot {
 			if(config.playingGame) client.setPlayingGame(config.playingGame);
 			if(config.botUpdateURL) {
 				this._checkForUpdate();
-				if(config.updateCheck > 0) setInterval(this._checkForUpdate, config.updateCheck * 60 * 1000);
+				if(config.updateCheck > 0) setInterval(this._checkForUpdate.bind(this), config.updateCheck * 60 * 1000);
 			}
 		});
 
