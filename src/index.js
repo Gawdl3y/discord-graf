@@ -11,16 +11,16 @@ import semver from 'semver';
 import Config from './config';
 import Registry from './commands/registry';
 import Dispatcher from './commands/dispatcher';
-import BotCommand from './commands/command';
-import BotPermissions from './permissions';
-import BotUtil from './util';
-import SettingModel from './data/models/setting';
-import BaseStorage from './data/storage';
+import _Command from './commands/command';
+import _Permissions from './permissions';
+import _Util from './util';
+import _Setting from './data/models/setting';
+import _Storage from './data/storage';
 import SettingStorage from './data/settings';
 import ModRoleStorage from './data/mod-roles';
 import AllowedChannelStorage from './data/allowed-channels';
-import FriendlyError from './errors/friendly';
-import CommandFormatError from './errors/command-format';
+import _FriendlyError from './errors/friendly';
+import _CommandFormatError from './errors/command-format';
 
 import HelpCommand from './commands/general/help';
 import AboutCommand from './commands/general/about';
@@ -37,15 +37,13 @@ import DisallowChannelCommand from './commands/channels/disallow';
 import ClearAllowedChannelsCommand from './commands/channels/clear-allowed';
 
 export const version = JSON.parse(readFileSync(pathJoin(__dirname, '../package.json'))).version;
-export const Command = BotCommand;
-export const Permissions = BotPermissions;
-export const Util = BotUtil;
-export const Setting = SettingModel;
-export const Storage = BaseStorage;
-export const errors = {
-	FriendlyError: FriendlyError,
-	CommandFormatError: CommandFormatError
-};
+export const Command = _Command;
+export const Permissions = _Permissions;
+export const Util = _Util;
+export const Storage = _Storage;
+export const Setting = _Setting;
+export const FriendlyError = _FriendlyError;
+export const CommandFormatError = _CommandFormatError;
 
 export default class Bot {
 	constructor(config) {

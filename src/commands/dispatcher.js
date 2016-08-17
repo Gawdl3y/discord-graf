@@ -87,7 +87,7 @@ export default class CommandDispatcher extends EventEmitter {
 		// Run the command
 		this.bot.logger.info(`Running ${command.group}:${command.groupName}.`, logInfo);
 		try {
-			const result = await command.run(message, args, fromPattern, this.bot);
+			const result = await command.run(message, args, fromPattern);
 			this.emit('commandRun', command, message, args, fromPattern, this.bot);
 			return result;
 		} catch(err) {
@@ -189,7 +189,7 @@ export default class CommandDispatcher extends EventEmitter {
 		if(!('argsType' in command) || command.argsType === 'single') {
 			args = [argString.trim()];
 		} else if(command.argsType === 'multiple') {
-			if('argsCount' in command) {
+			if(command.argsCount) {
 				if(command.argsCount < 2) throw new RangeError(`Command ${command.group}:${command.groupName} argsCount must be at least 2.`);
 				args = [];
 				const newlinesReplaced = argString.trim().replace(newlinesPattern, newlinesReplacement);

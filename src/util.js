@@ -279,5 +279,5 @@ const patterns = {
 	userID: /^(?:<@!?)?([0-9]+)>?$/,
 	roleID: /^(?:<@&)?([0-9]+)>?$/,
 	channelID: /^(?:<#)?([0-9]+)>?$/,
-	allUserMentions: /@everyone|@here|<@(?:!|&)?[0-9]+>/gi
+	anyUserMentions: /@everyone|@here|<@(?:!|&)?[0-9]+>/i
 };
