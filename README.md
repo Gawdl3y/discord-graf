@@ -11,7 +11,8 @@ This is a framework for Discord bots to use that contains command handling, conf
 It is written in ES7/ES2016 using Babel, and is built with [discord.js](https://github.com/hydrabolt/discord.js) and Node.js.
 
 ## Installation
-**Requires Node.js 6.0.0 or newer.**
+**Requires Node.js 6.0.0 or newer.**  
 `npm install --save discord-graf`
 
-## Usage
+## Documentation
+Coming soon&trade;.
