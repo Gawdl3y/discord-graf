@@ -121,6 +121,8 @@ export default class Bot {
 			this.logger.info('Logging in with email and password...');
 			client.login(config.email, config.password, loginCallback);
 		}
+
+		return client;
 	}
 
 	registerCommands(commands) {
