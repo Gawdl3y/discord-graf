@@ -37,6 +37,7 @@ import DisallowChannelCommand from './commands/channels/disallow';
 import ClearAllowedChannelsCommand from './commands/channels/clear-allowed';
 
 export const version = JSON.parse(readFileSync(pathJoin(__dirname, '../package.json'))).version;
+export const bots = [];
 export const Command = _Command;
 export const Permissions = _Permissions;
 export const Util = _Util;
@@ -57,6 +58,7 @@ export default class Bot {
 			modRoles: null,
 			allowedChannels: null
 		};
+		bots.push(this);
 	}
 
 	createClient() {
