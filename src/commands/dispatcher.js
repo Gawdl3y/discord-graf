@@ -20,8 +20,8 @@ export default class CommandDispatcher extends EventEmitter {
 		if(message.author.equals(this.bot.client.user)) return;
 
 		// Make sure the bot is allowed to run in the channel, or the user is an admin
-		if(message.server && !this.bot.storage.settings.isEmpty(message.server)
-			&& !this.bot.storage.settings.exists(message.server, message.channel)
+		if(message.server && !this.bot.storage.allowedChannels.isEmpty(message.server)
+			&& !this.bot.storage.allowedChannels.exists(message.server, message.channel)
 			&& !this.bot.permissions.isAdmin(message.server, message.author)) return;
 
 		// Parse the message, and get the old result if it exists
