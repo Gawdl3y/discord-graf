@@ -29,6 +29,7 @@ export default class AboutCommand extends Command {
 				This bot ${owner ? `is owned by ${owner.name}#${owner.discriminator}, and ` : ''}is serving ${users} ${usersLabel} across ${servers} ${serversLabel}.
 				It has been running without interruption for ${days > 0 ? `${daysStr} ` : ''}${hours > 0 ? `${hoursStr} ` : ''}${minutesStr}.
 				${config.invite ? `For bot feedback/help, use this invite: ${config.invite}` : ''}
+				
 				Based on Discord GRAF: https://github.com/Gawdl3y/discord-graf
 			`,
 			reply: 'Sent a DM to you with information.'
