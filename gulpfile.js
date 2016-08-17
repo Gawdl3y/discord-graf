@@ -36,7 +36,7 @@ gulp.task('docs', () =>
 );
 
 // Commit & tag with Git and publish to NPM
-gulp.task('publish', gulp.parallel('lint', 'docs', gulp.series('rebuild', () => {
+gulp.task('publish', gulp.parallel('lint', gulp.series('rebuild', () => {
 	const version = require('./package.json').version;
 	return gulp.src('.')
 		.pipe(exec(`git commit -am "Prepare ${version} release"`))
