@@ -24,6 +24,6 @@ export default class Command {
 	}
 
 	async run() {
-		return {};
+		throw new Error(`${this.constructor.name} doesn't have a run() method, or called the super.run() method.`);
 	}
 }
