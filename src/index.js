@@ -45,7 +45,6 @@ export const Setting = _Setting;
 export const FriendlyError = _FriendlyError;
 export const CommandFormatError = _CommandFormatError;
 
-export default Bot;
 export class Bot {
 	constructor(config) {
 		this.config = new Config(config);
@@ -210,3 +209,5 @@ export class Bot {
 		});
 	}
 }
+
+export default Bot;
