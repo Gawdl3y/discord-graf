@@ -44,6 +44,10 @@ export const Storage = _Storage;
 export const Setting = _Setting;
 export const FriendlyError = _FriendlyError;
 export const CommandFormatError = _CommandFormatError;
+export const defaultClientOptions = {
+	forceFetchUsers: true,
+	bot: true
+};
 
 export class Bot {
 	constructor(config) {
@@ -78,7 +82,7 @@ export class Bot {
 		this.logger.debug('Configuration:', debugConfig);
 
 		// Create client and bot classes
-		const clientOptions = { autoReconnect: config.autoReconnect, forceFetchUsers: true, disableEveryone: config.disableEveryone, bot: true };
+		const clientOptions = Object.assign({}, defaultClientOptions, config.clientOptions, { autoReconnect: config.autoReconnect });
 		const client = new Discord.Client(clientOptions);
 		this.client = client;
 		this.localStorage = new LocalStorage(config.storage);

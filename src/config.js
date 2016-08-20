@@ -237,6 +237,7 @@ const defaultDefaults = {
  * @property {string} [token] - The bot account API token to log in with
  * @property {string} [email] - The bot account email to log in with
  * @property {string} [password] - The bot account password to log in with
+ * @property {Object} [clientOptions] - The Discord.js Client options to pass to the Client constructor
  * @property {boolean} [autoReconnect=true] - Whether or not the bot should automatically reconnect upon disconnection
  * @property {string} [storage=bot-storage] - Path to the local storage directory
  * @property {string} [playingGame=Message\ for\ help] - Text to show the bot playing
