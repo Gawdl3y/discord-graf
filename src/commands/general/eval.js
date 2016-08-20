@@ -21,6 +21,7 @@ export default class EvalCommand extends Command {
 		this.details = 'Only the bot owner may use this command.';
 
 		this.lastResult = null;
+		this.objects = bot.evalObjects;
 	}
 
 	isRunnable(message) {
@@ -30,6 +31,7 @@ export default class EvalCommand extends Command {
 	async run(message, args) {
 		if(!args[0]) throw new CommandFormatError(this, message.server);
 		const msg = message; // eslint-disable-line no-unused-vars
+		const objects = this.objects; // eslint-disable-line no-unused-vars
 		try {
 			this.lastResult = eval(args[0]);
 			return `Result: \`${util.inspect(this.lastResult, { depth: 0 })}\``;

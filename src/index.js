@@ -57,6 +57,7 @@ export class Bot {
 			modRoles: null,
 			allowedChannels: null
 		};
+		this.evalObjects = {};
 	}
 
 	createClient() {
@@ -156,6 +157,10 @@ export class Bot {
 			['roles', 'Roles'],
 			['channels', 'Channels']
 		]);
+	}
+
+	registerEvalObjects(obj) {
+		Object.assign(this.evalObjects, obj);
 	}
 
 	get logger() {
