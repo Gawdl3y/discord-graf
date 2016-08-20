@@ -39,7 +39,7 @@ export default class BotPermissions {
 	 * @see {@link Permissions.isMod}
 	 */
 	isMod(server, user) {
-		return this.constructor.isMod(this.client, this.config, server, user);
+		return this.constructor.isMod(this.client, this.modRoles, this.config, server, user);
 	}
 
 	/**
@@ -48,19 +48,20 @@ export default class BotPermissions {
 	 * If the server has set moderator roles, then they will be a moderator if they have any of the moderator roles assigned.
 	 * The bot owner and users with the "Administrate" permission are always moderators.
 	 * @param {Client} client - The Discord.js Client to use
+	 * @param {ModRoleStorage} modRoles - The moderator roles to use
 	 * @param {BotConfig} config - The bot config to use
 	 * @param {Server|string} server - The Discord.js Server instance or a Discord server ID
 	 * @param {User|string} user - The Discord.js User instance or a Discord user ID
 	 * @return {boolean} Whether or not the user is considered a moderator
 	 * @see {@link Permissions#isMod}
 	 */
-	static isMod(client, config, server, user) {
+	static isMod(client, modRoles, config, server, user) {
 		[server, user] = this.resolve(client, server, user);
 		if(user.id === config.values.owner) return true;
 		const userRoles = server.rolesOfUser(user);
 		if(userRoles.some(role => role.hasPermission('administrator'))) return true;
-		if(this.modRoles.isEmpty(server)) return userRoles.some(role => role.hasPermission('manageMessages'));
-		return this.modRoles.find(server).some(role => userRoles.some(role2 => role.id === role2.id));
+		if(modRoles.isEmpty(server)) return userRoles.some(role => role.hasPermission('manageMessages'));
+		return modRoles.find(server).some(role => userRoles.some(role2 => role.id === role2.id));
 	}
 
 	/**
