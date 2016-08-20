@@ -31,11 +31,11 @@ export default class CommandDispatcher extends EventEmitter {
 		// Run the command, or make an error message result
 		let result;
 		if(command) {
-			if(!oldMessage || oldResult) result = this.constructor.makeResultObject(await this.run(command, args, fromPattern, message));
+			if(!oldMessage || oldResult) result = await this.run(command, args, fromPattern, message);
 		} else if(isCommandMessage) {
 			result = { reply: [`Unknown command. Use ${this.bot.util.usage('help', message.server)} to view the list of all commands.`], editable: true };
 		} else if(this.bot.config.values.nonCommandEdit) {
-			result = {};
+			result = { editable: true };
 		}
 
 		if(result) {
@@ -77,29 +77,32 @@ export default class CommandDispatcher extends EventEmitter {
 		// Make sure the command is usable
 		if(command.serverOnly && !message.server) {
 			this.bot.logger.info(`Not running ${command.group}:${command.groupName}; server only.`, logInfo);
-			return `The \`${command.name}\` command must be used in a server channel.`;
+			return { reply: `The \`${command.name}\` command must be used in a server channel.`, editable: true };
 		}
 		if(command.isRunnable && !command.isRunnable(message)) {
 			this.bot.logger.info(`Not running ${command.group}:${command.groupName}; not runnable.`, logInfo);
-			return `You do not have permission to use the \`${command.name}\` command.`;
+			return { reply: `You do not have permission to use the \`${command.name}\` command.`, editable: true };
 		}
 
 		// Run the command
 		this.bot.logger.info(`Running ${command.group}:${command.groupName}.`, logInfo);
 		try {
-			const result = await command.run(message, args, fromPattern);
-			this.emit('commandRun', command, this.bot, message, args, fromPattern);
+			const result = this.constructor.makeResultObject(await command.run(message, args, fromPattern));
+			this.emit('commandRun', command, result, message, args, fromPattern);
 			return result;
 		} catch(err) {
 			if(err instanceof FriendlyError) {
-				return err.message;
+				return { reply: err.message, editable: true };
 			} else {
 				this.bot.logger.error(err);
 				const owner = this.bot.config.values.owner ? message.client.users.get('id', this.bot.config.values.owner) : null;
-				return stripIndents`
-					An error occurred while running the command: \`${err.name}: ${err.message}\`
-					${owner ? `Please contact ${owner.name}#${owner.discriminator}${this.bot.config.values.invite ? ` in this server: ${this.bot.config.values.invite}` : '.'}` : ''}
-				`;
+				return {
+					reply: stripIndents`
+						An error occurred while running the command: \`${err.name}: ${err.message}\`
+						${owner ? `Please contact ${owner.name}#${owner.discriminator}${this.bot.config.values.invite ? ` in this server: ${this.bot.config.values.invite}` : '.'}` : ''}
+					`,
+					editable: true
+				};
 			}
 		}
 	}
