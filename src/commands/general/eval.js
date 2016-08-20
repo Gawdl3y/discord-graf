@@ -36,6 +36,7 @@ export default class EvalCommand extends Command {
 		/* eslint-disable no-unused-vars */
 		const msg = message;
 		const bot = this.bot;
+		const client = message.client;
 		const objects = this.objects;
 		const doReply = val => {
 			if(val instanceof Error) {
