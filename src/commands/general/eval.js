@@ -3,7 +3,6 @@
 
 /* eslint-disable no-unused-vars */
 import util from 'util';
-import stringArgv from 'string-argv';
 import * as graf from '../..';
 import Command from '../command';
 import FriendlyError from '../../errors/friendly';

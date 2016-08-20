@@ -2,7 +2,6 @@
 'use strict';
 
 import EventEmitter from 'events';
-import stringArgv from 'string-argv';
 import { stripIndents } from 'common-tags';
 import escapeRegex from 'escape-string-regexp';
 import FriendlyError from '../errors/friendly';
@@ -192,18 +191,8 @@ export default class CommandDispatcher extends EventEmitter {
 		if(!('argsType' in command) || command.argsType === 'single') {
 			args = [argString.trim()];
 		} else if(command.argsType === 'multiple') {
-			if(command.argsCount) {
-				if(command.argsCount < 2) throw new RangeError(`Command ${command.group}:${command.groupName} argsCount must be at least 2.`);
-				args = [];
-				const newlinesReplaced = argString.trim().replace(newlinesPattern, newlinesReplacement);
-				const argv = stringArgv(newlinesReplaced);
-				if(argv.length > 0) {
-					for(let i = 0; i < command.argsCount - 1; i++) args.push(argv.shift());
-					if(argv.length > 0) args.push(argv.join(' ').replace(newlinesReplacementPattern, '\n').replace(extraNewlinesPattern, '\n\n'));
-				}
-			} else {
-				args = stringArgv(argString);
-			}
+			if(command.argsCount < 2) throw new RangeError(`Command ${command.group}:${command.groupName} argsCount must be at least 2.`);
+			args = this.constructor.parseArgs(argString, command.argsCount, 'argsSingleQuotes' in command ? command.argsSingleQuotes : true);
 		} else {
 			throw new Error(`Command ${command.group}:${command.groupName} argsType is not one of 'single' or 'multiple'.`);
 		}
@@ -218,6 +207,29 @@ export default class CommandDispatcher extends EventEmitter {
 		if(result.reply && !Array.isArray(result.reply)) result.reply = [result.reply];
 		if(result.direct && !Array.isArray(result.direct)) result.direct = [result.direct];
 		if(!('editable' in result)) result.editable = true;
+		return result;
+	}
+
+	/**
+	 * Parses an argument string into an array of arguments
+	 * @param {string} argString - The argument string to parse
+	 * @param {number} [argCount] - The number of arguments to extract from the string
+	 * @param {boolean} [allowSingleQuote=true] - Whether or not single quotes should be allowed to wrap arguments, in addition to double quotes
+	 * @return {string[]} The array of arguments
+	 */
+	static parseArgs(argString, argCount, allowSingleQuote = true) {
+		const re = allowSingleQuote ? /\s*(?:("|')([^]*?)\1|(\S+))\s*/g : /\s*(?:(")([^]*?)"|(\S+))\s*/g;
+		const result = [];
+		let match = [];
+		// default: large enough to get all items
+		argCount = argCount || argString.length;
+		// get match and push the capture group that is not null to the result
+		while(--argCount && (match = re.exec(argString))) result.push(match[2] || match[3]);
+		// if text remains, push it to the array as it is, except for wrapping quotes, which are removed from it
+		if(match && re.lastIndex < argString.length) {
+			const re2 = allowSingleQuote ? /^("|')([^]*)\1$/g : /^(")([^]*)"$/g;
+			result.push(argString.substr(re.lastIndex).replace(re2, '$2'));
+		}
 		return result;
 	}
 
@@ -243,7 +255,3 @@ export default class CommandDispatcher extends EventEmitter {
 }
 
 const unprefixedCommandPattern = /^([^\s]+)/i;
-const newlinesPattern = /\n/g;
-const newlinesReplacement = '{!~NL~!}';
-const newlinesReplacementPattern = new RegExp(newlinesReplacement, 'g');
-const extraNewlinesPattern = /\n{3,}/g;
