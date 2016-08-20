@@ -9,6 +9,9 @@ import FriendlyError from '../../errors/friendly';
 import CommandFormatError from '../../errors/command-format';
 /* eslint-enable no-unused-vars */
 
+const nl = '!!NL!!';
+const nlPattern = new RegExp(nl, 'g');
+
 export default class EvalCommand extends Command {
 	constructor(bot) {
 		super(bot);
@@ -34,12 +37,19 @@ export default class EvalCommand extends Command {
 		const msg = message;
 		const bot = this.bot;
 		const objects = this.objects;
-		const doReply = val => message.reply(`Callback result: \`${util.inspect(val, { depth: 0 })}\``);
+		const doReply = val => {
+			if(val instanceof Error) {
+				message.reply(`Callback error: \`${val}\``);
+			} else {
+				const inspected = util.inspect(val, { depth: 0 });
+				message.reply(`Callback result: \`${inspected.length < 1925 ? inspected : val}\``);
+			}
+		};
 		/* eslint-enable no-unused-vars */
 
 		try {
 			this.lastResult = eval(args[0]);
-			return `Result: \`${util.inspect(this.lastResult, { depth: 0 })}\``;
+			return this.bot.util.split(`Result: \`${util.inspect(this.lastResult, { depth: 0 }).replace(nlPattern, '\n')}\``);
 		} catch(err) {
 			return `Error while evaluating: ${err}`;
 		}
