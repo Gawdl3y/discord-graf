@@ -192,7 +192,7 @@ export default class CommandDispatcher extends EventEmitter {
 		if(!('argsType' in command) || command.argsType === 'single') {
 			args = [argString.trim()];
 		} else if(command.argsType === 'multiple') {
-			if('argsCount' in command && command.argsCount < 2) throw new RangeError(`Command ${command.group}:${command.groupName} argsCount must be at least 2.`);
+			if(command.argsCount && command.argsCount < 2) throw new RangeError(`Command ${command.group}:${command.groupName} argsCount must be at least 2.`);
 			args = this.constructor.parseArgs(argString, command.argsCount, 'argsSingleQuotes' in command ? command.argsSingleQuotes : true);
 		} else {
 			throw new Error(`Command ${command.group}:${command.groupName} argsType is not one of 'single' or 'multiple'.`);
