@@ -173,7 +173,7 @@ export default class CommandDispatcher extends EventEmitter {
 		const patternIndex = message.server ? message.server.id : '-';
 		if(!this._serverCommandPatterns[patternIndex]) this._serverCommandPatterns[patternIndex] = this._buildCommandPattern(message.server, message.client.user);
 		let [command, args, isCommandMessage] = this.matchDefault(message, this._serverCommandPatterns[patternIndex], 2);
-		if(!command && !message.server) [command, args, isCommandMessage] = this.matchDefault(message, /^([^\s]+)/i);
+		if(!command && !message.server) [command, args, isCommandMessage] = this.matchDefault(message, unprefixedCommandPattern);
 		if(command) return [command, args, false, true];
 
 		return [null, null, false, isCommandMessage];
@@ -195,16 +195,12 @@ export default class CommandDispatcher extends EventEmitter {
 			if(command.argsCount) {
 				if(command.argsCount < 2) throw new RangeError(`Command ${command.group}:${command.groupName} argsCount must be at least 2.`);
 				args = [];
-				const argv = stringArgv(argString.trim().replace(/\n/g, '{!~NL~!}'));
-				if(argv.length === 0) return [command, args, true];
-				for(let i = 0; i < command.argsCount - 1; i++) {
-					if(!argv[i].includes('{!~NL~!}')) continue;
-					const fixed = argv[i].replace(/(?:{!~NL~!}){2,}/g, '{!~NL~!}').split('{!~NL~!}');
-					argv.shift();
-					argv.unshift(...fixed);
+				const newlinesReplaced = argString.trim().replace(newlinesPattern, newlinesReplacement);
+				const argv = stringArgv(newlinesReplaced);
+				if(argv.length > 0) {
+					for(let i = 0; i < command.argsCount - 1; i++) args.push(argv.shift());
+					if(argv.length > 0) args.push(argv.join(' ').replace(newlinesReplacementPattern, '\n').replace(extraNewlinesPattern, '\n\n'));
 				}
-				for(let i = 0; i < command.argsCount - 1; i++) args.push(argv.shift());
-				if(argv.length > 0) args.push(argv.join(' ').replace(/{!~NL~!}/g, '\n').replace(/\n{3,}/g, '\n\n'));
 			} else {
 				args = stringArgv(argString);
 			}
@@ -245,3 +241,9 @@ export default class CommandDispatcher extends EventEmitter {
 		return pattern;
 	}
 }
+
+const unprefixedCommandPattern = /^([^\s]+)/i;
+const newlinesPattern = /\n/g;
+const newlinesReplacement = '{!~NL~!}';
+const newlinesReplacementPattern = new RegExp(newlinesReplacement, 'g');
+const extraNewlinesPattern = /\n{3,}/g;
