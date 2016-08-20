@@ -29,8 +29,14 @@ export default class EvalCommand extends Command {
 
 	async run(message, args) {
 		if(!args[0]) throw new CommandFormatError(this, message.server);
-		const msg = message; // eslint-disable-line no-unused-vars
-		const objects = this.objects; // eslint-disable-line no-unused-vars
+
+		/* eslint-disable no-unused-vars */
+		const msg = message;
+		const bot = this.bot;
+		const objects = this.objects;
+		const doReply = val => message.reply(`Callback result: \`${util.inspect(val, { depth: 0 })}\``);
+		/* eslint-enable no-unused-vars */
+
 		try {
 			this.lastResult = eval(args[0]);
 			return `Result: \`${util.inspect(this.lastResult, { depth: 0 })}\``;
