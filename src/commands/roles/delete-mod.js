@@ -26,9 +26,8 @@ export default class DeleteModRoleCommand extends Command {
 	async run(message, args) {
 		if(!args[0]) throw new CommandFormatError(this, message.server);
 		const matches = this.bot.util.patterns.roleID.exec(args[0]);
-		let roles;
-		const idRole = message.server.roles.get('id', matches[1]);
-		if(idRole) roles = [idRole]; else roles = this.bot.storage.modRoles.find(message.server, matches[1]);
+		const idRole = matches ? message.server.roles.get('id', matches[1]) : null;
+		const roles = idRole ? [idRole] : this.bot.storage.modRoles.find(message.server, args[0]);
 
 		if(roles.length === 1) {
 			if(this.bot.storage.modRoles.delete(roles[0])) {
