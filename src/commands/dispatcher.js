@@ -90,6 +90,7 @@ export default class CommandDispatcher extends EventEmitter {
 			this.emit('commandRun', command, result, message, args, fromPattern);
 			return result;
 		} catch(err) {
+			this.emit('commandError', command, message, args, fromPattern);
 			if(err instanceof FriendlyError) {
 				return { reply: [err.message], editable: true };
 			} else {
