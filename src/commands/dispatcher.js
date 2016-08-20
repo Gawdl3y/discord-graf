@@ -76,11 +76,11 @@ export default class CommandDispatcher extends EventEmitter {
 		// Make sure the command is usable
 		if(command.serverOnly && !message.server) {
 			this.bot.logger.info(`Not running ${command.group}:${command.groupName}; server only.`, logInfo);
-			return { reply: `The \`${command.name}\` command must be used in a server channel.`, editable: true };
+			return { reply: [`The \`${command.name}\` command must be used in a server channel.`], editable: true };
 		}
 		if(command.isRunnable && !command.isRunnable(message)) {
 			this.bot.logger.info(`Not running ${command.group}:${command.groupName}; not runnable.`, logInfo);
-			return { reply: `You do not have permission to use the \`${command.name}\` command.`, editable: true };
+			return { reply: [`You do not have permission to use the \`${command.name}\` command.`], editable: true };
 		}
 
 		// Run the command
@@ -91,15 +91,15 @@ export default class CommandDispatcher extends EventEmitter {
 			return result;
 		} catch(err) {
 			if(err instanceof FriendlyError) {
-				return { reply: err.message, editable: true };
+				return { reply: [err.message], editable: true };
 			} else {
 				this.bot.logger.error(err);
 				const owner = this.bot.config.values.owner ? message.client.users.get('id', this.bot.config.values.owner) : null;
 				return {
-					reply: stripIndents`
+					reply: [stripIndents`
 						An error occurred while running the command: \`${err.name}: ${err.message}\`
 						${owner ? `Please contact ${owner.name}#${owner.discriminator}${this.bot.config.values.invite ? ` in this server: ${this.bot.config.values.invite}` : '.'}` : ''}
-					`,
+					`],
 					editable: true
 				};
 			}
