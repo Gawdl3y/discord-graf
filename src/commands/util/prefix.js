@@ -9,8 +9,8 @@ export default class PrefixCommand extends Command {
 	constructor(bot) {
 		super(bot);
 		this.name = 'prefix';
-		this.group = 'general';
-		this.groupName = 'prefix';
+		this.module = 'util';
+		this.memberName = 'prefix';
 		this.description = 'Shows or sets the command prefix.';
 		this.usage = 'prefix [prefix|"default"|"none"]';
 		this.details = oneLine`

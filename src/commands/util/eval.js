@@ -16,8 +16,8 @@ export default class EvalCommand extends Command {
 	constructor(bot) {
 		super(bot);
 		this.name = 'eval';
-		this.group = 'general';
-		this.groupName = 'eval';
+		this.module = 'util';
+		this.memberName = 'eval';
 		this.description = 'Evaluates input as JavaScript.';
 		this.usage = 'eval <script>';
 		this.details = 'Only the bot owner may use this command.';

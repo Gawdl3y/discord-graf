@@ -19,7 +19,9 @@ export default class CommandDispatcher extends EventEmitter {
 		if(message.author.equals(this.bot.client.user)) return;
 
 		// Make sure the bot is allowed to run in the channel, or the user is an admin
-		if(message.server && !this.bot.storage.allowedChannels.isEmpty(message.server)
+		if(message.server
+			&& this.bot.storage.settings.getValue(message.server, 'mod-channels', true)
+			&& !this.bot.storage.allowedChannels.isEmpty(message.server)
 			&& !this.bot.storage.allowedChannels.exists(message.server, message.channel)
 			&& !this.bot.permissions.isAdmin(message.server, message.author)) return;
 
@@ -30,7 +32,8 @@ export default class CommandDispatcher extends EventEmitter {
 		// Run the command, or make an error message result
 		let result;
 		if(command) {
-			if(!oldMessage || oldResult) result = await this.run(command, args, fromPattern, message);
+			if(!command.isEnabled(message.server)) result = { reply: [`The \`${command.name}\` command is disabled.`], editable: true };
+			else if(!oldMessage || oldResult) result = await this.run(command, args, fromPattern, message);
 		} else if(isCommandMessage) {
 			result = { reply: [`Unknown command. Use ${this.bot.util.usage('help', message.server)} to view the list of all commands.`], editable: true };
 		} else if(this.bot.config.values.nonCommandEdit) {
@@ -75,16 +78,16 @@ export default class CommandDispatcher extends EventEmitter {
 
 		// Make sure the command is usable
 		if(command.serverOnly && !message.server) {
-			this.bot.logger.info(`Not running ${command.group}:${command.groupName}; server only.`, logInfo);
+			this.bot.logger.info(`Not running ${command.module}:${command.memberName}; server only.`, logInfo);
 			return { reply: [`The \`${command.name}\` command must be used in a server channel.`], editable: true };
 		}
 		if(command.isRunnable && !command.isRunnable(message)) {
-			this.bot.logger.info(`Not running ${command.group}:${command.groupName}; not runnable.`, logInfo);
+			this.bot.logger.info(`Not running ${command.module}:${command.memberName}; not runnable.`, logInfo);
 			return { reply: [`You do not have permission to use the \`${command.name}\` command.`], editable: true };
 		}
 
 		// Run the command
-		this.bot.logger.info(`Running ${command.group}:${command.groupName}.`, logInfo);
+		this.bot.logger.info(`Running ${command.module}:${command.memberName}.`, logInfo);
 		try {
 			const result = this.constructor.makeResultObject(await command.run(message, args, fromPattern));
 			this.emit('commandRun', command, result, message, args, fromPattern);
@@ -183,22 +186,19 @@ export default class CommandDispatcher extends EventEmitter {
 		const matches = pattern.exec(message.content);
 		if(!matches) return [null, null, false];
 
-		const commandName = matches[commandNameIndex].toLowerCase();
-		const command = this.bot.registry.commands.find(cmd => cmd.name === commandName || (cmd.aliases && cmd.aliases.some(alias => alias === commandName)));
-		if(!command || command.disableDefault) return [null, null, true];
+		const commands = this.bot.registry.findCommands(matches[commandNameIndex]);
+		if(commands.length !== 1) return [null, null, true];
+		if(!commands[0] || commands[0].disableDefault) return [null, null, true];
 
 		const argString = message.content.substring(matches[1].length + (matches[2] ? matches[2].length : 0));
 		let args;
-		if(!('argsType' in command) || command.argsType === 'single') {
+		if(commands[0].argsType === 'single') {
 			args = [argString.trim()];
-		} else if(command.argsType === 'multiple') {
-			if(command.argsCount && command.argsCount < 2) throw new RangeError(`Command ${command.group}:${command.groupName} argsCount must be at least 2.`);
-			args = this.constructor.parseArgs(argString, command.argsCount, 'argsSingleQuotes' in command ? command.argsSingleQuotes : true);
-		} else {
-			throw new Error(`Command ${command.group}:${command.groupName} argsType is not one of 'single' or 'multiple'.`);
+		} else if(commands[0].argsType === 'multiple') {
+			args = this.constructor.parseArgs(argString, commands[0].argsCount, commands[0].argsSingleQuotes);
 		}
 
-		return [command, args, true];
+		return [commands[0], args, true];
 	}
 
 	static makeResultObject(result) {

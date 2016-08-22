@@ -9,8 +9,8 @@ export default class AddModRoleCommand extends Command {
 		super(bot);
 		this.name = 'addmodrole';
 		this.aliases = ['addmod'];
-		this.group = 'roles';
-		this.groupName = 'add-mod';
+		this.module = 'mod-roles';
+		this.memberName = 'add';
 		this.description = 'Adds a moderator role.';
 		this.usage = 'addmodrole <role>';
 		this.details = 'The role must be the name or ID of a role, or a role mention. Only administrators may use this command.';

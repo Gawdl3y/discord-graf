@@ -8,8 +8,8 @@ export default class ClearModRolesCommand extends Command {
 		super(bot);
 		this.name = 'clearmodroles';
 		this.aliases = ['clearmods'];
-		this.group = 'roles';
-		this.groupName = 'clear-mods';
+		this.module = 'mod-roles';
+		this.memberName = 'clear';
 		this.description = 'Clears all of the moderator roles.';
 		this.details = 'Only administrators may use this command.';
 		this.serverOnly = true;

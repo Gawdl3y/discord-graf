@@ -9,8 +9,8 @@ export default class ListAllowedChannelsCommand extends Command {
 		super(bot);
 		this.name = 'allowedchannels';
 		this.aliases = ['allowedchans', 'channels', 'chans'];
-		this.group = 'channels';
-		this.groupName = 'list-allowed';
+		this.module = 'channels';
+		this.memberName = 'list-allowed';
 		this.description = 'Lists all channels command operation is allowed in.';
 		this.serverOnly = true;
 	}

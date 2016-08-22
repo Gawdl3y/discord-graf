@@ -9,8 +9,8 @@ export default class AllowChannelCommand extends Command {
 		super(bot);
 		this.name = 'allowchannel';
 		this.aliases = ['allowchan', 'addchannel', 'addchan'];
-		this.group = 'channels';
-		this.groupName = 'allow';
+		this.module = 'channels';
+		this.memberName = 'allow';
 		this.description = 'Allows command operation in a channel.';
 		this.usage = 'allowchannel <channel>';
 		this.details = 'The channel must be the name or ID of a channel, or a channel mention. Only administrators may use this command.';

@@ -8,8 +8,8 @@ export default class HelpCommand extends Command {
 	constructor(bot) {
 		super(bot);
 		this.name = 'help';
-		this.group = 'general';
-		this.groupName = 'help';
+		this.module = 'info';
+		this.memberName = 'help';
 		this.aliases = ['commands'];
 		this.description = 'Displays a list of available commands, or detailed information for a specified command.';
 		this.usage = 'help [command]';
@@ -19,8 +19,8 @@ export default class HelpCommand extends Command {
 
 	async run(message, args) {
 		const util = this.bot.util;
-		const groups = this.bot.registry.groups;
-		const commands = this.bot.registry.find(args[0], message);
+		const modules = this.bot.registry.modules;
+		const commands = this.bot.registry.findCommands(args[0], message);
 		const showAll = args[0] && args[0].toLowerCase() === 'all';
 		if(args[0] && !showAll) {
 			if(commands.length === 1) {
@@ -53,9 +53,9 @@ export default class HelpCommand extends Command {
 
 					__**${showAll ? 'All commands' : `Available commands in ${message.server ? `${message.server}` : 'this DM'}`}**__
 
-					${(showAll ? groups : groups.filter(grp => grp.commands.some(cmd => this.bot.registry.constructor.isUsable(cmd, message)))).map(grp => stripIndents`
-						__${grp.name}__
-						${(showAll ? grp.commands : grp.commands.filter(cmd => this.bot.registry.constructor.isUsable(cmd, message)))
+					${(showAll ? modules : modules.filter(mod => mod.commands.some(cmd => this.bot.registry.constructor.isUsable(cmd, message)))).map(mod => stripIndents`
+						__${mod.name}__
+						${(showAll ? mod.commands : mod.commands.filter(cmd => this.bot.registry.constructor.isUsable(cmd, message)))
 							.map(cmd => `**${cmd.name}:** ${cmd.description}`).join('\n')
 						}
 					`).join('\n\n')}

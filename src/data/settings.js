@@ -10,9 +10,7 @@ export default class SettingStorage extends Storage {
 	}
 
 	save(setting) {
-		const server = setting.server;
-		delete setting.server;
-		return super.save(server, setting);
+		return super.save(setting.server, setting);
 	}
 
 	delete(server, setting) {
@@ -34,7 +32,7 @@ export default class SettingStorage extends Storage {
 		[server, setting] = this.getSettingServerAndKey(setting, server);
 		if(!this.serversMap) this.loadStorage();
 		if(!this.serversMap[server]) return defaultValue;
-		if(typeof this.serversMap[server][setting] === 'undefined') return defaultValue;
+		if(!(setting in this.serversMap[server])) return defaultValue;
 		return this.serversMap[server][setting];
 	}
 

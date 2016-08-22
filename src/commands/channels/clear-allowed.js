@@ -8,8 +8,8 @@ export default class ClearAllowedChannelsCommand extends Command {
 		super(bot);
 		this.name = 'clearallowedchannels';
 		this.aliases = ['clearallowedchans', 'clearchannels', 'clearchans'];
-		this.group = 'channels';
-		this.groupName = 'clear-allowed';
+		this.module = 'channels';
+		this.memberName = 'clear-allowed';
 		this.description = 'Clears all of the allowed channels.';
 		this.details = 'Only administrators may use this command.';
 		this.serverOnly = true;

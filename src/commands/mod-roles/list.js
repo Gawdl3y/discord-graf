@@ -9,8 +9,8 @@ export default class ListModRolesCommand extends Command {
 		super(bot);
 		this.name = 'modroles';
 		this.aliases = ['listmodroles', 'mods'];
-		this.group = 'roles';
-		this.groupName = 'list-mods';
+		this.module = 'mod-roles';
+		this.memberName = 'list';
 		this.description = 'Lists all moderator roles.';
 		this.details = 'Only administrators may use this command.';
 		this.serverOnly = true;

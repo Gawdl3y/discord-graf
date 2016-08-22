@@ -10,8 +10,8 @@ export default class DisallowChannelCommand extends Command {
 		super(bot);
 		this.name = 'disallowchannel';
 		this.aliases = ['disallowchan', 'deletechannel', 'deletechan', 'delchan', 'removechannel', 'removechan'];
-		this.group = 'channels';
-		this.groupName = 'disallow';
+		this.module = 'channels';
+		this.memberName = 'disallow';
 		this.description = 'Disallows command operation in a channel.';
 		this.usage = 'disallowchannel <channel>';
 		this.details = 'The channel must be the name or ID of a channel, or a channel mention. Only administrators may use this command.';

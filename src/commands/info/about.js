@@ -9,8 +9,8 @@ export default class AboutCommand extends Command {
 	constructor(bot) {
 		super(bot);
 		this.name = 'about';
-		this.group = 'general';
-		this.groupName = 'about';
+		this.module = 'info';
+		this.memberName = 'about';
 		this.description = 'Displays information about the bot.';
 	}
 

@@ -12,6 +12,7 @@ import Config from './config';
 import Registry from './commands/registry';
 import Dispatcher from './commands/dispatcher';
 import _Command from './commands/command';
+import _Module from './commands/module';
 import _Permissions from './permissions';
 import _Util from './util';
 import _Setting from './data/models/setting';
@@ -22,22 +23,26 @@ import AllowedChannelStorage from './data/allowed-channels';
 import _FriendlyError from './errors/friendly';
 import _CommandFormatError from './errors/command-format';
 
-import HelpCommand from './commands/general/help';
-import AboutCommand from './commands/general/about';
-import PrefixCommand from './commands/general/prefix';
-import EvalCommand from './commands/general/eval';
-import ListRolesCommand from './commands/roles/list';
-import ListModRolesCommand from './commands/roles/list-mods';
-import AddModRoleCommand from './commands/roles/add-mod';
-import DeleteModRoleCommand from './commands/roles/delete-mod';
-import ClearModRolesCommand from './commands/roles/clear-mods';
+import HelpCommand from './commands/info/help';
+import AboutCommand from './commands/info/about';
+import ListModulesCommand from './commands/modules/list';
+import ToggleModuleCommand from './commands/modules/toggle';
+import EnableModuleCommand from './commands/modules/enable';
+import DisableModuleCommand from './commands/modules/disable';
+import ListModRolesCommand from './commands/mod-roles/list';
+import AddModRoleCommand from './commands/mod-roles/add';
+import DeleteModRoleCommand from './commands/mod-roles/delete';
+import ClearModRolesCommand from './commands/mod-roles/clear';
 import ListAllowedChannelsCommand from './commands/channels/list-allowed';
 import AllowChannelCommand from './commands/channels/allow';
 import DisallowChannelCommand from './commands/channels/disallow';
 import ClearAllowedChannelsCommand from './commands/channels/clear-allowed';
+import PrefixCommand from './commands/util/prefix';
+import EvalCommand from './commands/util/eval';
 
 export const version = JSON.parse(readFileSync(pathJoin(__dirname, '../package.json'))).version;
 export const Command = _Command;
+export const Module = _Module;
 export const Permissions = _Permissions;
 export const Util = _Util;
 export const Storage = _Storage;
@@ -52,7 +57,6 @@ export const defaultClientOptions = {
 export class Bot {
 	constructor(config) {
 		this.config = new Config(config);
-		this.registry = null;
 		this.permissions = null;
 		this.util = null;
 		this.localStorage = null;
@@ -89,9 +93,8 @@ export class Bot {
 		this.storage.settings = new SettingStorage(this.localStorage, this.logger);
 		this.storage.modRoles = new ModRoleStorage(this.localStorage, this.logger);
 		this.storage.allowedChannels = new AllowedChannelStorage(this.localStorage, this.logger);
-		this.registry = new Registry(this.logger);
 		this.dispatcher = new Dispatcher(this);
-		this.permissions = new Permissions(client, this.storage.modRoles, this.config);
+		this.permissions = new Permissions(client, this.storage.modRoles, this.storage.settings, this.config);
 		this.util = new Util(client, this.storage.settings, this.config);
 		this.logger.info('Client created.', clientOptions);
 
@@ -130,23 +133,61 @@ export class Bot {
 		return client;
 	}
 
-	registerCommands(commands) {
-		if(!Array.isArray(commands)) commands = [commands];
-		for(let i = 0; i < commands.length; i++) if(typeof commands[i] === 'function') commands[i] = new commands[i](this);
-		this.registry.register(commands);
+	registerCommand(command) {
+		return this.registerCommands([command]);
 	}
 
-	nameGroups(groups) {
-		for(const group of groups) this.registry.nameGroup(...group);
+	registerCommands(commands) {
+		if(!Array.isArray(commands)) throw new TypeError('Commands must be an array.');
+		for(let i = 0; i < commands.length; i++) if(typeof commands[i] === 'function') commands[i] = new commands[i](this);
+		this.registry.registerCommands(commands);
+		return this;
+	}
+
+	registerModule(module) {
+		return this.registerModules([module]);
+	}
+
+	registerModules(modules) {
+		if(!Array.isArray(modules)) throw new TypeError('Modules must be an array.');
+		for(let i = 0; i < modules.length; i++) {
+			if(typeof modules[i] === 'function') {
+				modules[i] = new modules[i](this);
+			} else if(Array.isArray(modules[i])) {
+				modules[i] = new Module(this, ...modules[i]);
+			} else if(!(modules[i] instanceof Module)) {
+				modules[i] = new Module(this, modules[i].id, modules[i].name, modules[i].commands);
+			}
+		}
+		this.registry.registerModules(modules);
+		return this;
+	}
+
+	registerDefaults() {
+		this.registerDefaultModules();
+		this.registerDefaultCommands();
+		return this;
+	}
+
+	registerDefaultModules() {
+		this.registerModules([
+			['info', 'Information'],
+			['modules', 'Modules'],
+			['mod-roles', 'Moderator roles'],
+			['channels', 'Channels'],
+			['util', 'Utility']
+		]);
+		return this;
 	}
 
 	registerDefaultCommands() {
 		this.registerCommands([
 			HelpCommand,
 			AboutCommand,
-			PrefixCommand,
-			EvalCommand,
-			ListRolesCommand,
+			ListModulesCommand,
+			ToggleModuleCommand,
+			EnableModuleCommand,
+			DisableModuleCommand,
 			ListModRolesCommand,
 			AddModRoleCommand,
 			DeleteModRoleCommand,
@@ -154,17 +195,27 @@ export class Bot {
 			ListAllowedChannelsCommand,
 			AllowChannelCommand,
 			DisallowChannelCommand,
-			ClearAllowedChannelsCommand
+			ClearAllowedChannelsCommand,
+			PrefixCommand,
+			EvalCommand
 		]);
-		this.nameGroups([
-			['general', 'General'],
-			['roles', 'Roles'],
-			['channels', 'Channels']
-		]);
+		return this;
+	}
+
+	registerEvalObject(key, obj) {
+		const registerObj = {};
+		registerObj[key] = obj;
+		return this.registerEvalObjects(registerObj);
 	}
 
 	registerEvalObjects(obj) {
 		Object.assign(this.evalObjects, obj);
+		return this;
+	}
+
+	get registry() {
+		if(!this._registry) this._registry = new Registry(this.logger);
+		return this._registry;
 	}
 
 	get logger() {
