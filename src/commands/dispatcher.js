@@ -6,15 +6,26 @@ import { stripIndents } from 'common-tags';
 import escapeRegex from 'escape-string-regexp';
 import FriendlyError from '../errors/friendly';
 
+/** Handles parsing messages and running commands from them */
 export default class CommandDispatcher extends EventEmitter {
+	/** @param {Bot} bot - The bot the dispatcher is for */
 	constructor(bot) {
-		super();
 		if(!bot) throw new Error('A bot must be specified.');
+		super();
+
+		/** @type {Bot} */
 		this.bot = bot;
+
 		this._serverCommandPatterns = {};
 		this._results = {};
 	}
 
+	/**
+	 * Handle a new message or a message update
+	 * @param {Message} message - The message to handle
+	 * @param {?Message} [oldMessage] - The old message before the update
+	 * @return {Promise} Nothing
+	 */
 	async handleMessage(message, oldMessage = null) {
 		if(message.author.equals(this.bot.client.user)) return;
 
@@ -26,7 +37,7 @@ export default class CommandDispatcher extends EventEmitter {
 			&& !this.bot.permissions.isAdmin(message.server, message.author)) return;
 
 		// Parse the message, and get the old result if it exists
-		const [command, args, fromPattern, isCommandMessage] = this.parseMessage(message);
+		const [command, args, fromPattern, isCommandMessage] = this._parseMessage(message);
 		const oldResult = oldMessage ? this._results[oldMessage.id] : null;
 
 		// Run the command, or make an error message result
@@ -67,6 +78,14 @@ export default class CommandDispatcher extends EventEmitter {
 		}
 	}
 
+	/**
+	 * Run a command
+	 * @param {Command} command - The command to run
+	 * @param {string[]} args - The arguments for the command
+	 * @param {boolean} fromPattern - Whether or not the arguments are from a pattern match
+	 * @param {Message} message - The message that triggered the run
+	 * @return {Promise<CommandResult>} The result of running the command
+	 */
 	async run(command, args, fromPattern, message) {
 		const logInfo = {
 			args: String(args),
@@ -110,6 +129,12 @@ export default class CommandDispatcher extends EventEmitter {
 		}
 	}
 
+	/**
+	 * Sends messages for a command result
+	 * @param {Message} message - The message the result is for
+	 * @param {CommandResult} result - The command result
+	 * @return {Promise} Nothing
+	 */
 	async sendMessagesForResult(message, result) {
 		const messages = await Promise.all([
 			result.plain ? this.sendMessages(message, result.plain, 'plain') : null,
@@ -121,6 +146,13 @@ export default class CommandDispatcher extends EventEmitter {
 		if(result.direct) result.directMessages = messages[2];
 	}
 
+	/**
+	 * Sends messages
+	 * @param {Message} message - The message the messages are being sent in response to
+	 * @param {string[]} contents - Contents of the messages to send
+	 * @param {string} type - One of 'plain', 'reply', or 'direct'
+	 * @return {Promise<Message[]>} The sent messages
+	 */
 	async sendMessages(message, contents, type) {
 		const sentMessages = [];
 		for(const content of contents) {
@@ -131,6 +163,13 @@ export default class CommandDispatcher extends EventEmitter {
 		return sentMessages;
 	}
 
+	/**
+	 * Updates messages for a command result
+	 * @param {Message} message - The message the result is for
+	 * @param {CommandResult} result - The command result
+	 * @param {CommandResult} oldResult - The old command result
+	 * @return {Promise} Nothing
+	 */
 	async updateMessagesForResult(message, result, oldResult) {
 		// Update the messages
 		const messages = await Promise.all([
@@ -145,6 +184,14 @@ export default class CommandDispatcher extends EventEmitter {
 		if(!result.direct && oldResult.direct) for(const msg of oldResult.directMessages) msg.delete();
 	}
 
+	/**
+	 * Updates messages
+	 * @param {Message} message - The message the old messages are being updated in response to
+	 * @param {Message[]} oldMessages - The old messages to update
+	 * @param {string[]} contents - Contents of the messages to send
+	 * @param {string} type - One of 'plain', 'reply', or 'direct'
+	 * @return {Promise<Message[]>} The updated messages
+	 */
 	async updateMessages(message, oldMessages, contents, type) {
 		const updatedMessages = [];
 
@@ -162,7 +209,12 @@ export default class CommandDispatcher extends EventEmitter {
 		return updatedMessages;
 	}
 
-	parseMessage(message) {
+	/**
+	 * Parses a message to find details about command usage in it
+	 * @param {Message} message - The message
+	 * @return {Array} Command, arguments, whether or not it's from a pattern match, and whether or not it's a command message
+	 */
+	_parseMessage(message) {
 		// Find the command to run by patterns
 		for(const command of this.bot.registry.commands) {
 			if(!command.patterns) continue;
@@ -175,14 +227,21 @@ export default class CommandDispatcher extends EventEmitter {
 		// Find the command to run with default command handling
 		const patternIndex = message.server ? message.server.id : '-';
 		if(!this._serverCommandPatterns[patternIndex]) this._serverCommandPatterns[patternIndex] = this._buildCommandPattern(message.server, message.client.user);
-		let [command, args, isCommandMessage] = this.matchDefault(message, this._serverCommandPatterns[patternIndex], 2);
-		if(!command && !message.server) [command, args, isCommandMessage] = this.matchDefault(message, unprefixedCommandPattern);
+		let [command, args, isCommandMessage] = this._matchDefault(message, this._serverCommandPatterns[patternIndex], 2);
+		if(!command && !message.server) [command, args, isCommandMessage] = this._matchDefault(message, unprefixedCommandPattern);
 		if(command) return [command, args, false, true];
 
 		return [null, null, false, isCommandMessage];
 	}
 
-	matchDefault(message, pattern, commandNameIndex = 1) {
+	/**
+	 * Matches a message against a server command pattern
+	 * @param {Message} message - The message
+	 * @param {RegExp} pattern - The pattern to match against
+	 * @param {number} commandNameIndex - The index of the command name in the pattern matches
+	 * @return {Array} The command, arguments, and whether or not it's a command message
+	 */
+	_matchDefault(message, pattern, commandNameIndex = 1) {
 		const matches = pattern.exec(message.content);
 		if(!matches) return [null, null, false];
 
@@ -201,6 +260,11 @@ export default class CommandDispatcher extends EventEmitter {
 		return [commands[0], args, true];
 	}
 
+	/**
+	 * Makes a command result object from a command's run result
+	 * @param {CommandResult|string[]|string} result - The command's run result
+	 * @return {CommandResult} The result object
+	 */
 	static makeResultObject(result) {
 		if(typeof result !== 'object' || Array.isArray(result)) result = { reply: result };
 		if(result.plain && result.reply) throw new Error('The command result may contain either "plain" or "reply", not both.');
@@ -256,3 +320,11 @@ export default class CommandDispatcher extends EventEmitter {
 }
 
 const unprefixedCommandPattern = /^([^\s]+)/i;
+
+/**
+ * @typedef CommandResult
+ * @property {string[]} [plain] - Strings to send plain messages for
+ * @property {string[]} [reply] - Strings to send reply messages for
+ * @property {string[]} [direct] - Strings to send direct messages for
+ * @property {boolean} [editable=true] - Whether or not the command message is editable
+ */

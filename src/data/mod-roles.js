@@ -2,7 +2,7 @@
 'use strict';
 
 import Storage from './storage';
-import Util from '../util';
+import Util from '../bot/util';
 
 export default class ModRoleStorage extends Storage {
 	constructor(localStorage, logger) {

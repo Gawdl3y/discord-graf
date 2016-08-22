@@ -126,7 +126,7 @@ export default class Command {
 	 * @param {Message} message - The message the command is being run for
 	 * @param {string[]} args - The arguments for the command, or the matches from a pattern
 	 * @param {boolean} fromPattern - Whether or not the command is being run from a pattern match or not
-	 * @return {Object|string[]|string} The result of running the command
+	 * @return {Promise<CommandResult|string[]|string>} The result of running the command
 	 */
 	async run(message, args, fromPattern) { // eslint-disable-line no-unused-vars
 		throw new Error(`${this.constructor.name} doesn't have a run() method, or called the super.run() method.`);

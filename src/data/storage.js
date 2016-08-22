@@ -1,7 +1,7 @@
 'use babel';
 'use strict';
 
-import Util from '../util';
+import Util from '../bot/util';
 
 export default class Storage {
 	constructor(key, localStorage, logger, objectBased = false) {
