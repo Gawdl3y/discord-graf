@@ -4,18 +4,34 @@
 import EventEmitter from 'events';
 import Module from './module';
 
+/** Handles registration and searching of commands and modules */
 export default class CommandRegistry extends EventEmitter {
+	/** @param {?Logger} [logger] - The logger to use  */
 	constructor(logger) {
 		super();
-		this.logger = logger;
+
+		/** @type {?Logger} */
+		this.logger = logger || null;
+		/** @type {Command[]} */
 		this.commands = [];
+		/** @type {Module[]} */
 		this.modules = [];
 	}
 
+	/**
+	 * Registers a single command
+	 * @param {Command} command - The command to register
+	 * @return {void}
+	 */
 	registerCommand(command) {
 		this.registerCommands([command]);
 	}
 
+	/**
+	 * Registers multiple commands
+	 * @param {Command[]} commands - The commands to register
+	 * @return {void}
+	 */
 	registerCommands(commands) {
 		if(!Array.isArray(commands)) throw new TypeError('Commands must be an array.');
 		for(let command of commands) {
@@ -30,10 +46,20 @@ export default class CommandRegistry extends EventEmitter {
 		}
 	}
 
+	/**
+	 * Registers a single module
+	 * @param {Module} module - The module to register
+	 * @return {void}
+	 */
 	registerModule(module) {
 		this.registerModules([module]);
 	}
 
+	/**
+	 * Registers multiple modules
+	 * @param {Module[]} modules - The modules to register
+	 * @return {void}
+	 */
 	registerModules(modules) {
 		if(!Array.isArray(modules)) throw new TypeError('Modules must be an array.');
 		for(let module of modules) {
@@ -45,6 +71,12 @@ export default class CommandRegistry extends EventEmitter {
 		}
 	}
 
+	/**
+	 * Finds all commands that match the search string
+	 * @param {string} [searchString] - The string to search for
+	 * @param {Message} [message] - The message to check usability against
+	 * @return {Command[]} All commands that are found
+	 */
 	findCommands(searchString = null, message = null) {
 		if(!searchString) return message ? this.commands.filter(cmd => cmd.isUsable(message)) : this.commands;
 
@@ -64,6 +96,11 @@ export default class CommandRegistry extends EventEmitter {
 		return matchedCommands;
 	}
 
+	/**
+	 * Finds all modules that match the search string
+	 * @param {string} [searchString] - The string to search for
+	 * @return {Module[]} All modules that are found
+	 */
 	findModules(searchString = null) {
 		if(!searchString) return this.modules;
 
