@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/config.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/Gawdl3y/discord-graf.git" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/config.js~BotConfig.html">BotConfig</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/index.js~Bot.html">Bot</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/permissions.js~BotPermissions.html">BotPermissions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/util.js~BotUtil.html">BotUtil</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Command">Command</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-CommandFormatError">CommandFormatError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-FriendlyError">FriendlyError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Module">Module</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Permissions">Permissions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Setting">Setting</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Storage">Storage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Util">Util</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-defaultClientOptions">defaultClientOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-version">version</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ConfigObject">ConfigObject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-PatternConstants">PatternConstants</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-SearchOptions">SearchOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_client.html#parameters">ClientOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://yargs.js.org/docs/">Yargs</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_channel.html">Channel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_client.html">Client</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Storage">LocalStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://github.com/winstonjs/winston/blob/master/README.md">Logger</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_message.html">Message</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_user.html">User</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">commands</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/command.js~Command.html">Command</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/dispatcher.js~CommandDispatcher.html">CommandDispatcher</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/module.js~Module.html">Module</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html">CommandRegistry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-CommandInfo">CommandInfo</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-CommandResult">CommandResult</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">data</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/allowed-channels.js~AllowedChannelStorage.html">AllowedChannelStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/mod-roles.js~ModRoleStorage.html">ModRoleStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/settings.js~SettingStorage.html">SettingStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/storage.js~Storage.html">Storage</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">data/models</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/models/setting.js~Setting.html">Setting</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">errors</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/errors/command-format.js~CommandFormatError.html">CommandFormatError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/errors/friendly.js~FriendlyError.html">FriendlyError</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/config.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use babel&apos;;
+&apos;use strict&apos;;
+
+/** Configuration for a bot */
+export default class BotConfig {
+	/**
+	 * @param {ConfigObject} [values] - The configuration to start with
+	 * @param {ConfigObject} [defaults] - The defaults to start with
+	 */
+	constructor(values, defaults) {
+		this._values = {};
+		/** @type {ConfigObject} */
+		this.defaults = Object.assign({}, defaultDefaults, defaults);
+		this.loadDefaults();
+		this.values = values;
+	}
+
+	/**
+	 * Adds to the current values, overwriting existing ones
+	 * @param {ConfigObject} values - The values to add
+	 */
+	set values(values) {
+		Object.assign(this._values, values);
+	}
+
+	/** @type {ConfigObject} */
+	get values() {
+		return this._values;
+	}
+
+	/**
+	 * Adds the defaults to the current values
+	 * @param {boolean} [overwrite=false] - Whether or not the defaults should overwrite existing values
+	 * @return {void}
+	 */
+	loadDefaults(overwrite = false) {
+		if(overwrite) {
+			Object.assign(this._values, this.defaults);
+		} else {
+			for(const key of Object.keys(this.defaults)) {
+				if(!(key in this._values)) this._values[key] = this.defaults[key];
+			}
+		}
+	}
+
+	/**
+	 * Loads configuration from yargs, adding a bunch of default bot options
+	 * @param {Yargs} yargs - The yargs instance to use
+	 * @return {Yargs} The yargs instance
+	 */
+	yargs(yargs) {
+		this.values = yargs
+			// Authentication
+			.option(&apos;token&apos;, {
+				type: &apos;string&apos;,
+				alias: &apos;t&apos;,
+				describe: &apos;API token for the bot account&apos;,
+				group: &apos;Authentication:&apos;
+			})
+			.option(&apos;email&apos;, {
+				type: &apos;string&apos;,
+				alias: &apos;e&apos;,
+				describe: &apos;Email of the Discord account for the bot to use&apos;,
+				group: &apos;Authentication:&apos;
+			})
+			.option(&apos;password&apos;, {
+				type: &apos;string&apos;,
+				alias: &apos;p&apos;,
+				describe: &apos;Password of the Discord account for the bot to use&apos;,
+				group: &apos;Authentication:&apos;
+			})
+			.implies({ email: &apos;password&apos;, password: &apos;email&apos; })
+
+			// General
+			.option(&apos;owner&apos;, {
+				type: &apos;string&apos;,
+				alias: &apos;o&apos;,
+				describe: &apos;Discord user ID of the bot owner&apos;,
+				group: &apos;General:&apos;
+			})
+			.option(&apos;invite&apos;, {
+				type: &apos;string&apos;,
+				alias: &apos;i&apos;,
+				describe: &apos;Discord instant invite to a server to contact the owner&apos;,
+				group: &apos;General:&apos;
+			})
+			.option(&apos;playing-game&apos;, {
+				type: &apos;string&apos;,
+				default: this.defaults.playingGame,
+				alias: &apos;g&apos;,
+				describe: &apos;Text to show in the &quot;Playing...&quot; status&apos;,
+				group: &apos;General:&apos;
+			})
+			.option(&apos;pagination-items&apos;, {
+				type: &apos;number&apos;,
+				default: this.defaults.paginationItems,
+				alias: &apos;I&apos;,
+				describe: &apos;Number of items per page in paginated commands&apos;,
+				group: &apos;General:&apos;
+			})
+			.option(&apos;auto-reconnect&apos;, {
+				type: &apos;boolean&apos;,
+				default: this.defaults.autoReconnect,
+				alias: &apos;a&apos;,
+				describe: &apos;Whether or not the bot should automatically reconnect when disconnected&apos;,
+				group: &apos;General:&apos;
+			})
+			.option(&apos;storage&apos;, {
+				type: &apos;string&apos;,
+				default: this.defaults.storage,
+				alias: &apos;s&apos;,
+				describe: &apos;Path to storage directory&apos;,
+				group: &apos;General:&apos;,
+				normalize: true
+			})
+			.option(&apos;update-check&apos;, {
+				type: &apos;number&apos;,
+				default: this.defaults.updateCheck,
+				alias: &apos;U&apos;,
+				describe: &apos;How frequently to check for an update (in minutes, use 0 to disable)&apos;,
+				group: &apos;General:&apos;
+			})
+
+			// Commands
+			.option(&apos;command-prefix&apos;, {
+				type: &apos;string&apos;,
+				default: this.defaults.commandPrefix,
+				alias: &apos;P&apos;,
+				describe: &apos;Default command prefix (blank to use only mentions)&apos;,
+				group: &apos;Commands:&apos;
+			})
+			.option(&apos;command-editable&apos;, {
+				type: &apos;number&apos;,
+				default: this.defaults.commandEditable,
+				alias: &apos;E&apos;,
+				describe: &apos;How long a command message is editable (in seconds, use 0 to disable)&apos;,
+				group: &apos;Commands:&apos;
+			})
+			.option(&apos;non-command-edit&apos;, {
+				type: &apos;boolean&apos;,
+				default: this.defaults.nonCommandEdit,
+				alias: &apos;N&apos;,
+				describe: &apos;Whether or not a non-command message can be edited into a command&apos;,
+				group: &apos;Commands:&apos;
+			})
+
+			// Logging
+			.option(&apos;log&apos;, {
+				type: &apos;string&apos;,
+				default: this.defaults.log,
+				alias: &apos;l&apos;,
+				describe: &apos;Path to log file&apos;,
+				group: &apos;Logging:&apos;,
+				normalize: true
+			})
+			.option(&apos;log-max-size&apos;, {
+				type: &apos;number&apos;,
+				default: this.defaults.logMaxSize,
+				defaultDescription: &apos;5MB&apos;,
+				alias: &apos;S&apos;,
+				describe: &apos;Maximum size of single log file (in bytes)&apos;,
+				group: &apos;Logging:&apos;
+			})
+			.option(&apos;log-max-files&apos;, {
+				type: &apos;number&apos;,
+				default: this.defaults.logMaxFiles,
+				alias: &apos;F&apos;,
+				describe: &apos;Maximum amount of log files to keep&apos;,
+				group: &apos;Logging:&apos;
+			})
+			.option(&apos;log-level&apos;, {
+				type: &apos;string&apos;,
+				default: this.defaults.logLevel,
+				alias: &apos;L&apos;,
+				describe: &apos;Log level to output to the log file (error, warn, info, verbose, debug)&apos;,
+				group: &apos;Logging:&apos;
+			})
+			.option(&apos;console-level&apos;, {
+				type: &apos;string&apos;,
+				default: this.defaults.consoleLevel,
+				alias: &apos;C&apos;,
+				describe: &apos;Log level to output to the console (error, warn, info, verbose, debug)&apos;,
+				group: &apos;Logging:&apos;
+			})
+			.option(&apos;config&apos;, {
+				type: &apos;string&apos;,
+				alias: &apos;c&apos;,
+				describe: &apos;Path to JSON/YAML config file&apos;,
+				group: &apos;Special:&apos;,
+				normalize: true,
+				config: true,
+				configParser: configFile =&gt; {
+					const extension = require(&apos;path&apos;).extname(configFile).toLowerCase();
+					if(extension === &apos;.json&apos;) {
+						return JSON.parse(require(&apos;fs&apos;).readFileSync(configFile));
+					} else if(extension === &apos;.yml&apos; || extension === &apos;.yaml&apos;) {
+						return require(&apos;js-yaml&apos;).safeLoad(require(&apos;fs&apos;).readFileSync(configFile));
+					}
+					throw new Error(&apos;Unknown config file type.&apos;);
+				}
+			})
+		.argv;
+		return yargs;
+	}
+}
+
+const defaultDefaults = {
+	playingGame: &apos;Message for help&apos;,
+	paginationItems: 10,
+	updateCheck: 60,
+	commandPrefix: &apos;!&apos;,
+	commandEditable: 30,
+	nonCommandEdit: true,
+	autoReconnect: true,
+	storage: &apos;bot-storage&apos;,
+	log: &apos;bot.log&apos;,
+	logMaxSize: 5242880,
+	logMaxFiles: 5,
+	logLevel: &apos;info&apos;,
+	consoleLevel: &apos;info&apos;
+};
+
+/**
+ * @typedef {Object} ConfigObject
+ * @property {string} [botName] - Name of the bot (required to create a client)
+ * @property {string} [botVersion] - Version of the bot (should follow semver, required to create a client)
+ * @property {string} [botAbout] - Text information about the bot for the about command
+ * @property {string} [botUpdateURL] - URL to a package.json file to check for updates with
+ * @property {string} [token] - The bot account API token to log in with
+ * @property {string} [email] - The bot account email to log in with
+ * @property {string} [password] - The bot account password to log in with
+ * @property {ClientOptions} [clientOptions] - The options to pass to the Client constructor
+ * @property {boolean} [autoReconnect=true] - Whether or not the bot should automatically reconnect upon disconnection
+ * @property {string} [storage=bot-storage] - Path to the local storage directory
+ * @property {string} [playingGame=Message-for-help] - Text to show the bot playing
+ * @property {number} [paginationItems=10] - Maximum number of items per page the default commands use when paginating
+ * @property {number} [updateCheck=60] - How frequently to check for updates (in minutes)
+ * @property {string} [commandPrefix=!] - The default command prefix (empty/null for mentions only)
+ * @property {number} [commandEditable=30] - How long commands are editable (in seconds)
+ * @property {boolean} [nonCommandEdit=true] - Whether or not commands will be run in messages that were edited that previously didn&apos;t have any commands
+ * @property {string} [log=bot.log] - Path to the log file
+ * @property {number} [logMaxSize=5242880] - Maximum size of the log file before splitting it (in bytes)
+ * @property {number} [logMaxFiles=5] - Maximum log files to keep
+ * @property {string} [logLevel=info] - The log level to output to the log file (error, warn, info, verbose, debug)
+ * @property {string} [consoleLevel=info] - The log level to output to the console (error, warn, info, verbose, debug)
+ */
+
+/** @external {ClientOptions} http://discordjs.readthedocs.io/en/latest/docs_client.html#parameters */
+/** @external {Yargs} http://yargs.js.org/docs/ */
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.8)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/commands/command.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/Gawdl3y/discord-graf.git" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Bot">Bot</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Command">Command</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-CommandFormatError">CommandFormatError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-FriendlyError">FriendlyError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Module">Module</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Permissions">Permissions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Setting">Setting</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Storage">Storage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Util">Util</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-version">version</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_channel.html">Channel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_client.html">Client</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Storage">LocalStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://github.com/winstonjs/winston/blob/master/README.md">Logger</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_message.html">Message</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_user.html">User</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">bot</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/config.js~BotConfig.html">BotConfig</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/index.js~Bot.html">Bot</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/permissions.js~BotPermissions.html">BotPermissions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/util.js~BotUtil.html">BotUtil</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ConfigObject">ConfigObject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-PatternConstants">PatternConstants</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-SearchOptions">SearchOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_client.html#parameters">ClientOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://yargs.js.org/docs/">Yargs</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">commands</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/command.js~Command.html">Command</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/dispatcher.js~CommandDispatcher.html">CommandDispatcher</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/module.js~Module.html">Module</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html">CommandRegistry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-CommandInfo">CommandInfo</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-CommandResult">CommandResult</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">data</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/allowed-channels.js~AllowedChannelStorage.html">AllowedChannelStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/mod-roles.js~ModRoleStorage.html">ModRoleStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/settings.js~SettingStorage.html">SettingStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/storage.js~Storage.html">Storage</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">data/models</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/models/setting.js~Setting.html">Setting</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">errors</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/errors/command-format.js~CommandFormatError.html">CommandFormatError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/errors/friendly.js~FriendlyError.html">FriendlyError</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/commands/command.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use babel&apos;;
+&apos;use strict&apos;;
+
+import Setting from &apos;../data/models/setting&apos;;
+
+/** A command that can be run in a bot */
+export default class Command {
+	/**
+	 * @param {Bot} bot - The bot the command is for
+	 * @param {CommandInfo} info - The command information
+	 */
+	constructor(bot, info) { // eslint-disable-line complexity
+		if(new.target === Command) throw new Error(&apos;The base command class may not be instantiated.&apos;);
+		if(!bot) throw new Error(&apos;A bot must be specified.&apos;);
+		if(!info) throw new Error(&apos;Command info must be specified.&apos;);
+		if(!info.name) throw new Error(&apos;Command must have a name specified.&apos;);
+		if(info.aliases &amp;&amp; !Array.isArray(info.aliases)) throw new TypeError(&apos;Command aliases must be an array.&apos;);
+		if(!info.module) throw new Error(&apos;Command must have a module specified.&apos;);
+		if(!info.memberName) throw new Error(&apos;Command must have a memberName specified.&apos;);
+		if(!info.description) throw new Error(&apos;Command must have a description specified.&apos;);
+		if(info.examples &amp;&amp; !Array.isArray(info.examples)) throw new TypeError(&apos;Command examples must be an array.&apos;);
+		if(info.argsType &amp;&amp; ![&apos;single&apos;, &apos;multiple&apos;].includes(info.argsType)) throw new RangeError(&apos;Command argsType must be one of &quot;single&quot; or &quot;multiple&quot;.&apos;);
+		if(info.argsType === &apos;multiple&apos; &amp;&amp; info.argsCount &amp;&amp; info.argsCount &lt; 2) throw new RangeError(&apos;Command argsCount must be at least 2.&apos;);
+		if(info.patterns &amp;&amp; !Array.isArray(info.patterns)) throw new TypeError(&apos;Command patterns must be an array.&apos;);
+
+		/** @type {Bot} */
+		this.bot = bot;
+
+		/**
+		 * @type {string}
+		 * @see {@link CommandInfo}
+		 */
+		this.name = info.name;
+
+		/**
+		 * @type {string[]}
+		 * @see {@link CommandInfo}
+		 */
+		this.aliases = info.aliases || null;
+
+		/**
+		 * @type {string}
+		 * @see {@link CommandInfo}
+		 */
+		this.module = info.module;
+
+		/**
+		 * @type {string}
+		 * @see {@link CommandInfo}
+		 */
+		this.memberName = info.memberName;
+
+		/**
+		 * @type {string}
+		 * @see {@link CommandInfo}
+		 */
+		this.description = info.description;
+
+		/**
+		 * @type {string}
+		 * @see {@link CommandInfo}
+		 */
+		this.usage = info.usage || info.name;
+
+		/**
+		 * @type {string}
+		 * @see {@link CommandInfo}
+		 */
+		this.details = info.details || null;
+
+		/**
+		 * @type {string[]}
+		 * @see {@link CommandInfo}
+		 */
+		this.examples = info.examples || null;
+
+		/**
+		 * @type {boolean}
+		 * @see {@link CommandInfo}
+		 */
+		this.serverOnly = !!info.serverOnly;
+
+		/**
+		 * @type {boolean}
+		 * @see {@link CommandInfo}
+		 */
+		this.defaultHandling = &apos;defaultHandling&apos; in info ? info.defaultHandling : true;
+
+		/**
+		 * @type {string}
+		 * @see {@link CommandInfo}
+		 */
+		this.argsType = info.argsType || &apos;single&apos;;
+
+		/**
+		 * @type {number}
+		 * @see {@link CommandInfo}
+		 */
+		this.argsCount = info.argsCount || 0;
+
+		/**
+		 * @type {boolean}
+		 * @see {@link CommandInfo}
+		 */
+		this.argsSingleQuotes = &apos;argsSingleQuotes&apos; in info ? info.argsSingleQuotes : true;
+
+		/**
+		 * @type {RegExp[]}
+		 * @see {@link CommandInfo}
+		 */
+		this.patterns = info.patterns || null;
+	}
+
+	/**
+	 * Checks a user&apos;s permission on a server
+	 * @param {Server} server - The server to test the user&apos;s permission in
+	 * @param {User} user - The user to test the permission of
+	 * @return {boolean} Whether or not the user has permission to use the command in a server
+	 */
+	hasPermission(server, user) { // eslint-disable-line no-unused-vars
+		return true;
+	}
+
+	/**
+	 * Runs the command
+	 * @param {Message} message - The message the command is being run for
+	 * @param {string[]} args - The arguments for the command, or the matches from a pattern
+	 * @param {boolean} fromPattern - Whether or not the command is being run from a pattern match or not
+	 * @return {Promise&lt;CommandResult|string[]|string&gt;} The result of running the command
+	 */
+	async run(message, args, fromPattern) { // eslint-disable-line no-unused-vars
+		throw new Error(`${this.constructor.name} doesn&apos;t have a run() method, or called the super.run() method.`);
+	}
+
+
+	/**
+	 * Enables or disables the command on a server
+	 * @param {Server} server - The server
+	 * @param {boolean} enabled - Whether the command should be enabled or disabled
+	 * @return {void}
+	 */
+	setEnabled(server, enabled) {
+		this.bot.storage.settings.save(new Setting(server, `cmd-${this.name}`, enabled));
+	}
+
+	/**
+	 * Checks if the command is enabled on a server
+	 * @param {Server} server - The server
+	 * @return {boolean} Whether or not the command is enabled
+	 */
+	isEnabled(server) {
+		return this.bot.storage.settings.getValue(server, `cmd-${this.name}`, true) &amp;&amp; this.bot.storage.settings.getValue(server, `mod-${this.module}`, true);
+	}
+
+	/**
+	 * Checks if the command is usable for a message
+	 * @param {?Message} message - The message
+	 * @return {boolean} Whether or not the command is usable
+	 */
+	isUsable(message = null) {
+		if(this.serverOnly &amp;&amp; message &amp;&amp; !message.server) return false;
+		return !message || (this.isEnabled(message.server) &amp;&amp; this.hasPermission(message.server, message.author));
+	}
+}
+
+/**
+ * @typedef {Object} CommandInfo
+ * @property {string} name - The name of the command
+ * @property {string[]} aliases - Alternative names for the command
+ * @property {string} module - The ID of the module the command belongs to
+ * @property {string} memberName - The member name of the command in the module
+ * @property {string} description - A short description of the command
+ * @property {string} [usage=name] - The command usage format string
+ * @property {string} [details] - A detailed description of the command and its functionality
+ * @property {string[]} [examples] - Usage examples of the command
+ * @property {boolean} [serverOnly=false] - Whether or not the command should only function in a server channel
+ * @property {boolean} [defaultHandling=true] - Whether or not the default command handling should be used
+ * @property {string} [argsType=single] - One of &apos;single&apos; or &apos;multiple&apos;
+ * @property {number} [argsCount=0] - The number of arguments to parse from the command string. Only applicable when argsType is &apos;multiple&apos;. If nonzero, it should be at least 2.
+ * @property {boolean} [argsSingleQuotes=true] - Whether or not single quotes should be allowed to contain arguments in the command string.
+ * @property {RegExp[]} [patterns] - Patterns to use for matching the command in a message
+ */
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.8)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

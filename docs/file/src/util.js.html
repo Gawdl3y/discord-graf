@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/util.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/Gawdl3y/discord-graf.git" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/config.js~BotConfig.html">BotConfig</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/index.js~Bot.html">Bot</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/permissions.js~BotPermissions.html">BotPermissions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/util.js~BotUtil.html">BotUtil</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Command">Command</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-CommandFormatError">CommandFormatError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-FriendlyError">FriendlyError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Module">Module</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Permissions">Permissions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Setting">Setting</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Storage">Storage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Util">Util</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-defaultClientOptions">defaultClientOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-version">version</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ConfigObject">ConfigObject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-PatternConstants">PatternConstants</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-SearchOptions">SearchOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_client.html#parameters">ClientOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://yargs.js.org/docs/">Yargs</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_channel.html">Channel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_client.html">Client</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Storage">LocalStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://github.com/winstonjs/winston/blob/master/README.md">Logger</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_message.html">Message</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_user.html">User</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">commands</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/command.js~Command.html">Command</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/dispatcher.js~CommandDispatcher.html">CommandDispatcher</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/module.js~Module.html">Module</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html">CommandRegistry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-CommandInfo">CommandInfo</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-CommandResult">CommandResult</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">data</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/allowed-channels.js~AllowedChannelStorage.html">AllowedChannelStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/mod-roles.js~ModRoleStorage.html">ModRoleStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/settings.js~SettingStorage.html">SettingStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/storage.js~Storage.html">Storage</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">data/models</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/models/setting.js~Setting.html">Setting</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">errors</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/errors/command-format.js~CommandFormatError.html">CommandFormatError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/errors/friendly.js~FriendlyError.html">FriendlyError</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/util.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use babel&apos;;
+&apos;use strict&apos;;
+
+/** Contains general utility methods */
+export default class BotUtil {
+	/**
+	 * @param {Client} client - The Discord.js Client to use
+	 * @param {SettingStorage} settings - The setting storage to use
+	 * @param {BotConfig} config - The bot config to use
+	 */
+	constructor(client, settings, config) {
+		if(!client || !settings || !config) throw new Error(&apos;A client, settings, and config must be specified.&apos;);
+
+		/** @type {Client} */
+		this.client = client;
+		/** @type {SettingStorage} */
+		this.settings = settings;
+		/** @type {BotConfig} */
+		this.config = config;
+		/**
+		 * @type {PatternConstants}
+		 * @see {@link Util.patterns}
+		 */
+		this.patterns = patterns;
+	}
+
+	/**
+	 * @param {string} command - The short command string (ex. &quot;roll d20&quot;)
+	 * @param {?Server} [server=null] - The Discord.js Server instance of the server to use the prefix of
+	 * @param {boolean} [onlyMention=false] - Whether or not the usage string should only show the mention form
+	 * @return {string} The command usage string
+	 * @see {@link Util.usage}
+	 */
+	usage(command, server = null, onlyMention = false) {
+		return this.constructor.usage(this.client, this.settings, this.config, command, server, onlyMention);
+	}
+
+	/**
+	 * Build a command usage string
+	 * @param {Client} client - The Discord.js Client to use
+	 * @param {SettingStorage} settings - The setting storage to use
+	 * @param {BotConfig} config - The bot config to use
+	 * @param {string} command - The short command string (ex. &quot;roll d20&quot;)
+	 * @param {?Server} [server=null] - The Discord.js Server instance of the server to use the prefix of
+	 * @param {boolean} [onlyMention=false] - Whether or not the usage string should only show the mention form
+	 * @return {string} The command usage string
+	 * @see {@link Util#usage}
+	 */
+	static usage(client, settings, config, command, server = null, onlyMention = false) {
+		const nbcmd = this.nbsp(command);
+		if(!server &amp;&amp; !onlyMention) return `\`${nbcmd}\``;
+		let prefixAddon;
+		if(!onlyMention) {
+			let prefix = this.nbsp(settings.getValue(server, &apos;command-prefix&apos;, config.values.commandPrefix));
+			if(prefix.length &gt; 1) prefix += &apos;\xa0&apos;;
+			prefixAddon = prefix ? `\`${prefix}${nbcmd}\` or ` : &apos;&apos;;
+		}
+		return `${prefixAddon ? prefixAddon : &apos;&apos;}\`@${this.nbsp(client.user.name)}#${client.user.discriminator}\xa0${nbcmd}\``;
+	}
+
+	/**
+	 * @param {Object[]} items - An array of items to make the disambiguation list for
+	 * @param {string} label - The text to refer to the items as (ex. &quot;characters&quot;)
+	 * @param {string} [property=name] - The property on items to display in the list
+	 * @return {string} The disambiguation list
+	 * @see {@link Util.disambiguation}
+	 */
+	disambiguation(items, label, property = &apos;name&apos;) {
+		return this.constructor.disambiguation(items, label, property);
+	}
+
+	/**
+	 * Build a disambiguation list - useful for telling a user to be more specific when finding partial matches from a command
+	 * @param {Object[]} items - An array of items to make the disambiguation list for
+	 * @param {string} label - The text to refer to the items as (ex. &quot;characters&quot;)
+	 * @param {string} [property=name] - The property on items to display in the list
+	 * @return {string} The disambiguation list
+	 * @see {@link Util#disambiguation}
+	 */
+	static disambiguation(items, label, property = &apos;name&apos;) {
+		const itemList = items.map(item =&gt; `&quot;${this.nbsp(property ? item[property] : item)}&quot;`).join(&apos;,   &apos;);
+		return `Multiple ${label} found, please be more specific: ${itemList}`;
+	}
+
+	/**
+	 * @param {Object[]} items - An array of items to paginate
+	 * @param {number} [page=1] - The page to select
+	 * @param {number} [pageLength=10] - The number of items per page
+	 * @return {Object} The resulting paginated object
+	 * @property {Object[]} items - The chunk of items for the current page
+	 * @property {number} page - The current page
+	 * @property {number} maxPage - The maximum page
+	 * @property {number} pageLength - The numer of items per page
+	 * @property {string} pageText - The current page string (&quot;page x of y&quot;)
+	 * @see {@link Util.paginate}
+	 */
+	paginate(items, page = 1, pageLength = 10) {
+		return this.constructor.paginate(items, page, pageLength);
+	}
+
+	/**
+	 * Paginate an array of items
+	 * @param {Object[]} items - An array of items to paginate
+	 * @param {number} [page=1] - The page to select
+	 * @param {number} [pageLength=10] - The number of items per page
+	 * @return {Object} The resulting paginated object
+	 * @property {Object[]} items - The chunk of items for the current page
+	 * @property {number} page - The current page
+	 * @property {number} maxPage - The maximum page
+	 * @property {number} pageLength - The numer of items per page
+	 * @property {string} pageText - The current page string (&quot;page x of y&quot;)
+	 * @see {@link Util#paginate}
+	 */
+	static paginate(items, page = 1, pageLength = 10) {
+		const maxPage = Math.ceil(items.length / pageLength);
+		if(page &lt; 1) page = 1;
+		if(page &gt; maxPage) page = maxPage;
+		let startIndex = (page - 1) * pageLength;
+		return {
+			items: items.length &gt; pageLength ? items.slice(startIndex, startIndex + pageLength) : items,
+			page: page,
+			maxPage: maxPage,
+			pageLength: pageLength,
+			pageText: `page ${page} of ${maxPage}`
+		};
+	}
+
+	/**
+	 * @param {Object[]} items - An array of items to search in
+	 * @param {string} searchString - The string to search for
+	 * @param {SearchOptions} options - An options object
+	 * @return {Object[]} The matched items
+	 * @see {@link Util.search}
+	 */
+	search(items, searchString, { property = &apos;name&apos;, searchInexact = true, searchExact = true, useStartsWith = false } = {}) {
+		return this.constructor.search(items, searchString, { property: property, searchInexact: searchInexact, searchExact: searchExact, useStartsWith: useStartsWith });
+	}
+
+	/**
+	 * Search for matches in a list of items
+	 * @param {Object[]} items - An array of items to search in
+	 * @param {string} searchString - The string to search for
+	 * @param {SearchOptions} options - An options object
+	 * @return {Object[]} The matched items
+	 * @see {@link Util#search}
+	 */
+	static search(items, searchString, { property = &apos;name&apos;, searchInexact = true, searchExact = true, useStartsWith = false } = {}) {
+		if(!items || items.length === 0) return [];
+		if(!searchString) return items;
+
+		const lowercaseSearch = searchString.toLowerCase();
+		let matchedItems;
+
+		// Find all items that start with or include the search string
+		if(searchInexact) {
+			if(useStartsWith &amp;&amp; searchString.length === 1) {
+				matchedItems = items.filter(element =&gt; String(property ? element[property] : element)
+					.normalize(&apos;NFKD&apos;)
+					.toLowerCase()
+					.startsWith(lowercaseSearch)
+				);
+			} else {
+				matchedItems = items.filter(element =&gt; String(property ? element[property] : element)
+					.normalize(&apos;NFKD&apos;)
+					.toLowerCase()
+					.includes(lowercaseSearch)
+				);
+			}
+		} else {
+			matchedItems = items;
+		}
+
+		// See if any are an exact match
+		if(searchExact &amp;&amp; matchedItems.length &gt; 1) {
+			const exactItems = matchedItems.filter(element =&gt; String(property ? element[property] : element).normalize(&apos;NFKD&apos;).toLowerCase() === lowercaseSearch);
+			if(exactItems.length &gt; 0) return exactItems;
+		}
+
+		return matchedItems;
+	}
+
+	/**
+	 * @param {string} text - The string to split
+	 * @param {number} [maxLength=1925] - The maximum length of each split string
+	 * @param {string} [splitOn=\n] - The characters to split the string with
+	 * @return {string[]} The split strings
+	 * @see {@link Util.split}
+	 */
+	split(text, maxLength = 1925, splitOn = &apos;\n&apos;) {
+		return this.constructor.split(text, maxLength, splitOn);
+	}
+
+	/**
+	 * Splits a string using specified characters into multiple strings of a maximum length
+	 * @param {string} text - The string to split
+	 * @param {number} [maxLength=1925] - The maximum length of each split string
+	 * @param {string} [splitOn=\n] - The characters to split the string with
+	 * @return {string[]} The split strings
+	 * @see {@link Util#split}
+	 */
+	static split(text, maxLength = 1925, splitOn = &apos;\n&apos;) {
+		const splitText = text.split(splitOn);
+		if(splitText.length === 1 &amp;&amp; text.length &gt; maxLength) throw new Error(&apos;Message exceeds the max length and contains no split characters.&apos;);
+		const messages = [&apos;&apos;];
+		let msg = 0;
+		for(let i = 0; i &lt; splitText.length; i++) {
+			if(messages[msg].length + splitText[i].length + 1 &gt; maxLength) {
+				messages.push(&apos;&apos;);
+				msg++;
+			}
+			messages[msg] += (messages[msg].length &gt; 0 ? &apos;\n&apos; : &apos;&apos;) + splitText[i];
+		}
+		return messages;
+	}
+
+	/**
+	 * @param {string} text - The text to convert
+	 * @return {string} The converted text
+	 * @see {@link Util#nbsp}
+	 */
+	nbsp(text) {
+		return this.constructor.nbsp(text);
+	}
+
+	/**
+	 * Convert spaces to non-breaking spaces
+	 * @param {string} text - The text to convert
+	 * @return {string} The converted text
+	 * @see {@link Util#nbsp}
+	 */
+	static nbsp(text) {
+		return String(text).replace(spacePattern, nbsp);
+	}
+
+	/**
+	 * @type {PatternConstants}
+	 * @see {@link Util#patterns}
+	 */
+	static get patterns() {
+		return patterns;
+	}
+}
+
+const nbsp = &apos;\xa0&apos;;
+const spacePattern = / /g;
+
+/**
+ * @typedef {Object} PatternConstants
+ * @property {RegExp} userID - A pattern to match a user ID from a raw ID string or mention
+ * @property {RegExp} roleID - A pattern to match a role ID from a raw ID string or mention
+ * @property {RegExp} channelID - A pattern to match a channel ID from a raw ID string or mention
+ * @property {RegExp} allUserMentions - A pattern to to match any mentions that would notify users
+ */
+const patterns = {
+	userID: /^(?:&lt;@!?)?([0-9]+)&gt;?$/,
+	roleID: /^(?:&lt;@&amp;)?([0-9]+)&gt;?$/,
+	channelID: /^(?:&lt;#)?([0-9]+)&gt;?$/,
+	anyUserMentions: /@everyone|@here|&lt;@(?:!|&amp;)?[0-9]+&gt;/i
+};
+
+/**
+ * @typedef {Object} SearchOptions
+ * @property {string} [property=name] - The property on items to search against. If empty, the raw object&apos;s toString will be used instead.
+ * @property {boolean} [searchInexact=true] - Whether or not to search for inexact matches
+ * @property {boolean} [searchExact=true] - Whether or not to search for exact matches (will narrow down inexact matches if applicable)
+ * @property {boolean} [useStartsWith=false] - Whether or not to search inexact by checking to see if the item starts with the search string rather than contains,
+ * if the search string is only one character
+ */
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.8)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/bot/index.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/Gawdl3y/discord-graf.git" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Bot">Bot</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Command">Command</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-CommandFormatError">CommandFormatError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-FriendlyError">FriendlyError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Module">Module</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Permissions">Permissions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Setting">Setting</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Storage">Storage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Util">Util</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-version">version</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_channel.html">Channel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_client.html">Client</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Storage">LocalStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://github.com/winstonjs/winston/blob/master/README.md">Logger</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_message.html">Message</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_user.html">User</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">bot</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/config.js~BotConfig.html">BotConfig</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/index.js~Bot.html">Bot</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/permissions.js~BotPermissions.html">BotPermissions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/util.js~BotUtil.html">BotUtil</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ConfigObject">ConfigObject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-PatternConstants">PatternConstants</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-SearchOptions">SearchOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_client.html#parameters">ClientOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://yargs.js.org/docs/">Yargs</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">commands</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/command.js~Command.html">Command</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/dispatcher.js~CommandDispatcher.html">CommandDispatcher</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/module.js~Module.html">Module</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html">CommandRegistry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-CommandInfo">CommandInfo</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-CommandResult">CommandResult</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">data</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/allowed-channels.js~AllowedChannelStorage.html">AllowedChannelStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/mod-roles.js~ModRoleStorage.html">ModRoleStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/settings.js~SettingStorage.html">SettingStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/storage.js~Storage.html">Storage</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">data/models</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/models/setting.js~Setting.html">Setting</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">errors</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/errors/command-format.js~CommandFormatError.html">CommandFormatError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/errors/friendly.js~FriendlyError.html">FriendlyError</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/bot/index.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use babel&apos;;
+&apos;use strict&apos;;
+
+import Discord from &apos;discord.js&apos;;
+import { LocalStorage } from &apos;node-localstorage&apos;;
+import winston from &apos;winston&apos;;
+import request from &apos;request-promise-native&apos;;
+import semver from &apos;semver&apos;;
+import Config from &apos;./config&apos;;
+import Permissions from &apos;./permissions&apos;;
+import Util from &apos;./util&apos;;
+import Registry from &apos;../commands/registry&apos;;
+import Dispatcher from &apos;../commands/dispatcher&apos;;
+import Module from &apos;../commands/module&apos;;
+import Setting from &apos;../data/models/setting&apos;;
+import SettingStorage from &apos;../data/settings&apos;;
+import ModRoleStorage from &apos;../data/mod-roles&apos;;
+import AllowedChannelStorage from &apos;../data/allowed-channels&apos;;
+
+import HelpCommand from &apos;../commands/info/help&apos;;
+import AboutCommand from &apos;../commands/info/about&apos;;
+import ListModulesCommand from &apos;../commands/modules/list&apos;;
+import ToggleModuleCommand from &apos;../commands/modules/toggle&apos;;
+import EnableModuleCommand from &apos;../commands/modules/enable&apos;;
+import DisableModuleCommand from &apos;../commands/modules/disable&apos;;
+import ListModRolesCommand from &apos;../commands/mod-roles/list&apos;;
+import AddModRoleCommand from &apos;../commands/mod-roles/add&apos;;
+import DeleteModRoleCommand from &apos;../commands/mod-roles/delete&apos;;
+import ClearModRolesCommand from &apos;../commands/mod-roles/clear&apos;;
+import ListAllowedChannelsCommand from &apos;../commands/channels/list-allowed&apos;;
+import AllowChannelCommand from &apos;../commands/channels/allow&apos;;
+import DisallowChannelCommand from &apos;../commands/channels/disallow&apos;;
+import ClearAllowedChannelsCommand from &apos;../commands/channels/clear-allowed&apos;;
+import PrefixCommand from &apos;../commands/util/prefix&apos;;
+import EvalCommand from &apos;../commands/util/eval&apos;;
+
+/** A Discord bot that has its own command registry, storage, utilities, etc. */
+export default class Bot {
+	/** @param {ConfigObject} config - The configuration to use */
+	constructor(config) {
+		/** @type {Client} */
+		this.client = null;
+		/** @type {CommandDispatcher} */
+		this.dispatcher = null;
+		/** @type {BotConfig} */
+		this.config = new Config(config);
+		/** @type {BotPermissions} */
+		this.permissions = null;
+		/** @type {BotUtil} */
+		this.util = null;
+		/** @type {LocalStorage} */
+		this.localStorage = null;
+		/**
+		 * @type {Object}
+		 * @property {SettingStorage} settings
+		 * @property {ModRoleStorage} modRoles
+		 * @property {AllowedChannelStorage} allowedChannels
+		 */
+		this.storage = {
+			settings: null,
+			modRoles: null,
+			allowedChannels: null
+		};
+		/** @type {Object} */
+		this.evalObjects = {};
+	}
+
+	/**
+	 * Instantiates all bot classes and storages, and creates the client
+	 * @return {Client} The bot client
+	 */
+	createClient() {
+		if(this.client) throw new Error(&apos;Client has already been created.&apos;);
+		const config = this.config.values;
+
+		// Verify some stuff
+		if(!config.token &amp;&amp; (!config.email || !config.password)) throw new Error(&apos;Invalid credentials; either &quot;token&quot; or both &quot;email&quot; and &quot;password&quot; must be specified on the config.&apos;);
+		if(!config.botName) throw new Error(&apos;&quot;botName&quot; must be specified on the config.&apos;);
+		if(!config.botVersion) throw new Error(&apos;&quot;botVersion&quot; must be specified on the config.&apos;);
+
+		// Output safe config
+		const debugConfig = Object.assign({}, config);
+		if(debugConfig.email) debugConfig.email = &apos;--snip--&apos;;
+		if(debugConfig.password) debugConfig.password = &apos;--snip--&apos;;
+		if(debugConfig.token) debugConfig.token = &apos;--snip--&apos;;
+		for(const key of Object.keys(debugConfig)) if(key.length === 1 || key.includes(&apos;-&apos;)) delete debugConfig[key];
+		this.logger.debug(&apos;Configuration:&apos;, debugConfig);
+
+		// Create client and bot classes
+		const clientOptions = Object.assign({}, defaultClientOptions, config.clientOptions, { autoReconnect: config.autoReconnect });
+		const client = new Discord.Client(clientOptions);
+		this.client = client;
+		this.localStorage = new LocalStorage(config.storage);
+		this.storage.settings = new SettingStorage(this.localStorage, this.logger);
+		this.storage.modRoles = new ModRoleStorage(this.localStorage, this.logger);
+		this.storage.allowedChannels = new AllowedChannelStorage(this.localStorage, this.logger);
+		this.dispatcher = new Dispatcher(this);
+		this.permissions = new Permissions(client, this.storage.modRoles, this.storage.settings, this.config);
+		this.util = new Util(client, this.storage.settings, this.config);
+		this.logger.info(&apos;Client created.&apos;, clientOptions);
+
+		// Set up logging, playing game text, and update checking
+		client.on(&apos;error&apos;, err =&gt; { this.logger.error(err); });
+		client.on(&apos;warn&apos;, err =&gt; { this.logger.warn(err); });
+		client.on(&apos;debug&apos;, err =&gt; { this.logger.debug(err); });
+		client.on(&apos;disconnected&apos;, () =&gt; { this.logger.error(&apos;Disconnected.&apos;); });
+		client.on(&apos;ready&apos;, () =&gt; {
+			this.logger.info(`Bot is ready; logged in as ${client.user.username}#${client.user.discriminator} (ID: ${client.user.id})`);
+			if(config.playingGame) client.setPlayingGame(config.playingGame);
+			if(config.botUpdateURL) {
+				this._checkForUpdate();
+				if(config.updateCheck &gt; 0) setInterval(this._checkForUpdate.bind(this), config.updateCheck * 60 * 1000);
+			}
+		});
+
+		// Set up command handling
+		client.on(&apos;message&apos;, message =&gt; {
+			this.dispatcher.handleMessage(message).catch(err =&gt; { this.logger.error(err); });
+		});
+		client.on(&apos;messageUpdated&apos;, (oldMessage, newMessage) =&gt; {
+			this.dispatcher.handleMessage(newMessage, oldMessage).catch(err =&gt; { this.logger.error(err); });
+		});
+
+		// Log in
+		const loginCallback = err =&gt; { if(err) this.logger.error(&apos;Failed to login.&apos;, err); };
+		if(config.token) {
+			this.logger.info(&apos;Logging in with token...&apos;);
+			client.loginWithToken(config.token, config.email, config.password, loginCallback);
+		} else {
+			this.logger.info(&apos;Logging in with email and password...&apos;);
+			client.login(config.email, config.password, loginCallback);
+		}
+
+		return client;
+	}
+
+	/**
+	 * Registers a single command to the bot&apos;s registry
+	 * @param {Command|function} command - Either a Command instance, or a constructor for one
+	 * @return {Bot} This bot
+	 */
+	registerCommand(command) {
+		return this.registerCommands([command]);
+	}
+
+	/**
+	 * Registers multiple commands to the bot&apos;s registry
+	 * @param {Command[]|function[]} commands - An array of Command instances or constructors
+	 * @return {Bot} This bot
+	 */
+	registerCommands(commands) {
+		if(!Array.isArray(commands)) throw new TypeError(&apos;Commands must be an array.&apos;);
+		for(let i = 0; i &lt; commands.length; i++) if(typeof commands[i] === &apos;function&apos;) commands[i] = new commands[i](this);
+		this.registry.registerCommands(commands);
+		return this;
+	}
+
+	/**
+	 * Registers a single module to the bot&apos;s registry
+	 * @param {Module|function|Array} module - A Module instance, a constructor, or an array of [ID, Name]
+	 * @return {Bot} This bot
+	 */
+	registerModule(module) {
+		return this.registerModules([module]);
+	}
+
+	/**
+	 * Registers multiple modules to the bot&apos;s registry
+	 * @param {Module[]|function[]|Array[]} modules - An array of Module instances, constructors, or arrays of [ID, Name]
+	 * @return {Bot} This bot
+	 */
+	registerModules(modules) {
+		if(!Array.isArray(modules)) throw new TypeError(&apos;Modules must be an array.&apos;);
+		for(let i = 0; i &lt; modules.length; i++) {
+			if(typeof modules[i] === &apos;function&apos;) {
+				modules[i] = new modules[i](this);
+			} else if(Array.isArray(modules[i])) {
+				modules[i] = new Module(this, ...modules[i]);
+			} else if(!(modules[i] instanceof Module)) {
+				modules[i] = new Module(this, modules[i].id, modules[i].name, modules[i].commands);
+			}
+		}
+		this.registry.registerModules(modules);
+		return this;
+	}
+
+	/**
+	 * Registers both the default modules and commands to the bot&apos;s registry
+	 * @return {Bot} This bot
+	 */
+	registerDefaults() {
+		this.registerDefaultModules();
+		this.registerDefaultCommands();
+		return this;
+	}
+
+	/**
+	 * Registers the default modules to the bot&apos;s registry
+	 * @return {Bot} This bot
+	 */
+	registerDefaultModules() {
+		this.registerModules([
+			[&apos;info&apos;, &apos;Information&apos;],
+			[&apos;modules&apos;, &apos;Modules&apos;],
+			[&apos;mod-roles&apos;, &apos;Moderator roles&apos;],
+			[&apos;channels&apos;, &apos;Channels&apos;],
+			[&apos;util&apos;, &apos;Utility&apos;]
+		]);
+		return this;
+	}
+
+	/**
+	 * Registers the default commands to the bot&apos;s registry
+	 * @return {Bot} This bot
+	 */
+	registerDefaultCommands() {
+		this.registerCommands([
+			HelpCommand,
+			AboutCommand,
+			ListModulesCommand,
+			ToggleModuleCommand,
+			EnableModuleCommand,
+			DisableModuleCommand,
+			ListModRolesCommand,
+			AddModRoleCommand,
+			DeleteModRoleCommand,
+			ClearModRolesCommand,
+			ListAllowedChannelsCommand,
+			AllowChannelCommand,
+			DisallowChannelCommand,
+			ClearAllowedChannelsCommand,
+			PrefixCommand,
+			EvalCommand
+		]);
+		return this;
+	}
+
+	/**
+	 * Registers a single object to be usable by the eval command
+	 * @param {string} key - The key for the object
+	 * @param {Object} obj - The object
+	 * @return {Bot} This bot
+	 */
+	registerEvalObject(key, obj) {
+		const registerObj = {};
+		registerObj[key] = obj;
+		return this.registerEvalObjects(registerObj);
+	}
+
+	/**
+	 * Registers multiple objects to be usable by the eval command
+	 * @param {Object} obj - An object of keys: values
+	 * @return {Bot} This bot
+	 */
+	registerEvalObjects(obj) {
+		Object.assign(this.evalObjects, obj);
+		return this;
+	}
+
+	/** @type {CommandRegistry} */
+	get registry() {
+		if(!this._registry) this._registry = new Registry(this.logger);
+		return this._registry;
+	}
+
+	/** @type {Logger} */
+	get logger() {
+		if(!this._logger) {
+			this._logger = new winston.Logger({
+				transports: [
+					new winston.transports.Console({
+						level: this.config.values.consoleLevel,
+						colorize: true,
+						timestamp: true,
+						handleExceptions: true,
+						humanReadableUnhandledException: true
+					})
+				]
+			});
+			if(this.config.values.log) {
+				this._logger.add(winston.transports.File, {
+					level: this.config.values.logLevel,
+					filename: this.config.values.log,
+					maxsize: this.config.values.logMaxSize,
+					maxFiles: this.config.values.logMaxFiles,
+					tailable: true,
+					json: false,
+					handleExceptions: true,
+					humanReadableUnhandledException: true
+				});
+			}
+		}
+		return this._logger;
+	}
+
+	/**
+	 * Checks for an update for the bot
+	 * @return {void}
+	 */
+	_checkForUpdate() {
+		const config = this.config.values;
+		request(config.botUpdateURL).then(body =&gt; {
+			const masterVersion = JSON.parse(body).version;
+			if(!semver.gt(masterVersion, config.botVersion)) return;
+			const message = `An update for ${config.botName} is available! Current version is ${config.botVersion}, latest available is ${masterVersion}.`;
+			this.logger.warn(message);
+			const savedVersion = this.storage.settings.getValue(null, &apos;notified-version&apos;);
+			if(savedVersion !== masterVersion &amp;&amp; this.client &amp;&amp; config.owner) {
+				this.client.sendMessage(config.owner, message);
+				this.storage.settings.save(new Setting(null, &apos;notified-version&apos;, masterVersion));
+			}
+		}).catch(err =&gt; {
+			this.logger.error(err);
+		});
+	}
+}
+
+const defaultClientOptions = {
+	forceFetchUsers: true,
+	bot: true
+};
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.8)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

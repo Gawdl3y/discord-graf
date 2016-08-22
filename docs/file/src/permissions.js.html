@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/permissions.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/Gawdl3y/discord-graf.git" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/config.js~BotConfig.html">BotConfig</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/index.js~Bot.html">Bot</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/permissions.js~BotPermissions.html">BotPermissions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/util.js~BotUtil.html">BotUtil</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Command">Command</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-CommandFormatError">CommandFormatError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-FriendlyError">FriendlyError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Module">Module</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Permissions">Permissions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Setting">Setting</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Storage">Storage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Util">Util</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-defaultClientOptions">defaultClientOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-version">version</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ConfigObject">ConfigObject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-PatternConstants">PatternConstants</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-SearchOptions">SearchOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_client.html#parameters">ClientOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://yargs.js.org/docs/">Yargs</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_channel.html">Channel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_client.html">Client</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Storage">LocalStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://github.com/winstonjs/winston/blob/master/README.md">Logger</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_message.html">Message</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_user.html">User</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">commands</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/command.js~Command.html">Command</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/dispatcher.js~CommandDispatcher.html">CommandDispatcher</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/module.js~Module.html">Module</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html">CommandRegistry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-CommandInfo">CommandInfo</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-CommandResult">CommandResult</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">data</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/allowed-channels.js~AllowedChannelStorage.html">AllowedChannelStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/mod-roles.js~ModRoleStorage.html">ModRoleStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/settings.js~SettingStorage.html">SettingStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/storage.js~Storage.html">Storage</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">data/models</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/models/setting.js~Setting.html">Setting</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">errors</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/errors/command-format.js~CommandFormatError.html">CommandFormatError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/errors/friendly.js~FriendlyError.html">FriendlyError</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/permissions.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use babel&apos;;
+&apos;use strict&apos;;
+
+/** Contains methods to test whether a user has permissions in a server */
+export default class BotPermissions {
+	/**
+	 * @param {Client} client - The Client to use
+	 * @param {ModRoleStorage} modRoles - The mod role storage to use
+	 * @param {SettingStorage} settings - The setting storage to use
+	 * @param {BotConfig} config - The bot config to use
+	 */
+	constructor(client, modRoles, settings, config) {
+		if(!client || !modRoles || !settings || !config) throw new Error(&apos;A client, modRoles, settings, and config must be specified.&apos;);
+
+		/** @type {Client} */
+		this.client = client;
+		/** @type {ModRoleStorage} */
+		this.modRoles = modRoles;
+		/** @type {SettingStorage} */
+		this.settings = settings;
+		/** @type {BotConfig} */
+		this.config = config;
+	}
+
+	/**
+	 * @param {Server|string} server - The Server or the server ID
+	 * @param {User|string} user - The User or the user ID
+	 * @return {boolean} Whether or not the user is considered a moderator
+	 * @see {@link Permissions.isMod}
+	 */
+	isMod(server, user) {
+		return this.constructor.isMod(this.client, this.modRoles, this.settings, this.config, server, user);
+	}
+
+	/**
+	 * Tests to see if a user is a moderator on a server using a specified client and config.
+	 * If the server has not set any moderator roles, then they will be a moderator if any of their assigned roles contain the &quot;Manage messages&quot; permission.
+	 * If the server has set moderator roles, then they will be a moderator if they have any of the moderator roles assigned.
+	 * The bot owner and users with the &quot;Administrate&quot; permission are always moderators.
+	 * @param {Client} client - The Client to use
+	 * @param {ModRoleStorage} modRoles - The mod role storage to use
+	 * @param {SettingStorage} settings - The setting storage to use
+	 * @param {BotConfig} config - The bot config to use
+	 * @param {Server|string} server - The Server or the server ID
+	 * @param {User|string} user - The User or the user ID
+	 * @return {boolean} Whether or not the user is considered a moderator
+	 * @see {@link Permissions#isMod}
+	 */
+	static isMod(client, modRoles, settings, config, server, user) {
+		[server, user] = this.resolve(client, server, user);
+		if(user.id === config.values.owner) return true;
+		const userRoles = server.rolesOfUser(user);
+		if(userRoles.some(role =&gt; role.hasPermission(&apos;administrator&apos;))) return true;
+		if(!settings.getValue(server, &apos;mod-mod-roles&apos;, true) || modRoles.isEmpty(server)) return userRoles.some(role =&gt; role.hasPermission(&apos;manageMessages&apos;));
+		return modRoles.find(server).some(role =&gt; userRoles.some(role2 =&gt; role.id === role2.id));
+	}
+
+	/**
+	 * @param {Server|string} server - The Server or the server ID
+	 * @param {User|string} user - The User or the user ID
+	 * @return {boolean} Whether or not the user is considered an administrator
+	 * @see {@link Permissions.isAdmin}
+	 */
+	isAdmin(server, user) {
+		return this.constructor.isAdmin(this.client, this.config, server, user);
+	}
+
+	/**
+	 * Tests to see if a user is an administrator on a server with a specified client.
+	 * If the user is the bot owner or has any roles assigned with the &quot;Administrate&quot; permission, they are considered an administrator.
+	 * @param {Client} client - The Client to use
+	 * @param {BotConfig} config - The bot config to use
+	 * @param {Server|string} server - The Server or the server ID
+	 * @param {User|string} user - The User or the user ID
+	 * @return {boolean} Whether or not the user is considered an administrator
+	 * @see {@link Permissions#isAdmin}
+	 */
+	static isAdmin(client, config, server, user) {
+		[server, user] = this.resolve(client, server, user);
+		if(user.id === config.values.owner) return true;
+		return server.rolesOfUser(user).some(role =&gt; role.hasPermission(&apos;administrator&apos;));
+	}
+
+	/**
+	 * @param {Server|string} server - The Server or the server ID
+	 * @param {User|string} user - The User or the user ID
+	 * @return {[server, user]} The Server and User instance pair
+	 * @see {@link Permissions.resolve}
+	 */
+	resolve(server, user) {
+		if(!server || !user) throw new Error(&apos;A server and user must be specified.&apos;);
+		return this.constructor.resolve(this.client, server, user);
+	}
+
+	/**
+	 * Resolves a server and user to Discord.js instances with a specified client
+	 * @param {Client} client - The Client to use
+	 * @param {Server|string} server - The Server or the server ID
+	 * @param {User|string} user - The User or the user ID
+	 * @return {[server, user]} The Server and User instance pair
+	 * @see {@link Permissions#resolve}
+	 */
+	static resolve(client, server, user) {
+		if(!client || !server || !user) throw new Error(&apos;A client, server, and user must be specified.&apos;);
+		if(typeof server === &apos;string&apos;) server = client.servers.get(&apos;id&apos;, server);
+		if(!server || !server.id) throw new Error(&apos;Unable to identify server.&apos;);
+		if(typeof user === &apos;string&apos;) user = server.members.get(&apos;id&apos;, user);
+		if(!user || !user.id) throw new Error(&apos;Unable to identify user.&apos;);
+		return [server, user];
+	}
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.8)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

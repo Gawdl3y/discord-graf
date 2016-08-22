@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/commands/dispatcher.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/Gawdl3y/discord-graf.git" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Bot">Bot</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Command">Command</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-CommandFormatError">CommandFormatError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-FriendlyError">FriendlyError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Module">Module</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Permissions">Permissions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Setting">Setting</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Storage">Storage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Util">Util</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-version">version</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_channel.html">Channel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_client.html">Client</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Storage">LocalStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://github.com/winstonjs/winston/blob/master/README.md">Logger</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_message.html">Message</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_user.html">User</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">bot</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/config.js~BotConfig.html">BotConfig</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/index.js~Bot.html">Bot</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/permissions.js~BotPermissions.html">BotPermissions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/util.js~BotUtil.html">BotUtil</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ConfigObject">ConfigObject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-PatternConstants">PatternConstants</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-SearchOptions">SearchOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_client.html#parameters">ClientOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://yargs.js.org/docs/">Yargs</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">commands</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/command.js~Command.html">Command</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/dispatcher.js~CommandDispatcher.html">CommandDispatcher</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/module.js~Module.html">Module</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html">CommandRegistry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-CommandInfo">CommandInfo</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-CommandResult">CommandResult</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">data</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/allowed-channels.js~AllowedChannelStorage.html">AllowedChannelStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/mod-roles.js~ModRoleStorage.html">ModRoleStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/settings.js~SettingStorage.html">SettingStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/storage.js~Storage.html">Storage</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">data/models</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/models/setting.js~Setting.html">Setting</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">errors</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/errors/command-format.js~CommandFormatError.html">CommandFormatError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/errors/friendly.js~FriendlyError.html">FriendlyError</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/commands/dispatcher.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use babel&apos;;
+&apos;use strict&apos;;
+
+import EventEmitter from &apos;events&apos;;
+import { stripIndents } from &apos;common-tags&apos;;
+import escapeRegex from &apos;escape-string-regexp&apos;;
+import FriendlyError from &apos;../errors/friendly&apos;;
+
+/** Handles parsing messages and running commands from them */
+export default class CommandDispatcher extends EventEmitter {
+	/** @param {Bot} bot - The bot the dispatcher is for */
+	constructor(bot) {
+		if(!bot) throw new Error(&apos;A bot must be specified.&apos;);
+		super();
+
+		/** @type {Bot} */
+		this.bot = bot;
+
+		this._serverCommandPatterns = {};
+		this._results = {};
+	}
+
+	/**
+	 * Handle a new message or a message update
+	 * @param {Message} message - The message to handle
+	 * @param {?Message} [oldMessage] - The old message before the update
+	 * @return {Promise} Nothing
+	 */
+	async handleMessage(message, oldMessage = null) {
+		if(message.author.equals(this.bot.client.user)) return;
+
+		// Make sure the bot is allowed to run in the channel, or the user is an admin
+		if(message.server
+			&amp;&amp; this.bot.storage.settings.getValue(message.server, &apos;mod-channels&apos;, true)
+			&amp;&amp; !this.bot.storage.allowedChannels.isEmpty(message.server)
+			&amp;&amp; !this.bot.storage.allowedChannels.exists(message.server, message.channel)
+			&amp;&amp; !this.bot.permissions.isAdmin(message.server, message.author)) return;
+
+		// Parse the message, and get the old result if it exists
+		const [command, args, fromPattern, isCommandMessage] = this._parseMessage(message);
+		const oldResult = oldMessage ? this._results[oldMessage.id] : null;
+
+		// Run the command, or make an error message result
+		let result;
+		if(command) {
+			if(!command.isEnabled(message.server)) result = { reply: [`The \`${command.name}\` command is disabled.`], editable: true };
+			else if(!oldMessage || oldResult) result = await this.run(command, args, fromPattern, message);
+		} else if(isCommandMessage) {
+			result = { reply: [`Unknown command. Use ${this.bot.util.usage(&apos;help&apos;, message.server)} to view the list of all commands.`], editable: true };
+		} else if(this.bot.config.values.nonCommandEdit) {
+			result = { editable: true };
+		}
+
+		if(result) {
+			// Change a plain or reply response into direct if there isn&apos;t a server
+			if(!message.server) {
+				if(!result.direct) result.direct = result.plain || result.reply;
+				delete result.plain;
+				delete result.reply;
+			}
+
+			// Update old messages or send new ones
+			if(oldResult &amp;&amp; (oldResult.plain || oldResult.reply || oldResult.direct)) {
+				await this.updateMessagesForResult(message, result, oldResult);
+			} else {
+				await this.sendMessagesForResult(message, result);
+			}
+
+			// Cache the result
+			if(this.bot.config.values.commandEditable &gt; 0) {
+				if(result.editable) {
+					result.timeout = oldResult &amp;&amp; oldResult.timeout ? oldResult.timeout : setTimeout(() =&gt; { delete this._results[message.id]; }, this.bot.config.values.commandEditable * 1000);
+					this._results[message.id] = result;
+				} else {
+					delete this._results[message.id];
+				}
+			}
+		}
+	}
+
+	/**
+	 * Run a command
+	 * @param {Command} command - The command to run
+	 * @param {string[]} args - The arguments for the command
+	 * @param {boolean} fromPattern - Whether or not the arguments are from a pattern match
+	 * @param {Message} message - The message that triggered the run
+	 * @return {Promise&lt;CommandResult&gt;} The result of running the command
+	 */
+	async run(command, args, fromPattern, message) {
+		const logInfo = {
+			args: String(args),
+			user: `${message.author.username}#${message.author.discriminator}`,
+			userID: message.author.id,
+			server: message.server ? message.server.name : null,
+			serverID: message.server ? message.server.id : null
+		};
+
+		// Make sure the command is usable
+		if(command.serverOnly &amp;&amp; !message.server) {
+			this.bot.logger.info(`Not running ${command.module}:${command.memberName}; server only.`, logInfo);
+			return { reply: [`The \`${command.name}\` command must be used in a server channel.`], editable: true };
+		}
+		if(!command.hasPermission(message.server, message.author)) {
+			this.bot.logger.info(`Not running ${command.module}:${command.memberName}; don&apos;t have permission.`, logInfo);
+			return { reply: [`You do not have permission to use the \`${command.name}\` command.`], editable: true };
+		}
+
+		// Run the command
+		this.bot.logger.info(`Running ${command.module}:${command.memberName}.`, logInfo);
+		try {
+			const result = this.constructor.makeResultObject(await command.run(message, args, fromPattern));
+			this.emit(&apos;commandRun&apos;, command, result, message, args, fromPattern);
+			return result;
+		} catch(err) {
+			this.emit(&apos;commandError&apos;, command, message, args, fromPattern);
+			if(err instanceof FriendlyError) {
+				return { reply: [err.message], editable: true };
+			} else {
+				this.bot.logger.error(err);
+				const owner = this.bot.config.values.owner ? message.client.users.get(&apos;id&apos;, this.bot.config.values.owner) : null;
+				return {
+					reply: [stripIndents`
+						An error occurred while running the command: \`${err.name}: ${err.message}\`
+						${owner ? `Please contact ${owner.name}#${owner.discriminator}${this.bot.config.values.invite ? ` in this server: ${this.bot.config.values.invite}` : &apos;.&apos;}` : &apos;&apos;}
+					`],
+					editable: true
+				};
+			}
+		}
+	}
+
+	/**
+	 * Sends messages for a command result
+	 * @param {Message} message - The message the result is for
+	 * @param {CommandResult} result - The command result
+	 * @return {Promise} Nothing
+	 */
+	async sendMessagesForResult(message, result) {
+		const messages = await Promise.all([
+			result.plain ? this.sendMessages(message, result.plain, &apos;plain&apos;) : null,
+			result.reply ? this.sendMessages(message, result.reply, &apos;reply&apos;) : null,
+			result.direct ? this.sendMessages(message, result.direct, &apos;direct&apos;) : null
+		]);
+		if(result.plain) result.normalMessages = messages[0];
+		else if(result.reply) result.normalMessages = messages[1];
+		if(result.direct) result.directMessages = messages[2];
+	}
+
+	/**
+	 * Sends messages
+	 * @param {Message} message - The message the messages are being sent in response to
+	 * @param {string[]} contents - Contents of the messages to send
+	 * @param {string} type - One of &apos;plain&apos;, &apos;reply&apos;, or &apos;direct&apos;
+	 * @return {Promise&lt;Message[]&gt;} The sent messages
+	 */
+	async sendMessages(message, contents, type) {
+		const sentMessages = [];
+		for(const content of contents) {
+			if(type === &apos;plain&apos;) sentMessages.push(await message.client.sendMessage(message, content));
+			else if(type === &apos;reply&apos;) sentMessages.push(await message.reply(content));
+			else if(type === &apos;direct&apos;) sentMessages.push(await message.client.sendMessage(message.author, content));
+		}
+		return sentMessages;
+	}
+
+	/**
+	 * Updates messages for a command result
+	 * @param {Message} message - The message the result is for
+	 * @param {CommandResult} result - The command result
+	 * @param {CommandResult} oldResult - The old command result
+	 * @return {Promise} Nothing
+	 */
+	async updateMessagesForResult(message, result, oldResult) {
+		// Update the messages
+		const messages = await Promise.all([
+			result.plain || result.reply ? this.updateMessages(message, oldResult.normalMessages, result.plain ? result.plain : result.reply, result.plain ? &apos;plain&apos; : &apos;reply&apos;) : null,
+			result.direct ? oldResult.direct ? this.updateMessages(message, oldResult.directMessages, result.direct, &apos;direct&apos;) : this.sendMessages(message, result.direct, &apos;direct&apos;) : null
+		]);
+		if(result.plain || result.reply) result.normalMessages = messages[0];
+		if(result.direct) result.directMessages = messages[1];
+
+		// Delete old messages if we&apos;re not using them
+		if(!result.plain &amp;&amp; !result.reply &amp;&amp; (oldResult.plain || oldResult.reply)) for(const msg of oldResult.normalMessages) msg.delete();
+		if(!result.direct &amp;&amp; oldResult.direct) for(const msg of oldResult.directMessages) msg.delete();
+	}
+
+	/**
+	 * Updates messages
+	 * @param {Message} message - The message the old messages are being updated in response to
+	 * @param {Message[]} oldMessages - The old messages to update
+	 * @param {string[]} contents - Contents of the messages to send
+	 * @param {string} type - One of &apos;plain&apos;, &apos;reply&apos;, or &apos;direct&apos;
+	 * @return {Promise&lt;Message[]&gt;} The updated messages
+	 */
+	async updateMessages(message, oldMessages, contents, type) {
+		const updatedMessages = [];
+
+		// Update/send messages
+		for(let i = 0; i &lt; contents.length; i++) {
+			if(i &lt; oldMessages.length) updatedMessages.push(await oldMessages[i].update(type === &apos;reply&apos; ? `${message.author}, ${contents[i]}` : contents[i]));
+			else updatedMessages.push((await this.sendMessages(message, [contents[i]], type))[0]);
+		}
+
+		// Delete extra old messages
+		if(oldMessages.length &gt; contents.length) {
+			for(let i = oldMessages.length - 1; i &gt;= contents.length; i--) oldMessages[i].delete();
+		}
+
+		return updatedMessages;
+	}
+
+	/**
+	 * Parses a message to find details about command usage in it
+	 * @param {Message} message - The message
+	 * @return {Array} Command, arguments, whether or not it&apos;s from a pattern match, and whether or not it&apos;s a command message
+	 */
+	_parseMessage(message) {
+		// Find the command to run by patterns
+		for(const command of this.bot.registry.commands) {
+			if(!command.patterns) continue;
+			for(const pattern of command.patterns) {
+				const matches = pattern.exec(message.content);
+				if(matches) return [command, matches, true, true];
+			}
+		}
+
+		// Find the command to run with default command handling
+		const patternIndex = message.server ? message.server.id : &apos;-&apos;;
+		if(!this._serverCommandPatterns[patternIndex]) this._serverCommandPatterns[patternIndex] = this._buildCommandPattern(message.server, message.client.user);
+		let [command, args, isCommandMessage] = this._matchDefault(message, this._serverCommandPatterns[patternIndex], 2);
+		if(!command &amp;&amp; !message.server) [command, args, isCommandMessage] = this._matchDefault(message, unprefixedCommandPattern);
+		if(command) return [command, args, false, true];
+
+		return [null, null, false, isCommandMessage];
+	}
+
+	/**
+	 * Matches a message against a server command pattern
+	 * @param {Message} message - The message
+	 * @param {RegExp} pattern - The pattern to match against
+	 * @param {number} commandNameIndex - The index of the command name in the pattern matches
+	 * @return {Array} The command, arguments, and whether or not it&apos;s a command message
+	 */
+	_matchDefault(message, pattern, commandNameIndex = 1) {
+		const matches = pattern.exec(message.content);
+		if(!matches) return [null, null, false];
+
+		const commands = this.bot.registry.findCommands(matches[commandNameIndex]);
+		if(commands.length !== 1) return [null, null, true];
+		if(!commands[0] || !commands[0].defaultHandling) return [null, null, true];
+
+		const argString = message.content.substring(matches[1].length + (matches[2] ? matches[2].length : 0));
+		let args;
+		if(commands[0].argsType === &apos;single&apos;) {
+			args = [argString.trim()];
+		} else if(commands[0].argsType === &apos;multiple&apos;) {
+			args = this.constructor.parseArgs(argString, commands[0].argsCount, commands[0].argsSingleQuotes);
+		}
+
+		return [commands[0], args, true];
+	}
+
+	/**
+	 * Makes a command result object from a command&apos;s run result
+	 * @param {CommandResult|string[]|string} result - The command&apos;s run result
+	 * @return {CommandResult} The result object
+	 */
+	static makeResultObject(result) {
+		if(typeof result !== &apos;object&apos; || Array.isArray(result)) result = { reply: result };
+		if(result.plain &amp;&amp; result.reply) throw new Error(&apos;The command result may contain either &quot;plain&quot; or &quot;reply&quot;, not both.&apos;);
+		if(result.plain &amp;&amp; !Array.isArray(result.plain)) result.plain = [result.plain];
+		if(result.reply &amp;&amp; !Array.isArray(result.reply)) result.reply = [result.reply];
+		if(result.direct &amp;&amp; !Array.isArray(result.direct)) result.direct = [result.direct];
+		if(!(&apos;editable&apos; in result)) result.editable = true;
+		return result;
+	}
+
+	/**
+	 * Parses an argument string into an array of arguments
+	 * @param {string} argString - The argument string to parse
+	 * @param {number} [argCount] - The number of arguments to extract from the string
+	 * @param {boolean} [allowSingleQuote=true] - Whether or not single quotes should be allowed to wrap arguments, in addition to double quotes
+	 * @return {string[]} The array of arguments
+	 */
+	static parseArgs(argString, argCount, allowSingleQuote = true) {
+		const re = allowSingleQuote ? /\s*(?:(&quot;|&apos;)([^]*?)\1|(\S+))\s*/g : /\s*(?:(&quot;)([^]*?)&quot;|(\S+))\s*/g;
+		const result = [];
+		let match = [];
+		// default: large enough to get all items
+		argCount = argCount || argString.length;
+		// get match and push the capture group that is not null to the result
+		while(--argCount &amp;&amp; (match = re.exec(argString))) result.push(match[2] || match[3]);
+		// if text remains, push it to the array as it is, except for wrapping quotes, which are removed from it
+		if(match &amp;&amp; re.lastIndex &lt; argString.length) {
+			const re2 = allowSingleQuote ? /^(&quot;|&apos;)([^]*)\1$/g : /^(&quot;)([^]*)&quot;$/g;
+			result.push(argString.substr(re.lastIndex).replace(re2, &apos;$2&apos;));
+		}
+		return result;
+	}
+
+	/**
+	 * Creates a regular expression to match the command prefix and name in a message
+	 * @param {?Server} server - The Server that the message is from
+	 * @param {User} user - The User that the bot is running for
+	 * @return {RegExp} Regular expression that matches a command prefix and name
+	 */
+	_buildCommandPattern(server, user) {
+		let prefix = server ? this.bot.storage.settings.getValue(server, &apos;command-prefix&apos;, this.bot.config.values.commandPrefix) : this.bot.config.values.commandPrefix;
+		if(prefix === &apos;none&apos;) prefix = &apos;&apos;;
+		const escapedPrefix = escapeRegex(prefix);
+		const prefixPatternPiece = prefix ? `${escapedPrefix}\\s*|` : &apos;&apos;;
+		const pattern = new RegExp(`^(${prefixPatternPiece}&lt;@!?${user.id}&gt;\\s+(?:${escapedPrefix})?)([^\\s]+)`, &apos;i&apos;);
+		this.bot.logger.info(`Server command pattern built.`, {
+			server: server ? server.name : null,
+			serverID: server ? server.id : null,
+			prefix: prefix, pattern: pattern.source
+		});
+		return pattern;
+	}
+}
+
+const unprefixedCommandPattern = /^([^\s]+)/i;
+
+/**
+ * @typedef CommandResult
+ * @property {string[]} [plain] - Strings to send plain messages for
+ * @property {string[]} [reply] - Strings to send reply messages for
+ * @property {string[]} [direct] - Strings to send direct messages for
+ * @property {boolean} [editable=true] - Whether or not the command message is editable
+ */
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.8)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

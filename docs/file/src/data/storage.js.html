@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/data/storage.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/Gawdl3y/discord-graf.git" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Bot">Bot</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Command">Command</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-CommandFormatError">CommandFormatError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-FriendlyError">FriendlyError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Module">Module</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Permissions">Permissions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Setting">Setting</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Storage">Storage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Util">Util</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-version">version</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_channel.html">Channel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_client.html">Client</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Storage">LocalStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://github.com/winstonjs/winston/blob/master/README.md">Logger</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_message.html">Message</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_user.html">User</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">bot</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/config.js~BotConfig.html">BotConfig</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/index.js~Bot.html">Bot</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/permissions.js~BotPermissions.html">BotPermissions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/util.js~BotUtil.html">BotUtil</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ConfigObject">ConfigObject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-PatternConstants">PatternConstants</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-SearchOptions">SearchOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_client.html#parameters">ClientOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://yargs.js.org/docs/">Yargs</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">commands</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/command.js~Command.html">Command</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/dispatcher.js~CommandDispatcher.html">CommandDispatcher</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/module.js~Module.html">Module</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html">CommandRegistry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-CommandInfo">CommandInfo</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-CommandResult">CommandResult</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">data</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/allowed-channels.js~AllowedChannelStorage.html">AllowedChannelStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/mod-roles.js~ModRoleStorage.html">ModRoleStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/settings.js~SettingStorage.html">SettingStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/storage.js~Storage.html">Storage</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">data/models</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/models/setting.js~Setting.html">Setting</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">errors</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/errors/command-format.js~CommandFormatError.html">CommandFormatError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/errors/friendly.js~FriendlyError.html">FriendlyError</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/data/storage.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use babel&apos;;
+&apos;use strict&apos;;
+
+import Util from &apos;../bot/util&apos;;
+
+export default class Storage {
+	constructor(key, localStorage, logger, objectBased = false) {
+		if(!key || !localStorage) throw new Error(&apos;A key and localStorage must be specified.&apos;);
+		this.key = key;
+		this.localStorage = localStorage;
+		this.logger = logger;
+		this.objectBased = objectBased;
+	}
+
+	loadStorage() {
+		this.serversMap = JSON.parse(this.localStorage.getItem(this.key));
+		if(!this.serversMap) this.serversMap = {};
+	}
+
+	saveStorage() {
+		this.localStorage.setItem(this.key, JSON.stringify(this.serversMap));
+		if(this.logger) this.logger.debug(`Saved ${this.key} storage.`, this.serversMap);
+	}
+
+	save(server, entry, searchFunction = null) {
+		if(!server || !entry) throw new Error(&apos;A server and entry must be specified.&apos;);
+		if(!this.serversMap) this.loadStorage();
+		if(server.id) server = server.id;
+		if(!this.serversMap[server]) this.serversMap[server] = this.objectBased ? {} : [];
+
+		const exists = this.exists(server, entry, searchFunction);
+		if(!exists || this.objectBased) {
+			if(this.objectBased) this.serversMap[server][entry.key] = entry.value; else this.serversMap[server].push(entry);
+			this.saveStorage();
+			if(this.logger) this.logger.verbose(`${exists ? `Updated` : `Added`} entry in ${this.key} storage.`, { server: server, entry: entry });
+			return true;
+		} else {
+			if(this.logger) this.logger.verbose(`Not adding entry to ${this.key} storage, because it already exists.`, { server: server, entry: entry });
+			return false;
+		}
+	}
+
+	delete(server, entry, searchFunction = null) {
+		if(!server || !entry) throw new Error(&apos;A server and entry must be specified.&apos;);
+		if(!this.serversMap) this.loadStorage();
+		if(server.id) server = server.id;
+		if(!this.serversMap[server]) this.serversMap[server] = this.objectBased ? {} : [];
+
+		let index = this.objectBased ? null : -1;
+		if(this.objectBased) {
+			if(searchFunction) {
+				for(const entryKey of Object.keys(this.serversMap)) {
+					if(searchFunction(entryKey, this.serversMap[server][entryKey])) {
+						index = entryKey;
+						break;
+					}
+				}
+			} else {
+				index = entry.key ? entry.key : entry;
+			}
+		} else {
+			index = searchFunction ? this.serversMap[server].findIndex(searchFunction) : this.serversMap[server].findIndex(item =&gt; item === entry);
+		}
+
+		if((this.objectBased &amp;&amp; index) || (!this.objectBased &amp;&amp; index &gt;= 0)) {
+			if(this.objectBased) delete this.serversMap[server][index]; else this.serversMap[server].splice(index, 1);
+			this.saveStorage();
+			if(this.logger) this.logger.info(`Deleted entry from ${this.key} storage.`, { server: server, entry: entry });
+			return true;
+		} else {
+			if(this.logger) this.logger.info(`Not deleting entry from ${this.key} storage, because it doesn\&apos;t exist.`, { server: server, entry: entry });
+			return false;
+		}
+	}
+
+	clear(server) {
+		if(!server) throw new Error(&apos;A server must be specified.&apos;);
+		if(!this.serversMap) this.loadStorage();
+		delete this.serversMap[server.id ? server.id : server];
+		if(this.logger) this.logger.info(`Cleared a server in ${this.key} storage.`, { server: server.id ? server.id : server });
+		this.saveStorage();
+	}
+
+	clearAll() {
+		if(!this.serversMap) this.loadStorage();
+		for(const key of Object.keys(this.serversMap)) delete this.serversMap[key];
+		if(this.logger) this.logger.info(`Cleared all of ${this.key} storage.`);
+		this.saveStorage();
+	}
+
+	find(server, searchString = null, searchOptions = {}) {
+		if(!server) throw new Error(&apos;A server must be specified.&apos;);
+		if(!this.serversMap) this.loadStorage();
+		if(server.id) server = server.id;
+		if(!this.serversMap[server]) return [];
+		if(!searchString) return this.serversMap[server];
+		if(this.objectBased) {
+			if(this.serversMap[server][searchString]) return [this.serversMap[server][searchString]];
+			else return [];
+		} else {
+			return Util.search(this.serversMap[server], searchString, searchOptions);
+		}
+	}
+
+	exists(server, entry, searchFunction = null) {
+		if(!server || !entry) throw new Error(&apos;A server and entry must be specified.&apos;);
+		if(!this.serversMap) this.loadStorage();
+		if(server.id) server = server.id;
+		if(!this.serversMap[server]) return false;
+		if(this.objectBased) {
+			if(searchFunction) {
+				for(const entryKey of Object.keys(this.serversMap)) {
+					if(searchFunction(entryKey, this.serversMap[server][entryKey])) return true;
+				}
+				return false;
+			} else {
+				return typeof this.serversMap[server][entry.key ? entry.key : entry] !== &apos;undefined&apos;;
+			}
+		} else {
+			return searchFunction ? this.serversMap[server].some(searchFunction) : this.serversMap[server].includes(entry);
+		}
+	}
+
+	isEmpty(server) {
+		if(!server) throw new Error(&apos;A server must be specified.&apos;);
+		if(!this.serversMap) this.loadStorage();
+		if(server.id) server = server.id;
+		return !this.serversMap[server] || this.serversMap[server].length === 0;
+	}
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.8)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/commands/registry.js | API Document</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  
+  
+  <script src="script/manual.js"></script>
+</head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <a data-ice="repoURL" href="https://github.com/Gawdl3y/discord-graf.git" class="repo-url-github">Repository</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Bot">Bot</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Command">Command</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-CommandFormatError">CommandFormatError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-FriendlyError">FriendlyError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Module">Module</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Permissions">Permissions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Setting">Setting</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Storage">Storage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Util">Util</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-version">version</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_channel.html">Channel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_client.html">Client</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Storage">LocalStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://github.com/winstonjs/winston/blob/master/README.md">Logger</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_message.html">Message</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_user.html">User</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">bot</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/config.js~BotConfig.html">BotConfig</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/index.js~Bot.html">Bot</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/permissions.js~BotPermissions.html">BotPermissions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/util.js~BotUtil.html">BotUtil</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ConfigObject">ConfigObject</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-PatternConstants">PatternConstants</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-SearchOptions">SearchOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_client.html#parameters">ClientOptions</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://yargs.js.org/docs/">Yargs</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">commands</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/command.js~Command.html">Command</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/dispatcher.js~CommandDispatcher.html">CommandDispatcher</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/module.js~Module.html">Module</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html">CommandRegistry</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-CommandInfo">CommandInfo</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-CommandResult">CommandResult</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">data</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/allowed-channels.js~AllowedChannelStorage.html">AllowedChannelStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/mod-roles.js~ModRoleStorage.html">ModRoleStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/settings.js~SettingStorage.html">SettingStorage</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/storage.js~Storage.html">Storage</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">data/models</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/data/models/setting.js~Setting.html">Setting</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">errors</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/errors/command-format.js~CommandFormatError.html">CommandFormatError</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/errors/friendly.js~FriendlyError.html">FriendlyError</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/commands/registry.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use babel&apos;;
+&apos;use strict&apos;;
+
+import EventEmitter from &apos;events&apos;;
+import Module from &apos;./module&apos;;
+
+/** Handles registration and searching of commands and modules */
+export default class CommandRegistry extends EventEmitter {
+	/** @param {?Logger} [logger] - The logger to use  */
+	constructor(logger) {
+		super();
+
+		/** @type {?Logger} */
+		this.logger = logger || null;
+		/** @type {Command[]} */
+		this.commands = [];
+		/** @type {Module[]} */
+		this.modules = [];
+	}
+
+	/**
+	 * Registers a single command
+	 * @param {Command} command - The command to register
+	 * @return {void}
+	 */
+	registerCommand(command) {
+		this.registerCommands([command]);
+	}
+
+	/**
+	 * Registers multiple commands
+	 * @param {Command[]} commands - The commands to register
+	 * @return {void}
+	 */
+	registerCommands(commands) {
+		if(!Array.isArray(commands)) throw new TypeError(&apos;Commands must be an array.&apos;);
+		for(let command of commands) {
+			if(this.commands.some(cmd =&gt; cmd.name === command.name)) throw new Error(`A command with the name &quot;${command.name}&quot;&quot; is already registered.`);
+			const module = this.modules.find(mod =&gt; mod.id === command.module);
+			if(!module) throw new Error(`Module &quot;${command.module}&quot; is not registered.`);
+			if(module.commands.some(cmd =&gt; cmd.memberName === command.memberName)) throw new Error(`A command with the member name &quot;${command.memberName}&quot; is already registered in ${module.id}`);
+			module.commands.push(command);
+			this.commands.push(command);
+			if(this.logger) this.logger.verbose(`Registered command ${command.module}:${command.memberName}.`);
+			this.emit(&apos;commandRegister&apos;, command, this);
+		}
+	}
+
+	/**
+	 * Registers a single module
+	 * @param {Module} module - The module to register
+	 * @return {void}
+	 */
+	registerModule(module) {
+		this.registerModules([module]);
+	}
+
+	/**
+	 * Registers multiple modules
+	 * @param {Module[]} modules - The modules to register
+	 * @return {void}
+	 */
+	registerModules(modules) {
+		if(!Array.isArray(modules)) throw new TypeError(&apos;Modules must be an array.&apos;);
+		for(let module of modules) {
+			if(!(module instanceof Module)) throw new TypeError(&apos;Module must be an instance of Module.&apos;);
+			if(this.modules.some(mod =&gt; mod.name === module.name)) throw new Error(`Module &quot;${module.name}&quot;&quot; is already registered.`);
+			this.modules.push(module);
+			if(this.logger) this.logger.verbose(`Registered module ${module.id}.`);
+			this.emit(&apos;moduleRegister&apos;, module, this);
+		}
+	}
+
+	/**
+	 * Finds all commands that match the search string
+	 * @param {string} [searchString] - The string to search for
+	 * @param {Message} [message] - The message to check usability against
+	 * @return {Command[]} All commands that are found
+	 */
+	findCommands(searchString = null, message = null) {
+		if(!searchString) return message ? this.commands.filter(cmd =&gt; cmd.isUsable(message)) : this.commands;
+
+		// Find all matches
+		const lowercaseSearch = searchString.toLowerCase();
+		const matchedCommands = this.commands.filter(cmd =&gt;
+			cmd.name.includes(lowercaseSearch)
+			|| (cmd.aliases &amp;&amp; cmd.aliases.some(ali =&gt; ali.includes(lowercaseSearch)))
+			|| `${cmd.module}:${cmd.memberName}` === lowercaseSearch
+		);
+
+		// See if there&apos;s an exact match
+		for(const command of matchedCommands) {
+			if(command.name === lowercaseSearch || (command.aliases &amp;&amp; command.aliases.some(ali =&gt; ali === lowercaseSearch))) return [command];
+		}
+
+		return matchedCommands;
+	}
+
+	/**
+	 * Finds all modules that match the search string
+	 * @param {string} [searchString] - The string to search for
+	 * @return {Module[]} All modules that are found
+	 */
+	findModules(searchString = null) {
+		if(!searchString) return this.modules;
+
+		// Find all matches
+		const lowercaseSearch = searchString.toLowerCase();
+		const matchedModules = this.modules.filter(mod =&gt; mod.name.includes(lowercaseSearch) || mod.id.includes(lowercaseSearch));
+
+		// See if there&apos;s an exact match
+		for(const module of matchedModules) {
+			if(module.name.toLowerCase() === lowercaseSearch || module.id === lowercaseSearch) return [module];
+		}
+
+		return matchedModules;
+	}
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(0.4.8)</span></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>
