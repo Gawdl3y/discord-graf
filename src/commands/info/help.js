@@ -53,9 +53,9 @@ export default class HelpCommand extends Command {
 
 					__**${showAll ? 'All commands' : `Available commands in ${message.server ? `${message.server}` : 'this DM'}`}**__
 
-					${(showAll ? modules : modules.filter(mod => mod.commands.some(cmd => this.bot.registry.constructor.isUsable(cmd, message)))).map(mod => stripIndents`
+					${(showAll ? modules : modules.filter(mod => mod.commands.some(cmd => cmd.isUsable(message)))).map(mod => stripIndents`
 						__${mod.name}__
-						${(showAll ? mod.commands : mod.commands.filter(cmd => this.bot.registry.constructor.isUsable(cmd, message)))
+						${(showAll ? mod.commands : mod.commands.filter(cmd => cmd.isUsable(message)))
 							.map(cmd => `**${cmd.name}:** ${cmd.description}`).join('\n')
 						}
 					`).join('\n\n')}

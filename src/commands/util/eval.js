@@ -26,8 +26,8 @@ export default class EvalCommand extends Command {
 		this.objects = bot.evalObjects;
 	}
 
-	isRunnable(message) {
-		return message.author.id === this.bot.config.values.owner;
+	hasPermission(server, user) {
+		return user.id === this.bot.config.values.owner;
 	}
 
 	async run(message, args) {

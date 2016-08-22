@@ -81,8 +81,8 @@ export default class CommandDispatcher extends EventEmitter {
 			this.bot.logger.info(`Not running ${command.module}:${command.memberName}; server only.`, logInfo);
 			return { reply: [`The \`${command.name}\` command must be used in a server channel.`], editable: true };
 		}
-		if(command.isRunnable && !command.isRunnable(message)) {
-			this.bot.logger.info(`Not running ${command.module}:${command.memberName}; not runnable.`, logInfo);
+		if(!command.hasPermission(message.server, message.author)) {
+			this.bot.logger.info(`Not running ${command.module}:${command.memberName}; don't have permission.`, logInfo);
 			return { reply: [`You do not have permission to use the \`${command.name}\` command.`], editable: true };
 		}
 

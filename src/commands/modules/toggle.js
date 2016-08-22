@@ -23,8 +23,8 @@ export default class ToggleModuleCommand extends Command {
 		this.serverOnly = true;
 	}
 
-	isRunnable(message) {
-		return this.bot.permissions.isAdmin(message.server, message.author);
+	hasPermission(server, user) {
+		return this.bot.permissions.isAdmin(server, user);
 	}
 
 	async run(message, args) {

@@ -23,7 +23,7 @@ export default class Command {
 		this.argsSingleQuotes = true;
 	}
 
-	isRunnable() {
+	hasPermission(server, user) { // eslint-disable-line no-unused-vars
 		return true;
 	}
 
@@ -31,11 +31,17 @@ export default class Command {
 		throw new Error(`${this.constructor.name} doesn't have a run() method, or called the super.run() method.`);
 	}
 
+
 	setEnabled(server, enabled) {
 		this.bot.storage.settings.save(new Setting(server, `cmd-${this.name}`, enabled));
 	}
 
 	isEnabled(server) {
 		return this.bot.storage.settings.getValue(server, `cmd-${this.name}`, true) && this.bot.storage.settings.getValue(server, `mod-${this.module}`, true);
+	}
+
+	isUsable(message = null) {
+		if(this.serverOnly && message && !message.server) return false;
+		return !message || (this.isEnabled(message.server) && this.hasPermission(message.server, message.author));
 	}
 }

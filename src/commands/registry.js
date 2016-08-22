@@ -48,7 +48,7 @@ export default class CommandRegistry extends EventEmitter {
 	}
 
 	findCommands(searchString = null, message = null) {
-		if(!searchString) return message ? this.commands.filter(cmd => this.constructor.isUsable(cmd, message)) : this.commands;
+		if(!searchString) return message ? this.commands.filter(cmd => cmd.isUsable(message)) : this.commands;
 
 		// Find all matches
 		const lowercaseSearch = searchString.toLowerCase();
@@ -79,10 +79,5 @@ export default class CommandRegistry extends EventEmitter {
 		}
 
 		return matchedModules;
-	}
-
-	static isUsable(command, message = null) {
-		if(command.serverOnly && message && !message.server) return false;
-		return !message || (command.isEnabled(message.server) && command.isRunnable(message));
 	}
 }
