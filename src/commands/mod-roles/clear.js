@@ -5,14 +5,15 @@ import Command from '../command';
 
 export default class ClearModRolesCommand extends Command {
 	constructor(bot) {
-		super(bot);
-		this.name = 'clearmodroles';
-		this.aliases = ['clearmods'];
-		this.module = 'mod-roles';
-		this.memberName = 'clear';
-		this.description = 'Clears all of the moderator roles.';
-		this.details = 'Only administrators may use this command.';
-		this.serverOnly = true;
+		super(bot, {
+			name: 'clearmodroles',
+			aliases: ['clearmods'],
+			module: 'mod-roles',
+			memberName: 'clear',
+			description: 'Clears all of the moderator roles.',
+			details: 'Only administrators may use this command.',
+			serverOnly: true
+		});
 
 		this.lastUser = null;
 		this.timeout = null;

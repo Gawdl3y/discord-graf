@@ -6,15 +6,16 @@ import Command from '../command';
 
 export default class HelpCommand extends Command {
 	constructor(bot) {
-		super(bot);
-		this.name = 'help';
-		this.module = 'info';
-		this.memberName = 'help';
-		this.aliases = ['commands'];
-		this.description = 'Displays a list of available commands, or detailed information for a specified command.';
-		this.usage = 'help [command]';
-		this.details = 'The command may be part of a command name or a whole command name. If it isn\'t specified, all available commands will be listed.';
-		this.examples = ['help', 'help roll'];
+		super(bot, {
+			name: 'help',
+			module: 'info',
+			memberName: 'help',
+			aliases: ['commands'],
+			description: 'Displays a list of available commands, or detailed information for a specified command.',
+			usage: 'help [command]',
+			details: 'The command may be part of a command name or a whole command name. If it isn\'t specified, all available commands will be listed.',
+			examples: ['help', 'help roll']
+		});
 	}
 
 	async run(message, args) {

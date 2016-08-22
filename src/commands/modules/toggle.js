@@ -1,26 +1,27 @@
 'use babel';
 'use strict';
 
-import { stripIndents } from 'common-tags';
+import { oneLine } from 'common-tags';
 import Command from '../command';
 import CommandFormatError from '../../errors/command-format';
 
 export default class ToggleModuleCommand extends Command {
 	constructor(bot) {
-		super(bot);
-		this.name = 'togglemodule';
-		this.aliases = ['togglemod', 'module'];
-		this.module = 'modules';
-		this.memberName = 'toggle';
-		this.description = 'Toggles a module or command.';
-		this.usage = 'togglemodule <module|command>';
-		this.details = stripIndents`
-			The module must be the name (partial or whole) or ID of a module.
-			A command name may also be provided instead of a module in order to toggle a single command.
-			Only administrators may use this command.
-		`;
-		this.examples = ['togglemodule mod-roles', 'togglemodule Moderator roles', 'togglemodule prefix'];
-		this.serverOnly = true;
+		super(bot, {
+			name: 'togglemodule',
+			aliases: ['togglemod', 'module'],
+			module: 'modules',
+			memberName: 'toggle',
+			description: 'Toggles a module or command.',
+			usage: 'togglemodule <module|command>',
+			details: oneLine`
+				The module must be the name (partial or whole) or ID of a module.
+				A command name may also be provided instead of a module in order to toggle a single command.
+				Only administrators may use this command.
+			`,
+			examples: ['togglemodule mod-roles', 'togglemodule Moderator roles', 'togglemodule prefix'],
+			serverOnly: true
+		});
 	}
 
 	hasPermission(server, user) {

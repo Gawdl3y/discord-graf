@@ -1,26 +1,27 @@
 'use babel';
 'use strict';
 
-import { stripIndents } from 'common-tags';
+import { oneLine } from 'common-tags';
 import Command from '../command';
 import CommandFormatError from '../../errors/command-format';
 
 export default class DisableModuleCommand extends Command {
 	constructor(bot) {
-		super(bot);
-		this.name = 'disablemodule';
-		this.aliases = ['disablemod', 'moduleoff', 'modoff'];
-		this.module = 'modules';
-		this.memberName = 'disable';
-		this.description = 'Disables a module or command.';
-		this.usage = 'disablemodule <module|command>';
-		this.details = stripIndents`
-			The module must be the name (partial or whole) or ID of a module.
-			A command name may also be provided instead of a module in order to disable a single command.
-			Only administrators may use this command.
-		`;
-		this.examples = ['disablemodule mod-roles', 'disablemodule Moderator roles', 'disablemodule prefix'];
-		this.serverOnly = true;
+		super(bot, {
+			name: 'disablemodule',
+			aliases: ['disablemod', 'moduleoff', 'modoff'],
+			module: 'modules',
+			memberName: 'disable',
+			description: 'Disables a module or command.',
+			usage: 'disablemodule <module|command>',
+			details: oneLine`
+				The module must be the name (partial or whole) or ID of a module.
+				A command name may also be provided instead of a module in order to disable a single command.
+				Only administrators may use this command.
+			`,
+			examples: ['disablemodule mod-roles', 'disablemodule Moderator roles', 'disablemodule prefix'],
+			serverOnly: true
+		});
 	}
 
 	hasPermission(server, user) {

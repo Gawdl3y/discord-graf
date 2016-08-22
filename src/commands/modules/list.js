@@ -6,12 +6,13 @@ import Command from '../command';
 
 export default class ListModulesCommand extends Command {
 	constructor(bot) {
-		super(bot);
-		this.name = 'modules';
-		this.module = 'modules';
-		this.memberName = 'list';
-		this.description = 'Lists all modules. Only administrators may use this command.';
-		this.serverOnly = true;
+		super(bot, {
+			name: 'modules',
+			module: 'modules',
+			memberName: 'list',
+			description: 'Lists all modules. Only administrators may use this command.',
+			serverOnly: true
+		});
 	}
 
 	hasPermission(server, user) {

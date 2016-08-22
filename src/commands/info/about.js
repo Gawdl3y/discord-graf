@@ -7,11 +7,12 @@ import Command from '../command';
 
 export default class AboutCommand extends Command {
 	constructor(bot) {
-		super(bot);
-		this.name = 'about';
-		this.module = 'info';
-		this.memberName = 'about';
-		this.description = 'Displays information about the bot.';
+		super(bot, {
+			name: 'about',
+			module: 'info',
+			memberName: 'about',
+			description: 'Displays information about the bot.'
+		});
 	}
 
 	async run(message) {

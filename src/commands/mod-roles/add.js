@@ -6,16 +6,17 @@ import CommandFormatError from '../../errors/command-format';
 
 export default class AddModRoleCommand extends Command {
 	constructor(bot) {
-		super(bot);
-		this.name = 'addmodrole';
-		this.aliases = ['addmod'];
-		this.module = 'mod-roles';
-		this.memberName = 'add';
-		this.description = 'Adds a moderator role.';
-		this.usage = 'addmodrole <role>';
-		this.details = 'The role must be the name or ID of a role, or a role mention. Only administrators may use this command.';
-		this.examples = ['addmodrole cool', 'addmodrole 205536402341888001', 'addmodrole @CoolPeopleRole'];
-		this.serverOnly = true;
+		super(bot, {
+			name: 'addmodrole',
+			aliases: ['addmod'],
+			module: 'mod-roles',
+			memberName: 'add',
+			description: 'Adds a moderator role.',
+			usage: 'addmodrole <role>',
+			details: 'The role must be the name or ID of a role, or a role mention. Only administrators may use this command.',
+			examples: ['addmodrole cool', 'addmodrole 205536402341888001', 'addmodrole @CoolPeopleRole'],
+			serverOnly: true
+		});
 	}
 
 	hasPermission(server, user) {

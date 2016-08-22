@@ -7,16 +7,17 @@ import CommandFormatError from '../../errors/command-format';
 
 export default class DisallowChannelCommand extends Command {
 	constructor(bot) {
-		super(bot);
-		this.name = 'disallowchannel';
-		this.aliases = ['disallowchan', 'deletechannel', 'deletechan', 'delchan', 'removechannel', 'removechan'];
-		this.module = 'channels';
-		this.memberName = 'disallow';
-		this.description = 'Disallows command operation in a channel.';
-		this.usage = 'disallowchannel <channel>';
-		this.details = 'The channel must be the name or ID of a channel, or a channel mention. Only administrators may use this command.';
-		this.examples = ['disallowchannel #CoolChannel', 'disallowchannel cool', 'disallowchannel 205536402341888001'];
-		this.serverOnly = true;
+		super(bot, {
+			name: 'disallowchannel',
+			aliases: ['disallowchan', 'deletechannel', 'deletechan', 'delchan', 'removechannel', 'removechan'],
+			module: 'channels',
+			memberName: 'disallow',
+			description: 'Disallows command operation in a channel.',
+			usage: 'disallowchannel <channel>',
+			details: 'The channel must be the name or ID of a channel, or a channel mention. Only administrators may use command.',
+			examples: ['disallowchannel #CoolChannel', 'disallowchannel cool', 'disallowchannel 205536402341888001'],
+			serverOnly: true
+		});
 	}
 
 	hasPermission(server, user) {

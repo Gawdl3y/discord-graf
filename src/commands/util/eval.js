@@ -14,13 +14,14 @@ const nlPattern = new RegExp(nl, 'g');
 
 export default class EvalCommand extends Command {
 	constructor(bot) {
-		super(bot);
-		this.name = 'eval';
-		this.module = 'util';
-		this.memberName = 'eval';
-		this.description = 'Evaluates input as JavaScript.';
-		this.usage = 'eval <script>';
-		this.details = 'Only the bot owner may use this command.';
+		super(bot, {
+			name: 'eval',
+			module: 'util',
+			memberName: 'eval',
+			description: 'Evaluates input as JavaScript.',
+			usage: 'eval <script>',
+			details: 'Only the bot owner may use this command.'
+		});
 
 		this.lastResult = null;
 		this.objects = bot.evalObjects;

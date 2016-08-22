@@ -7,19 +7,20 @@ import Setting from '../../data/models/setting';
 
 export default class PrefixCommand extends Command {
 	constructor(bot) {
-		super(bot);
-		this.name = 'prefix';
-		this.module = 'util';
-		this.memberName = 'prefix';
-		this.description = 'Shows or sets the command prefix.';
-		this.usage = 'prefix [prefix|"default"|"none"]';
-		this.details = oneLine`
-			If no prefix is provided, the current prefix will be shown.
-			If the prefix is "default", the prefix will be reset to the bot\'s default prefix.
-			If the prefix is "none", the prefix will be removed entirely, only allowing mentions to run commands.
-			Only administrators may change the prefix.
-		`;
-		this.examples = ['prefix', 'prefix -', 'prefix omg!', 'prefix default', 'prefix none'];
+		super(bot, {
+			name: 'prefix',
+			module: 'util',
+			memberName: 'prefix',
+			description: 'Shows or sets the command prefix.',
+			usage: 'prefix [prefix|"default"|"none"]',
+			details: oneLine`
+				If no prefix is provided, the current prefix will be shown.
+				If the prefix is "default", the prefix will be reset to the bot's default prefix.
+				If the prefix is "none", the prefix will be removed entirely, only allowing mentions to run commands.
+				Only administrators may change the prefix.
+			`,
+			examples: ['prefix', 'prefix -', 'prefix omg!', 'prefix default', 'prefix none']
+		});
 	}
 
 	async run(message, args) {

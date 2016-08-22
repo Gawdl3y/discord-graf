@@ -20,8 +20,6 @@ export default class CommandRegistry extends EventEmitter {
 		if(!Array.isArray(commands)) throw new TypeError('Commands must be an array.');
 		for(let command of commands) {
 			if(this.commands.some(cmd => cmd.name === command.name)) throw new Error(`A command with the name "${command.name}"" is already registered.`);
-			if(!['single', 'multiple'].includes(command.argsType)) throw new RangeError(`Command ${command.module}:${command.memberName} argsType must be one of 'single' or 'multiple'.`);
-			if(command.argsCount && command.argsCount < 2) throw new RangeError(`Command ${command.module}:${command.memberName} argsCount must be at least 2.`);
 			const module = this.modules.find(mod => mod.id === command.module);
 			if(!module) throw new Error(`Module "${command.module}" is not registered.`);
 			if(module.commands.some(cmd => cmd.memberName === command.memberName)) throw new Error(`A command with the member name "${command.memberName}" is already registered in ${module.id}`);

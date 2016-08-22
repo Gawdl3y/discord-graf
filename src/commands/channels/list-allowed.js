@@ -6,13 +6,14 @@ import Command from '../command';
 
 export default class ListAllowedChannelsCommand extends Command {
 	constructor(bot) {
-		super(bot);
-		this.name = 'allowedchannels';
-		this.aliases = ['allowedchans', 'channels', 'chans'];
-		this.module = 'channels';
-		this.memberName = 'list-allowed';
-		this.description = 'Lists all channels command operation is allowed in.';
-		this.serverOnly = true;
+		super(bot, {
+			name: 'allowedchannels',
+			aliases: ['allowedchans', 'channels', 'chans'],
+			module: 'channels',
+			memberName: 'list-allowed',
+			description: 'Lists all channels command operation is allowed in.',
+			serverOnly: true
+		});
 	}
 
 	async run(message) {

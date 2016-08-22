@@ -1,26 +1,27 @@
 'use babel';
 'use strict';
 
-import { stripIndents } from 'common-tags';
+import { oneLine } from 'common-tags';
 import Command from '../command';
 import CommandFormatError from '../../errors/command-format';
 
 export default class EnableModuleCommand extends Command {
 	constructor(bot) {
-		super(bot);
-		this.name = 'enablemodule';
-		this.aliases = ['enablemod', 'moduleon', 'modon'];
-		this.module = 'modules';
-		this.memberName = 'enable';
-		this.description = 'Enables a module or command.';
-		this.usage = 'enablemodule <module|command>';
-		this.details = stripIndents`
-			The module must be the name (partial or whole) or ID of a module.
-			A command name may also be provided instead of a module in order to enable a single command.
-			Only administrators may use this command.
-		`;
-		this.examples = ['enablemodule mod-roles', 'enablemodule Moderator roles', 'enablemodule prefix'];
-		this.serverOnly = true;
+		super(bot, {
+			name: 'enablemodule',
+			aliases: ['enablemod', 'moduleon', 'modon'],
+			module: 'modules',
+			memberName: 'enable',
+			description: 'Enables a module or command.',
+			usage: 'enablemodule <module|command>',
+			details: oneLine`
+				The module must be the name (partial or whole) or ID of a module.
+				A command name may also be provided instead of a module in order to enable a single command.
+				Only administrators may use this command.
+			`,
+			examples: ['enablemodule mod-roles', 'enablemodule Moderator roles', 'enablemodule prefix'],
+			serverOnly: true
+		});
 	}
 
 	hasPermission(server, user) {

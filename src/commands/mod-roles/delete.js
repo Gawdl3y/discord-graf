@@ -7,16 +7,17 @@ import CommandFormatError from '../../errors/command-format';
 
 export default class DeleteModRoleCommand extends Command {
 	constructor(bot) {
-		super(bot);
-		this.name = 'deletemodrole';
-		this.aliases = ['removemodrole', 'delmodrole', 'removemod', 'deletemod', 'delmod'];
-		this.module = 'mod-roles';
-		this.memberName = 'delete';
-		this.description = 'Deletes a moderator role.';
-		this.usage = 'deletemodrole <role>';
-		this.details = 'The role must be the name or ID of a role, or a role mention. Only administrators may use this command.';
-		this.examples = ['deletemodrole cool', 'deletemodrole 205536402341888001', 'deletemodrole @CoolPeopleRole'];
-		this.serverOnly = true;
+		super(bot, {
+			name: 'deletemodrole',
+			aliases: ['removemodrole', 'delmodrole', 'removemod', 'deletemod', 'delmod'],
+			module: 'mod-roles',
+			memberName: 'delete',
+			description: 'Deletes a moderator role.',
+			usage: 'deletemodrole <role>',
+			details: 'The role must be the name or ID of a role, or a role mention. Only administrators may use this command.',
+			examples: ['deletemodrole cool', 'deletemodrole 205536402341888001', 'deletemodrole @CoolPeopleRole'],
+			serverOnly: true
+		});
 	}
 
 	hasPermission(server, user) {

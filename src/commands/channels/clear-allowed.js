@@ -1,18 +1,20 @@
 'use babel';
 'use strict';
 
+import { oneLine } from 'common-tags';
 import Command from '../command';
 
 export default class ClearAllowedChannelsCommand extends Command {
 	constructor(bot) {
-		super(bot);
-		this.name = 'clearallowedchannels';
-		this.aliases = ['clearallowedchans', 'clearchannels', 'clearchans'];
-		this.module = 'channels';
-		this.memberName = 'clear-allowed';
-		this.description = 'Clears all of the allowed channels.';
-		this.details = 'Only administrators may use this command.';
-		this.serverOnly = true;
+		super(bot, {
+			name: 'clearallowedchannels',
+			aliases: ['clearallowedchans', 'clearchannels', 'clearchans'],
+			module: 'channels',
+			memberName: 'clear-allowed',
+			description: 'Clears all of the allowed channels.',
+			details: 'Only administrators may use this command.',
+			serverOnly: true
+		});
 
 		this.lastUser = null;
 		this.timeout = null;
@@ -36,7 +38,11 @@ export default class ClearAllowedChannelsCommand extends Command {
 			}
 			this.lastUser = message.author;
 			this.timeout = setTimeout(() => { this.lastUser = null; }, 30000);
-			return `Are you sure you want to clear all of the allowed channels? Operation will be permitted in all channels. Use ${this.bot.util.usage('clearallowedchannels confirm', message.server)} to continue.`;
+			return oneLine`
+				Are you sure you want to clear all of the allowed channels?
+				Operation will be permitted in all channels.
+				Use ${this.bot.util.usage('clearallowedchannels confirm', message.server)} to continue.
+			`;
 		}
 	}
 }

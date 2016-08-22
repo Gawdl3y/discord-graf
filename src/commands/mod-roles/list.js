@@ -6,14 +6,15 @@ import Command from '../command';
 
 export default class ListModRolesCommand extends Command {
 	constructor(bot) {
-		super(bot);
-		this.name = 'modroles';
-		this.aliases = ['listmodroles', 'mods'];
-		this.module = 'mod-roles';
-		this.memberName = 'list';
-		this.description = 'Lists all moderator roles.';
-		this.details = 'Only administrators may use this command.';
-		this.serverOnly = true;
+		super(bot, {
+			name: 'modroles',
+			aliases: ['listmodroles', 'mods'],
+			module: 'mod-roles',
+			memberName: 'list',
+			description: 'Lists all moderator roles.',
+			details: 'Only administrators may use this command.',
+			serverOnly: true
+		});
 	}
 
 	hasPermission(server, user) {
