@@ -29,8 +29,7 @@ Add discord-graf as a dependency: `npm install --save discord-graf`
 
 ## Documentation
 The documentation is a work-in-progress.
-You may view it [here](https://gawdl3y.github.io/discord-graf/).
-
+You may view it [here](https://gawdl3y.github.io/discord-graf/).  
 You may also take a look at other bots' source code to see how they use GRAF.
 
 ## Known bots using GRAF
