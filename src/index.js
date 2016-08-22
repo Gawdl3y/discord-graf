@@ -249,7 +249,6 @@ export class Bot {
 
 	/**
 	 * Checks for an update for the bot
-	 * @param {Client} client - The Discord.js Client instance
 	 * @return {void}
 	 */
 	_checkForUpdate() {
@@ -271,3 +270,9 @@ export class Bot {
 }
 
 export default Bot;
+
+/** @external {Client} http://discordjs.readthedocs.io/en/latest/docs_client.html */
+/** @external {User} http://discordjs.readthedocs.io/en/latest/docs_user.html */
+/** @external {Server} http://discordjs.readthedocs.io/en/latest/docs_server.html */
+/** @external {Channel} http://discordjs.readthedocs.io/en/latest/docs_channel.html */
+/** @external {Message} http://discordjs.readthedocs.io/en/latest/docs_message.html */
