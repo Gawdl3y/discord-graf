@@ -188,7 +188,7 @@ export default class CommandDispatcher extends EventEmitter {
 
 		const commands = this.bot.registry.findCommands(matches[commandNameIndex]);
 		if(commands.length !== 1) return [null, null, true];
-		if(!commands[0] || commands[0].disableDefault) return [null, null, true];
+		if(!commands[0] || !commands[0].defaultHandling) return [null, null, true];
 
 		const argString = message.content.substring(matches[1].length + (matches[2] ? matches[2].length : 0));
 		let args;

@@ -81,6 +81,12 @@ export default class Command {
 		this.serverOnly = !!info.serverOnly;
 
 		/**
+		 * @type {boolean}
+		 * @see {@link CommandInfo}
+		 */
+		this.defaultHandling = 'defaultHandling' in info ? info.defaultHandling : true;
+
+		/**
 		 * @type {string}
 		 * @see {@link CommandInfo}
 		 */
@@ -97,12 +103,6 @@ export default class Command {
 		 * @see {@link CommandInfo}
 		 */
 		this.argsSingleQuotes = 'argsSingleQuotes' in info ? info.argsSingleQuotes : true;
-
-		/**
-		 * @type {boolean}
-		 * @see {@link CommandInfo}
-		 */
-		this.disableDefault = !!info.disableDefault;
 
 		/**
 		 * @type {RegExp[]}
@@ -174,9 +174,9 @@ export default class Command {
  * @property {string} [details] - A detailed description of the command and its functionality
  * @property {string[]} [examples] - Usage examples of the command
  * @property {boolean} [serverOnly=false] - Whether or not the command should only function in a server channel
+ * @property {boolean} [defaultHandling=true] - Whether or not the default command handling should be used
  * @property {string} [argsType=single] - One of 'single' or 'multiple'
  * @property {number} [argsCount=0] - The number of arguments to parse from the command string. Only applicable when argsType is 'multiple'. If nonzero, it should be at least 2.
  * @property {boolean} [argsSingleQuotes=true] - Whether or not single quotes should be allowed to contain arguments in the command string.
- * @property {boolean} [disableDefault=false] - Whether or not the default command handling should be disabled, and only patterns should be used
  * @property {RegExp[]} [patterns] - Patterns to use for matching the command in a message
  */
