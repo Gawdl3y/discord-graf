@@ -40,34 +40,41 @@ import ClearAllowedChannelsCommand from './commands/channels/clear-allowed';
 import PrefixCommand from './commands/util/prefix';
 import EvalCommand from './commands/util/eval';
 
-export const version = JSON.parse(readFileSync(pathJoin(__dirname, '../package.json'))).version;
-export const Command = _Command;
-export const Module = _Module;
-export const Permissions = _Permissions;
-export const Util = _Util;
-export const Storage = _Storage;
-export const Setting = _Setting;
-export const FriendlyError = _FriendlyError;
-export const CommandFormatError = _CommandFormatError;
-export const defaultClientOptions = {
-	forceFetchUsers: true,
-	bot: true
-};
-
+/** A Discord bot that has its own command registry, storage, utilities, etc. */
 export class Bot {
+	/** @param {ConfigObject} config - The configuration to use */
 	constructor(config) {
+		/** @type {Client} */
+		this.client = null;
+		/** @type {CommandDispatcher} */
+		this.dispatcher = null;
+		/** @type {BotConfig} */
 		this.config = new Config(config);
+		/** @type {BotPermissions} */
 		this.permissions = null;
+		/** @type {BotUtil} */
 		this.util = null;
+		/** @type {LocalStorage} */
 		this.localStorage = null;
+		/**
+		 * @type {Object}
+		 * @property {SettingStorage} settings
+		 * @property {ModRoleStorage} modRoles
+		 * @property {AllowedChannelStorage} allowedChannels
+		 */
 		this.storage = {
 			settings: null,
 			modRoles: null,
 			allowedChannels: null
 		};
+		/** @type {Object} */
 		this.evalObjects = {};
 	}
 
+	/**
+	 * Instantiates all bot classes and storages, and creates the client
+	 * @return {Client} The bot client
+	 */
 	createClient() {
 		if(this.client) throw new Error('Client has already been created.');
 		const config = this.config.values;
@@ -133,10 +140,20 @@ export class Bot {
 		return client;
 	}
 
+	/**
+	 * Registers a single command to the bot's registry
+	 * @param {Command|function} command - Either a Command instance, or a constructor for one
+	 * @return {Bot} This bot
+	 */
 	registerCommand(command) {
 		return this.registerCommands([command]);
 	}
 
+	/**
+	 * Registers multiple commands to the bot's registry
+	 * @param {Command[]|function[]} commands - An array of Command instances or constructors
+	 * @return {Bot} This bot
+	 */
 	registerCommands(commands) {
 		if(!Array.isArray(commands)) throw new TypeError('Commands must be an array.');
 		for(let i = 0; i < commands.length; i++) if(typeof commands[i] === 'function') commands[i] = new commands[i](this);
@@ -144,10 +161,20 @@ export class Bot {
 		return this;
 	}
 
+	/**
+	 * Registers a single module to the bot's registry
+	 * @param {Module|function|Array} module - A Module instance, a constructor, or an array of [ID, Name]
+	 * @return {Bot} This bot
+	 */
 	registerModule(module) {
 		return this.registerModules([module]);
 	}
 
+	/**
+	 * Registers multiple modules to the bot's registry
+	 * @param {Module[]|function[]|Array[]} modules - An array of Module instances, constructors, or arrays of [ID, Name]
+	 * @return {Bot} This bot
+	 */
 	registerModules(modules) {
 		if(!Array.isArray(modules)) throw new TypeError('Modules must be an array.');
 		for(let i = 0; i < modules.length; i++) {
@@ -163,12 +190,20 @@ export class Bot {
 		return this;
 	}
 
+	/**
+	 * Registers both the default modules and commands to the bot's registry
+	 * @return {Bot} This bot
+	 */
 	registerDefaults() {
 		this.registerDefaultModules();
 		this.registerDefaultCommands();
 		return this;
 	}
 
+	/**
+	 * Registers the default modules to the bot's registry
+	 * @return {Bot} This bot
+	 */
 	registerDefaultModules() {
 		this.registerModules([
 			['info', 'Information'],
@@ -180,6 +215,10 @@ export class Bot {
 		return this;
 	}
 
+	/**
+	 * Registers the default commands to the bot's registry
+	 * @return {Bot} This bot
+	 */
 	registerDefaultCommands() {
 		this.registerCommands([
 			HelpCommand,
@@ -202,22 +241,35 @@ export class Bot {
 		return this;
 	}
 
+	/**
+	 * Registers a single object to be usable by the eval command
+	 * @param {string} key - The key for the object
+	 * @param {Object} obj - The object
+	 * @return {Bot} This bot
+	 */
 	registerEvalObject(key, obj) {
 		const registerObj = {};
 		registerObj[key] = obj;
 		return this.registerEvalObjects(registerObj);
 	}
 
+	/**
+	 * Registers multiple objects to be usable by the eval command
+	 * @param {Object} obj - An object of keys: values
+	 * @return {Bot} This bot
+	 */
 	registerEvalObjects(obj) {
 		Object.assign(this.evalObjects, obj);
 		return this;
 	}
 
+	/** @type {CommandRegistry} */
 	get registry() {
 		if(!this._registry) this._registry = new Registry(this.logger);
 		return this._registry;
 	}
 
+	/** @type {Logger} */
 	get logger() {
 		if(!this._logger) {
 			this._logger = new winston.Logger({
@@ -268,11 +320,75 @@ export class Bot {
 		});
 	}
 }
-
 export default Bot;
+
+/**
+ * The version of GRAF
+ * @type {string}
+ */
+export const version = JSON.parse(readFileSync(pathJoin(__dirname, '../package.json'))).version;
+
+/**
+ * The {@link Command} class
+ * @type {function}
+ */
+export const Command = _Command;
+
+/**
+ * The {@link Module} class
+ * @type {function}
+ */
+export const Module = _Module;
+
+/**
+ * The {@link BotPermissions} class
+ * @type {function}
+ */
+export const Permissions = _Permissions;
+
+/**
+ * The {@link BotUtil} class
+ * @type {function}
+ */
+export const Util = _Util;
+
+/**
+ * The {@link Storage} class
+ * @type {function}
+ */
+export const Storage = _Storage;
+
+/**
+ * The {@link Setting} class
+ * @type {function}
+ */
+export const Setting = _Setting;
+
+/**
+ * The {@link FriendlyError} class
+ * @type {function}
+ */
+export const FriendlyError = _FriendlyError;
+
+/**
+ * The {@link CommandFormatError} class
+ * @type {function}
+ */
+export const CommandFormatError = _CommandFormatError;
+
+/**
+ * Default options for creating a Client
+ * @type {function}
+ */
+export const defaultClientOptions = {
+	forceFetchUsers: true,
+	bot: true
+};
 
 /** @external {Client} http://discordjs.readthedocs.io/en/latest/docs_client.html */
 /** @external {User} http://discordjs.readthedocs.io/en/latest/docs_user.html */
 /** @external {Server} http://discordjs.readthedocs.io/en/latest/docs_server.html */
 /** @external {Channel} http://discordjs.readthedocs.io/en/latest/docs_channel.html */
 /** @external {Message} http://discordjs.readthedocs.io/en/latest/docs_message.html */
+/** @external {Logger} https://github.com/winstonjs/winston/blob/master/README.md */
+/** @external {LocalStorage} https://developer.mozilla.org/en-US/docs/Web/API/Storage */

@@ -1,9 +1,7 @@
 'use babel';
 'use strict';
 
-/**
- * Configuration object for a bot
- */
+/** Configuration for a bot */
 export default class BotConfig {
 	/**
 	 * @param {ConfigObject} [values] - The configuration to start with
@@ -11,13 +9,9 @@ export default class BotConfig {
 	 */
 	constructor(values, defaults) {
 		this._values = {};
-
-		/**
-		 * @type {ConfigObject}
-		 */
+		/** @type {ConfigObject} */
 		this.defaults = Object.assign({}, defaultDefaults, defaults);
 		this.loadDefaults();
-
 		this.values = values;
 	}
 
@@ -29,16 +23,14 @@ export default class BotConfig {
 		Object.assign(this._values, values);
 	}
 
-	/**
-	 * Gets the current values
-	 */
+	/** @type {ConfigObject} */
 	get values() {
 		return this._values;
 	}
 
 	/**
 	 * Adds the defaults to the current values
-	 * @param {boolean} overwrite - Whether or not the defaults should overwrite existing values
+	 * @param {boolean} [overwrite=false] - Whether or not the defaults should overwrite existing values
 	 * @return {void}
 	 */
 	loadDefaults(overwrite = false) {
@@ -237,10 +229,10 @@ const defaultDefaults = {
  * @property {string} [token] - The bot account API token to log in with
  * @property {string} [email] - The bot account email to log in with
  * @property {string} [password] - The bot account password to log in with
- * @property {Object} [clientOptions] - The Discord.js Client options to pass to the Client constructor
+ * @property {ClientOptions} [clientOptions] - The options to pass to the Client constructor
  * @property {boolean} [autoReconnect=true] - Whether or not the bot should automatically reconnect upon disconnection
  * @property {string} [storage=bot-storage] - Path to the local storage directory
- * @property {string} [playingGame=Message\ for\ help] - Text to show the bot playing
+ * @property {string} [playingGame=Message-for-help] - Text to show the bot playing
  * @property {number} [paginationItems=10] - Maximum number of items per page the default commands use when paginating
  * @property {number} [updateCheck=60] - How frequently to check for updates (in minutes)
  * @property {string} [commandPrefix=!] - The default command prefix (empty/null for mentions only)
@@ -252,3 +244,6 @@ const defaultDefaults = {
  * @property {string} [logLevel=info] - The log level to output to the log file (error, warn, info, verbose, debug)
  * @property {string} [consoleLevel=info] - The log level to output to the console (error, warn, info, verbose, debug)
  */
+
+/** @external {ClientOptions} http://discordjs.readthedocs.io/en/latest/docs_client.html#parameters */
+/** @external {Yargs} http://yargs.js.org/docs/ */

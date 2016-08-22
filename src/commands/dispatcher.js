@@ -236,8 +236,8 @@ export default class CommandDispatcher extends EventEmitter {
 
 	/**
 	 * Creates a regular expression to match the command prefix and name in a message
-	 * @param {?Server} server - A Discord.js Server instance of the server that the message is from
-	 * @param {User} user - The Discord.js User instance of the bot
+	 * @param {?Server} server - The Server that the message is from
+	 * @param {User} user - The User that the bot is running for
 	 * @return {RegExp} Regular expression that matches a command prefix and name
 	 */
 	_buildCommandPattern(server, user) {

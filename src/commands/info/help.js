@@ -28,7 +28,7 @@ export default class HelpCommand extends Command {
 				let help = stripIndents`
 					__Command **${commands[0].name}**:__ ${commands[0].description}${commands[0].serverOnly ? ' (Usable only in servers)' : ''}
 
-					**Usage:** ${util.usage(commands[0].usage ? commands[0].usage : commands[0].name, message.server)}
+					**Usage:** ${util.usage(commands[0].usage, message.server)}
 				`;
 				if(commands[0].aliases) help += `\n**Aliases:** ${commands[0].aliases.join(', ')}`;
 				if(commands[0].details) help += `\n**Details:** ${commands[0].details}`;

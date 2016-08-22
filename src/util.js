@@ -1,9 +1,7 @@
 'use babel';
 'use strict';
 
-/**
- * Contains general utility methods.
- */
+/** Contains general utility methods */
 export default class BotUtil {
 	/**
 	 * @param {Client} client - The Discord.js Client to use
@@ -19,7 +17,6 @@ export default class BotUtil {
 		this.settings = settings;
 		/** @type {BotConfig} */
 		this.config = config;
-
 		/**
 		 * @type {PatternConstants}
 		 * @see {@link Util.patterns}
@@ -131,11 +128,7 @@ export default class BotUtil {
 	/**
 	 * @param {Object[]} items - An array of items to search in
 	 * @param {string} searchString - The string to search for
-	 * @param {Object} options - An options object
-	 * @param {string} [options.property=name] - The property on items to search against
-	 * @param {boolean} [options.searchInexact=true] - Whether or not to search for inexact matches
-	 * @param {boolean} [options.searchExact=true] - Whether or not to search for exact matches (will narrow down inexact matches if applicable)
-	 * @param {boolean} [options.useStartsWith=false] - Whether or not to search inexact by checking to see if the item starts with the search string rather than contains
+	 * @param {SearchOptions} options - An options object
 	 * @return {Object[]} The matched items
 	 * @see {@link Util.search}
 	 */
@@ -147,11 +140,7 @@ export default class BotUtil {
 	 * Search for matches in a list of items
 	 * @param {Object[]} items - An array of items to search in
 	 * @param {string} searchString - The string to search for
-	 * @param {Object} options - An options object
-	 * @param {string} [options.property=name] - The property on items to search against
-	 * @param {boolean} [options.searchInexact=true] - Whether or not to search for inexact matches
-	 * @param {boolean} [options.searchExact=true] - Whether or not to search for exact matches (will narrow down inexact matches if applicable)
-	 * @param {boolean} [options.useStartsWith=false] - Whether or not to search inexact by checking to see if the item starts with the search string rather than contains
+	 * @param {SearchOptions} options - An options object
 	 * @return {Object[]} The matched items
 	 * @see {@link Util#search}
 	 */
@@ -260,7 +249,7 @@ const spacePattern = / /g;
  * @property {RegExp} userID - A pattern to match a user ID from a raw ID string or mention
  * @property {RegExp} roleID - A pattern to match a role ID from a raw ID string or mention
  * @property {RegExp} channelID - A pattern to match a channel ID from a raw ID string or mention
- * @property {RegExp} allUserMentions - A pattern to to match all mentions that would notify users
+ * @property {RegExp} allUserMentions - A pattern to to match any mentions that would notify users
  */
 const patterns = {
 	userID: /^(?:<@!?)?([0-9]+)>?$/,
@@ -268,3 +257,12 @@ const patterns = {
 	channelID: /^(?:<#)?([0-9]+)>?$/,
 	anyUserMentions: /@everyone|@here|<@(?:!|&)?[0-9]+>/i
 };
+
+/**
+ * @typedef {Object} SearchOptions
+ * @property {string} [property=name] - The property on items to search against. If empty, the raw object's toString will be used instead.
+ * @property {boolean} [searchInexact=true] - Whether or not to search for inexact matches
+ * @property {boolean} [searchExact=true] - Whether or not to search for exact matches (will narrow down inexact matches if applicable)
+ * @property {boolean} [useStartsWith=false] - Whether or not to search inexact by checking to see if the item starts with the search string rather than contains,
+ * if the search string is only one character
+ */
