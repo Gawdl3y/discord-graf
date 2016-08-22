@@ -21,8 +21,8 @@ export default class ListModulesCommand extends Command {
 
 	async run(message) {
 		return stripIndents`
-			__**Modules:**__
-			${this.bot.registry.modules.map(mod => `**- ${mod.name}:** ${mod.isEnabled(message.server) ? 'Enabled' : 'Disabled'}`).join('\n')}
+			__**Modules**__
+			${this.bot.registry.modules.map(mod => `**${mod.name}:** ${mod.isEnabled(message.server) ? 'Enabled' : 'Disabled'}`).join('\n')}
 		`;
 	}
 }

@@ -20,7 +20,7 @@ export default class ListAllowedChannelsCommand extends Command {
 		const channels = this.bot.storage.allowedChannels.find(message.server);
 		if(channels.length > 0) {
 			return stripIndents`
-				__**Allowed channels:**__
+				__**Allowed channels**__
 				${channels.map(channel => `**-** ${channel}`).join('\n')}
 			`;
 		} else {

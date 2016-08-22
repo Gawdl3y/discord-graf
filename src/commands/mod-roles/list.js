@@ -25,7 +25,7 @@ export default class ListModRolesCommand extends Command {
 		const roles = this.bot.storage.modRoles.find(message.server);
 		if(roles.length > 0) {
 			return stripIndents`
-				__**Moderator roles:**__
+				__**Moderator roles**__
 				${roles.map(role => `**-** ${role.name} (ID: ${role.id})`).join('\n')}
 			`;
 		} else {
