@@ -19,6 +19,7 @@ Here's a quick list:
 - Channel restrictions (allow the bot to operate only in specific channels in a server)
 - Configurable command prefix (change the trigger for commands)
 - Help system and detailed about command
+- Eval command with a system for registering your own objects to make available in its scope, and some utilities
 - Update checking for your bot
 
 ## Installation
