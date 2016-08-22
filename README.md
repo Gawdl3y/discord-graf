@@ -13,16 +13,17 @@ It is written in ES2017 using Babel, and is built with [discord.js](https://gith
 ## Features
 GRAF contains loads of functionality that any bots built on it can use.
 Here's a quick list:
-- Command framework (with plain names, argument parsing, and optional regex patterns)
+- Command framework (with plain names, argument parsing, and optional regex patterns - probably the most robust command system of any bot)
 - Module system (allows you to disable modules and individual commands per server)
 - Admin/moderator permissions (moderators are configurable)
 - Channel restrictions (allow the bot to operate only in specific channels in a server)
 - Configurable command prefix (change the trigger for commands)
+- Help system and detailed about command
 - Update checking for your bot
 
 ## Installation
 **Requires Node.js 6.0.0 or newer.**  
-`npm install --save discord-graf`
+Add discord-graf as a dependency: `npm install --save discord-graf`
 
 ## Documentation
 Coming soon&trade;.  
