@@ -38,7 +38,7 @@ export default class Command {
 		return true;
 	}
 
-	async run() {
+	async run(message, args, fromPattern) { // eslint-disable-line no-unused-vars
 		throw new Error(`${this.constructor.name} doesn't have a run() method, or called the super.run() method.`);
 	}
 
