@@ -14,28 +14,13 @@ export default class BotPermissions {
 	constructor(client, modRoles, settings, config) {
 		if(!client || !modRoles || !settings || !config) throw new Error('A client, modRoles, settings, and config must be specified.');
 
-		/**
-		 * The Discord.js Client
-		 * @type {Client}
-		 */
+		/** @type {Client} */
 		this.client = client;
-
-		/**
-		 * The mod role storage
-		 * @type {ModRoleStorage}
-		 */
+		/** @type {ModRoleStorage} */
 		this.modRoles = modRoles;
-
-		/**
-		 * The settings torage
-		 * @type {SettingStorage}
-		 */
+		/** @type {SettingStorage} */
 		this.settings = settings;
-
-		/**
-		 * The bot config
-		 * @type {BotConfig}
-		 */
+		/** @type {BotConfig} */
 		this.config = config;
 	}
 

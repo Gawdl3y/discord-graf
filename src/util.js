@@ -13,26 +13,14 @@ export default class BotUtil {
 	constructor(client, settings, config) {
 		if(!client || !settings || !config) throw new Error('A client, settings, and config must be specified.');
 
-		/**
-		 * The Discord.js Client
-		 * @type {Client}
-		 */
+		/** @type {Client} */
 		this.client = client;
-
-		/**
-		 * The setting storage
-		 * @type {SettingStorage}
-		 */
+		/** @type {SettingStorage} */
 		this.settings = settings;
-
-		/**
-		 * The bot config
-		 * @type {BotConfig}
-		 */
+		/** @type {BotConfig} */
 		this.config = config;
 
 		/**
-		 * Useful pattern constants
 		 * @type {PatternConstants}
 		 * @see {@link Util.patterns}
 		 */
@@ -256,7 +244,6 @@ export default class BotUtil {
 	}
 
 	/**
-	 * Useful pattern constants
 	 * @type {PatternConstants}
 	 * @see {@link Util#patterns}
 	 */
