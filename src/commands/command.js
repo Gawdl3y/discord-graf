@@ -11,7 +11,7 @@ export default class Command {
 		if(!info.name) throw new Error('Command must have a name specified.');
 		if(info.aliases && !Array.isArray(info.aliases)) throw new TypeError('Command aliases must be an array.');
 		if(!info.module) throw new Error('Command must have a module specified.');
-		if(!info.memberName) throw new Error('Command must have a member name specified.');
+		if(!info.memberName) throw new Error('Command must have a memberName specified.');
 		if(!info.description) throw new Error('Command must have a description specified.');
 		if(info.examples && !Array.isArray(info.examples)) throw new TypeError('Command examples must be an array.');
 		if(info.argsType && !['single', 'multiple'].includes(info.argsType)) throw new RangeError('Command argsType must be one of "single" or "multiple".');
