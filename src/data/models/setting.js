@@ -16,6 +16,6 @@ export default class Setting {
 		/** @type {string} */
 		this.key = key;
 		/** @type {*} */
-		this.value = value || null;
+		this.value = value;
 	}
 }
