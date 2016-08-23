@@ -43,10 +43,11 @@ You now have a fully-functioning bot.
 
 ## Commands
 All commands extend the base [`Command`](../class/src/commands/command.js~Command.html) class.
-They must all override the constructor and [`run`](./class/src/commands/command.js~Command.html#instance-method-run) method.
-They may also optionally override the [`hasPermission`](./class/src/commands/command.js~Command.html#instance-method-hasPermission) method.
+They must all override the [constructor](../class/src/commands/command.js~Command.html#instance-constructor-constructor)
+and [`run`](../class/src/commands/command.js~Command.html#instance-method-run) method.
+They may also optionally override the [`hasPermission`](../class/src/commands/command.js~Command.html#instance-method-hasPermission) method.
 
-- [List of command settings](./typedef/index.html#static-typedef-CommandInfo)
+- [List of command settings](../typedef/index.html#static-typedef-CommandInfo)
 
 Example command:
 

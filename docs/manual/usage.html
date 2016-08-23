@@ -121,10 +121,11 @@ const client = bot
 You now have a fully-functioning bot.</p>
 <h2 id="commands">Commands</h2>
 <p>All commands extend the base <a href="./manual/../class/src/commands/command.js~Command.html"><code>Command</code></a> class.
-They must all override the constructor and <a href="./manual/./class/src/commands/command.js~Command.html#instance-method-run"><code>run</code></a> method.
-They may also optionally override the <a href="./manual/./class/src/commands/command.js~Command.html#instance-method-hasPermission"><code>hasPermission</code></a> method.</p>
+They must all override the <a href="./manual/../class/src/commands/command.js~Command.html#instance-constructor-constructor">constructor</a>
+and <a href="./manual/../class/src/commands/command.js~Command.html#instance-method-run"><code>run</code></a> method.
+They may also optionally override the <a href="./manual/../class/src/commands/command.js~Command.html#instance-method-hasPermission"><code>hasPermission</code></a> method.</p>
 <ul>
-<li><a href="./manual/./typedef/index.html#static-typedef-CommandInfo">List of command settings</a></li>
+<li><a href="./manual/../typedef/index.html#static-typedef-CommandInfo">List of command settings</a></li>
 </ul>
 <p>Example command:</p>
 <pre><code class="lang-javascript"><code class="source-code prettyprint">import { Command, CommandFormatError } from &apos;discord-graf&apos;;
