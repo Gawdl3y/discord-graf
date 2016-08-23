@@ -261,11 +261,13 @@ export default class BotUtil {
 	 * @param {string} text - The string to split
 	 * @param {number} [maxLength=1925] - The maximum length of each split string
 	 * @param {string} [splitOn=\n] - The characters to split the string with
+	 * @param {string} [prepend] - String to prepend to every split message
+	 * @param {string} [append] - String to append to every split message
 	 * @return {string[]} The split strings
 	 * @see {@link Util.split}
 	 */
-	split(text, maxLength = 1925, splitOn = &apos;\n&apos;) {
-		return this.constructor.split(text, maxLength, splitOn);
+	split(text, maxLength = 1925, splitOn = &apos;\n&apos;, prepend = &apos;&apos;, append = &apos;&apos;) {
+		return this.constructor.split(text, maxLength, splitOn, prepend, append);
 	}
 
 	/**
@@ -273,20 +275,23 @@ export default class BotUtil {
 	 * @param {string} text - The string to split
 	 * @param {number} [maxLength=1925] - The maximum length of each split string
 	 * @param {string} [splitOn=\n] - The characters to split the string with
+	 * @param {string} [prepend] - String to prepend to every split message
+	 * @param {string} [append] - String to append to every split message
 	 * @return {string[]} The split strings
 	 * @see {@link Util#split}
 	 */
-	static split(text, maxLength = 1925, splitOn = &apos;\n&apos;) {
+	static split(text, maxLength = 1900, splitOn = &apos;\n&apos;, prepend = &apos;&apos;, append = &apos;&apos;) {
 		const splitText = text.split(splitOn);
 		if(splitText.length === 1 &amp;&amp; text.length &gt; maxLength) throw new Error(&apos;Message exceeds the max length and contains no split characters.&apos;);
 		const messages = [&apos;&apos;];
 		let msg = 0;
 		for(let i = 0; i &lt; splitText.length; i++) {
 			if(messages[msg].length + splitText[i].length + 1 &gt; maxLength) {
-				messages.push(&apos;&apos;);
+				messages[msg] += append;
+				messages.push(prepend);
 				msg++;
 			}
-			messages[msg] += (messages[msg].length &gt; 0 ? &apos;\n&apos; : &apos;&apos;) + splitText[i];
+			messages[msg] += (messages[msg].length &gt; 0 &amp;&amp; messages[msg] !== prepend ? splitOn : &apos;&apos;) + splitText[i];
 		}
 		return messages;
 	}
