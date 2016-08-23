@@ -31,8 +31,7 @@ gulp.task('lint', () =>
 
 // Build documentation
 gulp.task('docs', () =>
-	gulp.src(['./src/**/*.js'])
-		.pipe(esdoc())
+	gulp.src(['./src/**/*.js']).pipe(esdoc())
 );
 
 // Commit & tag version
@@ -45,9 +44,8 @@ gulp.task('tag-release', () => {
 });
 
 // Commit & tag and publish to NPM
-gulp.task('publish', gulp.parallel('lint', gulp.series('rebuild', 'tag-release', () =>
-	gulp.src('.')
-		.pipe(exec('npm publish'))
+gulp.task('publish', gulp.parallel('lint', 'docs', gulp.series('rebuild', 'tag-release', () =>
+	gulp.src('.').pipe(exec('npm publish'))
 )));
 
 gulp.task('default', gulp.parallel('lint', 'rebuild'));

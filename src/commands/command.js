@@ -174,9 +174,11 @@ export default class Command {
  * @property {string} [details] - A detailed description of the command and its functionality
  * @property {string[]} [examples] - Usage examples of the command
  * @property {boolean} [serverOnly=false] - Whether or not the command should only function in a server channel
- * @property {boolean} [defaultHandling=true] - Whether or not the default command handling should be used
- * @property {string} [argsType=single] - One of 'single' or 'multiple'
+ * @property {boolean} [defaultHandling=true] - Whether or not the default command handling should be used. If false, then only patterns will trigger the command.
+ * @property {string} [argsType=single] - One of 'single' or 'multiple'. When 'single', the entire argument string will be passed to run as one argument.
+ * When 'multiple', it will be passed as multiple arguments.
  * @property {number} [argsCount=0] - The number of arguments to parse from the command string. Only applicable when argsType is 'multiple'. If nonzero, it should be at least 2.
- * @property {boolean} [argsSingleQuotes=true] - Whether or not single quotes should be allowed to contain arguments in the command string.
- * @property {RegExp[]} [patterns] - Patterns to use for matching the command in a message
+ * When this is 0, the command argument string will be split into as many arguments as it can be. When nonzero, it will be split into a maximum of this number of arguments.
+ * @property {boolean} [argsSingleQuotes=true] - Whether or not single quotes should be allowed to box-in arguments in the command string.
+ * @property {RegExp[]} [patterns] - Patterns to use for triggering the command
  */

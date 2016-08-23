@@ -1,10 +1,4 @@
-# Discord GRAF
-[![Discord](https://discordapp.com/api/servers/214147099133083659/widget.png)](https://discord.gg/a5ZD9n7)
-[![Downloads](https://img.shields.io/npm/dt/discord-graf.svg)](https://www.npmjs.com/package/discord-graf)
-[![Version](https://img.shields.io/npm/v/discord-graf.svg)](https://www.npmjs.com/package/discord-graf)
-[![Dependency status](https://david-dm.org/Gawdl3y/discord-graf.svg)](https://david-dm.org/Gawdl3y/discord-graf)
-[![License](https://img.shields.io/npm/l/discord-graf.svg)](LICENSE)
-
+## Information
 **GRAF:** Great Rad-Ass Framework
 
 This is a framework for Discord bots to use that makes it stupidly easy to build a bot with Node.js.  
@@ -22,11 +16,3 @@ Here's a quick list:
 - Eval command with a system for registering your own objects to make available in its scope, and some utilities
 - Lots of utility methods to simplify your logic
 - Update checking for your bot
-
-## Documentation
-The documentation is a work-in-progress.
-You may view it [here](https://gawdl3y.github.io/discord-graf/manual/index.html).  
-You may also take a look at other bots' source code to see how they use GRAF.
-
-## Known bots using GRAF
-- [RPBot](https://github.com/Gawdl3y/discord-rpbot)

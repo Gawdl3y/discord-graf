@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../">
-  <title data-ice="title">src/bot/config.js | API Document</title>
+  <title data-ice="title">src/bot/config.js | GRAF API Document</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -15,7 +15,7 @@
 
 <header>
   <a href="./">Home</a>
-  
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
   <a href="identifiers.html">Reference</a>
   <a href="source.html">Source</a>
   
@@ -124,160 +124,164 @@ export default class BotConfig {
 	/**
 	 * Loads configuration from yargs, adding a bunch of default bot options
 	 * @param {Yargs} yargs - The yargs instance to use
+	 * @param {boolean} [addOptions=true] - Whether or not to add options for GRAF&apos;s config
 	 * @return {Yargs} The yargs instance
 	 */
-	yargs(yargs) {
-		this.values = yargs
-			// Authentication
-			.option(&apos;token&apos;, {
-				type: &apos;string&apos;,
-				alias: &apos;t&apos;,
-				describe: &apos;API token for the bot account&apos;,
-				group: &apos;Authentication:&apos;
-			})
-			.option(&apos;email&apos;, {
-				type: &apos;string&apos;,
-				alias: &apos;e&apos;,
-				describe: &apos;Email of the Discord account for the bot to use&apos;,
-				group: &apos;Authentication:&apos;
-			})
-			.option(&apos;password&apos;, {
-				type: &apos;string&apos;,
-				alias: &apos;p&apos;,
-				describe: &apos;Password of the Discord account for the bot to use&apos;,
-				group: &apos;Authentication:&apos;
-			})
-			.implies({ email: &apos;password&apos;, password: &apos;email&apos; })
+	yargs(yargs, addOptions = true) {
+		if(addOptions) {
+			yargs
+				// Authentication
+				.option(&apos;token&apos;, {
+					type: &apos;string&apos;,
+					alias: &apos;t&apos;,
+					describe: &apos;API token for the bot account&apos;,
+					group: &apos;Authentication:&apos;
+				})
+				.option(&apos;email&apos;, {
+					type: &apos;string&apos;,
+					alias: &apos;e&apos;,
+					describe: &apos;Email of the Discord account for the bot to use&apos;,
+					group: &apos;Authentication:&apos;
+				})
+				.option(&apos;password&apos;, {
+					type: &apos;string&apos;,
+					alias: &apos;p&apos;,
+					describe: &apos;Password of the Discord account for the bot to use&apos;,
+					group: &apos;Authentication:&apos;
+				})
+				.implies({ email: &apos;password&apos;, password: &apos;email&apos; })
 
-			// General
-			.option(&apos;owner&apos;, {
-				type: &apos;string&apos;,
-				alias: &apos;o&apos;,
-				describe: &apos;Discord user ID of the bot owner&apos;,
-				group: &apos;General:&apos;
-			})
-			.option(&apos;invite&apos;, {
-				type: &apos;string&apos;,
-				alias: &apos;i&apos;,
-				describe: &apos;Discord instant invite to a server to contact the owner&apos;,
-				group: &apos;General:&apos;
-			})
-			.option(&apos;playing-game&apos;, {
-				type: &apos;string&apos;,
-				default: this.defaults.playingGame,
-				alias: &apos;g&apos;,
-				describe: &apos;Text to show in the &quot;Playing...&quot; status&apos;,
-				group: &apos;General:&apos;
-			})
-			.option(&apos;pagination-items&apos;, {
-				type: &apos;number&apos;,
-				default: this.defaults.paginationItems,
-				alias: &apos;I&apos;,
-				describe: &apos;Number of items per page in paginated commands&apos;,
-				group: &apos;General:&apos;
-			})
-			.option(&apos;auto-reconnect&apos;, {
-				type: &apos;boolean&apos;,
-				default: this.defaults.autoReconnect,
-				alias: &apos;a&apos;,
-				describe: &apos;Whether or not the bot should automatically reconnect when disconnected&apos;,
-				group: &apos;General:&apos;
-			})
-			.option(&apos;storage&apos;, {
-				type: &apos;string&apos;,
-				default: this.defaults.storage,
-				alias: &apos;s&apos;,
-				describe: &apos;Path to storage directory&apos;,
-				group: &apos;General:&apos;,
-				normalize: true
-			})
-			.option(&apos;update-check&apos;, {
-				type: &apos;number&apos;,
-				default: this.defaults.updateCheck,
-				alias: &apos;U&apos;,
-				describe: &apos;How frequently to check for an update (in minutes, use 0 to disable)&apos;,
-				group: &apos;General:&apos;
-			})
+				// General
+				.option(&apos;owner&apos;, {
+					type: &apos;string&apos;,
+					alias: &apos;o&apos;,
+					describe: &apos;Discord user ID of the bot owner&apos;,
+					group: &apos;General:&apos;
+				})
+				.option(&apos;invite&apos;, {
+					type: &apos;string&apos;,
+					alias: &apos;i&apos;,
+					describe: &apos;Discord instant invite to a server to contact the owner&apos;,
+					group: &apos;General:&apos;
+				})
+				.option(&apos;playing-game&apos;, {
+					type: &apos;string&apos;,
+					default: this.defaults.playingGame,
+					alias: &apos;g&apos;,
+					describe: &apos;Text to show in the &quot;Playing...&quot; status&apos;,
+					group: &apos;General:&apos;
+				})
+				.option(&apos;pagination-items&apos;, {
+					type: &apos;number&apos;,
+					default: this.defaults.paginationItems,
+					alias: &apos;I&apos;,
+					describe: &apos;Number of items per page in paginated commands&apos;,
+					group: &apos;General:&apos;
+				})
+				.option(&apos;auto-reconnect&apos;, {
+					type: &apos;boolean&apos;,
+					default: this.defaults.autoReconnect,
+					alias: &apos;a&apos;,
+					describe: &apos;Whether or not the bot should automatically reconnect when disconnected&apos;,
+					group: &apos;General:&apos;
+				})
+				.option(&apos;storage&apos;, {
+					type: &apos;string&apos;,
+					default: this.defaults.storage,
+					alias: &apos;s&apos;,
+					describe: &apos;Path to storage directory&apos;,
+					group: &apos;General:&apos;,
+					normalize: true
+				})
+				.option(&apos;update-check&apos;, {
+					type: &apos;number&apos;,
+					default: this.defaults.updateCheck,
+					alias: &apos;U&apos;,
+					describe: &apos;How frequently to check for an update (in minutes, use 0 to disable)&apos;,
+					group: &apos;General:&apos;
+				})
 
-			// Commands
-			.option(&apos;command-prefix&apos;, {
-				type: &apos;string&apos;,
-				default: this.defaults.commandPrefix,
-				alias: &apos;P&apos;,
-				describe: &apos;Default command prefix (blank to use only mentions)&apos;,
-				group: &apos;Commands:&apos;
-			})
-			.option(&apos;command-editable&apos;, {
-				type: &apos;number&apos;,
-				default: this.defaults.commandEditable,
-				alias: &apos;E&apos;,
-				describe: &apos;How long a command message is editable (in seconds, use 0 to disable)&apos;,
-				group: &apos;Commands:&apos;
-			})
-			.option(&apos;non-command-edit&apos;, {
-				type: &apos;boolean&apos;,
-				default: this.defaults.nonCommandEdit,
-				alias: &apos;N&apos;,
-				describe: &apos;Whether or not a non-command message can be edited into a command&apos;,
-				group: &apos;Commands:&apos;
-			})
+				// Commands
+				.option(&apos;command-prefix&apos;, {
+					type: &apos;string&apos;,
+					default: this.defaults.commandPrefix,
+					alias: &apos;P&apos;,
+					describe: &apos;Default command prefix (blank to use only mentions)&apos;,
+					group: &apos;Commands:&apos;
+				})
+				.option(&apos;command-editable&apos;, {
+					type: &apos;number&apos;,
+					default: this.defaults.commandEditable,
+					alias: &apos;E&apos;,
+					describe: &apos;How long a command message is editable (in seconds, use 0 to disable)&apos;,
+					group: &apos;Commands:&apos;
+				})
+				.option(&apos;non-command-edit&apos;, {
+					type: &apos;boolean&apos;,
+					default: this.defaults.nonCommandEdit,
+					alias: &apos;N&apos;,
+					describe: &apos;Whether or not a non-command message can be edited into a command&apos;,
+					group: &apos;Commands:&apos;
+				})
 
-			// Logging
-			.option(&apos;log&apos;, {
-				type: &apos;string&apos;,
-				default: this.defaults.log,
-				alias: &apos;l&apos;,
-				describe: &apos;Path to log file&apos;,
-				group: &apos;Logging:&apos;,
-				normalize: true
-			})
-			.option(&apos;log-max-size&apos;, {
-				type: &apos;number&apos;,
-				default: this.defaults.logMaxSize,
-				defaultDescription: &apos;5MB&apos;,
-				alias: &apos;S&apos;,
-				describe: &apos;Maximum size of single log file (in bytes)&apos;,
-				group: &apos;Logging:&apos;
-			})
-			.option(&apos;log-max-files&apos;, {
-				type: &apos;number&apos;,
-				default: this.defaults.logMaxFiles,
-				alias: &apos;F&apos;,
-				describe: &apos;Maximum amount of log files to keep&apos;,
-				group: &apos;Logging:&apos;
-			})
-			.option(&apos;log-level&apos;, {
-				type: &apos;string&apos;,
-				default: this.defaults.logLevel,
-				alias: &apos;L&apos;,
-				describe: &apos;Log level to output to the log file (error, warn, info, verbose, debug)&apos;,
-				group: &apos;Logging:&apos;
-			})
-			.option(&apos;console-level&apos;, {
-				type: &apos;string&apos;,
-				default: this.defaults.consoleLevel,
-				alias: &apos;C&apos;,
-				describe: &apos;Log level to output to the console (error, warn, info, verbose, debug)&apos;,
-				group: &apos;Logging:&apos;
-			})
-			.option(&apos;config&apos;, {
-				type: &apos;string&apos;,
-				alias: &apos;c&apos;,
-				describe: &apos;Path to JSON/YAML config file&apos;,
-				group: &apos;Special:&apos;,
-				normalize: true,
-				config: true,
-				configParser: configFile =&gt; {
-					const extension = require(&apos;path&apos;).extname(configFile).toLowerCase();
-					if(extension === &apos;.json&apos;) {
-						return JSON.parse(require(&apos;fs&apos;).readFileSync(configFile));
-					} else if(extension === &apos;.yml&apos; || extension === &apos;.yaml&apos;) {
-						return require(&apos;js-yaml&apos;).safeLoad(require(&apos;fs&apos;).readFileSync(configFile));
+				// Logging
+				.option(&apos;log&apos;, {
+					type: &apos;string&apos;,
+					default: this.defaults.log,
+					alias: &apos;l&apos;,
+					describe: &apos;Path to log file&apos;,
+					group: &apos;Logging:&apos;,
+					normalize: true
+				})
+				.option(&apos;log-max-size&apos;, {
+					type: &apos;number&apos;,
+					default: this.defaults.logMaxSize,
+					defaultDescription: &apos;5MB&apos;,
+					alias: &apos;S&apos;,
+					describe: &apos;Maximum size of single log file (in bytes)&apos;,
+					group: &apos;Logging:&apos;
+				})
+				.option(&apos;log-max-files&apos;, {
+					type: &apos;number&apos;,
+					default: this.defaults.logMaxFiles,
+					alias: &apos;F&apos;,
+					describe: &apos;Maximum amount of log files to keep&apos;,
+					group: &apos;Logging:&apos;
+				})
+				.option(&apos;log-level&apos;, {
+					type: &apos;string&apos;,
+					default: this.defaults.logLevel,
+					alias: &apos;L&apos;,
+					describe: &apos;Log level to output to the log file (error, warn, info, verbose, debug)&apos;,
+					group: &apos;Logging:&apos;
+				})
+				.option(&apos;console-level&apos;, {
+					type: &apos;string&apos;,
+					default: this.defaults.consoleLevel,
+					alias: &apos;C&apos;,
+					describe: &apos;Log level to output to the console (error, warn, info, verbose, debug)&apos;,
+					group: &apos;Logging:&apos;
+				})
+				.option(&apos;config&apos;, {
+					type: &apos;string&apos;,
+					alias: &apos;c&apos;,
+					describe: &apos;Path to JSON/YAML config file&apos;,
+					group: &apos;Special:&apos;,
+					normalize: true,
+					config: true,
+					configParser: configFile =&gt; {
+						const extension = require(&apos;path&apos;).extname(configFile).toLowerCase();
+						if(extension === &apos;.json&apos;) {
+							return JSON.parse(require(&apos;fs&apos;).readFileSync(configFile));
+						} else if(extension === &apos;.yml&apos; || extension === &apos;.yaml&apos;) {
+							return require(&apos;js-yaml&apos;).safeLoad(require(&apos;fs&apos;).readFileSync(configFile));
+						}
+						throw new Error(&apos;Unknown config file type.&apos;);
 					}
-					throw new Error(&apos;Unknown config file type.&apos;);
-				}
-			})
-		.argv;
+				});
+		}
+
+		this.values = yargs.argv;
 		return yargs;
 	}
 }

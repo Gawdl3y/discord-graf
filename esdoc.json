@@ -4,5 +4,12 @@
 	"excludes": ["commands(\\/|\\\\)[a-z-]+\\1[a-z-]+\\.js$"],
 	"plugins": [
 		{ "name": "esdoc-es7-plugin" }
-	]
+	],
+	"title": "GRAF",
+	"manual": {
+		"overview": ["./manual/overview.md"],
+		"installation": ["./manual/installation.md"],
+		"usage": ["./manual/usage.md"],
+		"configuration": ["./manual/configuration.md"]
+	}
 }

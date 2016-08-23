@@ -1,14 +1,14 @@
 {
   "type": "Program",
   "start": 0,
-  "end": 6511,
+  "end": 6873,
   "loc": {
     "start": {
       "line": 1,
       "column": 0
     },
     "end": {
-      "line": 183,
+      "line": 185,
       "column": 0
     }
   },
@@ -8464,22 +8464,22 @@
         "trailingComments": [
           {
             "type": "Block",
-            "value": "*\r\n * @typedef {Object} CommandInfo\r\n * @property {string} name - The name of the command\r\n * @property {string[]} aliases - Alternative names for the command\r\n * @property {string} module - The ID of the module the command belongs to\r\n * @property {string} memberName - The member name of the command in the module\r\n * @property {string} description - A short description of the command\r\n * @property {string} [usage=name] - The command usage format string\r\n * @property {string} [details] - A detailed description of the command and its functionality\r\n * @property {string[]} [examples] - Usage examples of the command\r\n * @property {boolean} [serverOnly=false] - Whether or not the command should only function in a server channel\r\n * @property {boolean} [defaultHandling=true] - Whether or not the default command handling should be used\r\n * @property {string} [argsType=single] - One of 'single' or 'multiple'\r\n * @property {number} [argsCount=0] - The number of arguments to parse from the command string. Only applicable when argsType is 'multiple'. If nonzero, it should be at least 2.\r\n * @property {boolean} [argsSingleQuotes=true] - Whether or not single quotes should be allowed to contain arguments in the command string.\r\n * @property {RegExp[]} [patterns] - Patterns to use for matching the command in a message\r\n ",
+            "value": "*\r\n * @typedef {Object} CommandInfo\r\n * @property {string} name - The name of the command\r\n * @property {string[]} aliases - Alternative names for the command\r\n * @property {string} module - The ID of the module the command belongs to\r\n * @property {string} memberName - The member name of the command in the module\r\n * @property {string} description - A short description of the command\r\n * @property {string} [usage=name] - The command usage format string\r\n * @property {string} [details] - A detailed description of the command and its functionality\r\n * @property {string[]} [examples] - Usage examples of the command\r\n * @property {boolean} [serverOnly=false] - Whether or not the command should only function in a server channel\r\n * @property {boolean} [defaultHandling=true] - Whether or not the default command handling should be used. If false, then only patterns will trigger the command.\r\n * @property {string} [argsType=single] - One of 'single' or 'multiple'. When 'single', the entire argument string will be passed to run as one argument.\r\n * When 'multiple', it will be passed as multiple arguments.\r\n * @property {number} [argsCount=0] - The number of arguments to parse from the command string. Only applicable when argsType is 'multiple'. If nonzero, it should be at least 2.\r\n * When this is 0, the command argument string will be split into as many arguments as it can be. When nonzero, it will be split into a maximum of this number of arguments.\r\n * @property {boolean} [argsSingleQuotes=true] - Whether or not single quotes should be allowed to box-in arguments in the command string.\r\n * @property {RegExp[]} [patterns] - Patterns to use for triggering the command\r\n ",
             "start": 5176,
-            "end": 6509,
+            "end": 6871,
             "loc": {
               "start": {
                 "line": 166,
                 "column": 0
               },
               "end": {
-                "line": 182,
+                "line": 184,
                 "column": 3
               }
             },
             "range": [
               5176,
-              6509
+              6871
             ]
           }
         ]
@@ -8509,22 +8509,22 @@
       "trailingComments": [
         {
           "type": "Block",
-          "value": "*\r\n * @typedef {Object} CommandInfo\r\n * @property {string} name - The name of the command\r\n * @property {string[]} aliases - Alternative names for the command\r\n * @property {string} module - The ID of the module the command belongs to\r\n * @property {string} memberName - The member name of the command in the module\r\n * @property {string} description - A short description of the command\r\n * @property {string} [usage=name] - The command usage format string\r\n * @property {string} [details] - A detailed description of the command and its functionality\r\n * @property {string[]} [examples] - Usage examples of the command\r\n * @property {boolean} [serverOnly=false] - Whether or not the command should only function in a server channel\r\n * @property {boolean} [defaultHandling=true] - Whether or not the default command handling should be used\r\n * @property {string} [argsType=single] - One of 'single' or 'multiple'\r\n * @property {number} [argsCount=0] - The number of arguments to parse from the command string. Only applicable when argsType is 'multiple'. If nonzero, it should be at least 2.\r\n * @property {boolean} [argsSingleQuotes=true] - Whether or not single quotes should be allowed to contain arguments in the command string.\r\n * @property {RegExp[]} [patterns] - Patterns to use for matching the command in a message\r\n ",
+          "value": "*\r\n * @typedef {Object} CommandInfo\r\n * @property {string} name - The name of the command\r\n * @property {string[]} aliases - Alternative names for the command\r\n * @property {string} module - The ID of the module the command belongs to\r\n * @property {string} memberName - The member name of the command in the module\r\n * @property {string} description - A short description of the command\r\n * @property {string} [usage=name] - The command usage format string\r\n * @property {string} [details] - A detailed description of the command and its functionality\r\n * @property {string[]} [examples] - Usage examples of the command\r\n * @property {boolean} [serverOnly=false] - Whether or not the command should only function in a server channel\r\n * @property {boolean} [defaultHandling=true] - Whether or not the default command handling should be used. If false, then only patterns will trigger the command.\r\n * @property {string} [argsType=single] - One of 'single' or 'multiple'. When 'single', the entire argument string will be passed to run as one argument.\r\n * When 'multiple', it will be passed as multiple arguments.\r\n * @property {number} [argsCount=0] - The number of arguments to parse from the command string. Only applicable when argsType is 'multiple'. If nonzero, it should be at least 2.\r\n * When this is 0, the command argument string will be split into as many arguments as it can be. When nonzero, it will be split into a maximum of this number of arguments.\r\n * @property {boolean} [argsSingleQuotes=true] - Whether or not single quotes should be allowed to box-in arguments in the command string.\r\n * @property {RegExp[]} [patterns] - Patterns to use for triggering the command\r\n ",
           "start": 5176,
-          "end": 6509,
+          "end": 6871,
           "loc": {
             "start": {
               "line": 166,
               "column": 0
             },
             "end": {
-              "line": 182,
+              "line": 184,
               "column": 3
             }
           },
           "range": [
             5176,
-            6509
+            6871
           ]
         }
       ]

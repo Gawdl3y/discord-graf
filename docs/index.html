@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl">
-  <title data-ice="title">API Document</title>
+  <title data-ice="title">GRAF API Document</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -15,7 +15,7 @@
 
 <header>
   <a href="./">Home</a>
-  
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
   <a href="identifiers.html">Reference</a>
   <a href="source.html">Source</a>
   
@@ -82,25 +82,28 @@
 <a href="https://david-dm.org/Gawdl3y/discord-graf"><img src="https://david-dm.org/Gawdl3y/discord-graf.svg" alt="Dependency status"></a>
 <a href="LICENSE"><img src="https://img.shields.io/npm/l/discord-graf.svg" alt="License"></a></p>
 <p><strong>GRAF:</strong> Great Rad-Ass Framework</p>
-<p>This is a framework for Discord bots to use that makes it stupidly easy to build a bot with Node.js.
-It is written in ES2017 using Babel, and is built with <a href="https://github.com/hydrabolt/discord.js">discord.js</a> and Node.js.</p>
+<p>This is a framework for Discord bots to use that makes it stupidly easy to build a bot with Node.js.<br>It is written in ES2017 using Babel, and is built on top of <a href="https://github.com/hydrabolt/discord.js">discord.js</a>.</p>
 <h2 id="features">Features</h2>
 <p>GRAF contains loads of functionality that any bots built on it can use.
 Here&apos;s a quick list:</p>
 <ul>
-<li>Command framework (with plain names, argument parsing, and optional regex patterns - probably the most robust command system of any bot)</li>
+<li>Command framework (with plain names, aliases, argument parsing, and optional regex patterns - probably the most robust command system of any bot)</li>
 <li>Module system (allows you to disable modules and individual commands per server)</li>
 <li>Admin/moderator permissions (moderators are configurable)</li>
 <li>Channel restrictions (allow the bot to operate only in specific channels in a server)</li>
 <li>Configurable command prefix (change the trigger for commands)</li>
 <li>Help system and detailed about command</li>
 <li>Eval command with a system for registering your own objects to make available in its scope, and some utilities</li>
+<li>Lots of utility methods to simplify your logic</li>
 <li>Update checking for your bot</li>
 </ul>
-<h2 id="installation">Installation</h2>
-<p><strong>Requires Node.js 6.0.0 or newer.</strong><br>Add discord-graf as a dependency: <code>npm install --save discord-graf</code></p>
 <h2 id="documentation">Documentation</h2>
-<p>Coming soon&#x2122;.<br>Until documentation is available, take a look at <a href="https://github.com/Gawdl3y/discord-rpbot">RPBot</a> to see how the framework is used.</p>
+<p>The documentation is a work-in-progress.
+You may view it <a href="https://gawdl3y.github.io/discord-graf/manual/index.html">here</a>.<br>You may also take a look at other bots&apos; source code to see how they use GRAF.</p>
+<h2 id="known-bots-using-graf">Known bots using GRAF</h2>
+<ul>
+<li><a href="https://github.com/Gawdl3y/discord-rpbot">RPBot</a></li>
+</ul>
 </div>
 </div>
 
