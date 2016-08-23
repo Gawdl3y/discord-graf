@@ -11,7 +11,8 @@ export default class ListModulesCommand extends Command {
 			aliases: ['listmodules', 'showmodules'],
 			module: 'modules',
 			memberName: 'list',
-			description: 'Lists all modules. Only administrators may use this command.',
+			description: 'Lists all modules.',
+			details: 'Only administrators may use this command.',
 			serverOnly: true
 		});
 	}
