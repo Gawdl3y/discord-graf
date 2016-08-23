@@ -7,7 +7,12 @@ It is written in ES2017 using Babel, and is built on top of [discord.js](https:/
 ## Features
 GRAF contains loads of functionality that any bots built on it can use.
 Here's a quick list:
-- Command framework (with plain names, aliases, argument parsing, and optional regex patterns - probably the most robust command system of any bot)
+- Command framework (probably the most robust command system of any bot)
+	* Plain names and aliases
+	* Argument parsing
+	* Regular expression triggers
+	* Multiple responses
+	* Command editing
 - Module system (allows you to disable modules and individual commands per server)
 - Admin/moderator permissions (moderators are configurable)
 - Channel restrictions (allow the bot to operate only in specific channels in a server)
