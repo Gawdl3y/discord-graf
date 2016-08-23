@@ -89,6 +89,7 @@ export default class CommandFormatError extends FriendlyError {
 	 */
 	constructor(command, server = null) {
 		super(`Invalid command format. Use ${command.bot.util.usage(`help ${command.name}`, server)} for information.`);
+		/** @ignore */
 		this.name = &apos;CommandFormatError&apos;;
 	}
 }

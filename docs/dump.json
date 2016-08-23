@@ -6220,7 +6220,7 @@
     "access": null,
     "description": null,
     "lineNumber": 1,
-    "content": "'use babel';\r\n'use strict';\r\n\r\nimport FriendlyError from './friendly';\r\n\r\n/** Has a descriptive message for a command not having proper format */\r\nexport default class CommandFormatError extends FriendlyError {\r\n\t/**\r\n\t * @param {Command} command - The command the error is for\r\n\t * @param {?Server} server - The Server the error is in\r\n\t */\r\n\tconstructor(command, server = null) {\r\n\t\tsuper(`Invalid command format. Use ${command.bot.util.usage(`help ${command.name}`, server)} for information.`);\r\n\t\tthis.name = 'CommandFormatError';\r\n\t}\r\n}\r\n"
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport FriendlyError from './friendly';\r\n\r\n/** Has a descriptive message for a command not having proper format */\r\nexport default class CommandFormatError extends FriendlyError {\r\n\t/**\r\n\t * @param {Command} command - The command the error is for\r\n\t * @param {?Server} server - The Server the error is in\r\n\t */\r\n\tconstructor(command, server = null) {\r\n\t\tsuper(`Invalid command format. Use ${command.bot.util.usage(`help ${command.name}`, server)} for information.`);\r\n\t\t/** @ignore */\r\n\t\tthis.name = 'CommandFormatError';\r\n\t}\r\n}\r\n"
   },
   {
     "__docId__": 194,
@@ -6286,8 +6286,8 @@
     "longname": "src/errors/command-format.js~CommandFormatError#name",
     "access": null,
     "description": null,
-    "lineNumber": 14,
-    "undocument": true,
+    "lineNumber": 15,
+    "ignore": true,
     "type": {
       "types": [
         "string"
@@ -6305,7 +6305,7 @@
     "access": null,
     "description": null,
     "lineNumber": 1,
-    "content": "'use babel';\r\n'use strict';\r\n\r\n/** Has a message that can be considered user-friendly */\r\nexport default class FriendlyError extends Error {\r\n\t/** @param {string} message - The error message */\r\n\tconstructor(message) {\r\n\t\tsuper(message);\r\n\t\tthis.name = 'FriendlyError';\r\n\t}\r\n}\r\n"
+    "content": "'use babel';\r\n'use strict';\r\n\r\n/** Has a message that can be considered user-friendly */\r\nexport default class FriendlyError extends Error {\r\n\t/** @param {string} message - The error message */\r\n\tconstructor(message) {\r\n\t\tsuper(message);\r\n\t\t/** @ignore */\r\n\t\tthis.name = 'FriendlyError';\r\n\t}\r\n}\r\n"
   },
   {
     "__docId__": 198,
@@ -6361,8 +6361,8 @@
     "longname": "src/errors/friendly.js~FriendlyError#name",
     "access": null,
     "description": null,
-    "lineNumber": 9,
-    "undocument": true,
+    "lineNumber": 10,
+    "ignore": true,
     "type": {
       "types": [
         "string"

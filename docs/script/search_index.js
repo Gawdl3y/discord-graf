@@ -1440,12 +1440,6 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "src/errors/command-format.js~commandformaterror#name",
-    "class/src/errors/command-format.js~CommandFormatError.html#instance-member-name",
-    "src/errors/command-format.js~CommandFormatError#name",
-    "member"
-  ],
-  [
     "src/errors/friendly.js",
     "file/src/errors/friendly.js.html",
     "src/errors/friendly.js",
@@ -1456,12 +1450,6 @@ window.esdocSearchIndex = [
     "class/src/errors/friendly.js~FriendlyError.html#instance-constructor-constructor",
     "src/errors/friendly.js~FriendlyError#constructor",
     "method"
-  ],
-  [
-    "src/errors/friendly.js~friendlyerror#name",
-    "class/src/errors/friendly.js~FriendlyError.html#instance-member-name",
-    "src/errors/friendly.js~FriendlyError#name",
-    "member"
   ],
   [
     "src/index.js",
