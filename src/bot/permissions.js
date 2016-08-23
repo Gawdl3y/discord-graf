@@ -1,6 +1,8 @@
 'use babel';
 'use strict';
 
+import Module from '../commands/module';
+
 /** Contains methods to test whether a user has permissions in a server */
 export default class BotPermissions {
 	/**
@@ -51,7 +53,7 @@ export default class BotPermissions {
 		if(user.id === config.values.owner) return true;
 		const userRoles = server.rolesOfUser(user);
 		if(userRoles.some(role => role.hasPermission('administrator'))) return true;
-		if(!settings.getValue(server, 'mod-mod-roles', true) || modRoles.isEmpty(server)) return userRoles.some(role => role.hasPermission('manageMessages'));
+		if(!Module.isEnabled(settings, server, 'mod-roles') || modRoles.isEmpty(server)) return userRoles.some(role => role.hasPermission('manageMessages'));
 		return modRoles.find(server).some(role => userRoles.some(role2 => role.id === role2.id));
 	}
 

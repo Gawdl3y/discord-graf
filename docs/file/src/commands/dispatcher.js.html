@@ -82,6 +82,7 @@
 import EventEmitter from &apos;events&apos;;
 import { stripIndents } from &apos;common-tags&apos;;
 import escapeRegex from &apos;escape-string-regexp&apos;;
+import Module from &apos;./module&apos;;
 import FriendlyError from &apos;../errors/friendly&apos;;
 
 /** Handles parsing messages and running commands from them */
@@ -101,7 +102,7 @@ export default class CommandDispatcher extends EventEmitter {
 	/**
 	 * Handle a new message or a message update
 	 * @param {Message} message - The message to handle
-	 * @param {?Message} [oldMessage] - The old message before the update
+	 * @param {Message} [oldMessage] - The old message before the update
 	 * @return {Promise} Nothing
 	 */
 	async handleMessage(message, oldMessage = null) {
@@ -109,7 +110,7 @@ export default class CommandDispatcher extends EventEmitter {
 
 		// Make sure the bot is allowed to run in the channel, or the user is an admin
 		if(message.server
-			&amp;&amp; this.bot.storage.settings.getValue(message.server, &apos;mod-channels&apos;, true)
+			&amp;&amp; Module.isEnabled(this.bot.storage.settings, message.server, &apos;channels&apos;)
 			&amp;&amp; !this.bot.storage.allowedChannels.isEmpty(message.server)
 			&amp;&amp; !this.bot.storage.allowedChannels.exists(message.server, message.channel)
 			&amp;&amp; !this.bot.permissions.isAdmin(message.server, message.author)) return;

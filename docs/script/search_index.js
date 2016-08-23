@@ -1014,6 +1014,18 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
+    "src/commands/command.js~command.isenabled",
+    "class/src/commands/command.js~Command.html#static-method-isEnabled",
+    "src/commands/command.js~Command.isEnabled",
+    "method"
+  ],
+  [
+    "src/commands/command.js~command.setenabled",
+    "class/src/commands/command.js~Command.html#static-method-setEnabled",
+    "src/commands/command.js~Command.setEnabled",
+    "method"
+  ],
+  [
     "src/commands/command.js~commandinfo",
     "typedef/index.html#static-typedef-CommandInfo",
     "src/commands/command.js~CommandInfo",
@@ -1137,6 +1149,18 @@ window.esdocSearchIndex = [
     "src/commands/module.js~module#setenabled",
     "class/src/commands/module.js~Module.html#instance-method-setEnabled",
     "src/commands/module.js~Module#setEnabled",
+    "method"
+  ],
+  [
+    "src/commands/module.js~module.isenabled",
+    "class/src/commands/module.js~Module.html#static-method-isEnabled",
+    "src/commands/module.js~Module.isEnabled",
+    "method"
+  ],
+  [
+    "src/commands/module.js~module.setenabled",
+    "class/src/commands/module.js~Module.html#static-method-setEnabled",
+    "src/commands/module.js~Module.setEnabled",
     "method"
   ],
   [

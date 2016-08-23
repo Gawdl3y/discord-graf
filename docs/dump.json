@@ -1339,7 +1339,7 @@
     "access": null,
     "description": null,
     "lineNumber": 1,
-    "content": "'use babel';\r\n'use strict';\r\n\r\n/** Contains methods to test whether a user has permissions in a server */\r\nexport default class BotPermissions {\r\n\t/**\r\n\t * @param {Client} client - The Client to use\r\n\t * @param {ModRoleStorage} modRoles - The mod role storage to use\r\n\t * @param {SettingStorage} settings - The setting storage to use\r\n\t * @param {BotConfig} config - The bot config to use\r\n\t */\r\n\tconstructor(client, modRoles, settings, config) {\r\n\t\tif(!client || !modRoles || !settings || !config) throw new Error('A client, modRoles, settings, and config must be specified.');\r\n\r\n\t\t/** @type {Client} */\r\n\t\tthis.client = client;\r\n\t\t/** @type {ModRoleStorage} */\r\n\t\tthis.modRoles = modRoles;\r\n\t\t/** @type {SettingStorage} */\r\n\t\tthis.settings = settings;\r\n\t\t/** @type {BotConfig} */\r\n\t\tthis.config = config;\r\n\t}\r\n\r\n\t/**\r\n\t * @param {Server|string} server - The Server or the server ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is considered a moderator\r\n\t * @see {@link Permissions.isMod}\r\n\t */\r\n\tisMod(server, user) {\r\n\t\treturn this.constructor.isMod(this.client, this.modRoles, this.settings, this.config, server, user);\r\n\t}\r\n\r\n\t/**\r\n\t * Tests to see if a user is a moderator on a server using a specified client and config.\r\n\t * If the server has not set any moderator roles, then they will be a moderator if any of their assigned roles contain the \"Manage messages\" permission.\r\n\t * If the server has set moderator roles, then they will be a moderator if they have any of the moderator roles assigned.\r\n\t * The bot owner and users with the \"Administrate\" permission are always moderators.\r\n\t * @param {Client} client - The Client to use\r\n\t * @param {ModRoleStorage} modRoles - The mod role storage to use\r\n\t * @param {SettingStorage} settings - The setting storage to use\r\n\t * @param {BotConfig} config - The bot config to use\r\n\t * @param {Server|string} server - The Server or the server ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is considered a moderator\r\n\t * @see {@link Permissions#isMod}\r\n\t */\r\n\tstatic isMod(client, modRoles, settings, config, server, user) {\r\n\t\t[server, user] = this.resolve(client, server, user);\r\n\t\tif(user.id === config.values.owner) return true;\r\n\t\tconst userRoles = server.rolesOfUser(user);\r\n\t\tif(userRoles.some(role => role.hasPermission('administrator'))) return true;\r\n\t\tif(!settings.getValue(server, 'mod-mod-roles', true) || modRoles.isEmpty(server)) return userRoles.some(role => role.hasPermission('manageMessages'));\r\n\t\treturn modRoles.find(server).some(role => userRoles.some(role2 => role.id === role2.id));\r\n\t}\r\n\r\n\t/**\r\n\t * @param {Server|string} server - The Server or the server ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is considered an administrator\r\n\t * @see {@link Permissions.isAdmin}\r\n\t */\r\n\tisAdmin(server, user) {\r\n\t\treturn this.constructor.isAdmin(this.client, this.config, server, user);\r\n\t}\r\n\r\n\t/**\r\n\t * Tests to see if a user is an administrator on a server with a specified client.\r\n\t * If the user is the bot owner or has any roles assigned with the \"Administrate\" permission, they are considered an administrator.\r\n\t * @param {Client} client - The Client to use\r\n\t * @param {BotConfig} config - The bot config to use\r\n\t * @param {Server|string} server - The Server or the server ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is considered an administrator\r\n\t * @see {@link Permissions#isAdmin}\r\n\t */\r\n\tstatic isAdmin(client, config, server, user) {\r\n\t\t[server, user] = this.resolve(client, server, user);\r\n\t\tif(user.id === config.values.owner) return true;\r\n\t\treturn server.rolesOfUser(user).some(role => role.hasPermission('administrator'));\r\n\t}\r\n\r\n\t/**\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is the bot owner\r\n\t * @see {@link Permissions.isOwner}\r\n\t */\r\n\tisOwner(user) {\r\n\t\treturn this.constructor.isOwner(this.config, user);\r\n\t}\r\n\r\n\t/**\r\n\t * Tests to see if a user is the owner of the bot\r\n\t * @param {BotConfig} config - The bot config to use\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is the bot owner\r\n\t * @see {@link Permissions#isOwner}\r\n\t */\r\n\tstatic isOwner(config, user) {\r\n\t\tif(!user) throw new Error('A user must be specified.');\r\n\t\treturn (user.id ? user.id : user) === config.values.owner;\r\n\t}\r\n\r\n\t/**\r\n\t * @param {Server|string} server - The Server or the server ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {[server, user]} The Server and User instance pair\r\n\t * @see {@link Permissions.resolve}\r\n\t */\r\n\tresolve(server, user) {\r\n\t\tif(!server || !user) throw new Error('A server and user must be specified.');\r\n\t\treturn this.constructor.resolve(this.client, server, user);\r\n\t}\r\n\r\n\t/**\r\n\t * Resolves a server and user to Discord.js instances with a specified client\r\n\t * @param {Client} client - The Client to use\r\n\t * @param {Server|string} server - The Server or the server ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {[server, user]} The Server and User instance pair\r\n\t * @see {@link Permissions#resolve}\r\n\t */\r\n\tstatic resolve(client, server, user) {\r\n\t\tif(!client || !server || !user) throw new Error('A client, server, and user must be specified.');\r\n\t\tif(typeof server === 'string') server = client.servers.get('id', server);\r\n\t\tif(!server || !server.id) throw new Error('Unable to identify server.');\r\n\t\tif(typeof user === 'string') user = server.members.get('id', user);\r\n\t\tif(!user || !user.id) throw new Error('Unable to identify user.');\r\n\t\treturn [server, user];\r\n\t}\r\n}\r\n"
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport Module from '../commands/module';\r\n\r\n/** Contains methods to test whether a user has permissions in a server */\r\nexport default class BotPermissions {\r\n\t/**\r\n\t * @param {Client} client - The Client to use\r\n\t * @param {ModRoleStorage} modRoles - The mod role storage to use\r\n\t * @param {SettingStorage} settings - The setting storage to use\r\n\t * @param {BotConfig} config - The bot config to use\r\n\t */\r\n\tconstructor(client, modRoles, settings, config) {\r\n\t\tif(!client || !modRoles || !settings || !config) throw new Error('A client, modRoles, settings, and config must be specified.');\r\n\r\n\t\t/** @type {Client} */\r\n\t\tthis.client = client;\r\n\t\t/** @type {ModRoleStorage} */\r\n\t\tthis.modRoles = modRoles;\r\n\t\t/** @type {SettingStorage} */\r\n\t\tthis.settings = settings;\r\n\t\t/** @type {BotConfig} */\r\n\t\tthis.config = config;\r\n\t}\r\n\r\n\t/**\r\n\t * @param {Server|string} server - The Server or the server ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is considered a moderator\r\n\t * @see {@link Permissions.isMod}\r\n\t */\r\n\tisMod(server, user) {\r\n\t\treturn this.constructor.isMod(this.client, this.modRoles, this.settings, this.config, server, user);\r\n\t}\r\n\r\n\t/**\r\n\t * Tests to see if a user is a moderator on a server using a specified client and config.\r\n\t * If the server has not set any moderator roles, then they will be a moderator if any of their assigned roles contain the \"Manage messages\" permission.\r\n\t * If the server has set moderator roles, then they will be a moderator if they have any of the moderator roles assigned.\r\n\t * The bot owner and users with the \"Administrate\" permission are always moderators.\r\n\t * @param {Client} client - The Client to use\r\n\t * @param {ModRoleStorage} modRoles - The mod role storage to use\r\n\t * @param {SettingStorage} settings - The setting storage to use\r\n\t * @param {BotConfig} config - The bot config to use\r\n\t * @param {Server|string} server - The Server or the server ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is considered a moderator\r\n\t * @see {@link Permissions#isMod}\r\n\t */\r\n\tstatic isMod(client, modRoles, settings, config, server, user) {\r\n\t\t[server, user] = this.resolve(client, server, user);\r\n\t\tif(user.id === config.values.owner) return true;\r\n\t\tconst userRoles = server.rolesOfUser(user);\r\n\t\tif(userRoles.some(role => role.hasPermission('administrator'))) return true;\r\n\t\tif(!Module.isEnabled(settings, server, 'mod-roles') || modRoles.isEmpty(server)) return userRoles.some(role => role.hasPermission('manageMessages'));\r\n\t\treturn modRoles.find(server).some(role => userRoles.some(role2 => role.id === role2.id));\r\n\t}\r\n\r\n\t/**\r\n\t * @param {Server|string} server - The Server or the server ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is considered an administrator\r\n\t * @see {@link Permissions.isAdmin}\r\n\t */\r\n\tisAdmin(server, user) {\r\n\t\treturn this.constructor.isAdmin(this.client, this.config, server, user);\r\n\t}\r\n\r\n\t/**\r\n\t * Tests to see if a user is an administrator on a server with a specified client.\r\n\t * If the user is the bot owner or has any roles assigned with the \"Administrate\" permission, they are considered an administrator.\r\n\t * @param {Client} client - The Client to use\r\n\t * @param {BotConfig} config - The bot config to use\r\n\t * @param {Server|string} server - The Server or the server ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is considered an administrator\r\n\t * @see {@link Permissions#isAdmin}\r\n\t */\r\n\tstatic isAdmin(client, config, server, user) {\r\n\t\t[server, user] = this.resolve(client, server, user);\r\n\t\tif(user.id === config.values.owner) return true;\r\n\t\treturn server.rolesOfUser(user).some(role => role.hasPermission('administrator'));\r\n\t}\r\n\r\n\t/**\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is the bot owner\r\n\t * @see {@link Permissions.isOwner}\r\n\t */\r\n\tisOwner(user) {\r\n\t\treturn this.constructor.isOwner(this.config, user);\r\n\t}\r\n\r\n\t/**\r\n\t * Tests to see if a user is the owner of the bot\r\n\t * @param {BotConfig} config - The bot config to use\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is the bot owner\r\n\t * @see {@link Permissions#isOwner}\r\n\t */\r\n\tstatic isOwner(config, user) {\r\n\t\tif(!user) throw new Error('A user must be specified.');\r\n\t\treturn (user.id ? user.id : user) === config.values.owner;\r\n\t}\r\n\r\n\t/**\r\n\t * @param {Server|string} server - The Server or the server ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {[server, user]} The Server and User instance pair\r\n\t * @see {@link Permissions.resolve}\r\n\t */\r\n\tresolve(server, user) {\r\n\t\tif(!server || !user) throw new Error('A server and user must be specified.');\r\n\t\treturn this.constructor.resolve(this.client, server, user);\r\n\t}\r\n\r\n\t/**\r\n\t * Resolves a server and user to Discord.js instances with a specified client\r\n\t * @param {Client} client - The Client to use\r\n\t * @param {Server|string} server - The Server or the server ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {[server, user]} The Server and User instance pair\r\n\t * @see {@link Permissions#resolve}\r\n\t */\r\n\tstatic resolve(client, server, user) {\r\n\t\tif(!client || !server || !user) throw new Error('A client, server, and user must be specified.');\r\n\t\tif(typeof server === 'string') server = client.servers.get('id', server);\r\n\t\tif(!server || !server.id) throw new Error('Unable to identify server.');\r\n\t\tif(typeof user === 'string') user = server.members.get('id', user);\r\n\t\tif(!user || !user.id) throw new Error('Unable to identify user.');\r\n\t\treturn [server, user];\r\n\t}\r\n}\r\n"
   },
   {
     "__docId__": 48,
@@ -1354,7 +1354,7 @@
     "importPath": "discord-graf/src/bot/permissions.js",
     "importStyle": "BotPermissions",
     "description": "Contains methods to test whether a user has permissions in a server",
-    "lineNumber": 5,
+    "lineNumber": 7,
     "interface": false
   },
   {
@@ -1367,7 +1367,7 @@
     "longname": "src/bot/permissions.js~BotPermissions#constructor",
     "access": null,
     "description": "",
-    "lineNumber": 12,
+    "lineNumber": 14,
     "params": [
       {
         "nullable": null,
@@ -1422,7 +1422,7 @@
     "longname": "src/bot/permissions.js~BotPermissions#client",
     "access": null,
     "description": null,
-    "lineNumber": 16,
+    "lineNumber": 18,
     "type": {
       "nullable": null,
       "types": [
@@ -1442,7 +1442,7 @@
     "longname": "src/bot/permissions.js~BotPermissions#modRoles",
     "access": null,
     "description": null,
-    "lineNumber": 18,
+    "lineNumber": 20,
     "type": {
       "nullable": null,
       "types": [
@@ -1462,7 +1462,7 @@
     "longname": "src/bot/permissions.js~BotPermissions#settings",
     "access": null,
     "description": null,
-    "lineNumber": 20,
+    "lineNumber": 22,
     "type": {
       "nullable": null,
       "types": [
@@ -1482,7 +1482,7 @@
     "longname": "src/bot/permissions.js~BotPermissions#config",
     "access": null,
     "description": null,
-    "lineNumber": 22,
+    "lineNumber": 24,
     "type": {
       "nullable": null,
       "types": [
@@ -1505,7 +1505,7 @@
     "see": [
       "{@link Permissions.isMod}"
     ],
-    "lineNumber": 31,
+    "lineNumber": 33,
     "params": [
       {
         "nullable": null,
@@ -1553,7 +1553,7 @@
     "see": [
       "{@link Permissions#isMod}"
     ],
-    "lineNumber": 49,
+    "lineNumber": 51,
     "params": [
       {
         "nullable": null,
@@ -1641,7 +1641,7 @@
     "see": [
       "{@link Permissions.isAdmin}"
     ],
-    "lineNumber": 64,
+    "lineNumber": 66,
     "params": [
       {
         "nullable": null,
@@ -1689,7 +1689,7 @@
     "see": [
       "{@link Permissions#isAdmin}"
     ],
-    "lineNumber": 78,
+    "lineNumber": 80,
     "params": [
       {
         "nullable": null,
@@ -1757,7 +1757,7 @@
     "see": [
       "{@link Permissions.isOwner}"
     ],
-    "lineNumber": 89,
+    "lineNumber": 91,
     "params": [
       {
         "nullable": null,
@@ -1794,7 +1794,7 @@
     "see": [
       "{@link Permissions#isOwner}"
     ],
-    "lineNumber": 100,
+    "lineNumber": 102,
     "params": [
       {
         "nullable": null,
@@ -1841,7 +1841,7 @@
     "see": [
       "{@link Permissions.resolve}"
     ],
-    "lineNumber": 111,
+    "lineNumber": 113,
     "params": [
       {
         "nullable": null,
@@ -1889,7 +1889,7 @@
     "see": [
       "{@link Permissions#resolve}"
     ],
-    "lineNumber": 124,
+    "lineNumber": 126,
     "params": [
       {
         "nullable": null,
@@ -3091,7 +3091,7 @@
     "access": null,
     "description": null,
     "lineNumber": 1,
-    "content": "'use babel';\r\n'use strict';\r\n\r\nimport Setting from '../data/models/setting';\r\n\r\n/** A command that can be run in a bot */\r\nexport default class Command {\r\n\t/**\r\n\t * @param {Bot} bot - The bot the command is for\r\n\t * @param {CommandInfo} info - The command information\r\n\t */\r\n\tconstructor(bot, info) { // eslint-disable-line complexity\r\n\t\tif(new.target === Command) throw new Error('The base command class may not be instantiated.');\r\n\t\tif(!bot) throw new Error('A bot must be specified.');\r\n\t\tif(!info) throw new Error('Command info must be specified.');\r\n\t\tif(!info.name) throw new Error('Command must have a name specified.');\r\n\t\tif(info.aliases && !Array.isArray(info.aliases)) throw new TypeError('Command aliases must be an array.');\r\n\t\tif(!info.module) throw new Error('Command must have a module specified.');\r\n\t\tif(!info.memberName) throw new Error('Command must have a memberName specified.');\r\n\t\tif(!info.description) throw new Error('Command must have a description specified.');\r\n\t\tif(info.examples && !Array.isArray(info.examples)) throw new TypeError('Command examples must be an array.');\r\n\t\tif(info.argsType && !['single', 'multiple'].includes(info.argsType)) throw new RangeError('Command argsType must be one of \"single\" or \"multiple\".');\r\n\t\tif(info.argsType === 'multiple' && info.argsCount && info.argsCount < 2) throw new RangeError('Command argsCount must be at least 2.');\r\n\t\tif(info.patterns && !Array.isArray(info.patterns)) throw new TypeError('Command patterns must be an array.');\r\n\r\n\t\t/** @type {Bot} */\r\n\t\tthis.bot = bot;\r\n\r\n\t\t/**\r\n\t\t * @type {string}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.name = info.name;\r\n\r\n\t\t/**\r\n\t\t * @type {string[]}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.aliases = info.aliases || null;\r\n\r\n\t\t/**\r\n\t\t * @type {string}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.module = info.module;\r\n\r\n\t\t/**\r\n\t\t * @type {string}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.memberName = info.memberName;\r\n\r\n\t\t/**\r\n\t\t * @type {string}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.description = info.description;\r\n\r\n\t\t/**\r\n\t\t * @type {string}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.usage = info.usage || info.name;\r\n\r\n\t\t/**\r\n\t\t * @type {string}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.details = info.details || null;\r\n\r\n\t\t/**\r\n\t\t * @type {string[]}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.examples = info.examples || null;\r\n\r\n\t\t/**\r\n\t\t * @type {boolean}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.serverOnly = !!info.serverOnly;\r\n\r\n\t\t/**\r\n\t\t * @type {boolean}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.defaultHandling = 'defaultHandling' in info ? info.defaultHandling : true;\r\n\r\n\t\t/**\r\n\t\t * @type {string}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.argsType = info.argsType || 'single';\r\n\r\n\t\t/**\r\n\t\t * @type {number}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.argsCount = info.argsCount || 0;\r\n\r\n\t\t/**\r\n\t\t * @type {boolean}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.argsSingleQuotes = 'argsSingleQuotes' in info ? info.argsSingleQuotes : true;\r\n\r\n\t\t/**\r\n\t\t * @type {RegExp[]}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.patterns = info.patterns || null;\r\n\t}\r\n\r\n\t/**\r\n\t * Checks a user's permission on a server\r\n\t * @param {Server} server - The server to test the user's permission in\r\n\t * @param {User} user - The user to test the permission of\r\n\t * @return {boolean} Whether or not the user has permission to use the command in a server\r\n\t */\r\n\thasPermission(server, user) { // eslint-disable-line no-unused-vars\r\n\t\treturn true;\r\n\t}\r\n\r\n\t/**\r\n\t * Runs the command\r\n\t * @param {Message} message - The message the command is being run for\r\n\t * @param {string[]} args - The arguments for the command, or the matches from a pattern\r\n\t * @param {boolean} fromPattern - Whether or not the command is being run from a pattern match or not\r\n\t * @return {Promise<CommandResult|string[]|string>} The result of running the command\r\n\t */\r\n\tasync run(message, args, fromPattern) { // eslint-disable-line no-unused-vars\r\n\t\tthrow new Error(`${this.constructor.name} doesn't have a run() method, or called the super.run() method.`);\r\n\t}\r\n\r\n\r\n\t/**\r\n\t * Enables or disables the command on a server\r\n\t * @param {Server} server - The server\r\n\t * @param {boolean} enabled - Whether the command should be enabled or disabled\r\n\t * @return {void}\r\n\t */\r\n\tsetEnabled(server, enabled) {\r\n\t\tthis.bot.storage.settings.save(new Setting(server, `cmd-${this.name}`, enabled));\r\n\t}\r\n\r\n\t/**\r\n\t * Checks if the command is enabled on a server\r\n\t * @param {Server} server - The server\r\n\t * @return {boolean} Whether or not the command is enabled\r\n\t */\r\n\tisEnabled(server) {\r\n\t\treturn this.bot.storage.settings.getValue(server, `cmd-${this.name}`, true) && this.bot.storage.settings.getValue(server, `mod-${this.module}`, true);\r\n\t}\r\n\r\n\t/**\r\n\t * Checks if the command is usable for a message\r\n\t * @param {?Message} message - The message\r\n\t * @return {boolean} Whether or not the command is usable\r\n\t */\r\n\tisUsable(message = null) {\r\n\t\tif(this.serverOnly && message && !message.server) return false;\r\n\t\treturn !message || (this.isEnabled(message.server) && this.hasPermission(message.server, message.author));\r\n\t}\r\n}\r\n\r\n/**\r\n * @typedef {Object} CommandInfo\r\n * @property {string} name - The name of the command\r\n * @property {string[]} aliases - Alternative names for the command\r\n * @property {string} module - The ID of the module the command belongs to\r\n * @property {string} memberName - The member name of the command in the module\r\n * @property {string} description - A short description of the command\r\n * @property {string} [usage=name] - The command usage format string\r\n * @property {string} [details] - A detailed description of the command and its functionality\r\n * @property {string[]} [examples] - Usage examples of the command\r\n * @property {boolean} [serverOnly=false] - Whether or not the command should only function in a server channel\r\n * @property {boolean} [defaultHandling=true] - Whether or not the default command handling should be used. If false, then only patterns will trigger the command.\r\n * @property {string} [argsType=single] - One of 'single' or 'multiple'. When 'single', the entire argument string will be passed to run as one argument.\r\n * When 'multiple', it will be passed as multiple arguments.\r\n * @property {number} [argsCount=0] - The number of arguments to parse from the command string. Only applicable when argsType is 'multiple'. If nonzero, it should be at least 2.\r\n * When this is 0, the command argument string will be split into as many arguments as it can be. When nonzero, it will be split into a maximum of this number of arguments.\r\n * @property {boolean} [argsSingleQuotes=true] - Whether or not single quotes should be allowed to box-in arguments in the command string.\r\n * @property {RegExp[]} [patterns] - Patterns to use for triggering the command\r\n */\r\n"
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport Setting from '../data/models/setting';\r\n\r\n/** A command that can be run in a bot */\r\nexport default class Command {\r\n\t/**\r\n\t * @param {Bot} bot - The bot the command is for\r\n\t * @param {CommandInfo} info - The command information\r\n\t */\r\n\tconstructor(bot, info) { // eslint-disable-line complexity\r\n\t\tif(new.target === Command) throw new Error('The base command class may not be instantiated.');\r\n\t\tif(!bot) throw new Error('A bot must be specified.');\r\n\t\tif(!info) throw new Error('Command info must be specified.');\r\n\t\tif(!info.name) throw new Error('Command must have a name specified.');\r\n\t\tif(info.aliases && !Array.isArray(info.aliases)) throw new TypeError('Command aliases must be an array.');\r\n\t\tif(!info.module) throw new Error('Command must have a module specified.');\r\n\t\tif(!info.memberName) throw new Error('Command must have a memberName specified.');\r\n\t\tif(!info.description) throw new Error('Command must have a description specified.');\r\n\t\tif(info.examples && !Array.isArray(info.examples)) throw new TypeError('Command examples must be an array.');\r\n\t\tif(info.argsType && !['single', 'multiple'].includes(info.argsType)) throw new RangeError('Command argsType must be one of \"single\" or \"multiple\".');\r\n\t\tif(info.argsType === 'multiple' && info.argsCount && info.argsCount < 2) throw new RangeError('Command argsCount must be at least 2.');\r\n\t\tif(info.patterns && !Array.isArray(info.patterns)) throw new TypeError('Command patterns must be an array.');\r\n\r\n\t\t/** @type {Bot} */\r\n\t\tthis.bot = bot;\r\n\r\n\t\t/**\r\n\t\t * @type {string}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.name = info.name;\r\n\r\n\t\t/**\r\n\t\t * @type {string[]}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.aliases = info.aliases || null;\r\n\r\n\t\t/**\r\n\t\t * @type {string}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.module = info.module;\r\n\r\n\t\t/**\r\n\t\t * @type {string}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.memberName = info.memberName;\r\n\r\n\t\t/**\r\n\t\t * @type {string}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.description = info.description;\r\n\r\n\t\t/**\r\n\t\t * @type {string}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.usage = info.usage || info.name;\r\n\r\n\t\t/**\r\n\t\t * @type {string}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.details = info.details || null;\r\n\r\n\t\t/**\r\n\t\t * @type {string[]}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.examples = info.examples || null;\r\n\r\n\t\t/**\r\n\t\t * @type {boolean}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.serverOnly = !!info.serverOnly;\r\n\r\n\t\t/**\r\n\t\t * @type {boolean}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.defaultHandling = 'defaultHandling' in info ? info.defaultHandling : true;\r\n\r\n\t\t/**\r\n\t\t * @type {string}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.argsType = info.argsType || 'single';\r\n\r\n\t\t/**\r\n\t\t * @type {number}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.argsCount = info.argsCount || 0;\r\n\r\n\t\t/**\r\n\t\t * @type {boolean}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.argsSingleQuotes = 'argsSingleQuotes' in info ? info.argsSingleQuotes : true;\r\n\r\n\t\t/**\r\n\t\t * @type {RegExp[]}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.patterns = info.patterns || null;\r\n\t}\r\n\r\n\t/**\r\n\t * Checks a user's permission on a server\r\n\t * @param {Server} server - The server to test the user's permission in\r\n\t * @param {User} user - The user to test the permission of\r\n\t * @return {boolean} Whether or not the user has permission to use the command in a server\r\n\t */\r\n\thasPermission(server, user) { // eslint-disable-line no-unused-vars\r\n\t\treturn true;\r\n\t}\r\n\r\n\t/**\r\n\t * Runs the command\r\n\t * @param {Message} message - The message the command is being run for\r\n\t * @param {string[]} args - The arguments for the command, or the matches from a pattern\r\n\t * @param {boolean} fromPattern - Whether or not the command is being run from a pattern match or not\r\n\t * @return {Promise<CommandResult|string[]|string>} The result of running the command\r\n\t */\r\n\tasync run(message, args, fromPattern) { // eslint-disable-line no-unused-vars\r\n\t\tthrow new Error(`${this.constructor.name} doesn't have a run() method, or called the super.run() method.`);\r\n\t}\r\n\r\n\r\n\t/**\r\n\t * Enables or disables the command on a server\r\n\t * @param {Server|string} server - The server or server ID\r\n\t * @param {boolean} enabled - Whether the command should be enabled or disabled\r\n\t * @return {void}\r\n\t * @see {@link Command.setEnabled}\r\n\t */\r\n\tsetEnabled(server, enabled) {\r\n\t\tthis.constructor.setEnabled(this.bot.storage.settings, server, this, enabled);\r\n\t}\r\n\r\n\t/**\r\n\t * Enables or disables a command on a server\r\n\t * @param {SettingStorage} settings - The setting storage to use\r\n\t * @param {Server|string} server - The server or server ID\r\n\t * @param {Command|string} command - The command or command name\r\n\t * @param {boolean} enabled - Whether the command should be enabled or disabled\r\n\t * @return {void}\r\n\t * @see {@link Command#setEnabled}\r\n\t */\r\n\tstatic setEnabled(settings, server, command, enabled) {\r\n\t\tsettings.save(new Setting(server, `cmd-${command.name || command}`, enabled));\r\n\t}\r\n\r\n\t/**\r\n\t * Checks if the command is enabled on a server\r\n\t * @param {Server} server - The server\r\n\t * @return {boolean} Whether or not the command is enabled\r\n\t * @see {@link Command.isEnabled}\r\n\t */\r\n\tisEnabled(server) {\r\n\t\treturn this.constructor.isEnabled(this.bot.storage.settings, server, this);\r\n\t}\r\n\r\n\t/**\r\n\t * Checks if a command is enabled on a server\r\n\t * @param {SettingStorage} settings - The setting storage to use\r\n\t * @param {Server} server - The server\r\n\t * @param {Command|string} command - The command or command name\r\n\t * @return {boolean} Whether or not the command is enabled\r\n\t * @see {@link Command#isEnabled}\r\n\t */\r\n\tstatic isEnabled(settings, server, command) {\r\n\t\treturn settings.getValue(server, `cmd-${command.name || command}`, true);\r\n\t}\r\n\r\n\t/**\r\n\t * Checks if the command is usable for a message\r\n\t * @param {?Message} message - The message\r\n\t * @return {boolean} Whether or not the command is usable\r\n\t */\r\n\tisUsable(message = null) {\r\n\t\tif(this.serverOnly && message && !message.server) return false;\r\n\t\treturn !message || (this.isEnabled(message.server) && this.hasPermission(message.server, message.author));\r\n\t}\r\n}\r\n\r\n/**\r\n * @typedef {Object} CommandInfo\r\n * @property {string} name - The name of the command\r\n * @property {string[]} aliases - Alternative names for the command\r\n * @property {string} module - The ID of the module the command belongs to\r\n * @property {string} memberName - The member name of the command in the module\r\n * @property {string} description - A short description of the command\r\n * @property {string} [usage=name] - The command usage format string\r\n * @property {string} [details] - A detailed description of the command and its functionality\r\n * @property {string[]} [examples] - Usage examples of the command\r\n * @property {boolean} [serverOnly=false] - Whether or not the command should only function in a server channel\r\n * @property {boolean} [defaultHandling=true] - Whether or not the default command handling should be used. If false, then only patterns will trigger the command.\r\n * @property {string} [argsType=single] - One of 'single' or 'multiple'. When 'single', the entire argument string will be passed to run as one argument.\r\n * When 'multiple', it will be passed as multiple arguments.\r\n * @property {number} [argsCount=0] - The number of arguments to parse from the command string. Only applicable when argsType is 'multiple'. If nonzero, it should be at least 2.\r\n * When this is 0, the command argument string will be split into as many arguments as it can be. When nonzero, it will be split into a maximum of this number of arguments.\r\n * @property {boolean} [argsSingleQuotes=true] - Whether or not single quotes should be allowed to box-in arguments in the command string.\r\n * @property {RegExp[]} [patterns] - Patterns to use for triggering the command\r\n */\r\n"
   },
   {
     "__docId__": 87,
@@ -3766,17 +3766,21 @@
     "longname": "src/commands/command.js~Command#setEnabled",
     "access": null,
     "description": "Enables or disables the command on a server",
-    "lineNumber": 142,
+    "see": [
+      "{@link Command.setEnabled}"
+    ],
+    "lineNumber": 143,
     "params": [
       {
         "nullable": null,
         "types": [
-          "Server"
+          "Server",
+          "string"
         ],
         "spread": false,
         "optional": false,
         "name": "server",
-        "description": "The server"
+        "description": "The server or server ID"
       },
       {
         "nullable": null,
@@ -3802,6 +3806,74 @@
   {
     "__docId__": 108,
     "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "setEnabled",
+    "memberof": "src/commands/command.js~Command",
+    "longname": "src/commands/command.js~Command.setEnabled",
+    "access": null,
+    "description": "Enables or disables a command on a server",
+    "see": [
+      "{@link Command#setEnabled}"
+    ],
+    "lineNumber": 156,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "SettingStorage"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "settings",
+        "description": "The setting storage to use"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Server",
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "server",
+        "description": "The server or server ID"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Command",
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "command",
+        "description": "The command or command name"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "boolean"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "enabled",
+        "description": "Whether the command should be enabled or disabled"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "void"
+      ],
+      "spread": false,
+      "description": ""
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 109,
+    "kind": "method",
     "static": false,
     "variation": null,
     "name": "isEnabled",
@@ -3809,7 +3881,10 @@
     "longname": "src/commands/command.js~Command#isEnabled",
     "access": null,
     "description": "Checks if the command is enabled on a server",
-    "lineNumber": 151,
+    "see": [
+      "{@link Command.isEnabled}"
+    ],
+    "lineNumber": 166,
     "params": [
       {
         "nullable": null,
@@ -3833,7 +3908,64 @@
     "generator": false
   },
   {
-    "__docId__": 109,
+    "__docId__": 110,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "isEnabled",
+    "memberof": "src/commands/command.js~Command",
+    "longname": "src/commands/command.js~Command.isEnabled",
+    "access": null,
+    "description": "Checks if a command is enabled on a server",
+    "see": [
+      "{@link Command#isEnabled}"
+    ],
+    "lineNumber": 178,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "SettingStorage"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "settings",
+        "description": "The setting storage to use"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Server"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "server",
+        "description": "The server"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Command",
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "command",
+        "description": "The command or command name"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "boolean"
+      ],
+      "spread": false,
+      "description": "Whether or not the command is enabled"
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 111,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -3842,7 +3974,7 @@
     "longname": "src/commands/command.js~Command#isUsable",
     "access": null,
     "description": "Checks if the command is usable for a message",
-    "lineNumber": 160,
+    "lineNumber": 187,
     "params": [
       {
         "nullable": true,
@@ -3866,7 +3998,7 @@
     "generator": false
   },
   {
-    "__docId__": 110,
+    "__docId__": 112,
     "kind": "file",
     "static": true,
     "variation": null,
@@ -3876,10 +4008,10 @@
     "access": null,
     "description": null,
     "lineNumber": 1,
-    "content": "'use babel';\r\n'use strict';\r\n\r\nimport EventEmitter from 'events';\r\nimport { stripIndents } from 'common-tags';\r\nimport escapeRegex from 'escape-string-regexp';\r\nimport FriendlyError from '../errors/friendly';\r\n\r\n/** Handles parsing messages and running commands from them */\r\nexport default class CommandDispatcher extends EventEmitter {\r\n\t/** @param {Bot} bot - The bot the dispatcher is for */\r\n\tconstructor(bot) {\r\n\t\tif(!bot) throw new Error('A bot must be specified.');\r\n\t\tsuper();\r\n\r\n\t\t/** @type {Bot} */\r\n\t\tthis.bot = bot;\r\n\r\n\t\tthis._serverCommandPatterns = {};\r\n\t\tthis._results = {};\r\n\t}\r\n\r\n\t/**\r\n\t * Handle a new message or a message update\r\n\t * @param {Message} message - The message to handle\r\n\t * @param {?Message} [oldMessage] - The old message before the update\r\n\t * @return {Promise} Nothing\r\n\t */\r\n\tasync handleMessage(message, oldMessage = null) {\r\n\t\tif(message.author.equals(this.bot.client.user)) return;\r\n\r\n\t\t// Make sure the bot is allowed to run in the channel, or the user is an admin\r\n\t\tif(message.server\r\n\t\t\t&& this.bot.storage.settings.getValue(message.server, 'mod-channels', true)\r\n\t\t\t&& !this.bot.storage.allowedChannels.isEmpty(message.server)\r\n\t\t\t&& !this.bot.storage.allowedChannels.exists(message.server, message.channel)\r\n\t\t\t&& !this.bot.permissions.isAdmin(message.server, message.author)) return;\r\n\r\n\t\t// Parse the message, and get the old result if it exists\r\n\t\tconst [command, args, fromPattern, isCommandMessage] = this._parseMessage(message);\r\n\t\tconst oldResult = oldMessage ? this._results[oldMessage.id] : null;\r\n\r\n\t\t// Run the command, or make an error message result\r\n\t\tlet result;\r\n\t\tif(command) {\r\n\t\t\tif(!command.isEnabled(message.server)) result = { reply: [`The \\`${command.name}\\` command is disabled.`], editable: true };\r\n\t\t\telse if(!oldMessage || oldResult) result = await this.run(command, args, fromPattern, message);\r\n\t\t} else if(isCommandMessage) {\r\n\t\t\tresult = { reply: [`Unknown command. Use ${this.bot.util.usage('help', message.server)} to view the list of all commands.`], editable: true };\r\n\t\t} else if(this.bot.config.values.nonCommandEdit) {\r\n\t\t\tresult = { editable: true };\r\n\t\t}\r\n\r\n\t\tif(result) {\r\n\t\t\t// Change a plain or reply response into direct if there isn't a server\r\n\t\t\tif(!message.server) {\r\n\t\t\t\tif(!result.direct) result.direct = result.plain || result.reply;\r\n\t\t\t\tdelete result.plain;\r\n\t\t\t\tdelete result.reply;\r\n\t\t\t}\r\n\r\n\t\t\t// Update old messages or send new ones\r\n\t\t\tif(oldResult && (oldResult.plain || oldResult.reply || oldResult.direct)) {\r\n\t\t\t\tawait this.updateMessagesForResult(message, result, oldResult);\r\n\t\t\t} else {\r\n\t\t\t\tawait this.sendMessagesForResult(message, result);\r\n\t\t\t}\r\n\r\n\t\t\t// Cache the result\r\n\t\t\tif(this.bot.config.values.commandEditable > 0) {\r\n\t\t\t\tif(result.editable) {\r\n\t\t\t\t\tresult.timeout = oldResult && oldResult.timeout ? oldResult.timeout : setTimeout(() => { delete this._results[message.id]; }, this.bot.config.values.commandEditable * 1000);\r\n\t\t\t\t\tthis._results[message.id] = result;\r\n\t\t\t\t} else {\r\n\t\t\t\t\tdelete this._results[message.id];\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Run a command\r\n\t * @param {Command} command - The command to run\r\n\t * @param {string[]} args - The arguments for the command\r\n\t * @param {boolean} fromPattern - Whether or not the arguments are from a pattern match\r\n\t * @param {Message} message - The message that triggered the run\r\n\t * @return {Promise<CommandResult>} The result of running the command\r\n\t */\r\n\tasync run(command, args, fromPattern, message) {\r\n\t\tconst logInfo = {\r\n\t\t\targs: String(args),\r\n\t\t\tuser: `${message.author.username}#${message.author.discriminator}`,\r\n\t\t\tuserID: message.author.id,\r\n\t\t\tserver: message.server ? message.server.name : null,\r\n\t\t\tserverID: message.server ? message.server.id : null\r\n\t\t};\r\n\r\n\t\t// Make sure the command is usable\r\n\t\tif(command.serverOnly && !message.server) {\r\n\t\t\tthis.bot.logger.info(`Not running ${command.module}:${command.memberName}; server only.`, logInfo);\r\n\t\t\treturn { reply: [`The \\`${command.name}\\` command must be used in a server channel.`], editable: true };\r\n\t\t}\r\n\t\tif(!command.hasPermission(message.server, message.author)) {\r\n\t\t\tthis.bot.logger.info(`Not running ${command.module}:${command.memberName}; don't have permission.`, logInfo);\r\n\t\t\treturn { reply: [`You do not have permission to use the \\`${command.name}\\` command.`], editable: true };\r\n\t\t}\r\n\r\n\t\t// Run the command\r\n\t\tthis.bot.logger.info(`Running ${command.module}:${command.memberName}.`, logInfo);\r\n\t\ttry {\r\n\t\t\tconst result = this.constructor.makeResultObject(await command.run(message, args, fromPattern));\r\n\t\t\tthis.emit('commandRun', command, result, message, args, fromPattern);\r\n\t\t\treturn result;\r\n\t\t} catch(err) {\r\n\t\t\tthis.emit('commandError', command, message, args, fromPattern);\r\n\t\t\tif(err instanceof FriendlyError) {\r\n\t\t\t\treturn { reply: [err.message], editable: true };\r\n\t\t\t} else {\r\n\t\t\t\tthis.bot.logger.error(err);\r\n\t\t\t\tconst owner = this.bot.config.values.owner ? message.client.users.get('id', this.bot.config.values.owner) : null;\r\n\t\t\t\treturn {\r\n\t\t\t\t\treply: [stripIndents`\r\n\t\t\t\t\t\tAn error occurred while running the command: \\`${err.name}: ${err.message}\\`\r\n\t\t\t\t\t\t${owner ? `Please contact ${owner.name}#${owner.discriminator}${this.bot.config.values.invite ? ` in this server: ${this.bot.config.values.invite}` : '.'}` : ''}\r\n\t\t\t\t\t`],\r\n\t\t\t\t\teditable: true\r\n\t\t\t\t};\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Sends messages for a command result\r\n\t * @param {Message} message - The message the result is for\r\n\t * @param {CommandResult} result - The command result\r\n\t * @return {Promise} Nothing\r\n\t */\r\n\tasync sendMessagesForResult(message, result) {\r\n\t\tconst messages = await Promise.all([\r\n\t\t\tresult.plain ? this.sendMessages(message, result.plain, 'plain') : null,\r\n\t\t\tresult.reply ? this.sendMessages(message, result.reply, 'reply') : null,\r\n\t\t\tresult.direct ? this.sendMessages(message, result.direct, 'direct') : null\r\n\t\t]);\r\n\t\tif(result.plain) result.normalMessages = messages[0];\r\n\t\telse if(result.reply) result.normalMessages = messages[1];\r\n\t\tif(result.direct) result.directMessages = messages[2];\r\n\t}\r\n\r\n\t/**\r\n\t * Sends messages\r\n\t * @param {Message} message - The message the messages are being sent in response to\r\n\t * @param {string[]} contents - Contents of the messages to send\r\n\t * @param {string} type - One of 'plain', 'reply', or 'direct'\r\n\t * @return {Promise<Message[]>} The sent messages\r\n\t */\r\n\tasync sendMessages(message, contents, type) {\r\n\t\tconst sentMessages = [];\r\n\t\tfor(const content of contents) {\r\n\t\t\tif(type === 'plain') sentMessages.push(await message.client.sendMessage(message, content));\r\n\t\t\telse if(type === 'reply') sentMessages.push(await message.reply(content));\r\n\t\t\telse if(type === 'direct') sentMessages.push(await message.client.sendMessage(message.author, content));\r\n\t\t}\r\n\t\treturn sentMessages;\r\n\t}\r\n\r\n\t/**\r\n\t * Updates messages for a command result\r\n\t * @param {Message} message - The message the result is for\r\n\t * @param {CommandResult} result - The command result\r\n\t * @param {CommandResult} oldResult - The old command result\r\n\t * @return {Promise} Nothing\r\n\t */\r\n\tasync updateMessagesForResult(message, result, oldResult) {\r\n\t\t// Update the messages\r\n\t\tconst messages = await Promise.all([\r\n\t\t\tresult.plain || result.reply ? this.updateMessages(message, oldResult.normalMessages, result.plain ? result.plain : result.reply, result.plain ? 'plain' : 'reply') : null,\r\n\t\t\tresult.direct ? oldResult.direct ? this.updateMessages(message, oldResult.directMessages, result.direct, 'direct') : this.sendMessages(message, result.direct, 'direct') : null\r\n\t\t]);\r\n\t\tif(result.plain || result.reply) result.normalMessages = messages[0];\r\n\t\tif(result.direct) result.directMessages = messages[1];\r\n\r\n\t\t// Delete old messages if we're not using them\r\n\t\tif(!result.plain && !result.reply && (oldResult.plain || oldResult.reply)) for(const msg of oldResult.normalMessages) msg.delete();\r\n\t\tif(!result.direct && oldResult.direct) for(const msg of oldResult.directMessages) msg.delete();\r\n\t}\r\n\r\n\t/**\r\n\t * Updates messages\r\n\t * @param {Message} message - The message the old messages are being updated in response to\r\n\t * @param {Message[]} oldMessages - The old messages to update\r\n\t * @param {string[]} contents - Contents of the messages to send\r\n\t * @param {string} type - One of 'plain', 'reply', or 'direct'\r\n\t * @return {Promise<Message[]>} The updated messages\r\n\t */\r\n\tasync updateMessages(message, oldMessages, contents, type) {\r\n\t\tconst updatedMessages = [];\r\n\r\n\t\t// Update/send messages\r\n\t\tfor(let i = 0; i < contents.length; i++) {\r\n\t\t\tif(i < oldMessages.length) updatedMessages.push(await oldMessages[i].update(type === 'reply' ? `${message.author}, ${contents[i]}` : contents[i]));\r\n\t\t\telse updatedMessages.push((await this.sendMessages(message, [contents[i]], type))[0]);\r\n\t\t}\r\n\r\n\t\t// Delete extra old messages\r\n\t\tif(oldMessages.length > contents.length) {\r\n\t\t\tfor(let i = oldMessages.length - 1; i >= contents.length; i--) oldMessages[i].delete();\r\n\t\t}\r\n\r\n\t\treturn updatedMessages;\r\n\t}\r\n\r\n\t/**\r\n\t * Parses a message to find details about command usage in it\r\n\t * @param {Message} message - The message\r\n\t * @return {Array} Command, arguments, whether or not it's from a pattern match, and whether or not it's a command message\r\n\t */\r\n\t_parseMessage(message) {\r\n\t\t// Find the command to run by patterns\r\n\t\tfor(const command of this.bot.registry.commands) {\r\n\t\t\tif(!command.patterns) continue;\r\n\t\t\tfor(const pattern of command.patterns) {\r\n\t\t\t\tconst matches = pattern.exec(message.content);\r\n\t\t\t\tif(matches) return [command, matches, true, true];\r\n\t\t\t}\r\n\t\t}\r\n\r\n\t\t// Find the command to run with default command handling\r\n\t\tconst patternIndex = message.server ? message.server.id : '-';\r\n\t\tif(!this._serverCommandPatterns[patternIndex]) this._serverCommandPatterns[patternIndex] = this._buildCommandPattern(message.server, message.client.user);\r\n\t\tlet [command, args, isCommandMessage] = this._matchDefault(message, this._serverCommandPatterns[patternIndex], 2);\r\n\t\tif(!command && !message.server) [command, args, isCommandMessage] = this._matchDefault(message, unprefixedCommandPattern);\r\n\t\tif(command) return [command, args, false, true];\r\n\r\n\t\treturn [null, null, false, isCommandMessage];\r\n\t}\r\n\r\n\t/**\r\n\t * Matches a message against a server command pattern\r\n\t * @param {Message} message - The message\r\n\t * @param {RegExp} pattern - The pattern to match against\r\n\t * @param {number} commandNameIndex - The index of the command name in the pattern matches\r\n\t * @return {Array} The command, arguments, and whether or not it's a command message\r\n\t */\r\n\t_matchDefault(message, pattern, commandNameIndex = 1) {\r\n\t\tconst matches = pattern.exec(message.content);\r\n\t\tif(!matches) return [null, null, false];\r\n\r\n\t\tconst commands = this.bot.registry.findCommands(matches[commandNameIndex]);\r\n\t\tif(commands.length !== 1) return [null, null, true];\r\n\t\tif(!commands[0] || !commands[0].defaultHandling) return [null, null, true];\r\n\r\n\t\tconst argString = message.content.substring(matches[1].length + (matches[2] ? matches[2].length : 0));\r\n\t\tlet args;\r\n\t\tif(commands[0].argsType === 'single') {\r\n\t\t\targs = [argString.trim()];\r\n\t\t} else if(commands[0].argsType === 'multiple') {\r\n\t\t\targs = this.constructor.parseArgs(argString, commands[0].argsCount, commands[0].argsSingleQuotes);\r\n\t\t}\r\n\r\n\t\treturn [commands[0], args, true];\r\n\t}\r\n\n\t/**\n\t * Makes a command result object from a command's run result\n\t * @param {CommandResult|string[]|string} result - The command's run result\n\t * @return {CommandResult} The result object\n\t */\r\n\tstatic makeResultObject(result) {\r\n\t\tif(typeof result !== 'object' || Array.isArray(result)) result = { reply: result };\r\n\t\tif(result.plain && result.reply) throw new Error('The command result may contain either \"plain\" or \"reply\", not both.');\r\n\t\tif(result.plain && !Array.isArray(result.plain)) result.plain = [result.plain];\r\n\t\tif(result.reply && !Array.isArray(result.reply)) result.reply = [result.reply];\r\n\t\tif(result.direct && !Array.isArray(result.direct)) result.direct = [result.direct];\r\n\t\tif(!('editable' in result)) result.editable = true;\r\n\t\treturn result;\r\n\t}\r\n\r\n\t/**\r\n\t * Parses an argument string into an array of arguments\r\n\t * @param {string} argString - The argument string to parse\r\n\t * @param {number} [argCount] - The number of arguments to extract from the string\r\n\t * @param {boolean} [allowSingleQuote=true] - Whether or not single quotes should be allowed to wrap arguments, in addition to double quotes\r\n\t * @return {string[]} The array of arguments\r\n\t */\r\n\tstatic parseArgs(argString, argCount, allowSingleQuote = true) {\r\n\t\tconst re = allowSingleQuote ? /\\s*(?:(\"|')([^]*?)\\1|(\\S+))\\s*/g : /\\s*(?:(\")([^]*?)\"|(\\S+))\\s*/g;\r\n\t\tconst result = [];\r\n\t\tlet match = [];\r\n\t\t// default: large enough to get all items\r\n\t\targCount = argCount || argString.length;\r\n\t\t// get match and push the capture group that is not null to the result\r\n\t\twhile(--argCount && (match = re.exec(argString))) result.push(match[2] || match[3]);\r\n\t\t// if text remains, push it to the array as it is, except for wrapping quotes, which are removed from it\r\n\t\tif(match && re.lastIndex < argString.length) {\r\n\t\t\tconst re2 = allowSingleQuote ? /^(\"|')([^]*)\\1$/g : /^(\")([^]*)\"$/g;\r\n\t\t\tresult.push(argString.substr(re.lastIndex).replace(re2, '$2'));\r\n\t\t}\r\n\t\treturn result;\r\n\t}\r\n\r\n\t/**\r\n\t * Creates a regular expression to match the command prefix and name in a message\r\n\t * @param {?Server} server - The Server that the message is from\r\n\t * @param {User} user - The User that the bot is running for\r\n\t * @return {RegExp} Regular expression that matches a command prefix and name\r\n\t */\r\n\t_buildCommandPattern(server, user) {\r\n\t\tlet prefix = server ? this.bot.storage.settings.getValue(server, 'command-prefix', this.bot.config.values.commandPrefix) : this.bot.config.values.commandPrefix;\r\n\t\tif(prefix === 'none') prefix = '';\r\n\t\tconst escapedPrefix = escapeRegex(prefix);\r\n\t\tconst prefixPatternPiece = prefix ? `${escapedPrefix}\\\\s*|` : '';\r\n\t\tconst pattern = new RegExp(`^(${prefixPatternPiece}<@!?${user.id}>\\\\s+(?:${escapedPrefix})?)([^\\\\s]+)`, 'i');\r\n\t\tthis.bot.logger.info(`Server command pattern built.`, {\r\n\t\t\tserver: server ? server.name : null,\r\n\t\t\tserverID: server ? server.id : null,\r\n\t\t\tprefix: prefix, pattern: pattern.source\r\n\t\t});\r\n\t\treturn pattern;\r\n\t}\r\n}\r\n\r\nconst unprefixedCommandPattern = /^([^\\s]+)/i;\r\n\r\n/**\r\n * @typedef CommandResult\r\n * @property {string[]} [plain] - Strings to send plain messages for\r\n * @property {string[]} [reply] - Strings to send reply messages for\r\n * @property {string[]} [direct] - Strings to send direct messages for\r\n * @property {boolean} [editable=true] - Whether or not the command message is editable\r\n */\r\n"
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport EventEmitter from 'events';\r\nimport { stripIndents } from 'common-tags';\r\nimport escapeRegex from 'escape-string-regexp';\r\nimport Module from './module';\r\nimport FriendlyError from '../errors/friendly';\r\n\r\n/** Handles parsing messages and running commands from them */\r\nexport default class CommandDispatcher extends EventEmitter {\r\n\t/** @param {Bot} bot - The bot the dispatcher is for */\r\n\tconstructor(bot) {\r\n\t\tif(!bot) throw new Error('A bot must be specified.');\r\n\t\tsuper();\r\n\r\n\t\t/** @type {Bot} */\r\n\t\tthis.bot = bot;\r\n\r\n\t\tthis._serverCommandPatterns = {};\r\n\t\tthis._results = {};\r\n\t}\r\n\r\n\t/**\r\n\t * Handle a new message or a message update\r\n\t * @param {Message} message - The message to handle\r\n\t * @param {Message} [oldMessage] - The old message before the update\r\n\t * @return {Promise} Nothing\r\n\t */\r\n\tasync handleMessage(message, oldMessage = null) {\r\n\t\tif(message.author.equals(this.bot.client.user)) return;\r\n\r\n\t\t// Make sure the bot is allowed to run in the channel, or the user is an admin\r\n\t\tif(message.server\r\n\t\t\t&& Module.isEnabled(this.bot.storage.settings, message.server, 'channels')\r\n\t\t\t&& !this.bot.storage.allowedChannels.isEmpty(message.server)\r\n\t\t\t&& !this.bot.storage.allowedChannels.exists(message.server, message.channel)\r\n\t\t\t&& !this.bot.permissions.isAdmin(message.server, message.author)) return;\r\n\r\n\t\t// Parse the message, and get the old result if it exists\r\n\t\tconst [command, args, fromPattern, isCommandMessage] = this._parseMessage(message);\r\n\t\tconst oldResult = oldMessage ? this._results[oldMessage.id] : null;\r\n\r\n\t\t// Run the command, or make an error message result\r\n\t\tlet result;\r\n\t\tif(command) {\r\n\t\t\tif(!command.isEnabled(message.server)) result = { reply: [`The \\`${command.name}\\` command is disabled.`], editable: true };\r\n\t\t\telse if(!oldMessage || oldResult) result = await this.run(command, args, fromPattern, message);\r\n\t\t} else if(isCommandMessage) {\r\n\t\t\tresult = { reply: [`Unknown command. Use ${this.bot.util.usage('help', message.server)} to view the list of all commands.`], editable: true };\r\n\t\t} else if(this.bot.config.values.nonCommandEdit) {\r\n\t\t\tresult = { editable: true };\r\n\t\t}\r\n\r\n\t\tif(result) {\r\n\t\t\t// Change a plain or reply response into direct if there isn't a server\r\n\t\t\tif(!message.server) {\r\n\t\t\t\tif(!result.direct) result.direct = result.plain || result.reply;\r\n\t\t\t\tdelete result.plain;\r\n\t\t\t\tdelete result.reply;\r\n\t\t\t}\r\n\r\n\t\t\t// Update old messages or send new ones\r\n\t\t\tif(oldResult && (oldResult.plain || oldResult.reply || oldResult.direct)) {\r\n\t\t\t\tawait this.updateMessagesForResult(message, result, oldResult);\r\n\t\t\t} else {\r\n\t\t\t\tawait this.sendMessagesForResult(message, result);\r\n\t\t\t}\r\n\r\n\t\t\t// Cache the result\r\n\t\t\tif(this.bot.config.values.commandEditable > 0) {\r\n\t\t\t\tif(result.editable) {\r\n\t\t\t\t\tresult.timeout = oldResult && oldResult.timeout ? oldResult.timeout : setTimeout(() => { delete this._results[message.id]; }, this.bot.config.values.commandEditable * 1000);\r\n\t\t\t\t\tthis._results[message.id] = result;\r\n\t\t\t\t} else {\r\n\t\t\t\t\tdelete this._results[message.id];\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Run a command\r\n\t * @param {Command} command - The command to run\r\n\t * @param {string[]} args - The arguments for the command\r\n\t * @param {boolean} fromPattern - Whether or not the arguments are from a pattern match\r\n\t * @param {Message} message - The message that triggered the run\r\n\t * @return {Promise<CommandResult>} The result of running the command\r\n\t */\r\n\tasync run(command, args, fromPattern, message) {\r\n\t\tconst logInfo = {\r\n\t\t\targs: String(args),\r\n\t\t\tuser: `${message.author.username}#${message.author.discriminator}`,\r\n\t\t\tuserID: message.author.id,\r\n\t\t\tserver: message.server ? message.server.name : null,\r\n\t\t\tserverID: message.server ? message.server.id : null\r\n\t\t};\r\n\r\n\t\t// Make sure the command is usable\r\n\t\tif(command.serverOnly && !message.server) {\r\n\t\t\tthis.bot.logger.info(`Not running ${command.module}:${command.memberName}; server only.`, logInfo);\r\n\t\t\treturn { reply: [`The \\`${command.name}\\` command must be used in a server channel.`], editable: true };\r\n\t\t}\r\n\t\tif(!command.hasPermission(message.server, message.author)) {\r\n\t\t\tthis.bot.logger.info(`Not running ${command.module}:${command.memberName}; don't have permission.`, logInfo);\r\n\t\t\treturn { reply: [`You do not have permission to use the \\`${command.name}\\` command.`], editable: true };\r\n\t\t}\r\n\r\n\t\t// Run the command\r\n\t\tthis.bot.logger.info(`Running ${command.module}:${command.memberName}.`, logInfo);\r\n\t\ttry {\r\n\t\t\tconst result = this.constructor.makeResultObject(await command.run(message, args, fromPattern));\r\n\t\t\tthis.emit('commandRun', command, result, message, args, fromPattern);\r\n\t\t\treturn result;\r\n\t\t} catch(err) {\r\n\t\t\tthis.emit('commandError', command, message, args, fromPattern);\r\n\t\t\tif(err instanceof FriendlyError) {\r\n\t\t\t\treturn { reply: [err.message], editable: true };\r\n\t\t\t} else {\r\n\t\t\t\tthis.bot.logger.error(err);\r\n\t\t\t\tconst owner = this.bot.config.values.owner ? message.client.users.get('id', this.bot.config.values.owner) : null;\r\n\t\t\t\treturn {\r\n\t\t\t\t\treply: [stripIndents`\r\n\t\t\t\t\t\tAn error occurred while running the command: \\`${err.name}: ${err.message}\\`\r\n\t\t\t\t\t\t${owner ? `Please contact ${owner.name}#${owner.discriminator}${this.bot.config.values.invite ? ` in this server: ${this.bot.config.values.invite}` : '.'}` : ''}\r\n\t\t\t\t\t`],\r\n\t\t\t\t\teditable: true\r\n\t\t\t\t};\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Sends messages for a command result\r\n\t * @param {Message} message - The message the result is for\r\n\t * @param {CommandResult} result - The command result\r\n\t * @return {Promise} Nothing\r\n\t */\r\n\tasync sendMessagesForResult(message, result) {\r\n\t\tconst messages = await Promise.all([\r\n\t\t\tresult.plain ? this.sendMessages(message, result.plain, 'plain') : null,\r\n\t\t\tresult.reply ? this.sendMessages(message, result.reply, 'reply') : null,\r\n\t\t\tresult.direct ? this.sendMessages(message, result.direct, 'direct') : null\r\n\t\t]);\r\n\t\tif(result.plain) result.normalMessages = messages[0];\r\n\t\telse if(result.reply) result.normalMessages = messages[1];\r\n\t\tif(result.direct) result.directMessages = messages[2];\r\n\t}\r\n\r\n\t/**\r\n\t * Sends messages\r\n\t * @param {Message} message - The message the messages are being sent in response to\r\n\t * @param {string[]} contents - Contents of the messages to send\r\n\t * @param {string} type - One of 'plain', 'reply', or 'direct'\r\n\t * @return {Promise<Message[]>} The sent messages\r\n\t */\r\n\tasync sendMessages(message, contents, type) {\r\n\t\tconst sentMessages = [];\r\n\t\tfor(const content of contents) {\r\n\t\t\tif(type === 'plain') sentMessages.push(await message.client.sendMessage(message, content));\r\n\t\t\telse if(type === 'reply') sentMessages.push(await message.reply(content));\r\n\t\t\telse if(type === 'direct') sentMessages.push(await message.client.sendMessage(message.author, content));\r\n\t\t}\r\n\t\treturn sentMessages;\r\n\t}\r\n\r\n\t/**\r\n\t * Updates messages for a command result\r\n\t * @param {Message} message - The message the result is for\r\n\t * @param {CommandResult} result - The command result\r\n\t * @param {CommandResult} oldResult - The old command result\r\n\t * @return {Promise} Nothing\r\n\t */\r\n\tasync updateMessagesForResult(message, result, oldResult) {\r\n\t\t// Update the messages\r\n\t\tconst messages = await Promise.all([\r\n\t\t\tresult.plain || result.reply ? this.updateMessages(message, oldResult.normalMessages, result.plain ? result.plain : result.reply, result.plain ? 'plain' : 'reply') : null,\r\n\t\t\tresult.direct ? oldResult.direct ? this.updateMessages(message, oldResult.directMessages, result.direct, 'direct') : this.sendMessages(message, result.direct, 'direct') : null\r\n\t\t]);\r\n\t\tif(result.plain || result.reply) result.normalMessages = messages[0];\r\n\t\tif(result.direct) result.directMessages = messages[1];\r\n\r\n\t\t// Delete old messages if we're not using them\r\n\t\tif(!result.plain && !result.reply && (oldResult.plain || oldResult.reply)) for(const msg of oldResult.normalMessages) msg.delete();\r\n\t\tif(!result.direct && oldResult.direct) for(const msg of oldResult.directMessages) msg.delete();\r\n\t}\r\n\r\n\t/**\r\n\t * Updates messages\r\n\t * @param {Message} message - The message the old messages are being updated in response to\r\n\t * @param {Message[]} oldMessages - The old messages to update\r\n\t * @param {string[]} contents - Contents of the messages to send\r\n\t * @param {string} type - One of 'plain', 'reply', or 'direct'\r\n\t * @return {Promise<Message[]>} The updated messages\r\n\t */\r\n\tasync updateMessages(message, oldMessages, contents, type) {\r\n\t\tconst updatedMessages = [];\r\n\r\n\t\t// Update/send messages\r\n\t\tfor(let i = 0; i < contents.length; i++) {\r\n\t\t\tif(i < oldMessages.length) updatedMessages.push(await oldMessages[i].update(type === 'reply' ? `${message.author}, ${contents[i]}` : contents[i]));\r\n\t\t\telse updatedMessages.push((await this.sendMessages(message, [contents[i]], type))[0]);\r\n\t\t}\r\n\r\n\t\t// Delete extra old messages\r\n\t\tif(oldMessages.length > contents.length) {\r\n\t\t\tfor(let i = oldMessages.length - 1; i >= contents.length; i--) oldMessages[i].delete();\r\n\t\t}\r\n\r\n\t\treturn updatedMessages;\r\n\t}\r\n\r\n\t/**\r\n\t * Parses a message to find details about command usage in it\r\n\t * @param {Message} message - The message\r\n\t * @return {Array} Command, arguments, whether or not it's from a pattern match, and whether or not it's a command message\r\n\t */\r\n\t_parseMessage(message) {\r\n\t\t// Find the command to run by patterns\r\n\t\tfor(const command of this.bot.registry.commands) {\r\n\t\t\tif(!command.patterns) continue;\r\n\t\t\tfor(const pattern of command.patterns) {\r\n\t\t\t\tconst matches = pattern.exec(message.content);\r\n\t\t\t\tif(matches) return [command, matches, true, true];\r\n\t\t\t}\r\n\t\t}\r\n\r\n\t\t// Find the command to run with default command handling\r\n\t\tconst patternIndex = message.server ? message.server.id : '-';\r\n\t\tif(!this._serverCommandPatterns[patternIndex]) this._serverCommandPatterns[patternIndex] = this._buildCommandPattern(message.server, message.client.user);\r\n\t\tlet [command, args, isCommandMessage] = this._matchDefault(message, this._serverCommandPatterns[patternIndex], 2);\r\n\t\tif(!command && !message.server) [command, args, isCommandMessage] = this._matchDefault(message, unprefixedCommandPattern);\r\n\t\tif(command) return [command, args, false, true];\r\n\r\n\t\treturn [null, null, false, isCommandMessage];\r\n\t}\r\n\r\n\t/**\r\n\t * Matches a message against a server command pattern\r\n\t * @param {Message} message - The message\r\n\t * @param {RegExp} pattern - The pattern to match against\r\n\t * @param {number} commandNameIndex - The index of the command name in the pattern matches\r\n\t * @return {Array} The command, arguments, and whether or not it's a command message\r\n\t */\r\n\t_matchDefault(message, pattern, commandNameIndex = 1) {\r\n\t\tconst matches = pattern.exec(message.content);\r\n\t\tif(!matches) return [null, null, false];\r\n\r\n\t\tconst commands = this.bot.registry.findCommands(matches[commandNameIndex]);\r\n\t\tif(commands.length !== 1) return [null, null, true];\r\n\t\tif(!commands[0] || !commands[0].defaultHandling) return [null, null, true];\r\n\r\n\t\tconst argString = message.content.substring(matches[1].length + (matches[2] ? matches[2].length : 0));\r\n\t\tlet args;\r\n\t\tif(commands[0].argsType === 'single') {\r\n\t\t\targs = [argString.trim()];\r\n\t\t} else if(commands[0].argsType === 'multiple') {\r\n\t\t\targs = this.constructor.parseArgs(argString, commands[0].argsCount, commands[0].argsSingleQuotes);\r\n\t\t}\r\n\r\n\t\treturn [commands[0], args, true];\r\n\t}\r\n\n\t/**\n\t * Makes a command result object from a command's run result\n\t * @param {CommandResult|string[]|string} result - The command's run result\n\t * @return {CommandResult} The result object\n\t */\r\n\tstatic makeResultObject(result) {\r\n\t\tif(typeof result !== 'object' || Array.isArray(result)) result = { reply: result };\r\n\t\tif(result.plain && result.reply) throw new Error('The command result may contain either \"plain\" or \"reply\", not both.');\r\n\t\tif(result.plain && !Array.isArray(result.plain)) result.plain = [result.plain];\r\n\t\tif(result.reply && !Array.isArray(result.reply)) result.reply = [result.reply];\r\n\t\tif(result.direct && !Array.isArray(result.direct)) result.direct = [result.direct];\r\n\t\tif(!('editable' in result)) result.editable = true;\r\n\t\treturn result;\r\n\t}\r\n\r\n\t/**\r\n\t * Parses an argument string into an array of arguments\r\n\t * @param {string} argString - The argument string to parse\r\n\t * @param {number} [argCount] - The number of arguments to extract from the string\r\n\t * @param {boolean} [allowSingleQuote=true] - Whether or not single quotes should be allowed to wrap arguments, in addition to double quotes\r\n\t * @return {string[]} The array of arguments\r\n\t */\r\n\tstatic parseArgs(argString, argCount, allowSingleQuote = true) {\r\n\t\tconst re = allowSingleQuote ? /\\s*(?:(\"|')([^]*?)\\1|(\\S+))\\s*/g : /\\s*(?:(\")([^]*?)\"|(\\S+))\\s*/g;\r\n\t\tconst result = [];\r\n\t\tlet match = [];\r\n\t\t// default: large enough to get all items\r\n\t\targCount = argCount || argString.length;\r\n\t\t// get match and push the capture group that is not null to the result\r\n\t\twhile(--argCount && (match = re.exec(argString))) result.push(match[2] || match[3]);\r\n\t\t// if text remains, push it to the array as it is, except for wrapping quotes, which are removed from it\r\n\t\tif(match && re.lastIndex < argString.length) {\r\n\t\t\tconst re2 = allowSingleQuote ? /^(\"|')([^]*)\\1$/g : /^(\")([^]*)\"$/g;\r\n\t\t\tresult.push(argString.substr(re.lastIndex).replace(re2, '$2'));\r\n\t\t}\r\n\t\treturn result;\r\n\t}\r\n\r\n\t/**\r\n\t * Creates a regular expression to match the command prefix and name in a message\r\n\t * @param {?Server} server - The Server that the message is from\r\n\t * @param {User} user - The User that the bot is running for\r\n\t * @return {RegExp} Regular expression that matches a command prefix and name\r\n\t */\r\n\t_buildCommandPattern(server, user) {\r\n\t\tlet prefix = server ? this.bot.storage.settings.getValue(server, 'command-prefix', this.bot.config.values.commandPrefix) : this.bot.config.values.commandPrefix;\r\n\t\tif(prefix === 'none') prefix = '';\r\n\t\tconst escapedPrefix = escapeRegex(prefix);\r\n\t\tconst prefixPatternPiece = prefix ? `${escapedPrefix}\\\\s*|` : '';\r\n\t\tconst pattern = new RegExp(`^(${prefixPatternPiece}<@!?${user.id}>\\\\s+(?:${escapedPrefix})?)([^\\\\s]+)`, 'i');\r\n\t\tthis.bot.logger.info(`Server command pattern built.`, {\r\n\t\t\tserver: server ? server.name : null,\r\n\t\t\tserverID: server ? server.id : null,\r\n\t\t\tprefix: prefix, pattern: pattern.source\r\n\t\t});\r\n\t\treturn pattern;\r\n\t}\r\n}\r\n\r\nconst unprefixedCommandPattern = /^([^\\s]+)/i;\r\n\r\n/**\r\n * @typedef CommandResult\r\n * @property {string[]} [plain] - Strings to send plain messages for\r\n * @property {string[]} [reply] - Strings to send reply messages for\r\n * @property {string[]} [direct] - Strings to send direct messages for\r\n * @property {boolean} [editable=true] - Whether or not the command message is editable\r\n */\r\n"
   },
   {
-    "__docId__": 111,
+    "__docId__": 113,
     "kind": "class",
     "static": true,
     "variation": null,
@@ -3891,14 +4023,14 @@
     "importPath": "discord-graf/src/commands/dispatcher.js",
     "importStyle": "CommandDispatcher",
     "description": "Handles parsing messages and running commands from them",
-    "lineNumber": 10,
+    "lineNumber": 11,
     "interface": false,
     "extends": [
       "events~EventEmitter"
     ]
   },
   {
-    "__docId__": 112,
+    "__docId__": 114,
     "kind": "constructor",
     "static": false,
     "variation": null,
@@ -3907,7 +4039,7 @@
     "longname": "src/commands/dispatcher.js~CommandDispatcher#constructor",
     "access": null,
     "description": null,
-    "lineNumber": 12,
+    "lineNumber": 13,
     "params": [
       {
         "nullable": null,
@@ -3923,7 +4055,7 @@
     "generator": false
   },
   {
-    "__docId__": 113,
+    "__docId__": 115,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -3932,7 +4064,7 @@
     "longname": "src/commands/dispatcher.js~CommandDispatcher#bot",
     "access": null,
     "description": null,
-    "lineNumber": 17,
+    "lineNumber": 18,
     "type": {
       "nullable": null,
       "types": [
@@ -3943,31 +4075,13 @@
     }
   },
   {
-    "__docId__": 114,
+    "__docId__": 116,
     "kind": "member",
     "static": false,
     "variation": null,
     "name": "_serverCommandPatterns",
     "memberof": "src/commands/dispatcher.js~CommandDispatcher",
     "longname": "src/commands/dispatcher.js~CommandDispatcher#_serverCommandPatterns",
-    "access": null,
-    "description": null,
-    "lineNumber": 19,
-    "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 115,
-    "kind": "member",
-    "static": false,
-    "variation": null,
-    "name": "_results",
-    "memberof": "src/commands/dispatcher.js~CommandDispatcher",
-    "longname": "src/commands/dispatcher.js~CommandDispatcher#_results",
     "access": null,
     "description": null,
     "lineNumber": 20,
@@ -3979,7 +4093,25 @@
     }
   },
   {
-    "__docId__": 116,
+    "__docId__": 117,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "_results",
+    "memberof": "src/commands/dispatcher.js~CommandDispatcher",
+    "longname": "src/commands/dispatcher.js~CommandDispatcher#_results",
+    "access": null,
+    "description": null,
+    "lineNumber": 21,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 118,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -3988,7 +4120,7 @@
     "longname": "src/commands/dispatcher.js~CommandDispatcher#handleMessage",
     "access": null,
     "description": "Handle a new message or a message update",
-    "lineNumber": 29,
+    "lineNumber": 30,
     "params": [
       {
         "nullable": null,
@@ -4001,7 +4133,7 @@
         "description": "The message to handle"
       },
       {
-        "nullable": true,
+        "nullable": null,
         "types": [
           "Message"
         ],
@@ -4022,7 +4154,7 @@
     "generator": false
   },
   {
-    "__docId__": 117,
+    "__docId__": 119,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -4031,7 +4163,7 @@
     "longname": "src/commands/dispatcher.js~CommandDispatcher#run",
     "access": null,
     "description": "Run a command",
-    "lineNumber": 89,
+    "lineNumber": 90,
     "params": [
       {
         "nullable": null,
@@ -4085,7 +4217,7 @@
     "generator": false
   },
   {
-    "__docId__": 118,
+    "__docId__": 120,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -4094,7 +4226,7 @@
     "longname": "src/commands/dispatcher.js~CommandDispatcher#sendMessagesForResult",
     "access": null,
     "description": "Sends messages for a command result",
-    "lineNumber": 138,
+    "lineNumber": 139,
     "params": [
       {
         "nullable": null,
@@ -4128,7 +4260,7 @@
     "generator": false
   },
   {
-    "__docId__": 119,
+    "__docId__": 121,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -4137,7 +4269,7 @@
     "longname": "src/commands/dispatcher.js~CommandDispatcher#sendMessages",
     "access": null,
     "description": "Sends messages",
-    "lineNumber": 156,
+    "lineNumber": 157,
     "params": [
       {
         "nullable": null,
@@ -4181,7 +4313,7 @@
     "generator": false
   },
   {
-    "__docId__": 120,
+    "__docId__": 122,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -4190,7 +4322,7 @@
     "longname": "src/commands/dispatcher.js~CommandDispatcher#updateMessagesForResult",
     "access": null,
     "description": "Updates messages for a command result",
-    "lineNumber": 173,
+    "lineNumber": 174,
     "params": [
       {
         "nullable": null,
@@ -4234,7 +4366,7 @@
     "generator": false
   },
   {
-    "__docId__": 121,
+    "__docId__": 123,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -4243,7 +4375,7 @@
     "longname": "src/commands/dispatcher.js~CommandDispatcher#updateMessages",
     "access": null,
     "description": "Updates messages",
-    "lineNumber": 195,
+    "lineNumber": 196,
     "params": [
       {
         "nullable": null,
@@ -4297,7 +4429,7 @@
     "generator": false
   },
   {
-    "__docId__": 122,
+    "__docId__": 124,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -4306,7 +4438,7 @@
     "longname": "src/commands/dispatcher.js~CommandDispatcher#_parseMessage",
     "access": null,
     "description": "Parses a message to find details about command usage in it",
-    "lineNumber": 217,
+    "lineNumber": 218,
     "params": [
       {
         "nullable": null,
@@ -4330,7 +4462,7 @@
     "generator": false
   },
   {
-    "__docId__": 123,
+    "__docId__": 125,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -4339,7 +4471,7 @@
     "longname": "src/commands/dispatcher.js~CommandDispatcher#_matchDefault",
     "access": null,
     "description": "Matches a message against a server command pattern",
-    "lineNumber": 244,
+    "lineNumber": 245,
     "params": [
       {
         "nullable": null,
@@ -4383,7 +4515,7 @@
     "generator": false
   },
   {
-    "__docId__": 124,
+    "__docId__": 126,
     "kind": "method",
     "static": true,
     "variation": null,
@@ -4392,7 +4524,7 @@
     "longname": "src/commands/dispatcher.js~CommandDispatcher.makeResultObject",
     "access": null,
     "description": "Makes a command result object from a command's run result",
-    "lineNumber": 268,
+    "lineNumber": 269,
     "params": [
       {
         "nullable": null,
@@ -4418,7 +4550,7 @@
     "generator": false
   },
   {
-    "__docId__": 125,
+    "__docId__": 127,
     "kind": "method",
     "static": true,
     "variation": null,
@@ -4427,7 +4559,7 @@
     "longname": "src/commands/dispatcher.js~CommandDispatcher.parseArgs",
     "access": null,
     "description": "Parses an argument string into an array of arguments",
-    "lineNumber": 285,
+    "lineNumber": 286,
     "params": [
       {
         "nullable": null,
@@ -4473,7 +4605,7 @@
     "generator": false
   },
   {
-    "__docId__": 126,
+    "__docId__": 128,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -4482,7 +4614,7 @@
     "longname": "src/commands/dispatcher.js~CommandDispatcher#_buildCommandPattern",
     "access": null,
     "description": "Creates a regular expression to match the command prefix and name in a message",
-    "lineNumber": 307,
+    "lineNumber": 308,
     "params": [
       {
         "nullable": true,
@@ -4516,7 +4648,7 @@
     "generator": false
   },
   {
-    "__docId__": 127,
+    "__docId__": 129,
     "kind": "variable",
     "static": true,
     "variation": null,
@@ -4528,7 +4660,7 @@
     "importPath": "discord-graf/src/commands/dispatcher.js",
     "importStyle": null,
     "description": null,
-    "lineNumber": 322,
+    "lineNumber": 323,
     "undocument": true,
     "type": {
       "types": [
@@ -4537,7 +4669,7 @@
     }
   },
   {
-    "__docId__": 128,
+    "__docId__": 130,
     "kind": "typedef",
     "static": true,
     "variation": null,
@@ -4599,7 +4731,7 @@
     }
   },
   {
-    "__docId__": 129,
+    "__docId__": 131,
     "kind": "file",
     "static": true,
     "variation": null,
@@ -4609,10 +4741,10 @@
     "access": null,
     "description": null,
     "lineNumber": 1,
-    "content": "'use babel';\r\n'use strict';\r\n\r\nimport Setting from '../data/models/setting';\r\n\r\n/** A module for commands */\r\nexport default class Module {\r\n\t/**\r\n\t * @param {Bot} bot - The bot the module is for\r\n\t * @param {string} id - The ID for the module\r\n\t * @param {string} [name=id] - The name of the module\r\n\t * @param {Command[]} [commands] - The commands that the module contains\r\n\t */\r\n\tconstructor(bot, id, name, commands) {\r\n\t\tif(!bot || !id) throw new Error('A bot and ID must be specified.');\r\n\t\tif(commands && !Array.isArray(commands)) throw new TypeError('Commands must be an array.');\r\n\r\n\t\t/** @type {Bot} */\r\n\t\tthis.bot = bot;\r\n\t\t/** @type {string} */\r\n\t\tthis.id = id;\r\n\t\t/** @type {string} */\r\n\t\tthis.name = name || id;\r\n\t\t/** @type {Command[]} */\r\n\t\tthis.commands = commands || [];\r\n\t}\r\n\r\n\t/**\r\n\t * Enables or disables the module on a server\r\n\t * @param {Server} server - The server\r\n\t * @param {boolean} enabled - Whether the module should be enabled or disabled\r\n\t * @return {void}\r\n\t */\r\n\tsetEnabled(server, enabled) {\r\n\t\tthis.bot.storage.settings.save(new Setting(server, `mod-${this.id}`, enabled));\r\n\t}\r\n\r\n\t/**\r\n\t * Checks if the module is enabled on a server\r\n\t * @param {Server} server - The server\r\n\t * @return {boolean} Whether or not the module is enabled\r\n\t */\r\n\tisEnabled(server) {\r\n\t\treturn this.bot.storage.settings.getValue(server, `mod-${this.id}`, true);\r\n\t}\r\n}\r\n"
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport Setting from '../data/models/setting';\r\n\r\n/** A module for commands */\r\nexport default class Module {\r\n\t/**\r\n\t * @param {Bot} bot - The bot the module is for\r\n\t * @param {string} id - The ID for the module\r\n\t * @param {string} [name=id] - The name of the module\r\n\t * @param {Command[]} [commands] - The commands that the module contains\r\n\t */\r\n\tconstructor(bot, id, name, commands) {\r\n\t\tif(!bot || !id) throw new Error('A bot and ID must be specified.');\r\n\t\tif(commands && !Array.isArray(commands)) throw new TypeError('Commands must be an array.');\r\n\r\n\t\t/** @type {Bot} */\r\n\t\tthis.bot = bot;\r\n\t\t/** @type {string} */\r\n\t\tthis.id = id;\r\n\t\t/** @type {string} */\r\n\t\tthis.name = name || id;\r\n\t\t/** @type {Command[]} */\r\n\t\tthis.commands = commands || [];\r\n\t}\r\n\r\n\t/**\r\n\t * Enables or disables the module on a server\r\n\t * @param {Server|string} server - The server or server ID\r\n\t * @param {boolean} enabled - Whether the module should be enabled or disabled\r\n\t * @return {void}\r\n\t * @see {@link Module.setEnabled}\r\n\t */\r\n\tsetEnabled(server, enabled) {\r\n\t\tthis.constructor.setEnabled(this.bot.storage.settings, server, this, enabled);\r\n\t}\r\n\r\n\t/**\r\n\t * Enables or disables a module on a server\r\n\t * @param {SettingStorage} settings - The setting storage to use\r\n\t * @param {Server|string} server - The server or server ID\r\n\t * @param {Module|string} module - The module or module ID\r\n\t * @param {boolean} enabled - Whether the module should be enabled or disabled\r\n\t * @return {void}\r\n\t * @see {@link Module#setEnabled}\r\n\t */\r\n\tstatic setEnabled(settings, server, module, enabled) {\r\n\t\tsettings.save(new Setting(server, `mod-${module.id || module}`, enabled));\r\n\t}\r\n\r\n\t/**\r\n\t * Checks if the module is enabled on a server\r\n\t * @param {Server} server - The server\r\n\t * @return {boolean} Whether or not the module is enabled\r\n\t * @see {@link Module.isEnabled}\r\n\t */\r\n\tisEnabled(server) {\r\n\t\treturn this.constructor.isEnabled(this.bot.storage.settings, server, this);\r\n\t}\r\n\r\n\t/**\r\n\t * Checks if a module is enabled on a server\r\n\t * @param {SettingStorage} settings - The setting storage to use\r\n\t * @param {Server} server - The server\r\n\t * @param {Module|string} module - The module or module ID\r\n\t * @return {boolean} Whether or not the module is enabled\r\n\t * @see {@link Module#isEnabled}\r\n\t */\r\n\tstatic isEnabled(settings, server, module) {\r\n\t\treturn settings.getValue(server, `mod-${module.id || module}`, true);\r\n\t}\r\n}\r\n"
   },
   {
-    "__docId__": 130,
+    "__docId__": 132,
     "kind": "class",
     "static": true,
     "variation": null,
@@ -4628,7 +4760,7 @@
     "interface": false
   },
   {
-    "__docId__": 131,
+    "__docId__": 133,
     "kind": "constructor",
     "static": false,
     "variation": null,
@@ -4685,7 +4817,7 @@
     "generator": false
   },
   {
-    "__docId__": 132,
+    "__docId__": 134,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -4705,7 +4837,7 @@
     }
   },
   {
-    "__docId__": 133,
+    "__docId__": 135,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -4725,7 +4857,7 @@
     }
   },
   {
-    "__docId__": 134,
+    "__docId__": 136,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -4745,7 +4877,7 @@
     }
   },
   {
-    "__docId__": 135,
+    "__docId__": 137,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -4765,7 +4897,7 @@
     }
   },
   {
-    "__docId__": 136,
+    "__docId__": 138,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -4774,17 +4906,21 @@
     "longname": "src/commands/module.js~Module#setEnabled",
     "access": null,
     "description": "Enables or disables the module on a server",
-    "lineNumber": 34,
+    "see": [
+      "{@link Module.setEnabled}"
+    ],
+    "lineNumber": 35,
     "params": [
       {
         "nullable": null,
         "types": [
-          "Server"
+          "Server",
+          "string"
         ],
         "spread": false,
         "optional": false,
         "name": "server",
-        "description": "The server"
+        "description": "The server or server ID"
       },
       {
         "nullable": null,
@@ -4808,7 +4944,75 @@
     "generator": false
   },
   {
-    "__docId__": 137,
+    "__docId__": 139,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "setEnabled",
+    "memberof": "src/commands/module.js~Module",
+    "longname": "src/commands/module.js~Module.setEnabled",
+    "access": null,
+    "description": "Enables or disables a module on a server",
+    "see": [
+      "{@link Module#setEnabled}"
+    ],
+    "lineNumber": 48,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "SettingStorage"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "settings",
+        "description": "The setting storage to use"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Server",
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "server",
+        "description": "The server or server ID"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Module",
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "module",
+        "description": "The module or module ID"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "boolean"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "enabled",
+        "description": "Whether the module should be enabled or disabled"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "void"
+      ],
+      "spread": false,
+      "description": ""
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 140,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -4817,7 +5021,10 @@
     "longname": "src/commands/module.js~Module#isEnabled",
     "access": null,
     "description": "Checks if the module is enabled on a server",
-    "lineNumber": 43,
+    "see": [
+      "{@link Module.isEnabled}"
+    ],
+    "lineNumber": 58,
     "params": [
       {
         "nullable": null,
@@ -4841,7 +5048,64 @@
     "generator": false
   },
   {
-    "__docId__": 138,
+    "__docId__": 141,
+    "kind": "method",
+    "static": true,
+    "variation": null,
+    "name": "isEnabled",
+    "memberof": "src/commands/module.js~Module",
+    "longname": "src/commands/module.js~Module.isEnabled",
+    "access": null,
+    "description": "Checks if a module is enabled on a server",
+    "see": [
+      "{@link Module#isEnabled}"
+    ],
+    "lineNumber": 70,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "SettingStorage"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "settings",
+        "description": "The setting storage to use"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Server"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "server",
+        "description": "The server"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Module",
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "module",
+        "description": "The module or module ID"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "boolean"
+      ],
+      "spread": false,
+      "description": "Whether or not the module is enabled"
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 142,
     "kind": "file",
     "static": true,
     "variation": null,
@@ -4854,7 +5118,7 @@
     "content": "'use babel';\r\n'use strict';\r\n\r\nimport EventEmitter from 'events';\r\nimport Module from './module';\r\n\r\n/** Handles registration and searching of commands and modules */\r\nexport default class CommandRegistry extends EventEmitter {\r\n\t/** @param {?Logger} [logger] - The logger to use  */\r\n\tconstructor(logger) {\r\n\t\tsuper();\r\n\r\n\t\t/** @type {?Logger} */\r\n\t\tthis.logger = logger || null;\r\n\t\t/** @type {Command[]} */\r\n\t\tthis.commands = [];\r\n\t\t/** @type {Module[]} */\r\n\t\tthis.modules = [];\r\n\t}\r\n\r\n\t/**\r\n\t * Registers a single command\r\n\t * @param {Command} command - The command to register\r\n\t * @return {void}\r\n\t */\r\n\tregisterCommand(command) {\r\n\t\tthis.registerCommands([command]);\r\n\t}\r\n\r\n\t/**\r\n\t * Registers multiple commands\r\n\t * @param {Command[]} commands - The commands to register\r\n\t * @return {void}\r\n\t */\r\n\tregisterCommands(commands) {\r\n\t\tif(!Array.isArray(commands)) throw new TypeError('Commands must be an array.');\r\n\t\tfor(let command of commands) {\r\n\t\t\tif(this.commands.some(cmd => cmd.name === command.name)) throw new Error(`A command with the name \"${command.name}\"\" is already registered.`);\r\n\t\t\tconst module = this.modules.find(mod => mod.id === command.module);\r\n\t\t\tif(!module) throw new Error(`Module \"${command.module}\" is not registered.`);\r\n\t\t\tif(module.commands.some(cmd => cmd.memberName === command.memberName)) throw new Error(`A command with the member name \"${command.memberName}\" is already registered in ${module.id}`);\r\n\t\t\tmodule.commands.push(command);\r\n\t\t\tthis.commands.push(command);\r\n\t\t\tif(this.logger) this.logger.verbose(`Registered command ${command.module}:${command.memberName}.`);\r\n\t\t\tthis.emit('commandRegister', command, this);\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Registers a single module\r\n\t * @param {Module} module - The module to register\r\n\t * @return {void}\r\n\t */\r\n\tregisterModule(module) {\r\n\t\tthis.registerModules([module]);\r\n\t}\r\n\r\n\t/**\r\n\t * Registers multiple modules\r\n\t * @param {Module[]} modules - The modules to register\r\n\t * @return {void}\r\n\t */\r\n\tregisterModules(modules) {\r\n\t\tif(!Array.isArray(modules)) throw new TypeError('Modules must be an array.');\r\n\t\tfor(let module of modules) {\r\n\t\t\tif(!(module instanceof Module)) throw new TypeError('Module must be an instance of Module.');\r\n\t\t\tif(this.modules.some(mod => mod.name === module.name)) throw new Error(`Module \"${module.name}\"\" is already registered.`);\r\n\t\t\tthis.modules.push(module);\r\n\t\t\tif(this.logger) this.logger.verbose(`Registered module ${module.id}.`);\r\n\t\t\tthis.emit('moduleRegister', module, this);\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Finds all commands that match the search string\r\n\t * @param {string} [searchString] - The string to search for\r\n\t * @param {Message} [message] - The message to check usability against\r\n\t * @return {Command[]} All commands that are found\r\n\t */\r\n\tfindCommands(searchString = null, message = null) {\r\n\t\tif(!searchString) return message ? this.commands.filter(cmd => cmd.isUsable(message)) : this.commands;\r\n\r\n\t\t// Find all matches\r\n\t\tconst lowercaseSearch = searchString.toLowerCase();\r\n\t\tconst matchedCommands = this.commands.filter(cmd =>\r\n\t\t\tcmd.name.includes(lowercaseSearch)\r\n\t\t\t|| (cmd.aliases && cmd.aliases.some(ali => ali.includes(lowercaseSearch)))\r\n\t\t\t|| `${cmd.module}:${cmd.memberName}` === lowercaseSearch\r\n\t\t);\r\n\r\n\t\t// See if there's an exact match\r\n\t\tfor(const command of matchedCommands) {\r\n\t\t\tif(command.name === lowercaseSearch || (command.aliases && command.aliases.some(ali => ali === lowercaseSearch))) return [command];\r\n\t\t}\r\n\r\n\t\treturn matchedCommands;\r\n\t}\r\n\r\n\t/**\r\n\t * Finds all modules that match the search string\r\n\t * @param {string} [searchString] - The string to search for\r\n\t * @return {Module[]} All modules that are found\r\n\t */\r\n\tfindModules(searchString = null) {\r\n\t\tif(!searchString) return this.modules;\r\n\r\n\t\t// Find all matches\r\n\t\tconst lowercaseSearch = searchString.toLowerCase();\r\n\t\tconst matchedModules = this.modules.filter(mod => mod.name.includes(lowercaseSearch) || mod.id.includes(lowercaseSearch));\r\n\r\n\t\t// See if there's an exact match\r\n\t\tfor(const module of matchedModules) {\r\n\t\t\tif(module.name.toLowerCase() === lowercaseSearch || module.id === lowercaseSearch) return [module];\r\n\t\t}\r\n\r\n\t\treturn matchedModules;\r\n\t}\r\n}\r\n"
   },
   {
-    "__docId__": 139,
+    "__docId__": 143,
     "kind": "class",
     "static": true,
     "variation": null,
@@ -4873,7 +5137,7 @@
     ]
   },
   {
-    "__docId__": 140,
+    "__docId__": 144,
     "kind": "constructor",
     "static": false,
     "variation": null,
@@ -4898,7 +5162,7 @@
     "generator": false
   },
   {
-    "__docId__": 141,
+    "__docId__": 145,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -4918,7 +5182,7 @@
     }
   },
   {
-    "__docId__": 142,
+    "__docId__": 146,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -4938,7 +5202,7 @@
     }
   },
   {
-    "__docId__": 143,
+    "__docId__": 147,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -4958,7 +5222,7 @@
     }
   },
   {
-    "__docId__": 144,
+    "__docId__": 148,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -4991,7 +5255,7 @@
     "generator": false
   },
   {
-    "__docId__": 145,
+    "__docId__": 149,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -5024,7 +5288,7 @@
     "generator": false
   },
   {
-    "__docId__": 146,
+    "__docId__": 150,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -5057,7 +5321,7 @@
     "generator": false
   },
   {
-    "__docId__": 147,
+    "__docId__": 151,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -5090,7 +5354,7 @@
     "generator": false
   },
   {
-    "__docId__": 148,
+    "__docId__": 152,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -5133,7 +5397,7 @@
     "generator": false
   },
   {
-    "__docId__": 149,
+    "__docId__": 153,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -5166,7 +5430,7 @@
     "generator": false
   },
   {
-    "__docId__": 150,
+    "__docId__": 154,
     "kind": "file",
     "static": true,
     "variation": null,
@@ -5179,7 +5443,7 @@
     "content": "'use babel';\r\n'use strict';\r\n\r\nimport Storage from './storage';\r\nimport Util from '../bot/util';\r\n\r\nexport default class AllowedChannelStorage extends Storage {\r\n\tconstructor(localStorage, logger) {\r\n\t\tsuper('allowed-channels', localStorage, logger);\r\n\t}\n\n\tsave(channel) {\r\n\t\treturn super.save(channel.server, channel.id);\r\n\t}\r\n\r\n\tdelete(channel) {\r\n\t\treturn super.delete(channel.server, channel.id);\r\n\t}\r\n\r\n\tfind(server, searchString = null) {\r\n\t\tif(!server) throw new Error('A server must be specified.');\r\n\t\tif(!this.serversMap) this.loadStorage();\r\n\t\tif(!this.serversMap[server.id]) return [];\r\n\r\n\t\t// Find all of the server's channels that match, and filter them to ones that are usable channels\r\n\t\tconst channels = Util.search(server.channels.getAll('type', 'text'), searchString, { searchExact: false }).filter(channel => this.serversMap[server.id].includes(channel.id));\r\n\t\treturn Util.search(channels, searchString, { searchInexact: false });\r\n\t}\r\n}\r\n"
   },
   {
-    "__docId__": 151,
+    "__docId__": 155,
     "kind": "class",
     "static": true,
     "variation": null,
@@ -5199,7 +5463,7 @@
     ]
   },
   {
-    "__docId__": 152,
+    "__docId__": 156,
     "kind": "constructor",
     "static": false,
     "variation": null,
@@ -5227,7 +5491,7 @@
     "generator": false
   },
   {
-    "__docId__": 153,
+    "__docId__": 157,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -5254,7 +5518,7 @@
     "generator": false
   },
   {
-    "__docId__": 154,
+    "__docId__": 158,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -5281,7 +5545,7 @@
     "generator": false
   },
   {
-    "__docId__": 155,
+    "__docId__": 159,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -5317,7 +5581,7 @@
     "generator": false
   },
   {
-    "__docId__": 156,
+    "__docId__": 160,
     "kind": "file",
     "static": true,
     "variation": null,
@@ -5330,7 +5594,7 @@
     "content": "'use babel';\r\n'use strict';\r\n\r\nimport Storage from './storage';\r\nimport Util from '../bot/util';\r\n\r\nexport default class ModRoleStorage extends Storage {\r\n\tconstructor(localStorage, logger) {\r\n\t\tsuper('mod-roles', localStorage, logger);\r\n\t}\r\n\r\n\tsave(role) {\r\n\t\treturn super.save(role.server, role.id);\r\n\t}\r\n\r\n\tdelete(role) {\r\n\t\treturn super.delete(role.server, role.id);\r\n\t}\r\n\r\n\tfind(server, searchString = null) {\r\n\t\tif(!server) throw new Error('A server must be specified.');\r\n\t\tif(!this.serversMap) this.loadStorage();\r\n\t\tif(!this.serversMap[server.id]) return [];\r\n\r\n\t\t// Find all of the server's roles that match, and filter them to ones that are mod roles\r\n\t\tconst roles = Util.search(server.roles, searchString, { searchExact: false }).filter(role => this.serversMap[server.id].includes(role.id));\r\n\t\treturn Util.search(roles, searchString, { searchInexact: false });\r\n\t}\r\n}\r\n"
   },
   {
-    "__docId__": 157,
+    "__docId__": 161,
     "kind": "class",
     "static": true,
     "variation": null,
@@ -5350,7 +5614,7 @@
     ]
   },
   {
-    "__docId__": 158,
+    "__docId__": 162,
     "kind": "constructor",
     "static": false,
     "variation": null,
@@ -5378,7 +5642,7 @@
     "generator": false
   },
   {
-    "__docId__": 159,
+    "__docId__": 163,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -5405,7 +5669,7 @@
     "generator": false
   },
   {
-    "__docId__": 160,
+    "__docId__": 164,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -5432,7 +5696,7 @@
     "generator": false
   },
   {
-    "__docId__": 161,
+    "__docId__": 165,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -5468,7 +5732,7 @@
     "generator": false
   },
   {
-    "__docId__": 162,
+    "__docId__": 166,
     "kind": "file",
     "static": true,
     "variation": null,
@@ -5481,7 +5745,7 @@
     "content": "'use babel';\r\n'use strict';\r\n\r\nexport default class Setting {\r\n\tconstructor(server, key, value) {\r\n\t\tif(!key) throw new Error('Setting key must be specified.');\r\n\t\tthis.server = server ? server.id ? server.id : server : 'global';\r\n\t\tthis.key = key;\r\n\t\tthis.value = value;\r\n\t}\r\n}\r\n"
   },
   {
-    "__docId__": 163,
+    "__docId__": 167,
     "kind": "class",
     "static": true,
     "variation": null,
@@ -5498,7 +5762,7 @@
     "interface": false
   },
   {
-    "__docId__": 164,
+    "__docId__": 168,
     "kind": "constructor",
     "static": false,
     "variation": null,
@@ -5532,7 +5796,7 @@
     "generator": false
   },
   {
-    "__docId__": 165,
+    "__docId__": 169,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -5550,7 +5814,7 @@
     }
   },
   {
-    "__docId__": 166,
+    "__docId__": 170,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -5568,7 +5832,7 @@
     }
   },
   {
-    "__docId__": 167,
+    "__docId__": 171,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -5586,7 +5850,7 @@
     }
   },
   {
-    "__docId__": 168,
+    "__docId__": 172,
     "kind": "file",
     "static": true,
     "variation": null,
@@ -5599,7 +5863,7 @@
     "content": "'use babel';\r\n'use strict';\r\n\r\nimport Storage from './storage';\r\nimport Setting from './models/setting';\r\n\r\nexport default class SettingStorage extends Storage {\r\n\tconstructor(localStorage, logger) {\r\n\t\tsuper('settings', localStorage, logger, true);\r\n\t}\r\n\r\n\tsave(setting) {\r\n\t\treturn super.save(setting.server, setting);\r\n\t}\r\n\r\n\tdelete(server, setting) {\r\n\t\t[server, setting] = this.getSettingServerAndKey(setting, server);\r\n\t\treturn super.delete(server, setting);\r\n\t}\r\n\r\n\tfind(server, setting) {\r\n\t\t[server, setting] = this.getSettingServerAndKey(setting, server);\r\n\t\treturn super.find(server, setting);\r\n\t}\r\n\r\n\texists(server, setting) {\r\n\t\t[server, setting] = this.getSettingServerAndKey(setting, server);\r\n\t\treturn super.exists(server, setting);\r\n\t}\r\n\r\n\tgetValue(server, setting, defaultValue = null) {\r\n\t\t[server, setting] = this.getSettingServerAndKey(setting, server);\r\n\t\tif(!this.serversMap) this.loadStorage();\r\n\t\tif(!this.serversMap[server]) return defaultValue;\r\n\t\tif(!(setting in this.serversMap[server])) return defaultValue;\r\n\t\treturn this.serversMap[server][setting];\r\n\t}\r\n\r\n\tgetSettingServerAndKey(setting, server) {\r\n\t\tif(setting instanceof Setting) {\r\n\t\t\treturn [!server ? setting.server : server.id ? server.id : server, setting.key];\r\n\t\t} else {\r\n\t\t\tif(!setting) throw new Error('A setting or a key must be specified.');\r\n\t\t\treturn [server ? server.id ? server.id : server : 'global', setting];\r\n\t\t}\r\n\t}\r\n}\r\n"
   },
   {
-    "__docId__": 169,
+    "__docId__": 173,
     "kind": "class",
     "static": true,
     "variation": null,
@@ -5619,7 +5883,7 @@
     ]
   },
   {
-    "__docId__": 170,
+    "__docId__": 174,
     "kind": "constructor",
     "static": false,
     "variation": null,
@@ -5647,7 +5911,7 @@
     "generator": false
   },
   {
-    "__docId__": 171,
+    "__docId__": 175,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -5674,7 +5938,7 @@
     "generator": false
   },
   {
-    "__docId__": 172,
+    "__docId__": 176,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -5707,7 +5971,7 @@
     "generator": false
   },
   {
-    "__docId__": 173,
+    "__docId__": 177,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -5740,7 +6004,7 @@
     "generator": false
   },
   {
-    "__docId__": 174,
+    "__docId__": 178,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -5773,7 +6037,7 @@
     "generator": false
   },
   {
-    "__docId__": 175,
+    "__docId__": 179,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -5815,7 +6079,7 @@
     "generator": false
   },
   {
-    "__docId__": 176,
+    "__docId__": 180,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -5848,7 +6112,7 @@
     "generator": false
   },
   {
-    "__docId__": 177,
+    "__docId__": 181,
     "kind": "file",
     "static": true,
     "variation": null,
@@ -5861,7 +6125,7 @@
     "content": "'use babel';\r\n'use strict';\r\n\r\nimport Util from '../bot/util';\r\n\r\nexport default class Storage {\r\n\tconstructor(key, localStorage, logger, objectBased = false) {\r\n\t\tif(!key || !localStorage) throw new Error('A key and localStorage must be specified.');\r\n\t\tthis.key = key;\r\n\t\tthis.localStorage = localStorage;\r\n\t\tthis.logger = logger;\r\n\t\tthis.objectBased = objectBased;\r\n\t}\r\n\r\n\tloadStorage() {\r\n\t\tthis.serversMap = JSON.parse(this.localStorage.getItem(this.key));\r\n\t\tif(!this.serversMap) this.serversMap = {};\r\n\t}\r\n\r\n\tsaveStorage() {\r\n\t\tthis.localStorage.setItem(this.key, JSON.stringify(this.serversMap));\r\n\t\tif(this.logger) this.logger.debug(`Saved ${this.key} storage.`, this.serversMap);\r\n\t}\r\n\r\n\tsave(server, entry, searchFunction = null) {\r\n\t\tif(!server || !entry) throw new Error('A server and entry must be specified.');\r\n\t\tif(!this.serversMap) this.loadStorage();\r\n\t\tif(server.id) server = server.id;\r\n\t\tif(!this.serversMap[server]) this.serversMap[server] = this.objectBased ? {} : [];\r\n\r\n\t\tconst exists = this.exists(server, entry, searchFunction);\r\n\t\tif(!exists || this.objectBased) {\r\n\t\t\tif(this.objectBased) this.serversMap[server][entry.key] = entry.value; else this.serversMap[server].push(entry);\r\n\t\t\tthis.saveStorage();\r\n\t\t\tif(this.logger) this.logger.verbose(`${exists ? `Updated` : `Added`} entry in ${this.key} storage.`, { server: server, entry: entry });\r\n\t\t\treturn true;\r\n\t\t} else {\r\n\t\t\tif(this.logger) this.logger.verbose(`Not adding entry to ${this.key} storage, because it already exists.`, { server: server, entry: entry });\r\n\t\t\treturn false;\r\n\t\t}\r\n\t}\r\n\r\n\tdelete(server, entry, searchFunction = null) {\r\n\t\tif(!server || !entry) throw new Error('A server and entry must be specified.');\r\n\t\tif(!this.serversMap) this.loadStorage();\r\n\t\tif(server.id) server = server.id;\r\n\t\tif(!this.serversMap[server]) this.serversMap[server] = this.objectBased ? {} : [];\r\n\r\n\t\tlet index = this.objectBased ? null : -1;\r\n\t\tif(this.objectBased) {\r\n\t\t\tif(searchFunction) {\r\n\t\t\t\tfor(const entryKey of Object.keys(this.serversMap)) {\r\n\t\t\t\t\tif(searchFunction(entryKey, this.serversMap[server][entryKey])) {\r\n\t\t\t\t\t\tindex = entryKey;\r\n\t\t\t\t\t\tbreak;\r\n\t\t\t\t\t}\r\n\t\t\t\t}\r\n\t\t\t} else {\r\n\t\t\t\tindex = entry.key ? entry.key : entry;\r\n\t\t\t}\r\n\t\t} else {\r\n\t\t\tindex = searchFunction ? this.serversMap[server].findIndex(searchFunction) : this.serversMap[server].findIndex(item => item === entry);\r\n\t\t}\r\n\r\n\t\tif((this.objectBased && index) || (!this.objectBased && index >= 0)) {\r\n\t\t\tif(this.objectBased) delete this.serversMap[server][index]; else this.serversMap[server].splice(index, 1);\r\n\t\t\tthis.saveStorage();\r\n\t\t\tif(this.logger) this.logger.info(`Deleted entry from ${this.key} storage.`, { server: server, entry: entry });\r\n\t\t\treturn true;\r\n\t\t} else {\r\n\t\t\tif(this.logger) this.logger.info(`Not deleting entry from ${this.key} storage, because it doesn\\'t exist.`, { server: server, entry: entry });\r\n\t\t\treturn false;\r\n\t\t}\r\n\t}\r\n\r\n\tclear(server) {\r\n\t\tif(!server) throw new Error('A server must be specified.');\r\n\t\tif(!this.serversMap) this.loadStorage();\r\n\t\tdelete this.serversMap[server.id ? server.id : server];\r\n\t\tif(this.logger) this.logger.info(`Cleared a server in ${this.key} storage.`, { server: server.id ? server.id : server });\r\n\t\tthis.saveStorage();\r\n\t}\r\n\r\n\tclearAll() {\r\n\t\tif(!this.serversMap) this.loadStorage();\r\n\t\tfor(const key of Object.keys(this.serversMap)) delete this.serversMap[key];\r\n\t\tif(this.logger) this.logger.info(`Cleared all of ${this.key} storage.`);\r\n\t\tthis.saveStorage();\r\n\t}\r\n\r\n\tfind(server, searchString = null, searchOptions = {}) {\r\n\t\tif(!server) throw new Error('A server must be specified.');\r\n\t\tif(!this.serversMap) this.loadStorage();\r\n\t\tif(server.id) server = server.id;\r\n\t\tif(!this.serversMap[server]) return [];\r\n\t\tif(!searchString) return this.serversMap[server];\r\n\t\tif(this.objectBased) {\r\n\t\t\tif(this.serversMap[server][searchString]) return [this.serversMap[server][searchString]];\r\n\t\t\telse return [];\r\n\t\t} else {\r\n\t\t\treturn Util.search(this.serversMap[server], searchString, searchOptions);\r\n\t\t}\r\n\t}\r\n\r\n\texists(server, entry, searchFunction = null) {\r\n\t\tif(!server || !entry) throw new Error('A server and entry must be specified.');\r\n\t\tif(!this.serversMap) this.loadStorage();\r\n\t\tif(server.id) server = server.id;\r\n\t\tif(!this.serversMap[server]) return false;\r\n\t\tif(this.objectBased) {\r\n\t\t\tif(searchFunction) {\r\n\t\t\t\tfor(const entryKey of Object.keys(this.serversMap)) {\r\n\t\t\t\t\tif(searchFunction(entryKey, this.serversMap[server][entryKey])) return true;\r\n\t\t\t\t}\r\n\t\t\t\treturn false;\r\n\t\t\t} else {\r\n\t\t\t\treturn typeof this.serversMap[server][entry.key ? entry.key : entry] !== 'undefined';\r\n\t\t\t}\r\n\t\t} else {\r\n\t\t\treturn searchFunction ? this.serversMap[server].some(searchFunction) : this.serversMap[server].includes(entry);\r\n\t\t}\r\n\t}\r\n\r\n\tisEmpty(server) {\r\n\t\tif(!server) throw new Error('A server must be specified.');\r\n\t\tif(!this.serversMap) this.loadStorage();\r\n\t\tif(server.id) server = server.id;\r\n\t\treturn !this.serversMap[server] || this.serversMap[server].length === 0;\r\n\t}\r\n}\r\n"
   },
   {
-    "__docId__": 178,
+    "__docId__": 182,
     "kind": "class",
     "static": true,
     "variation": null,
@@ -5878,7 +6142,7 @@
     "interface": false
   },
   {
-    "__docId__": 179,
+    "__docId__": 183,
     "kind": "constructor",
     "static": false,
     "variation": null,
@@ -5921,7 +6185,7 @@
     "generator": false
   },
   {
-    "__docId__": 180,
+    "__docId__": 184,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -5939,7 +6203,7 @@
     }
   },
   {
-    "__docId__": 181,
+    "__docId__": 185,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -5957,7 +6221,7 @@
     }
   },
   {
-    "__docId__": 182,
+    "__docId__": 186,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -5975,7 +6239,7 @@
     }
   },
   {
-    "__docId__": 183,
+    "__docId__": 187,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -5993,7 +6257,7 @@
     }
   },
   {
-    "__docId__": 184,
+    "__docId__": 188,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -6008,7 +6272,7 @@
     "generator": false
   },
   {
-    "__docId__": 185,
+    "__docId__": 189,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -6026,7 +6290,7 @@
     }
   },
   {
-    "__docId__": 186,
+    "__docId__": 190,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -6044,7 +6308,7 @@
     }
   },
   {
-    "__docId__": 187,
+    "__docId__": 191,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -6059,7 +6323,7 @@
     "generator": false
   },
   {
-    "__docId__": 188,
+    "__docId__": 192,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -6101,7 +6365,7 @@
     "generator": false
   },
   {
-    "__docId__": 189,
+    "__docId__": 193,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -6143,7 +6407,7 @@
     "generator": false
   },
   {
-    "__docId__": 190,
+    "__docId__": 194,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -6165,7 +6429,7 @@
     "generator": false
   },
   {
-    "__docId__": 191,
+    "__docId__": 195,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -6180,7 +6444,7 @@
     "generator": false
   },
   {
-    "__docId__": 192,
+    "__docId__": 196,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -6225,7 +6489,7 @@
     "generator": false
   },
   {
-    "__docId__": 193,
+    "__docId__": 197,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -6267,7 +6531,7 @@
     "generator": false
   },
   {
-    "__docId__": 194,
+    "__docId__": 198,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -6294,7 +6558,7 @@
     "generator": false
   },
   {
-    "__docId__": 195,
+    "__docId__": 199,
     "kind": "file",
     "static": true,
     "variation": null,
@@ -6307,7 +6571,7 @@
     "content": "'use babel';\r\n'use strict';\r\n\r\nimport FriendlyError from './friendly';\r\n\r\n/** Has a descriptive message for a command not having proper format */\r\nexport default class CommandFormatError extends FriendlyError {\r\n\t/**\r\n\t * @param {Command} command - The command the error is for\r\n\t * @param {?Server} server - The Server the error is in\r\n\t */\r\n\tconstructor(command, server = null) {\r\n\t\tsuper(`Invalid command format. Use ${command.bot.util.usage(`help ${command.name}`, server)} for information.`);\r\n\t\t/** @ignore */\r\n\t\tthis.name = 'CommandFormatError';\r\n\t}\r\n}\r\n"
   },
   {
-    "__docId__": 196,
+    "__docId__": 200,
     "kind": "class",
     "static": true,
     "variation": null,
@@ -6326,7 +6590,7 @@
     ]
   },
   {
-    "__docId__": 197,
+    "__docId__": 201,
     "kind": "constructor",
     "static": false,
     "variation": null,
@@ -6361,7 +6625,7 @@
     "generator": false
   },
   {
-    "__docId__": 198,
+    "__docId__": 202,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -6379,7 +6643,7 @@
     }
   },
   {
-    "__docId__": 199,
+    "__docId__": 203,
     "kind": "file",
     "static": true,
     "variation": null,
@@ -6392,7 +6656,7 @@
     "content": "'use babel';\r\n'use strict';\r\n\r\n/** Has a message that can be considered user-friendly */\r\nexport default class FriendlyError extends Error {\r\n\t/** @param {string} message - The error message */\r\n\tconstructor(message) {\r\n\t\tsuper(message);\r\n\t\t/** @ignore */\r\n\t\tthis.name = 'FriendlyError';\r\n\t}\r\n}\r\n"
   },
   {
-    "__docId__": 200,
+    "__docId__": 204,
     "kind": "class",
     "static": true,
     "variation": null,
@@ -6411,7 +6675,7 @@
     ]
   },
   {
-    "__docId__": 201,
+    "__docId__": 205,
     "kind": "constructor",
     "static": false,
     "variation": null,
@@ -6436,7 +6700,7 @@
     "generator": false
   },
   {
-    "__docId__": 202,
+    "__docId__": 206,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -6454,7 +6718,7 @@
     }
   },
   {
-    "__docId__": 203,
+    "__docId__": 207,
     "kind": "file",
     "static": true,
     "variation": null,
@@ -6467,7 +6731,7 @@
     "content": "'use babel';\r\n'use strict';\r\n\r\nimport { readFileSync } from 'fs';\r\nimport { join as pathJoin } from 'path';\r\nimport _Bot from './bot';\r\nimport _Permissions from './bot/permissions';\r\nimport _Util from './bot/util';\r\nimport _Command from './commands/command';\r\nimport _Module from './commands/module';\r\nimport _Setting from './data/models/setting';\r\nimport _Storage from './data/storage';\r\nimport _FriendlyError from './errors/friendly';\r\nimport _CommandFormatError from './errors/command-format';\r\n\r\n/**\r\n * The version of GRAF\r\n * @type {string}\r\n */\r\nexport const version = JSON.parse(readFileSync(pathJoin(__dirname, '../package.json'))).version;\r\n\r\n/**\r\n * The {@link Bot} class\r\n * @type {function}\r\n */\r\nexport const Bot = _Bot;\r\nexport default Bot;\r\n\r\n/**\r\n * The {@link Command} class\r\n * @type {function}\r\n */\r\nexport const Command = _Command;\r\n\r\n/**\r\n * The {@link Module} class\r\n * @type {function}\r\n */\r\nexport const Module = _Module;\r\n\r\n/**\r\n * The {@link BotPermissions} class\r\n * @type {function}\r\n */\r\nexport const Permissions = _Permissions;\r\n\r\n/**\r\n * The {@link BotUtil} class\r\n * @type {function}\r\n */\r\nexport const Util = _Util;\r\n\r\n/**\r\n * The {@link Storage} class\r\n * @type {function}\r\n */\r\nexport const Storage = _Storage;\r\n\r\n/**\r\n * The {@link Setting} class\r\n * @type {function}\r\n */\r\nexport const Setting = _Setting;\r\n\r\n/**\r\n * The {@link FriendlyError} class\r\n * @type {function}\r\n */\r\nexport const FriendlyError = _FriendlyError;\r\n\r\n/**\r\n * The {@link CommandFormatError} class\r\n * @type {function}\r\n */\r\nexport const CommandFormatError = _CommandFormatError;\r\n\r\n/** @external {Client} http://discordjs.readthedocs.io/en/latest/docs_client.html */\r\n/** @external {User} http://discordjs.readthedocs.io/en/latest/docs_user.html */\r\n/** @external {Server} http://discordjs.readthedocs.io/en/latest/docs_server.html */\r\n/** @external {Channel} http://discordjs.readthedocs.io/en/latest/docs_channel.html */\r\n/** @external {Message} http://discordjs.readthedocs.io/en/latest/docs_message.html */\r\n/** @external {Logger} https://github.com/winstonjs/winston/blob/master/README.md */\r\n/** @external {LocalStorage} https://developer.mozilla.org/en-US/docs/Web/API/Storage */\r\n"
   },
   {
-    "__docId__": 204,
+    "__docId__": 208,
     "kind": "variable",
     "static": true,
     "variation": null,
@@ -6490,7 +6754,7 @@
     }
   },
   {
-    "__docId__": 205,
+    "__docId__": 209,
     "kind": "variable",
     "static": true,
     "variation": null,
@@ -6513,7 +6777,7 @@
     }
   },
   {
-    "__docId__": 206,
+    "__docId__": 210,
     "kind": "variable",
     "static": true,
     "variation": null,
@@ -6536,7 +6800,7 @@
     }
   },
   {
-    "__docId__": 207,
+    "__docId__": 211,
     "kind": "variable",
     "static": true,
     "variation": null,
@@ -6559,7 +6823,7 @@
     }
   },
   {
-    "__docId__": 208,
+    "__docId__": 212,
     "kind": "variable",
     "static": true,
     "variation": null,
@@ -6582,7 +6846,7 @@
     }
   },
   {
-    "__docId__": 209,
+    "__docId__": 213,
     "kind": "variable",
     "static": true,
     "variation": null,
@@ -6605,7 +6869,7 @@
     }
   },
   {
-    "__docId__": 210,
+    "__docId__": 214,
     "kind": "variable",
     "static": true,
     "variation": null,
@@ -6628,7 +6892,7 @@
     }
   },
   {
-    "__docId__": 211,
+    "__docId__": 215,
     "kind": "variable",
     "static": true,
     "variation": null,
@@ -6651,7 +6915,7 @@
     }
   },
   {
-    "__docId__": 212,
+    "__docId__": 216,
     "kind": "variable",
     "static": true,
     "variation": null,
@@ -6674,7 +6938,7 @@
     }
   },
   {
-    "__docId__": 213,
+    "__docId__": 217,
     "kind": "variable",
     "static": true,
     "variation": null,
@@ -6697,7 +6961,7 @@
     }
   },
   {
-    "__docId__": 214,
+    "__docId__": 218,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6709,7 +6973,7 @@
     "description": null
   },
   {
-    "__docId__": 215,
+    "__docId__": 219,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6721,7 +6985,7 @@
     "description": null
   },
   {
-    "__docId__": 216,
+    "__docId__": 220,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6733,7 +6997,7 @@
     "description": null
   },
   {
-    "__docId__": 217,
+    "__docId__": 221,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6745,7 +7009,7 @@
     "description": null
   },
   {
-    "__docId__": 218,
+    "__docId__": 222,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6757,7 +7021,7 @@
     "description": null
   },
   {
-    "__docId__": 219,
+    "__docId__": 223,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6769,7 +7033,7 @@
     "description": null
   },
   {
-    "__docId__": 220,
+    "__docId__": 224,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6781,7 +7045,7 @@
     "description": null
   },
   {
-    "__docId__": 222,
+    "__docId__": 226,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6794,7 +7058,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 223,
+    "__docId__": 227,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6807,7 +7071,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 224,
+    "__docId__": 228,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6820,7 +7084,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 225,
+    "__docId__": 229,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6833,7 +7097,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 226,
+    "__docId__": 230,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6846,7 +7110,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 227,
+    "__docId__": 231,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6859,7 +7123,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 228,
+    "__docId__": 232,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6872,7 +7136,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 229,
+    "__docId__": 233,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6885,7 +7149,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 230,
+    "__docId__": 234,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6898,7 +7162,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 231,
+    "__docId__": 235,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6911,7 +7175,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 232,
+    "__docId__": 236,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6924,7 +7188,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 233,
+    "__docId__": 237,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6937,7 +7201,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 234,
+    "__docId__": 238,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6950,7 +7214,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 235,
+    "__docId__": 239,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6963,7 +7227,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 236,
+    "__docId__": 240,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6976,7 +7240,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 237,
+    "__docId__": 241,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6989,7 +7253,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 238,
+    "__docId__": 242,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7002,7 +7266,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 239,
+    "__docId__": 243,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7015,7 +7279,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 240,
+    "__docId__": 244,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7028,7 +7292,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 241,
+    "__docId__": 245,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7041,7 +7305,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 242,
+    "__docId__": 246,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7054,7 +7318,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 243,
+    "__docId__": 247,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7067,7 +7331,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 244,
+    "__docId__": 248,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7080,7 +7344,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 245,
+    "__docId__": 249,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7093,7 +7357,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 246,
+    "__docId__": 250,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7106,7 +7370,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 247,
+    "__docId__": 251,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7119,7 +7383,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 248,
+    "__docId__": 252,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7132,7 +7396,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 249,
+    "__docId__": 253,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7145,7 +7409,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 250,
+    "__docId__": 254,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7158,7 +7422,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 251,
+    "__docId__": 255,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7171,7 +7435,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 252,
+    "__docId__": 256,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7184,7 +7448,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 253,
+    "__docId__": 257,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7197,7 +7461,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 254,
+    "__docId__": 258,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7210,7 +7474,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 255,
+    "__docId__": 259,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7223,7 +7487,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 256,
+    "__docId__": 260,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7236,7 +7500,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 257,
+    "__docId__": 261,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7249,7 +7513,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 258,
+    "__docId__": 262,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7262,7 +7526,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 259,
+    "__docId__": 263,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7275,7 +7539,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 260,
+    "__docId__": 264,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7288,7 +7552,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 261,
+    "__docId__": 265,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7301,7 +7565,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 262,
+    "__docId__": 266,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7314,7 +7578,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 263,
+    "__docId__": 267,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7327,7 +7591,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 264,
+    "__docId__": 268,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7340,7 +7604,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 265,
+    "__docId__": 269,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7353,7 +7617,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 266,
+    "__docId__": 270,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7366,7 +7630,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 267,
+    "__docId__": 271,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7379,7 +7643,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 268,
+    "__docId__": 272,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7392,7 +7656,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 270,
+    "__docId__": 274,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7405,7 +7669,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 271,
+    "__docId__": 275,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7418,7 +7682,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 272,
+    "__docId__": 276,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7431,7 +7695,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 273,
+    "__docId__": 277,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7444,7 +7708,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 274,
+    "__docId__": 278,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7457,7 +7721,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 275,
+    "__docId__": 279,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7470,7 +7734,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 276,
+    "__docId__": 280,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7483,7 +7747,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 277,
+    "__docId__": 281,
     "kind": "external",
     "static": true,
     "variation": null,

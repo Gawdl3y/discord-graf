@@ -105,21 +105,48 @@ export default class Module {
 
 	/**
 	 * Enables or disables the module on a server
-	 * @param {Server} server - The server
+	 * @param {Server|string} server - The server or server ID
 	 * @param {boolean} enabled - Whether the module should be enabled or disabled
 	 * @return {void}
+	 * @see {@link Module.setEnabled}
 	 */
 	setEnabled(server, enabled) {
-		this.bot.storage.settings.save(new Setting(server, `mod-${this.id}`, enabled));
+		this.constructor.setEnabled(this.bot.storage.settings, server, this, enabled);
+	}
+
+	/**
+	 * Enables or disables a module on a server
+	 * @param {SettingStorage} settings - The setting storage to use
+	 * @param {Server|string} server - The server or server ID
+	 * @param {Module|string} module - The module or module ID
+	 * @param {boolean} enabled - Whether the module should be enabled or disabled
+	 * @return {void}
+	 * @see {@link Module#setEnabled}
+	 */
+	static setEnabled(settings, server, module, enabled) {
+		settings.save(new Setting(server, `mod-${module.id || module}`, enabled));
 	}
 
 	/**
 	 * Checks if the module is enabled on a server
 	 * @param {Server} server - The server
 	 * @return {boolean} Whether or not the module is enabled
+	 * @see {@link Module.isEnabled}
 	 */
 	isEnabled(server) {
-		return this.bot.storage.settings.getValue(server, `mod-${this.id}`, true);
+		return this.constructor.isEnabled(this.bot.storage.settings, server, this);
+	}
+
+	/**
+	 * Checks if a module is enabled on a server
+	 * @param {SettingStorage} settings - The setting storage to use
+	 * @param {Server} server - The server
+	 * @param {Module|string} module - The module or module ID
+	 * @return {boolean} Whether or not the module is enabled
+	 * @see {@link Module#isEnabled}
+	 */
+	static isEnabled(settings, server, module) {
+		return settings.getValue(server, `mod-${module.id || module}`, true);
 	}
 }
 </code></pre>

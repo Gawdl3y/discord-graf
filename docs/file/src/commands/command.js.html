@@ -213,21 +213,48 @@ export default class Command {
 
 	/**
 	 * Enables or disables the command on a server
-	 * @param {Server} server - The server
+	 * @param {Server|string} server - The server or server ID
 	 * @param {boolean} enabled - Whether the command should be enabled or disabled
 	 * @return {void}
+	 * @see {@link Command.setEnabled}
 	 */
 	setEnabled(server, enabled) {
-		this.bot.storage.settings.save(new Setting(server, `cmd-${this.name}`, enabled));
+		this.constructor.setEnabled(this.bot.storage.settings, server, this, enabled);
+	}
+
+	/**
+	 * Enables or disables a command on a server
+	 * @param {SettingStorage} settings - The setting storage to use
+	 * @param {Server|string} server - The server or server ID
+	 * @param {Command|string} command - The command or command name
+	 * @param {boolean} enabled - Whether the command should be enabled or disabled
+	 * @return {void}
+	 * @see {@link Command#setEnabled}
+	 */
+	static setEnabled(settings, server, command, enabled) {
+		settings.save(new Setting(server, `cmd-${command.name || command}`, enabled));
 	}
 
 	/**
 	 * Checks if the command is enabled on a server
 	 * @param {Server} server - The server
 	 * @return {boolean} Whether or not the command is enabled
+	 * @see {@link Command.isEnabled}
 	 */
 	isEnabled(server) {
-		return this.bot.storage.settings.getValue(server, `cmd-${this.name}`, true) &amp;&amp; this.bot.storage.settings.getValue(server, `mod-${this.module}`, true);
+		return this.constructor.isEnabled(this.bot.storage.settings, server, this);
+	}
+
+	/**
+	 * Checks if a command is enabled on a server
+	 * @param {SettingStorage} settings - The setting storage to use
+	 * @param {Server} server - The server
+	 * @param {Command|string} command - The command or command name
+	 * @return {boolean} Whether or not the command is enabled
+	 * @see {@link Command#isEnabled}
+	 */
+	static isEnabled(settings, server, command) {
+		return settings.getValue(server, `cmd-${command.name || command}`, true);
 	}
 
 	/**

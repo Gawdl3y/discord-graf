@@ -115,7 +115,65 @@
 </div>
 
 
-
+<div data-ice="staticMethodSummary"><h2>Static Method Summary</h2><table class="summary" data-ice="summary">
+  <thead><tr><td data-ice="title" colspan="3">Static Public Methods</td></tr></thead>
+  <tbody>
+  
+  <tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      <span data-ice="static">static</span>
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/src/commands/module.js~Module.html#static-method-isEnabled">isEnabled</a></span></span><span data-ice="signature">(settings: <span><a href="class/src/data/settings.js~SettingStorage.html">SettingStorage</a></span>, server: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span>, module: <span><a href="class/src/commands/module.js~Module.html">Module</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>Checks if a module is enabled on a server</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      <span data-ice="static">static</span>
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/src/commands/module.js~Module.html#static-method-setEnabled">setEnabled</a></span></span><span data-ice="signature">(settings: <span><a href="class/src/data/settings.js~SettingStorage.html">SettingStorage</a></span>, server: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, module: <span><a href="class/src/commands/module.js~Module.html">Module</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, enabled: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span>void</span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>Enables or disables a module on a server</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+</tbody>
+</table>
+</div>
 <div data-ice="constructorSummary"><h2>Constructor Summary</h2><table class="summary" data-ice="summary">
   <thead><tr><td data-ice="title" colspan="3">Public Constructor</td></tr></thead>
   <tbody>
@@ -296,7 +354,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/commands/module.js~Module.html#instance-method-setEnabled">setEnabled</a></span></span><span data-ice="signature">(server: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span>, enabled: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span>void</span></span>
+           <span data-ice="name"><span><a href="class/src/commands/module.js~Module.html#instance-method-setEnabled">setEnabled</a></span></span><span data-ice="signature">(server: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, enabled: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span>void</span></span>
         </p>
       </div>
       <div>
@@ -318,7 +376,181 @@
 
 
 
+<div data-ice="staticMethodDetails"><h2 data-ice="title">Static Public Methods</h2>
 
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="static-method-isEnabled">
+    <span class="access" data-ice="access">public</span>
+    <span data-ice="static">static</span>
+    
+    
+    
+    <span data-ice="name">isEnabled</span><span data-ice="signature">(settings: <span><a href="class/src/data/settings.js~SettingStorage.html">SettingStorage</a></span>, server: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span>, module: <span><a href="class/src/commands/module.js~Module.html">Module</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/commands/module.js.html#lineNumber70">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>Checks if a module is enabled on a server</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">settings</td>
+      <td data-ice="type"><span><a href="class/src/data/settings.js~SettingStorage.html">SettingStorage</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The setting storage to use</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">server</td>
+      <td data-ice="type"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The server</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">module</td>
+      <td data-ice="type"><span><a href="class/src/commands/module.js~Module.html">Module</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The module or module ID</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>Whether or not the module is enabled</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  <div data-ice="see"><h4>See:</h4><ul><li><span><span><a href="class/src/commands/module.js~Module.html#instance-method-isEnabled">Module#isEnabled</a></span></span></li></ul></div>
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="static-method-setEnabled">
+    <span class="access" data-ice="access">public</span>
+    <span data-ice="static">static</span>
+    
+    
+    
+    <span data-ice="name">setEnabled</span><span data-ice="signature">(settings: <span><a href="class/src/data/settings.js~SettingStorage.html">SettingStorage</a></span>, server: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, module: <span><a href="class/src/commands/module.js~Module.html">Module</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, enabled: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span>void</span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/commands/module.js.html#lineNumber48">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>Enables or disables a module on a server</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">settings</td>
+      <td data-ice="type"><span><a href="class/src/data/settings.js~SettingStorage.html">SettingStorage</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The setting storage to use</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">server</td>
+      <td data-ice="type"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The server or server ID</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">module</td>
+      <td data-ice="type"><span><a href="class/src/commands/module.js~Module.html">Module</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The module or module ID</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">enabled</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>Whether the module should be enabled or disabled</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span>void</span></td>
+        
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  <div data-ice="see"><h4>See:</h4><ul><li><span><span><a href="class/src/commands/module.js~Module.html#instance-method-setEnabled">Module#setEnabled</a></span></span></li></ul></div>
+  
+</div>
+</div>
 <div data-ice="constructorDetails"><h2 data-ice="title">Public Constructors</h2>
 
 <div class="detail" data-ice="detail">
@@ -577,7 +809,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/commands/module.js.html#lineNumber43">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/commands/module.js.html#lineNumber58">source</a></span></span>
     </span>
   </h3>
 
@@ -632,7 +864,7 @@
 
   
 
-  
+  <div data-ice="see"><h4>See:</h4><ul><li><span><span><a href="class/src/commands/module.js~Module.html#instance-method-isEnabled">Module.isEnabled</a></span></span></li></ul></div>
   
 </div>
 <div class="detail" data-ice="detail">
@@ -642,11 +874,11 @@
     
     
     
-    <span data-ice="name">setEnabled</span><span data-ice="signature">(server: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span>, enabled: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span>void</span></span>
+    <span data-ice="name">setEnabled</span><span data-ice="signature">(server: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, enabled: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span>void</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/commands/module.js.html#lineNumber34">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/commands/module.js.html#lineNumber35">source</a></span></span>
     </span>
   </h3>
 
@@ -668,9 +900,9 @@
     
     <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">server</td>
-      <td data-ice="type"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span></td>
+      <td data-ice="type"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"><p>The server</p>
+      <td data-ice="description"><p>The server or server ID</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="0">
@@ -707,7 +939,7 @@
 
   
 
-  
+  <div data-ice="see"><h4>See:</h4><ul><li><span><span><a href="class/src/commands/module.js~Module.html#instance-method-setEnabled">Module.setEnabled</a></span></span></li></ul></div>
   
 </div>
 </div>
