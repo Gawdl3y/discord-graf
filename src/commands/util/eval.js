@@ -28,7 +28,7 @@ export default class EvalCommand extends Command {
 	}
 
 	hasPermission(server, user) {
-		return user.id === this.bot.config.values.owner;
+		return this.bot.permissions.isOwner(user);
 	}
 
 	async run(message, args) {

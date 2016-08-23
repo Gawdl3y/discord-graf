@@ -182,6 +182,32 @@
     <td>
       <div>
         <p>
+           <span data-ice="name"><span><a href="class/src/bot/permissions.js~BotPermissions.html#static-method-isOwner">isOwner</a></span></span><span data-ice="signature">(config: <span><a href="class/src/bot/config.js~BotConfig.html">BotConfig</a></span>, user: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_user.html">User</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>Tests to see if a user is the owner of the bot</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      <span data-ice="static">static</span>
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
            <span data-ice="name"><span><a href="class/src/bot/permissions.js~BotPermissions.html#static-method-resolve">resolve</a></span></span><span data-ice="signature">(client: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_client.html">Client</a></span>, server: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, user: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_user.html">User</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span>[server, user]</span></span>
         </p>
       </div>
@@ -380,6 +406,31 @@
       <div>
         <p>
            <span data-ice="name"><span><a href="class/src/bot/permissions.js~BotPermissions.html#instance-method-isMod">isMod</a></span></span><span data-ice="signature">(server: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, user: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_user.html">User</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/src/bot/permissions.js~BotPermissions.html#instance-method-isOwner">isOwner</a></span></span><span data-ice="signature">(user: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_user.html">User</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
         </p>
       </div>
       <div>
@@ -626,6 +677,82 @@ The bot owner and users with the &quot;Administrate&quot; permission are always 
   
 </div>
 <div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="static-method-isOwner">
+    <span class="access" data-ice="access">public</span>
+    <span data-ice="static">static</span>
+    
+    
+    
+    <span data-ice="name">isOwner</span><span data-ice="signature">(config: <span><a href="class/src/bot/config.js~BotConfig.html">BotConfig</a></span>, user: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_user.html">User</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/bot/permissions.js.html#lineNumber100">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>Tests to see if a user is the owner of the bot</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">config</td>
+      <td data-ice="type"><span><a href="class/src/bot/config.js~BotConfig.html">BotConfig</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The bot config to use</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">user</td>
+      <td data-ice="type"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_user.html">User</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The User or the user ID</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>Whether or not the user is the bot owner</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  <div data-ice="see"><h4>See:</h4><ul><li><span><span>Permissions#isOwner</span></span></li></ul></div>
+  
+</div>
+<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="static-method-resolve">
     <span class="access" data-ice="access">public</span>
     <span data-ice="static">static</span>
@@ -636,7 +763,7 @@ The bot owner and users with the &quot;Administrate&quot; permission are always 
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/bot/permissions.js.html#lineNumber103">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/bot/permissions.js.html#lineNumber124">source</a></span></span>
     </span>
   </h3>
 
@@ -1106,6 +1233,74 @@ The bot owner and users with the &quot;Administrate&quot; permission are always 
   
 </div>
 <div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-isOwner">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">isOwner</span><span data-ice="signature">(user: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_user.html">User</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/bot/permissions.js.html#lineNumber89">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">user</td>
+      <td data-ice="type"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_user.html">User</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The User or the user ID</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>Whether or not the user is the bot owner</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  <div data-ice="see"><h4>See:</h4><ul><li><span><span>Permissions.isOwner</span></span></li></ul></div>
+  
+</div>
+<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="instance-method-resolve">
     <span class="access" data-ice="access">public</span>
     
@@ -1116,7 +1311,7 @@ The bot owner and users with the &quot;Administrate&quot; permission are always 
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/bot/permissions.js.html#lineNumber90">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/bot/permissions.js.html#lineNumber111">source</a></span></span>
     </span>
   </h3>
 

@@ -708,6 +708,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "src/bot/permissions.js~botpermissions#isowner",
+    "class/src/bot/permissions.js~BotPermissions.html#instance-method-isOwner",
+    "src/bot/permissions.js~BotPermissions#isOwner",
+    "method"
+  ],
+  [
     "src/bot/permissions.js~botpermissions#modroles",
     "class/src/bot/permissions.js~BotPermissions.html#instance-member-modRoles",
     "src/bot/permissions.js~BotPermissions#modRoles",
@@ -735,6 +741,12 @@ window.esdocSearchIndex = [
     "src/bot/permissions.js~botpermissions.ismod",
     "class/src/bot/permissions.js~BotPermissions.html#static-method-isMod",
     "src/bot/permissions.js~BotPermissions.isMod",
+    "method"
+  ],
+  [
+    "src/bot/permissions.js~botpermissions.isowner",
+    "class/src/bot/permissions.js~BotPermissions.html#static-method-isOwner",
+    "src/bot/permissions.js~BotPermissions.isOwner",
     "method"
   ],
   [

@@ -160,6 +160,27 @@ export default class BotPermissions {
 	}
 
 	/**
+	 * @param {User|string} user - The User or the user ID
+	 * @return {boolean} Whether or not the user is the bot owner
+	 * @see {@link Permissions.isOwner}
+	 */
+	isOwner(user) {
+		return this.constructor.isOwner(this.config, user);
+	}
+
+	/**
+	 * Tests to see if a user is the owner of the bot
+	 * @param {BotConfig} config - The bot config to use
+	 * @param {User|string} user - The User or the user ID
+	 * @return {boolean} Whether or not the user is the bot owner
+	 * @see {@link Permissions#isOwner}
+	 */
+	static isOwner(config, user) {
+		if(!user) throw new Error(&apos;A user must be specified.&apos;);
+		return (user.id ? user.id : user) === config.values.owner;
+	}
+
+	/**
 	 * @param {Server|string} server - The Server or the server ID
 	 * @param {User|string} user - The User or the user ID
 	 * @return {[server, user]} The Server and User instance pair
