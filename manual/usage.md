@@ -78,7 +78,7 @@ export default class AddNumbersCommand extends Command {
 ```
 
 ## Permissions
-Documentation coming soon&copy;.
+Documentation coming soon&trade;.
 
 ## Storage
-Documentation coming soon&copy;.
+Documentation coming soon&trade;.
