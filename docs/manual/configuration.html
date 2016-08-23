@@ -100,8 +100,8 @@ The registry will also access the bot&apos;s logger.</p>
 
 const version = &apos;1.0.0&apos;;
 const bot = new Bot({
-    botName: &apos;SomeBot&apos;,
-    botVersion: version,
+    name: &apos;SomeBot&apos;,
+    version: version,
     token: &apos;SomeLongTokenStringForABotAccount&apos;,
     email: &apos;SomeEmail@ForAUserAccount.com&apos;,
     password: &apos;SomePasswordForAUserAccount&apos;,
@@ -120,8 +120,8 @@ import yargs from &apos;yargs&apos;;
 
 const version = &apos;1.0.0&apos;;
 const bot = new Bot({
-    botName: &apos;SomeBot&apos;,
-    botVersion: version
+    name: &apos;SomeBot&apos;,
+    version: version
 });
 
 const config = bot.config.yargs(yargs)

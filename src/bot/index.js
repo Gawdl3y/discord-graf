@@ -75,8 +75,8 @@ export default class Bot {
 
 		// Verify some stuff
 		if(!config.token && (!config.email || !config.password)) throw new Error('Invalid credentials; either "token" or both "email" and "password" must be specified on the config.');
-		if(!config.botName) throw new Error('"botName" must be specified on the config.');
-		if(!config.botVersion) throw new Error('"botVersion" must be specified on the config.');
+		if(!config.name) throw new Error('"name" must be specified on the config.');
+		if(!config.version) throw new Error('"version" must be specified on the config.');
 
 		// Output safe config
 		const debugConfig = Object.assign({}, config);
@@ -107,7 +107,7 @@ export default class Bot {
 		client.on('ready', () => {
 			this.logger.info(`Bot is ready; logged in as ${client.user.username}#${client.user.discriminator} (ID: ${client.user.id})`);
 			if(config.playingGame) client.setPlayingGame(config.playingGame);
-			if(config.botUpdateURL) {
+			if(config.updateURL) {
 				this._checkForUpdate();
 				if(config.updateCheck > 0) setInterval(this._checkForUpdate.bind(this), config.updateCheck * 60 * 1000);
 			}
@@ -299,10 +299,10 @@ export default class Bot {
 	 */
 	_checkForUpdate() {
 		const config = this.config.values;
-		request(config.botUpdateURL).then(body => {
+		request(config.updateURL).then(body => {
 			const masterVersion = JSON.parse(body).version;
-			if(!semver.gt(masterVersion, config.botVersion)) return;
-			const message = `An update for ${config.botName} is available! Current version is ${config.botVersion}, latest available is ${masterVersion}.`;
+			if(!semver.gt(masterVersion, config.version)) return;
+			const message = `An update for ${config.name} is available! Current version is ${config.version}, latest available is ${masterVersion}.`;
 			this.logger.warn(message);
 			const savedVersion = this.storage.settings.getValue(null, 'notified-version');
 			if(savedVersion !== masterVersion && this.client && config.owner) {

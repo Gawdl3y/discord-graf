@@ -153,8 +153,8 @@ export default class Bot {
 
 		// Verify some stuff
 		if(!config.token &amp;&amp; (!config.email || !config.password)) throw new Error(&apos;Invalid credentials; either &quot;token&quot; or both &quot;email&quot; and &quot;password&quot; must be specified on the config.&apos;);
-		if(!config.botName) throw new Error(&apos;&quot;botName&quot; must be specified on the config.&apos;);
-		if(!config.botVersion) throw new Error(&apos;&quot;botVersion&quot; must be specified on the config.&apos;);
+		if(!config.name) throw new Error(&apos;&quot;name&quot; must be specified on the config.&apos;);
+		if(!config.version) throw new Error(&apos;&quot;version&quot; must be specified on the config.&apos;);
 
 		// Output safe config
 		const debugConfig = Object.assign({}, config);
@@ -185,7 +185,7 @@ export default class Bot {
 		client.on(&apos;ready&apos;, () =&gt; {
 			this.logger.info(`Bot is ready; logged in as ${client.user.username}#${client.user.discriminator} (ID: ${client.user.id})`);
 			if(config.playingGame) client.setPlayingGame(config.playingGame);
-			if(config.botUpdateURL) {
+			if(config.updateURL) {
 				this._checkForUpdate();
 				if(config.updateCheck &gt; 0) setInterval(this._checkForUpdate.bind(this), config.updateCheck * 60 * 1000);
 			}
@@ -377,10 +377,10 @@ export default class Bot {
 	 */
 	_checkForUpdate() {
 		const config = this.config.values;
-		request(config.botUpdateURL).then(body =&gt; {
+		request(config.updateURL).then(body =&gt; {
 			const masterVersion = JSON.parse(body).version;
-			if(!semver.gt(masterVersion, config.botVersion)) return;
-			const message = `An update for ${config.botName} is available! Current version is ${config.botVersion}, latest available is ${masterVersion}.`;
+			if(!semver.gt(masterVersion, config.version)) return;
+			const message = `An update for ${config.name} is available! Current version is ${config.version}, latest available is ${masterVersion}.`;
 			this.logger.warn(message);
 			const savedVersion = this.storage.settings.getValue(null, &apos;notified-version&apos;);
 			if(savedVersion !== masterVersion &amp;&amp; this.client &amp;&amp; config.owner) {

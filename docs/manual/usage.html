@@ -86,17 +86,17 @@
     <span data-ice="title">Usage</span>
   </div>
   <div data-ice="content"><h2 id="setup">Setup</h2>
-<p>The first thing you&apos;ll want to do is instantiate the <a href="./manual/../class/src/bot/index.js~Bot.html"><code>Bot</code></a> class, specifying at minimum a <code>botName</code> and <code>botVersion</code>.
-To add information to the built-in about command, also add <code>botAbout</code>.
-For update checking, specify <code>botUpdateURL</code>.<br>Example:</p>
+<p>The first thing you&apos;ll want to do is instantiate the <a href="./manual/../class/src/bot/index.js~Bot.html"><code>Bot</code></a> class, specifying at minimum the properties <code>name</code> and <code>version</code>.
+To add information to the built-in about command, also add the <code>about</code> property.
+For update checking, specify <code>updateURL</code>.<br>Example:</p>
 <pre><code class="lang-javascript"><code class="source-code prettyprint">import { Bot, Command } from &apos;discord-graf&apos;;
 
 const version = &apos;1.0.0&apos;;
 const bot = new Bot({
-    botName: &apos;SomeBot&apos;,
-    botVersion: version,
-    botAbout: `**SomeBot** v${version} created by Some Guy.`,
-    botUpdateURL: &apos;https://raw.githubusercontent.com/SomeGuy/some-bot/master/package.json&apos;
+    name: &apos;SomeBot&apos;,
+    version: version,
+    about: `**SomeBot** v${version} created by Some Guy.`,
+    updateURL: &apos;https://raw.githubusercontent.com/SomeGuy/some-bot/master/package.json&apos;
 });</code>
 </code></pre>
 <p>Then, you&apos;ll need to register your modules and commands to the bot, and create the client.<br>Example:</p>
@@ -108,7 +108,7 @@ const client = bot
     .registerDefaults()
     .registerModules([
         [&apos;general&apos;, &apos;General&apos;],
-        [&apos;some-mod&apos;, &apos;Some module&apos;]
+        [&apos;something&apos;, &apos;Some module&apos;]
     ])
     .registerCommands([
         SomeCommand,

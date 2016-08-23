@@ -1,7 +1,7 @@
 {
   "type": "Program",
   "start": 0,
-  "end": 8566,
+  "end": 8554,
   "loc": {
     "start": {
       "line": 1,
@@ -12128,9 +12128,9 @@
       "trailingComments": [
         {
           "type": "Block",
-          "value": "*\r\n * @typedef {Object} ConfigObject\r\n * @property {string} [botName] - Name of the bot (required to create a client)\r\n * @property {string} [botVersion] - Version of the bot (should follow semver, required to create a client)\r\n * @property {string} [botAbout] - Text information about the bot for the about command\r\n * @property {string} [botUpdateURL] - URL to a package.json file to check for updates with\r\n * @property {string} [token] - The bot account API token to log in with\r\n * @property {string} [email] - The bot account email to log in with\r\n * @property {string} [password] - The bot account password to log in with\r\n * @property {ClientOptions} [clientOptions] - The options to pass to the Client constructor\r\n * @property {boolean} [autoReconnect=true] - Whether or not the bot should automatically reconnect upon disconnection\r\n * @property {string} [storage=bot-storage] - Path to the local storage directory\r\n * @property {string} [playingGame=Message-for-help] - Text to show the bot playing\r\n * @property {number} [paginationItems=10] - Maximum number of items per page the default commands use when paginating\r\n * @property {number} [updateCheck=60] - How frequently to check for updates (in minutes)\r\n * @property {string} [commandPrefix=!] - The default command prefix (empty/null for mentions only)\r\n * @property {number} [commandEditable=30] - How long commands are editable (in seconds)\r\n * @property {boolean} [nonCommandEdit=true] - Whether or not commands will be run in messages that were edited that previously didn't have any commands\r\n * @property {string} [log=bot.log] - Path to the log file\r\n * @property {number} [logMaxSize=5242880] - Maximum size of the log file before splitting it (in bytes)\r\n * @property {number} [logMaxFiles=5] - Maximum log files to keep\r\n * @property {string} [logLevel=info] - The log level to output to the log file (error, warn, info, verbose, debug)\r\n * @property {string} [consoleLevel=info] - The log level to output to the console (error, warn, info, verbose, debug)\r\n ",
+          "value": "*\r\n * @typedef {Object} ConfigObject\r\n * @property {string} [name] - Name of the bot (required to create a client)\r\n * @property {string} [version] - Version of the bot (should follow semver, required to create a client)\r\n * @property {string} [about] - Text information about the bot for the about command\r\n * @property {string} [updateURL] - URL to a package.json file to check for updates with\r\n * @property {string} [token] - The bot account API token to log in with\r\n * @property {string} [email] - The bot account email to log in with\r\n * @property {string} [password] - The bot account password to log in with\r\n * @property {ClientOptions} [clientOptions] - The options to pass to the Client constructor\r\n * @property {boolean} [autoReconnect=true] - Whether or not the bot should automatically reconnect upon disconnection\r\n * @property {string} [storage=bot-storage] - Path to the local storage directory\r\n * @property {string} [playingGame=Message-for-help] - Text to show the bot playing\r\n * @property {number} [paginationItems=10] - Maximum number of items per page the default commands use when paginating\r\n * @property {number} [updateCheck=60] - How frequently to check for updates (in minutes)\r\n * @property {string} [commandPrefix=!] - The default command prefix (empty/null for mentions only)\r\n * @property {number} [commandEditable=30] - How long commands are editable (in seconds)\r\n * @property {boolean} [nonCommandEdit=true] - Whether or not commands will be run in messages that were edited that previously didn't have any commands\r\n * @property {string} [log=bot.log] - Path to the log file\r\n * @property {number} [logMaxSize=5242880] - Maximum size of the log file before splitting it (in bytes)\r\n * @property {number} [logMaxFiles=5] - Maximum log files to keep\r\n * @property {string} [logLevel=info] - The log level to output to the log file (error, warn, info, verbose, debug)\r\n * @property {string} [consoleLevel=info] - The log level to output to the console (error, warn, info, verbose, debug)\r\n ",
           "start": 6363,
-          "end": 8406,
+          "end": 8394,
           "loc": {
             "start": {
               "line": 227,
@@ -12143,14 +12143,14 @@
           },
           "range": [
             6363,
-            8406
+            8394
           ]
         },
         {
           "type": "Block",
           "value": "* @external {ClientOptions} http://discordjs.readthedocs.io/en/latest/docs_client.html#parameters ",
-          "start": 8410,
-          "end": 8512,
+          "start": 8398,
+          "end": 8500,
           "loc": {
             "start": {
               "line": 252,
@@ -12162,15 +12162,15 @@
             }
           },
           "range": [
-            8410,
-            8512
+            8398,
+            8500
           ]
         },
         {
           "type": "Block",
           "value": "* @external {Yargs} http://yargs.js.org/docs/ ",
-          "start": 8514,
-          "end": 8564,
+          "start": 8502,
+          "end": 8552,
           "loc": {
             "start": {
               "line": 253,
@@ -12182,8 +12182,8 @@
             }
           },
           "range": [
-            8514,
-            8564
+            8502,
+            8552
           ]
         }
       ]

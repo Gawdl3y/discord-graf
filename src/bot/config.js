@@ -226,10 +226,10 @@ const defaultDefaults = {
 
 /**
  * @typedef {Object} ConfigObject
- * @property {string} [botName] - Name of the bot (required to create a client)
- * @property {string} [botVersion] - Version of the bot (should follow semver, required to create a client)
- * @property {string} [botAbout] - Text information about the bot for the about command
- * @property {string} [botUpdateURL] - URL to a package.json file to check for updates with
+ * @property {string} [name] - Name of the bot (required to create a client)
+ * @property {string} [version] - Version of the bot (should follow semver, required to create a client)
+ * @property {string} [about] - Text information about the bot for the about command
+ * @property {string} [updateURL] - URL to a package.json file to check for updates with
  * @property {string} [token] - The bot account API token to log in with
  * @property {string} [email] - The bot account email to log in with
  * @property {string} [password] - The bot account password to log in with

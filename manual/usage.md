@@ -1,7 +1,7 @@
 ## Setup
-The first thing you'll want to do is instantiate the [`Bot`](../class/src/bot/index.js~Bot.html) class, specifying at minimum a `botName` and `botVersion`.
-To add information to the built-in about command, also add `botAbout`.
-For update checking, specify `botUpdateURL`.  
+The first thing you'll want to do is instantiate the [`Bot`](../class/src/bot/index.js~Bot.html) class, specifying at minimum the properties `name` and `version`.
+To add information to the built-in about command, also add the `about` property.
+For update checking, specify `updateURL`.  
 Example:
 
 ```javascript
@@ -9,10 +9,10 @@ import { Bot, Command } from 'discord-graf';
 
 const version = '1.0.0';
 const bot = new Bot({
-	botName: 'SomeBot',
-	botVersion: version,
-	botAbout: `**SomeBot** v${version} created by Some Guy.`,
-	botUpdateURL: 'https://raw.githubusercontent.com/SomeGuy/some-bot/master/package.json'
+	name: 'SomeBot',
+	version: version,
+	about: `**SomeBot** v${version} created by Some Guy.`,
+	updateURL: 'https://raw.githubusercontent.com/SomeGuy/some-bot/master/package.json'
 });
 ```
 
@@ -28,7 +28,7 @@ const client = bot
 	.registerDefaults()
 	.registerModules([
 		['general', 'General'],
-		['some-mod', 'Some module']
+		['something', 'Some module']
 	])
 	.registerCommands([
 		SomeCommand,

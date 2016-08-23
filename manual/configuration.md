@@ -16,8 +16,8 @@ import { Bot } from 'discord-graf';
 
 const version = '1.0.0';
 const bot = new Bot({
-	botName: 'SomeBot',
-	botVersion: version,
+	name: 'SomeBot',
+	version: version,
 	token: 'SomeLongTokenStringForABotAccount',
 	email: 'SomeEmail@ForAUserAccount.com',
 	password: 'SomePasswordForAUserAccount',
@@ -40,8 +40,8 @@ import yargs from 'yargs';
 
 const version = '1.0.0';
 const bot = new Bot({
-	botName: 'SomeBot',
-	botVersion: version
+	name: 'SomeBot',
+	version: version
 });
 
 const config = bot.config.yargs(yargs)

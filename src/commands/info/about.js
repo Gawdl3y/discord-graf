@@ -26,7 +26,7 @@ export default class AboutCommand extends Command {
 		const daysStr = `${days.toLocaleString()} ${daysLabel}`, hoursStr = `${hours.toLocaleString()} ${hoursLabel}`, minutesStr = `${minutes.toLocaleString()} ${minutesLabel}`;
 		return {
 			direct: stripIndents`
-				${config.botAbout ? config.botAbout : ''}
+				${config.about ? config.about : ''}
 
 				This bot ${owner ? `is owned by ${owner.name}#${owner.discriminator}, and ` : ''}is serving ${users} ${usersLabel} across ${servers} ${serversLabel}.
 				It has been running without interruption for ${days > 0 ? `${daysStr} ` : ''}${hours > 0 ? `${hoursStr} ` : ''}${minutesStr}.
