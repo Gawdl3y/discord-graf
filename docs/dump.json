@@ -5742,7 +5742,7 @@
     "access": null,
     "description": null,
     "lineNumber": 1,
-    "content": "'use babel';\r\n'use strict';\r\n\r\nexport default class Setting {\r\n\tconstructor(server, key, value) {\r\n\t\tif(!key) throw new Error('Setting key must be specified.');\r\n\t\tthis.server = server ? server.id ? server.id : server : 'global';\r\n\t\tthis.key = key;\r\n\t\tthis.value = value;\r\n\t}\r\n}\r\n"
+    "content": "'use babel';\r\n'use strict';\r\n\r\n/** A server-specific setting */\r\nexport default class Setting {\r\n\t/**\r\n\t * @param {?Server|string} server - The server or server ID ('global' if empty)\r\n\t * @param {string} key - The key of the setting\r\n\t * @param {*} [value] - The value of the setting\r\n\t */\r\n\tconstructor(server, key, value) {\r\n\t\tif(!key) throw new Error('Setting key must be specified.');\r\n\r\n\t\t/** @type {string} */\r\n\t\tthis.server = server ? server.id ? server.id : server : 'global';\r\n\t\t/** @type {string} */\r\n\t\tthis.key = key;\r\n\t\t/** @type {*} */\r\n\t\tthis.value = value || null;\r\n\t}\r\n}\r\n"
   },
   {
     "__docId__": 167,
@@ -5756,9 +5756,8 @@
     "export": true,
     "importPath": "discord-graf/src/data/models/setting.js",
     "importStyle": "Setting",
-    "description": null,
-    "lineNumber": 4,
-    "undocument": true,
+    "description": "A server-specific setting",
+    "lineNumber": 5,
     "interface": false
   },
   {
@@ -5770,27 +5769,39 @@
     "memberof": "src/data/models/setting.js~Setting",
     "longname": "src/data/models/setting.js~Setting#constructor",
     "access": null,
-    "description": null,
-    "lineNumber": 5,
-    "undocument": true,
+    "description": "",
+    "lineNumber": 11,
     "params": [
       {
+        "nullable": true,
+        "types": [
+          "Server",
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
         "name": "server",
-        "types": [
-          "*"
-        ]
+        "description": "The server or server ID ('global' if empty)"
       },
       {
+        "nullable": null,
+        "types": [
+          "string"
+        ],
+        "spread": false,
+        "optional": false,
         "name": "key",
-        "types": [
-          "*"
-        ]
+        "description": "The key of the setting"
       },
       {
-        "name": "value",
+        "nullable": null,
         "types": [
           "*"
-        ]
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "value",
+        "description": "The value of the setting"
       }
     ],
     "generator": false
@@ -5805,12 +5816,14 @@
     "longname": "src/data/models/setting.js~Setting#server",
     "access": null,
     "description": null,
-    "lineNumber": 7,
-    "undocument": true,
+    "lineNumber": 15,
     "type": {
+      "nullable": null,
       "types": [
-        "*"
-      ]
+        "string"
+      ],
+      "spread": false,
+      "description": null
     }
   },
   {
@@ -5823,12 +5836,14 @@
     "longname": "src/data/models/setting.js~Setting#key",
     "access": null,
     "description": null,
-    "lineNumber": 8,
-    "undocument": true,
+    "lineNumber": 17,
     "type": {
+      "nullable": null,
       "types": [
-        "*"
-      ]
+        "string"
+      ],
+      "spread": false,
+      "description": null
     }
   },
   {
@@ -5841,12 +5856,14 @@
     "longname": "src/data/models/setting.js~Setting#value",
     "access": null,
     "description": null,
-    "lineNumber": 9,
-    "undocument": true,
+    "lineNumber": 19,
     "type": {
+      "nullable": null,
       "types": [
         "*"
-      ]
+      ],
+      "spread": false,
+      "description": null
     }
   },
   {

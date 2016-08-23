@@ -76,13 +76,13 @@
 </nav>
 
 <div class="content" data-ice="content"><div class="header-notice">
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import Setting from &apos;<span><a href="file/src/data/models/setting.js.html#lineNumber4">discord-graf/src/data/models/setting.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import Setting from &apos;<span><a href="file/src/data/models/setting.js.html#lineNumber5">discord-graf/src/data/models/setting.js</a></span>&apos;</code></pre></div>
   <span data-ice="access">public</span>
   <span data-ice="kind">class</span>
   
   
   
-  <span data-ice="source">| <span><a href="file/src/data/models/setting.js.html#lineNumber4">source</a></span></span>
+  <span data-ice="source">| <span><a href="file/src/data/models/setting.js.html#lineNumber5">source</a></span></span>
 </div>
 
 <div class="self-detail detail">
@@ -102,7 +102,8 @@
 
   
   
-  
+  <div class="description" data-ice="description"><p>A server-specific setting</p>
+</div>
 
   
 
@@ -130,7 +131,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/data/models/setting.js~Setting.html#instance-constructor-constructor">constructor</a></span></span><span data-ice="signature">(server: <span>*</span>, key: <span>*</span>, value: <span>*</span>)</span>
+           <span data-ice="name"><span><a href="class/src/data/models/setting.js~Setting.html#instance-constructor-constructor">constructor</a></span></span><span data-ice="signature">(server: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, key: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, value: <span>*</span>)</span>
         </p>
       </div>
       <div>
@@ -162,7 +163,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/data/models/setting.js~Setting.html#instance-member-key">key</a></span></span><span data-ice="signature">: <span>*</span></span>
+           <span data-ice="name"><span><a href="class/src/data/models/setting.js~Setting.html#instance-member-key">key</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
         </p>
       </div>
       <div>
@@ -187,7 +188,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/data/models/setting.js~Setting.html#instance-member-server">server</a></span></span><span data-ice="signature">: <span>*</span></span>
+           <span data-ice="name"><span><a href="class/src/data/models/setting.js~Setting.html#instance-member-server">server</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
         </p>
       </div>
       <div>
@@ -244,11 +245,11 @@
     
     
     
-    <span data-ice="name">constructor</span><span data-ice="signature">(server: <span>*</span>, key: <span>*</span>, value: <span>*</span>)</span>
+    <span data-ice="name">constructor</span><span data-ice="signature">(server: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, key: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, value: <span>*</span>)</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/data/models/setting.js.html#lineNumber5">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/data/models/setting.js.html#lineNumber11">source</a></span></span>
     </span>
   </h3>
 
@@ -269,21 +270,24 @@
     
     <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">server</td>
-      <td data-ice="type"><span>*</span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="type"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"><ul><li>nullable: true</li></ul></td>
+      <td data-ice="description"><p>The server or server ID (&apos;global&apos; if empty)</p>
+</td>
     </tr>
 <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">key</td>
-      <td data-ice="type"><span>*</span></td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="description"><p>The key of the setting</p>
+</td>
     </tr>
 <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">value</td>
       <td data-ice="type"><span>*</span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>The value of the setting</p>
+</td>
     </tr>
 </tbody>
   </table>
@@ -315,11 +319,11 @@
     
     
     
-    <span data-ice="name">key</span><span data-ice="signature">: <span>*</span></span>
+    <span data-ice="name">key</span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/data/models/setting.js.html#lineNumber8">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/data/models/setting.js.html#lineNumber17">source</a></span></span>
     </span>
   </h3>
 
@@ -355,11 +359,11 @@
     
     
     
-    <span data-ice="name">server</span><span data-ice="signature">: <span>*</span></span>
+    <span data-ice="name">server</span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/data/models/setting.js.html#lineNumber7">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/data/models/setting.js.html#lineNumber15">source</a></span></span>
     </span>
   </h3>
 
@@ -399,7 +403,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/data/models/setting.js.html#lineNumber9">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/data/models/setting.js.html#lineNumber19">source</a></span></span>
     </span>
   </h3>
 
