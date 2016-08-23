@@ -1,5 +1,5 @@
 # Discord GRAF
-[![Discord](https://discordapp.com/api/servers/214147099133083659/widget.png)](https://discord.gg/a5ZD9n7)
+[![Discord](https://discordapp.com/api/guilds/214147099133083659/embed.png)](https://discord.gg/a5ZD9n7)
 [![Downloads](https://img.shields.io/npm/dt/discord-graf.svg)](https://www.npmjs.com/package/discord-graf)
 [![Version](https://img.shields.io/npm/v/discord-graf.svg)](https://www.npmjs.com/package/discord-graf)
 [![Dependency status](https://david-dm.org/Gawdl3y/discord-graf.svg)](https://david-dm.org/Gawdl3y/discord-graf)
