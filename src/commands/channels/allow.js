@@ -8,7 +8,7 @@ export default class AllowChannelCommand extends Command {
 	constructor(bot) {
 		super(bot, {
 			name: 'allowchannel',
-			aliases: ['allowchan', 'addchannel', 'addchan'],
+			aliases: ['allowchan'],
 			module: 'channels',
 			memberName: 'allow',
 			description: 'Allows command operation in a channel.',

@@ -7,7 +7,6 @@ export default class ClearModRolesCommand extends Command {
 	constructor(bot) {
 		super(bot, {
 			name: 'clearmodroles',
-			aliases: ['clearmods'],
 			module: 'mod-roles',
 			memberName: 'clear',
 			description: 'Clears all of the moderator roles.',

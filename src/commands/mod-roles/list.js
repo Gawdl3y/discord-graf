@@ -8,7 +8,7 @@ export default class ListModRolesCommand extends Command {
 	constructor(bot) {
 		super(bot, {
 			name: 'modroles',
-			aliases: ['listmodroles', 'mods'],
+			aliases: ['listmodroles', 'showmodroles'],
 			module: 'mod-roles',
 			memberName: 'list',
 			description: 'Lists all moderator roles.',

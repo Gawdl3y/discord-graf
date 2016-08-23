@@ -8,7 +8,7 @@ export default class ClearAllowedChannelsCommand extends Command {
 	constructor(bot) {
 		super(bot, {
 			name: 'clearallowedchannels',
-			aliases: ['clearallowedchans', 'clearchannels', 'clearchans'],
+			aliases: ['clearallowedchans'],
 			module: 'channels',
 			memberName: 'clear-allowed',
 			description: 'Clears all of the allowed channels.',

@@ -8,7 +8,6 @@ export default class AddModRoleCommand extends Command {
 	constructor(bot) {
 		super(bot, {
 			name: 'addmodrole',
-			aliases: ['addmod'],
 			module: 'mod-roles',
 			memberName: 'add',
 			description: 'Adds a moderator role.',

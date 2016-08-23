@@ -37,6 +37,12 @@
       
     <li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/overview.html#information" data-ice="link">Information</a></li>
 <li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/overview.html#features" data-ice="link">Features</a></li>
+<li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/overview.html#commands" data-ice="link">Commands</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/overview.html#information" data-ice="link">Information</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/overview.html#modules" data-ice="link">Modules</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/overview.html#moderator-roles" data-ice="link">Moderator roles</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/overview.html#channels" data-ice="link">Channels</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/overview.html#utility" data-ice="link">Utility</a></li>
 </ul>
   </div>
 <div data-ice="manual" data-toc-name="installation">
@@ -102,6 +108,153 @@ Here&apos;s a quick list:</p>
 <li>Lots of utility methods to simplify your logic</li>
 <li>Update checking for your bot</li>
 </ul>
+<h2 id="commands">Commands</h2>
+<p>GRAF allows bots to accept commands in multiple formats.
+You may use a command by prefixing it with the command prefix (default <code>!</code>) or the bot&apos;s mention (e.g. <code>@SomeBot#1337</code>).
+Use <code>!help</code> or <code>@SomeBot#1337 help</code>, for example.
+The prefix is configurable on a server-by-server basis, with the <code>prefix</code> command.
+The bot will also handle commands in DMs.</p>
+<p>See the <a href="./manual/./usage.html#permissions">usage documentation</a> for information about permissions.</p>
+<h3 id="information">Information</h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Permission required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>help</td>
+<td></td>
+<td>Displays a list of available commands, or detailed information for a specified command.</td>
+</tr>
+<tr>
+<td>about</td>
+<td></td>
+<td>Displays information about the bot.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="modules">Modules</h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Permission required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>modules</td>
+<td>Administrator</td>
+<td>Lists all modules.</td>
+</tr>
+<tr>
+<td>togglemodule</td>
+<td>Administrator</td>
+<td>Toggles a module or command.</td>
+</tr>
+<tr>
+<td>enablemodule</td>
+<td>Administrator</td>
+<td>Enables a module or command.</td>
+</tr>
+<tr>
+<td>disablemodule</td>
+<td>Administrator</td>
+<td>Disables a module or command.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="moderator-roles">Moderator roles</h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Permission required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>modroles</td>
+<td>Administrator</td>
+<td>Lists all moderator roles.</td>
+</tr>
+<tr>
+<td>addmodrole</td>
+<td>Administrator</td>
+<td>Adds a moderator role.</td>
+</tr>
+<tr>
+<td>deletemodrole</td>
+<td>Administrator</td>
+<td>Deletes a moderator role.</td>
+</tr>
+<tr>
+<td>clearmodroles</td>
+<td>Administrator</td>
+<td>Clears all of the moderator roles.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="channels">Channels</h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Permission required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>allowedchannels</td>
+<td></td>
+<td>Lists all channels command operation is allowed in.</td>
+</tr>
+<tr>
+<td>allowchannel</td>
+<td>Administrator</td>
+<td>Allows command operation in a channel.</td>
+</tr>
+<tr>
+<td>disallowchannel</td>
+<td>Administrator</td>
+<td>Disallows command operation in a channel.</td>
+</tr>
+<tr>
+<td>clearallowedchannels</td>
+<td>Administrator</td>
+<td>Clears all of the allowed channels.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="utility">Utility</h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Permission required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>prefix</td>
+<td></td>
+<td>Shows or sets the command prefix.</td>
+</tr>
+<tr>
+<td>eval</td>
+<td>Owner</td>
+<td>Evaluates input as JavaScript.</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>

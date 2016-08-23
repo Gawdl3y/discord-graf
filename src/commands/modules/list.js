@@ -8,6 +8,7 @@ export default class ListModulesCommand extends Command {
 	constructor(bot) {
 		super(bot, {
 			name: 'modules',
+			aliases: ['listmodules', 'showmodules'],
 			module: 'modules',
 			memberName: 'list',
 			description: 'Lists all modules. Only administrators may use this command.',

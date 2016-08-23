@@ -8,7 +8,7 @@ export default class ListAllowedChannelsCommand extends Command {
 	constructor(bot) {
 		super(bot, {
 			name: 'allowedchannels',
-			aliases: ['allowedchans', 'channels', 'chans'],
+			aliases: ['listallowedchannels', 'showallowedchannels', 'allowedchans'],
 			module: 'channels',
 			memberName: 'list-allowed',
 			description: 'Lists all channels command operation is allowed in.',

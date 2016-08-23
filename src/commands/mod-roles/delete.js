@@ -9,7 +9,7 @@ export default class DeleteModRoleCommand extends Command {
 	constructor(bot) {
 		super(bot, {
 			name: 'deletemodrole',
-			aliases: ['removemodrole', 'delmodrole', 'removemod', 'deletemod', 'delmod'],
+			aliases: ['removemodrole', 'delmodrole'],
 			module: 'mod-roles',
 			memberName: 'delete',
 			description: 'Deletes a moderator role.',

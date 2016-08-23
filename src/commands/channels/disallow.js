@@ -9,7 +9,7 @@ export default class DisallowChannelCommand extends Command {
 	constructor(bot) {
 		super(bot, {
 			name: 'disallowchannel',
-			aliases: ['disallowchan', 'deletechannel', 'deletechan', 'delchan', 'removechannel', 'removechan'],
+			aliases: ['disallowchan'],
 			module: 'channels',
 			memberName: 'disallow',
 			description: 'Disallows command operation in a channel.',
