@@ -183,11 +183,13 @@ export default class BotUtil {
 	 * @param {string} text - The string to split
 	 * @param {number} [maxLength=1925] - The maximum length of each split string
 	 * @param {string} [splitOn=\n] - The characters to split the string with
+	 * @param {string} [prepend] - String to prepend to every split message
+	 * @param {string} [append] - String to append to every split message
 	 * @return {string[]} The split strings
 	 * @see {@link Util.split}
 	 */
-	split(text, maxLength = 1925, splitOn = '\n') {
-		return this.constructor.split(text, maxLength, splitOn);
+	split(text, maxLength = 1925, splitOn = '\n', prepend = '', append = '') {
+		return this.constructor.split(text, maxLength, splitOn, prepend, append);
 	}
 
 	/**
@@ -195,20 +197,23 @@ export default class BotUtil {
 	 * @param {string} text - The string to split
 	 * @param {number} [maxLength=1925] - The maximum length of each split string
 	 * @param {string} [splitOn=\n] - The characters to split the string with
+	 * @param {string} [prepend] - String to prepend to every split message
+	 * @param {string} [append] - String to append to every split message
 	 * @return {string[]} The split strings
 	 * @see {@link Util#split}
 	 */
-	static split(text, maxLength = 1925, splitOn = '\n') {
+	static split(text, maxLength = 1900, splitOn = '\n', prepend = '', append = '') {
 		const splitText = text.split(splitOn);
 		if(splitText.length === 1 && text.length > maxLength) throw new Error('Message exceeds the max length and contains no split characters.');
 		const messages = [''];
 		let msg = 0;
 		for(let i = 0; i < splitText.length; i++) {
 			if(messages[msg].length + splitText[i].length + 1 > maxLength) {
-				messages.push('');
+				messages[msg] += append;
+				messages.push(prepend);
 				msg++;
 			}
-			messages[msg] += (messages[msg].length > 0 ? '\n' : '') + splitText[i];
+			messages[msg] += (messages[msg].length > 0 && messages[msg] !== prepend ? splitOn : '') + splitText[i];
 		}
 		return messages;
 	}

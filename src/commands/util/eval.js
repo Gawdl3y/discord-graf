@@ -3,6 +3,7 @@
 
 /* eslint-disable no-unused-vars */
 import util from 'util';
+import * as tags from 'common-tags';
 import * as graf from '../..';
 import Command from '../command';
 import FriendlyError from '../../errors/friendly';
@@ -44,16 +45,34 @@ export default class EvalCommand extends Command {
 				message.reply(`Callback error: \`${val}\``);
 			} else {
 				const inspected = util.inspect(val, { depth: 0 });
-				message.reply(`Callback result: \`${inspected.length < 1925 ? inspected : val}\``);
+				message.reply(tags.stripIndents`
+					Callback result:
+					\`\`\`javascript
+					${inspected.length < 1925 ? inspected : val}
+					\`\`\`
+				`);
 			}
 		};
 		/* eslint-enable no-unused-vars */
 
 		try {
 			this.lastResult = eval(args[0]);
-			return this.bot.util.split(`Result: \`${util.inspect(this.lastResult, { depth: 0 }).replace(nlPattern, '\n')}\``);
 		} catch(err) {
-			return `Error while evaluating: ${err}`;
+			return `Error while evaluating: \`${err}\``;
 		}
+
+		const inspected = util.inspect(this.lastResult, { depth: 0 }).replace(nlPattern, '\n');
+		const split = inspected.split('\n');
+		const last = inspected.length - 1;
+		const prependPart = inspected[0] !== '{' && inspected[0] !== '[' && inspected[0] !== "'" ? split[0] : inspected[0];
+		const appendPart = inspected[last] !== '}' && inspected[last] !== ']' && inspected[last] !== "'" ? split[split.length - 1] : inspected[last];
+		const prepend = `\`\`\`javascript\n${prependPart}\n`;
+		const append = `\n${appendPart}\n\`\`\``;
+		return this.bot.util.split(tags.stripIndents`
+			Result:
+			\`\`\`javascript
+			${inspected}
+			\`\`\`
+		`, 1900, '\n', prepend, append);
 	}
 }
