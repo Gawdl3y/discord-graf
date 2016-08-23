@@ -36,10 +36,10 @@ export default class PrefixCommand extends Command {
 			let response;
 			if(lowercase === 'default') {
 				storage.delete('command-prefix', message.server);
-				response = `Reset the command prefix to the default (currently "${config.commandPrefix}").`;
+				response = `Reset the command prefix to the default (currently \`${config.commandPrefix}\`).`;
 			} else {
 				storage.save(new Setting(message.server, 'command-prefix', prefix));
-				response = prefix ? `Set the command prefix to "${args[0]}".` : 'Removed the command prefix entirely.';
+				response = prefix ? `Set the command prefix to \`${args[0]}\`.` : 'Removed the command prefix entirely.';
 			}
 
 			// Build the pattern
@@ -49,7 +49,7 @@ export default class PrefixCommand extends Command {
 			return `${response} To run commands, use ${this.bot.util.usage('command', message.server)}.`;
 		} else {
 			const prefix = message.server ? storage.getValue(message.server, 'command-prefix', config.commandPrefix) : config.commandPrefix;
-			return `${prefix ? `The command prefix is "${prefix}".` : 'There is no command prefix.'} To run commands, use ${this.bot.util.usage('command', message.server)}.`;
+			return `${prefix ? `The command prefix is \`${prefix}\`.` : 'There is no command prefix.'} To run commands, use ${this.bot.util.usage('command', message.server)}.`;
 		}
 	}
 }
