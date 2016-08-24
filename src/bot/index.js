@@ -115,12 +115,9 @@ export default class Bot {
 		});
 
 		// Set up command handling
-		const messageErr = err => {
-			this.logger.error('Error while handling message. This may be an issue with GRAF.');
-			this.logger.error(err);
-		};
+		const messageErr = err => { this.logger.error('Error while handling message. This may be an issue with GRAF.', err); };
 		client.on('message', message => { this.dispatcher.handleMessage(message).catch(messageErr); });
-		client.on('messageUpdated', (oldMessage, newMessage) => { this.dispatcher.handleMessage(newMessage, oldMessage).catch(messageErr); });
+		client.on('messageUpdate', (oldMessage, newMessage) => { this.dispatcher.handleMessage(newMessage, oldMessage).catch(messageErr); });
 
 		// Log in
 		const loginErr = err => {
