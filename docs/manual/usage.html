@@ -57,10 +57,12 @@
     <h1 class="manual-toc-title"><a href="manual/usage.html" data-ice="title">Usage</a></h1>
     <ul class="manual-toc">
       
-    <li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/usage.html#setup" data-ice="link">Setup</a></li>
+    <li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/usage.html#information" data-ice="link">Information</a></li>
+<li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/usage.html#first-steps" data-ice="link">First steps</a></li>
 <li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/usage.html#commands" data-ice="link">Commands</a></li>
 <li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/usage.html#permissions" data-ice="link">Permissions</a></li>
-<li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/usage.html#storage" data-ice="link">Storage</a></li>
+<li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/usage.html#guild-storage" data-ice="link">Guild storage</a></li>
+<li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/usage.html#utilities" data-ice="link">Utilities</a></li>
 </ul>
   </div>
 <div data-ice="manual" data-toc-name="configuration">
@@ -91,7 +93,13 @@
     <span>&#xBB;</span>
     <span data-ice="title">Usage</span>
   </div>
-  <div data-ice="content"><h2 id="setup">Setup</h2>
+  <div data-ice="content"><h2 id="information">Information</h2>
+<p>Even though the framework is written with them, you don&apos;t need to write your code with ES6 modules and ES2017 async/await.
+Imports and exports are replaceable by the CommonJS <code>require</code> function and <code>exports</code> object.
+Any <code>async</code> functions return <code>Promise</code>s.</p>
+<p>The framework is built on top of the <a href="http://hydrabolt.github.io/discord.js/index.html#!/docs">discord.js rewrite</a>.
+A Discord server is always referred to as a <code>Guild</code> internally, as that&apos;s what the API calls them.</p>
+<h2 id="first-steps">First steps</h2>
 <p>The first thing you&apos;ll want to do is instantiate the <a href="./manual/../class/src/bot/index.js~Bot.html"><code>Bot</code></a> class, specifying at minimum the properties <code>name</code> and <code>version</code>.
 To add information to the built-in about command, also add the <code>about</code> property.
 For update checking, specify <code>updateURL</code>.<br>Example:</p>
@@ -160,7 +168,7 @@ export default class AddNumbersCommand extends Command {
 }</code>
 </code></pre>
 <h2 id="permissions">Permissions</h2>
-<p>Every bot has an instance of <a href="./manual/../class/src/bot/permissions.js~BotPermissions.html"><code>BotPermissions</code></a> that contains handy methods for checking the permissions of a user on a server.
+<p>Every bot has an instance of <a href="./manual/../class/src/bot/permissions.js~BotPermissions.html"><code>BotPermissions</code></a> as <code>bot.permissions</code> that contains handy methods for checking the permissions of a user on a server.
 There are three permissions:</p>
 <ul>
 <li>Owner (<a href="./manual/../class/src/bot/permissions.js~BotPermissions.html#instance-method-isOwner"><code>isOwner</code></a>):
@@ -171,8 +179,32 @@ A user has this permission if they are the bot owner, or if they have a role on 
 A user has this permission if they are the bot owner, they are an admin, or they have one of the moderator roles assigned.
 If there are no moderator roles set in the server, then the &quot;Manage messages&quot; permission on any of their roles will make them a moderator instead.</li>
 </ul>
-<h2 id="storage">Storage</h2>
-<p>Documentation coming soon&#x2122;.</p>
+<h2 id="guild-storage">Guild storage</h2>
+<p>The <a href="./manual/../class/src/storage/index.js~GuildStorage.html"><code>GuildStorage</code></a> class allows you to create storages that associate data with guilds.
+You can either directly instantiate the base <code>GuildStorage</code> class, or extend it.
+There are three built-in storages that every bot has an instance of:</p>
+<ul>
+<li><a href="./manual/../class/src/storage/allowed-channels.js~AllowedChannelStorage.html"><code>AllowedChannelStorage</code></a> as <code>bot.storage.allowedChannels</code></li>
+<li><a href="./manual/../class/src/storage/mod-roles.js~ModRoleStorage.html"><code>ModRoleStorage</code></a> as <code>bot.storage.modRoles</code></li>
+<li><a href="./manual/../class/src/storage/settings.js~SettingStorage.html"><code>SettingStorage</code></a> as <code>bot.storage.settings</code></li>
+</ul>
+<p>You probably will never need to use the first two, as they are used primarily by built-in commands/functionality.
+The <code>SettingStorage</code>, however, could prove to be very useful for your bot.
+It&apos;s essentially a key-value store that is associated with guilds, so you can store simple per-guild settings with it.</p>
+<p>It is not recommended to use the storages to store large amounts of data or user-generated content.
+Use <a href="https://www.npmjs.com/package/sqlite">SQLite</a> or some other database for that.</p>
+<h2 id="utilities">Utilities</h2>
+<p>Every bot has an instance of <a href="./manual/../class/src/bot/util.js~BotUtil.html"><code>BotUtil</code></a> as <code>bot.util</code>.
+This contains several handy methods:</p>
+<ul>
+<li><a href="./manual/../class/src/bot/util.js~BotUtil.html#instance-method-usage"><code>usage</code></a> creates command usage strings to send in messages</li>
+<li><a href="./manual/../class/src/bot/util.js~BotUtil.html#instance-method-nbsp"><code>nbsp</code></a> converts all spaces in a string into non-breaking spaces</li>
+<li><a href="./manual/../class/src/bot/util.js~BotUtil.html#instance-method-disambiguation"><code>disambiguation</code></a> creates disambiguation strings to send in messages
+(for when you find multiple matches from user input, and need a specific one)</li>
+<li><a href="./manual/../class/src/bot/util.js~BotUtil.html#instance-method-paginate"><code>paginate</code></a> paginates an array of items, and returns info about the pagination</li>
+<li><a href="./manual/../class/src/bot/util.js~BotUtil.html#instance-method-search"><code>search</code></a> searches an array of items and finds matches</li>
+<li><a href="./manual/../class/src/bot/util.js~BotUtil.html#instance-method-split"><code>split</code></a> splits a string into multiple strings that will fit within Discord&apos;s 2,000 character limit</li>
+</ul>
 </div>
 </div>
 </div>

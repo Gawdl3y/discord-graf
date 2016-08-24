@@ -1,4 +1,12 @@
-## Setup
+## Information
+Even though the framework is written with them, you don't need to write your code with ES6 modules and ES2017 async/await.
+Imports and exports are replaceable by the CommonJS `require` function and `exports` object.
+Any `async` functions return `Promise`s.
+
+The framework is built on top of the [discord.js rewrite](http://hydrabolt.github.io/discord.js/index.html#!/docs).
+A Discord server is always referred to as a `Guild` internally, as that's what the API calls them.
+
+## First steps
 The first thing you'll want to do is instantiate the [`Bot`](../class/src/bot/index.js~Bot.html) class, specifying at minimum the properties `name` and `version`.
 To add information to the built-in about command, also add the `about` property.
 For update checking, specify `updateURL`.  
@@ -79,7 +87,7 @@ export default class AddNumbersCommand extends Command {
 ```
 
 ## Permissions
-Every bot has an instance of [`BotPermissions`](../class/src/bot/permissions.js~BotPermissions.html) that contains handy methods for checking the permissions of a user on a server.
+Every bot has an instance of [`BotPermissions`](../class/src/bot/permissions.js~BotPermissions.html) as `bot.permissions` that contains handy methods for checking the permissions of a user on a server.
 There are three permissions:
 - Owner ([`isOwner`](../class/src/bot/permissions.js~BotPermissions.html#instance-method-isOwner)):
   Only the owner of the bot has this permission, and they have it in every server.
@@ -89,5 +97,28 @@ There are three permissions:
   A user has this permission if they are the bot owner, they are an admin, or they have one of the moderator roles assigned.
   If there are no moderator roles set in the server, then the "Manage messages" permission on any of their roles will make them a moderator instead.
 
-## Storage
-Documentation coming soon&trade;.
+## Guild storage
+The [`GuildStorage`](../class/src/storage/index.js~GuildStorage.html) class allows you to create storages that associate data with guilds.
+You can either directly instantiate the base `GuildStorage` class, or extend it.
+There are three built-in storages that every bot has an instance of:
+- [`AllowedChannelStorage`](../class/src/storage/allowed-channels.js~AllowedChannelStorage.html) as `bot.storage.allowedChannels`
+- [`ModRoleStorage`](../class/src/storage/mod-roles.js~ModRoleStorage.html) as `bot.storage.modRoles`
+- [`SettingStorage`](../class/src/storage/settings.js~SettingStorage.html) as `bot.storage.settings`
+
+You probably will never need to use the first two, as they are used primarily by built-in commands/functionality.
+The `SettingStorage`, however, could prove to be very useful for your bot.
+It's essentially a key-value store that is associated with guilds, so you can store simple per-guild settings with it.
+
+It is not recommended to use the storages to store large amounts of data or user-generated content.
+Use [SQLite](https://www.npmjs.com/package/sqlite) or some other database for that.
+
+## Utilities
+Every bot has an instance of [`BotUtil`](../class/src/bot/util.js~BotUtil.html) as `bot.util`.
+This contains several handy methods:
+- [`usage`](../class/src/bot/util.js~BotUtil.html#instance-method-usage) creates command usage strings to send in messages
+- [`nbsp`](../class/src/bot/util.js~BotUtil.html#instance-method-nbsp) converts all spaces in a string into non-breaking spaces
+- [`disambiguation`](../class/src/bot/util.js~BotUtil.html#instance-method-disambiguation) creates disambiguation strings to send in messages
+  (for when you find multiple matches from user input, and need a specific one)
+- [`paginate`](../class/src/bot/util.js~BotUtil.html#instance-method-paginate) paginates an array of items, and returns info about the pagination
+- [`search`](../class/src/bot/util.js~BotUtil.html#instance-method-search) searches an array of items and finds matches
+- [`split`](../class/src/bot/util.js~BotUtil.html#instance-method-split) splits a string into multiple strings that will fit within Discord's 2,000 character limit

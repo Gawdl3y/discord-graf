@@ -4,7 +4,7 @@
 /** Contains general utility methods */
 export default class BotUtil {
 	/**
-	 * @param {Client} client - The Discord.js Client to use
+	 * @param {Client} client - The client to use
 	 * @param {SettingStorage} settings - The setting storage to use
 	 * @param {BotConfig} config - The bot config to use
 	 */
@@ -26,7 +26,7 @@ export default class BotUtil {
 
 	/**
 	 * @param {string} command - The short command string (ex. "roll d20")
-	 * @param {?Guild} [guild=null] - The Discord.js Guild instance of the guild to use the prefix of
+	 * @param {Guild|string} [guild] - The guild or guild ID to use the prefix of
 	 * @param {boolean} [onlyMention=false] - Whether or not the usage string should only show the mention form
 	 * @return {string} The command usage string
 	 * @see {@link Util.usage}
@@ -37,11 +37,11 @@ export default class BotUtil {
 
 	/**
 	 * Build a command usage string
-	 * @param {Client} client - The Discord.js Client to use
+	 * @param {Client} client - The client to use
 	 * @param {SettingStorage} settings - The setting storage to use
 	 * @param {BotConfig} config - The bot config to use
 	 * @param {string} command - The short command string (ex. "roll d20")
-	 * @param {?Guild} [guild=null] - The Discord.js Guild instance of the guild to use the prefix of
+	 * @param {Guild|string} [guild] - The guild or guild ID to use the prefix of
 	 * @param {boolean} [onlyMention=false] - Whether or not the usage string should only show the mention form
 	 * @return {string} The command usage string
 	 * @see {@link Util#usage}
