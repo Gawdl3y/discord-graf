@@ -118,7 +118,7 @@ export default class CommandDispatcher extends EventEmitter {
 				return { reply: [err.message], editable: true };
 			} else {
 				this.bot.logger.error(err);
-				const owner = this.bot.config.values.owner ? message.client.users.get('id', this.bot.config.values.owner) : null;
+				const owner = this.bot.config.values.owner ? message.client.users.get(this.bot.config.values.owner) : null;
 				return {
 					reply: [stripIndents`
 						An error occurred while running the command: \`${err.name}: ${err.message}\`
@@ -157,9 +157,9 @@ export default class CommandDispatcher extends EventEmitter {
 	async sendMessages(message, contents, type) {
 		const sentMessages = [];
 		for(const content of contents) {
-			if(type === 'plain') sentMessages.push(await message.client.sendMessage(message, content));
+			if(type === 'plain') sentMessages.push(await message.channel.sendMessage(content));
 			else if(type === 'reply') sentMessages.push(await message.reply(content));
-			else if(type === 'direct') sentMessages.push(await message.client.sendMessage(message.author, content));
+			else if(type === 'direct') sentMessages.push(await message.author.sendMessage(content));
 		}
 		return sentMessages;
 	}

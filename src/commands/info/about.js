@@ -17,7 +17,7 @@ export default class AboutCommand extends Command {
 
 	async run(message) {
 		const config = this.bot.config.values;
-		const owner = message.client.users.get('id', this.bot.config.values.owner);
+		const owner = message.client.users.get(this.bot.config.values.owner);
 		const servers = message.client.servers.length.toLocaleString(), users = message.client.users.length.toLocaleString();
 		const serversLabel = servers !== 1 ? 'servers' : 'server', usersLabel = users !== 1 ? 'users' : 'user';
 		const uptime = process.uptime();

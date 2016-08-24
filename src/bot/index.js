@@ -101,12 +101,13 @@ export default class Bot {
 
 		// Set up logging, playing game text, and update checking
 		client.on('error', err => { this.logger.error(err); });
-		client.on('warn', err => { this.logger.warn(err); });
-		client.on('debug', err => { this.logger.debug(err); });
-		client.on('disconnected', () => { this.logger.error('Disconnected.'); });
+		client.on('warn', msg => { this.logger.warn(msg); });
+		client.on('debug', msg => { this.logger.debug(msg); });
+		client.on('disconnected', () => { this.logger.warn('Disconnected.'); });
+		client.on('reconnecting', () => { this.logger.warn('Reconnecting...'); });
 		client.on('ready', () => {
 			this.logger.info(`Bot is ready; logged in as ${client.user.username}#${client.user.discriminator} (ID: ${client.user.id})`);
-			if(config.playingGame) client.setPlayingGame(config.playingGame);
+			if(config.playingGame) client.user.setStatus('online', config.playingGame);
 			if(config.updateURL) {
 				this._checkForUpdate();
 				if(config.updateCheck > 0) setInterval(this._checkForUpdate.bind(this), config.updateCheck * 60 * 1000);
@@ -122,13 +123,16 @@ export default class Bot {
 		});
 
 		// Log in
-		const loginCallback = err => { if(err) this.logger.error('Failed to login.', err); };
+		const loginErr = err => {
+			this.logger.error('Failed to login.');
+			this.logger.error(err);
+		};
 		if(config.token) {
 			this.logger.info('Logging in with token...');
-			client.loginWithToken(config.token, config.email, config.password, loginCallback);
+			client.login(config.token).catch(loginErr);
 		} else {
 			this.logger.info('Logging in with email and password...');
-			client.login(config.email, config.password, loginCallback);
+			client.login(config.email, config.password).catch(loginErr);
 		}
 
 		return client;
@@ -306,7 +310,7 @@ export default class Bot {
 			this.logger.warn(message);
 			const savedVersion = this.storage.settings.getValue(null, 'notified-version');
 			if(savedVersion !== masterVersion && this.client && config.owner) {
-				this.client.sendMessage(config.owner, message);
+				this.client.users.get(config.owner).sendMessage(message);
 				this.storage.settings.save(new Setting(null, 'notified-version', masterVersion));
 			}
 		}).catch(err => {

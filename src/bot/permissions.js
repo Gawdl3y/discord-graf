@@ -125,9 +125,9 @@ export default class BotPermissions {
 	 */
 	static resolve(client, server, user) {
 		if(!client || !server || !user) throw new Error('A client, server, and user must be specified.');
-		if(typeof server === 'string') server = client.servers.get('id', server);
+		if(typeof server === 'string') server = client.servers.get(server);
 		if(!server || !server.id) throw new Error('Unable to identify server.');
-		if(typeof user === 'string') user = server.members.get('id', user);
+		if(typeof user === 'string') user = server.members.get(user);
 		if(!user || !user.id) throw new Error('Unable to identify user.');
 		return [server, user];
 	}

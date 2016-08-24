@@ -25,7 +25,7 @@ export default class AllowChannelCommand extends Command {
 	async run(message, args) {
 		if(!args[0]) throw new CommandFormatError(this, message.server);
 		const matches = this.bot.util.patterns.channelID.exec(args[0]);
-		const idChannel = matches ? message.server.channels.get('id', matches[1]) : null;
+		const idChannel = matches ? message.server.channels.get(matches[1]) : null;
 		const channels = idChannel ? [idChannel] : this.bot.util.search(message.server.channels.getAll('type', 'text'), args[0]);
 
 		if(channels.length === 1) {

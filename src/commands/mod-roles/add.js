@@ -25,7 +25,7 @@ export default class AddModRoleCommand extends Command {
 	async run(message, args) {
 		if(!args[0]) throw new CommandFormatError(this, message.server);
 		const matches = this.bot.util.patterns.roleID.exec(args[0]);
-		const idRole = matches ? message.server.roles.get('id', matches[1]) : null;
+		const idRole = matches ? message.server.roles.get(matches[1]) : null;
 		const roles = idRole ? [idRole] : this.bot.util.search(message.server.roles, args[0]);
 
 		if(roles.length === 1) {

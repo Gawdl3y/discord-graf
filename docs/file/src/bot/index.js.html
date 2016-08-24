@@ -179,12 +179,13 @@ export default class Bot {
 
 		// Set up logging, playing game text, and update checking
 		client.on(&apos;error&apos;, err =&gt; { this.logger.error(err); });
-		client.on(&apos;warn&apos;, err =&gt; { this.logger.warn(err); });
-		client.on(&apos;debug&apos;, err =&gt; { this.logger.debug(err); });
-		client.on(&apos;disconnected&apos;, () =&gt; { this.logger.error(&apos;Disconnected.&apos;); });
+		client.on(&apos;warn&apos;, msg =&gt; { this.logger.warn(msg); });
+		client.on(&apos;debug&apos;, msg =&gt; { this.logger.debug(msg); });
+		client.on(&apos;disconnected&apos;, () =&gt; { this.logger.warn(&apos;Disconnected.&apos;); });
+		client.on(&apos;reconnecting&apos;, () =&gt; { this.logger.warn(&apos;Reconnecting...&apos;); });
 		client.on(&apos;ready&apos;, () =&gt; {
 			this.logger.info(`Bot is ready; logged in as ${client.user.username}#${client.user.discriminator} (ID: ${client.user.id})`);
-			if(config.playingGame) client.setPlayingGame(config.playingGame);
+			if(config.playingGame) client.user.setStatus(&apos;online&apos;, config.playingGame);
 			if(config.updateURL) {
 				this._checkForUpdate();
 				if(config.updateCheck &gt; 0) setInterval(this._checkForUpdate.bind(this), config.updateCheck * 60 * 1000);
@@ -200,13 +201,16 @@ export default class Bot {
 		});
 
 		// Log in
-		const loginCallback = err =&gt; { if(err) this.logger.error(&apos;Failed to login.&apos;, err); };
+		const loginErr = err =&gt; {
+			this.logger.error(&apos;Failed to login.&apos;);
+			this.logger.error(err);
+		};
 		if(config.token) {
 			this.logger.info(&apos;Logging in with token...&apos;);
-			client.loginWithToken(config.token, config.email, config.password, loginCallback);
+			client.login(config.token).catch(loginErr);
 		} else {
 			this.logger.info(&apos;Logging in with email and password...&apos;);
-			client.login(config.email, config.password, loginCallback);
+			client.login(config.email, config.password).catch(loginErr);
 		}
 
 		return client;
@@ -384,7 +388,7 @@ export default class Bot {
 			this.logger.warn(message);
 			const savedVersion = this.storage.settings.getValue(null, &apos;notified-version&apos;);
 			if(savedVersion !== masterVersion &amp;&amp; this.client &amp;&amp; config.owner) {
-				this.client.sendMessage(config.owner, message);
+				this.client.users.get(config.owner).sendMessage(message);
 				this.storage.settings.save(new Setting(null, &apos;notified-version&apos;, masterVersion));
 			}
 		}).catch(err =&gt; {
