@@ -48,6 +48,7 @@ export default class HelpCommand extends Command {
 						For example, ${util.usage('roll d20', message.guild, !message.guild)}.
 					`}
 					To run a command in this DM, simply use ${util.usage('command')} with no prefix. For example, ${util.usage('roll d20')}.
+					Hyphens (\`-\`) are always optional in commands.
 
 					Use ${util.usage('help <command>')} to view detailed information about a specific command.
 					Use ${util.usage('help all')} to view a list of *all* commands, not just available ones.
