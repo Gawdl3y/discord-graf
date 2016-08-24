@@ -94,7 +94,7 @@ export default class GuildStorage {
 					}
 				}
 			} else {
-				index = entry.key ? entry.key : entry;
+				index = entry.key || entry;
 			}
 		} else {
 			index = searchFunction ? this.guildsMap[guild].findIndex(searchFunction) : this.guildsMap[guild].findIndex(item => item === entry);
@@ -119,8 +119,8 @@ export default class GuildStorage {
 	clear(guild) {
 		if(!guild) throw new Error('A guild must be specified.');
 		if(!this.guildsMap) this.loadStorage();
-		delete this.guildsMap[guild.id ? guild.id : guild];
-		if(this.logger) this.logger.info(`Cleared a guild in ${this.key} storage.`, { guild: guild.id ? guild.id : guild });
+		delete this.guildsMap[guild.id || guild];
+		if(this.logger) this.logger.info(`Cleared a guild in ${this.key} storage.`, { guild: guild.id || guild });
 		this.saveStorage();
 	}
 
@@ -177,7 +177,7 @@ export default class GuildStorage {
 				}
 				return false;
 			} else {
-				return typeof this.guildsMap[guild][entry.key ? entry.key : entry] !== 'undefined';
+				return typeof this.guildsMap[guild][entry.key || entry] !== 'undefined';
 			}
 		} else {
 			return searchFunction ? this.guildsMap[guild].some(searchFunction) : this.guildsMap[guild].includes(entry);

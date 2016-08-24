@@ -70,7 +70,9 @@ export default class CommandDispatcher extends EventEmitter {
 			// Cache the result
 			if(this.bot.config.values.commandEditable > 0) {
 				if(result.editable) {
-					result.timeout = oldResult && oldResult.timeout ? oldResult.timeout : setTimeout(() => { delete this._results[message.id]; }, this.bot.config.values.commandEditable * 1000);
+					result.timeout = oldResult && oldResult.timeout
+						? oldResult.timeout
+						: setTimeout(() => { delete this._results[message.id]; }, this.bot.config.values.commandEditable * 1000);
 					this._results[message.id] = result;
 				} else {
 					delete this._results[message.id];
@@ -174,7 +176,7 @@ export default class CommandDispatcher extends EventEmitter {
 	async updateMessagesForResult(message, result, oldResult) {
 		// Update the messages
 		const messages = await Promise.all([
-			result.plain || result.reply ? this.updateMessages(message, oldResult.normalMessages, result.plain ? result.plain : result.reply, result.plain ? 'plain' : 'reply') : null,
+			result.plain || result.reply ? this.updateMessages(message, oldResult.normalMessages, result.plain || result.reply, result.plain ? 'plain' : 'reply') : null,
 			result.direct ? oldResult.direct ? this.updateMessages(message, oldResult.directMessages, result.direct, 'direct') : this.sendMessages(message, result.direct, 'direct') : null
 		]);
 		if(result.plain || result.reply) result.normalMessages = messages[0];

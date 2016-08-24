@@ -101,7 +101,7 @@ export default class BotPermissions {
 	 */
 	static isOwner(config, user) {
 		if(!user) throw new Error('A user must be specified.');
-		return (user.id ? user.id : user) === config.values.owner;
+		return (user.id || user) === config.values.owner;
 	}
 
 	/**

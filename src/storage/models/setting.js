@@ -12,7 +12,7 @@ export default class Setting {
 		if(!key) throw new Error('Setting key must be specified.');
 
 		/** @type {string} */
-		this.guild = guild ? guild.id ? guild.id : guild : 'global';
+		this.guild = guild ? guild.id || guild : 'global';
 		/** @type {string} */
 		this.key = key;
 		/** @type {*} */
