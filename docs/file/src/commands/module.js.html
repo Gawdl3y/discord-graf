@@ -92,6 +92,7 @@ export default class Module {
 	constructor(bot, id, name, commands) {
 		if(!bot || !id) throw new Error(&apos;A bot and ID must be specified.&apos;);
 		if(commands &amp;&amp; !Array.isArray(commands)) throw new TypeError(&apos;Commands must be an array.&apos;);
+		if(id !== id.toLowerCase()) throw new Error(&apos;Module ID must be lowercase.&apos;);
 
 		/** @type {Bot} */
 		this.bot = bot;

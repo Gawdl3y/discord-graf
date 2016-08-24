@@ -92,9 +92,13 @@ export default class Command {
 		if(!bot) throw new Error(&apos;A bot must be specified.&apos;);
 		if(!info) throw new Error(&apos;Command info must be specified.&apos;);
 		if(!info.name) throw new Error(&apos;Command must have a name specified.&apos;);
+		if(info.name !== info.name.toLowerCase()) throw new Error(&apos;Command name must be lowercase.&apos;);
 		if(info.aliases &amp;&amp; !Array.isArray(info.aliases)) throw new TypeError(&apos;Command aliases must be an array.&apos;);
+		if(info.aliases &amp;&amp; info.aliases.some(ali =&gt; ali !== ali.toLowerCase())) throw new Error(&apos;Command aliases must be lowercase.&apos;);
 		if(!info.module) throw new Error(&apos;Command must have a module specified.&apos;);
+		if(info.module !== info.module.toLowerCase()) throw new Error(&apos;Command module must be lowercase.&apos;);
 		if(!info.memberName) throw new Error(&apos;Command must have a memberName specified.&apos;);
+		if(info.memberName !== info.memberName.toLowerCase()) throw new Error(&apos;Command memberName must be lowercase.&apos;);
 		if(!info.description) throw new Error(&apos;Command must have a description specified.&apos;);
 		if(info.examples &amp;&amp; !Array.isArray(info.examples)) throw new TypeError(&apos;Command examples must be an array.&apos;);
 		if(info.argsType &amp;&amp; ![&apos;single&apos;, &apos;multiple&apos;].includes(info.argsType)) throw new RangeError(&apos;Command argsType must be one of &quot;single&quot; or &quot;multiple&quot;.&apos;);

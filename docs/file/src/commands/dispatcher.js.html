@@ -177,7 +177,7 @@ export default class CommandDispatcher extends EventEmitter {
 		// Make sure the command is usable
 		if(command.guildOnly &amp;&amp; !message.guild) {
 			this.bot.logger.info(`Not running ${command.module}:${command.memberName}; guild only.`, logInfo);
-			return { reply: [`The \`${command.name}\` command must be used in a guild channel.`], editable: true };
+			return { reply: [`The \`${command.name}\` command must be used in a server channel.`], editable: true };
 		}
 		if(!command.hasPermission(message.guild, message.author)) {
 			this.bot.logger.info(`Not running ${command.module}:${command.memberName}; don&apos;t have permission.`, logInfo);
@@ -200,7 +200,7 @@ export default class CommandDispatcher extends EventEmitter {
 				return {
 					reply: [stripIndents`
 						An error occurred while running the command: \`${err.name}: ${err.message}\`
-						${owner ? `Please contact ${owner.name}#${owner.discriminator}${this.bot.config.values.invite ? ` in this guild: ${this.bot.config.values.invite}` : &apos;.&apos;}` : &apos;&apos;}
+						${owner ? `Please contact ${owner.name}#${owner.discriminator}${this.bot.config.values.invite ? ` in this server: ${this.bot.config.values.invite}` : &apos;.&apos;}` : &apos;&apos;}
 					`],
 					editable: true
 				};
