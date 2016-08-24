@@ -43,7 +43,7 @@ export default class HelpCommand extends Command {
 			return {
 				direct: util.split(stripIndents`
 					${oneLine`
-						To run a command in ${message.guild ? message.guild : 'any guild'},
+						To run a command in ${message.guild ? message.guild : 'any server'},
 						use ${util.usage('command', message.guild, !message.guild)}.
 						For example, ${util.usage('roll d20', message.guild, !message.guild)}.
 					`}
@@ -52,7 +52,7 @@ export default class HelpCommand extends Command {
 					Use ${util.usage('help <command>')} to view detailed information about a specific command.
 					Use ${util.usage('help all')} to view a list of *all* commands, not just available ones.
 
-					__**${showAll ? 'All commands' : `Available commands in ${message.guild ? `${message.guild}` : 'this DM'}`}**__
+					__**${showAll ? 'All commands' : `Available commands in ${message.guild ? message.guild : 'this DM'}`}**__
 
 					${(showAll ? modules : modules.filter(mod => mod.commands.some(cmd => cmd.isUsable(message)))).map(mod => stripIndents`
 						__${mod.name}__
