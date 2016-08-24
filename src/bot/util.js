@@ -55,7 +55,7 @@ export default class BotUtil {
 			if(prefix.length > 1) prefix += '\xa0';
 			prefixAddon = prefix ? `\`${prefix}${nbcmd}\` or ` : '';
 		}
-		return `${prefixAddon ? prefixAddon : ''}\`@${this.nbsp(client.user.name)}#${client.user.discriminator}\xa0${nbcmd}\``;
+		return `${prefixAddon ? prefixAddon : ''}\`@${this.nbsp(client.user.username)}#${client.user.discriminator}\xa0${nbcmd}\``;
 	}
 
 	/**
