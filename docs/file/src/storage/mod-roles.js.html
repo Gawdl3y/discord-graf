@@ -80,11 +80,11 @@
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use babel&apos;;
 &apos;use strict&apos;;
 
-import Storage from &apos;.&apos;;
+import GuildStorage from &apos;.&apos;;
 import Util from &apos;../bot/util&apos;;
 
 /** Stores roles that are moderators within a guild */
-export default class ModRoleStorage extends Storage {
+export default class ModRoleStorage extends GuildStorage {
 	/**
 	 * @param {LocalStorage} localStorage - The LocalStorage instance to use
 	 * @param {Logger} [logger] - The logger to use

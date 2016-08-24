@@ -1,11 +1,11 @@
 'use babel';
 'use strict';
 
-import Storage from '.';
+import GuildStorage from '.';
 import Setting from './models/setting';
 
 /** Stores settings within a guild */
-export default class SettingStorage extends Storage {
+export default class SettingStorage extends GuildStorage {
 	/**
 	 * @param {LocalStorage} localStorage - The LocalStorage instance to use
 	 * @param {Logger} [logger] - The logger to use

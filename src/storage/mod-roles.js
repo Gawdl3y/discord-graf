@@ -1,11 +1,11 @@
 'use babel';
 'use strict';
 
-import Storage from '.';
+import GuildStorage from '.';
 import Util from '../bot/util';
 
 /** Stores roles that are moderators within a guild */
-export default class ModRoleStorage extends Storage {
+export default class ModRoleStorage extends GuildStorage {
 	/**
 	 * @param {LocalStorage} localStorage - The LocalStorage instance to use
 	 * @param {Logger} [logger] - The logger to use
