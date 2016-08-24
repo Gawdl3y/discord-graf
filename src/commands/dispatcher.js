@@ -99,7 +99,7 @@ export default class CommandDispatcher extends EventEmitter {
 		// Make sure the command is usable
 		if(command.guildOnly && !message.guild) {
 			this.bot.logger.info(`Not running ${command.module}:${command.memberName}; guild only.`, logInfo);
-			return { reply: [`The \`${command.name}\` command must be used in a guild channel.`], editable: true };
+			return { reply: [`The \`${command.name}\` command must be used in a server channel.`], editable: true };
 		}
 		if(!command.hasPermission(message.guild, message.author)) {
 			this.bot.logger.info(`Not running ${command.module}:${command.memberName}; don't have permission.`, logInfo);
