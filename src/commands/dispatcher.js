@@ -95,7 +95,8 @@ export default class CommandDispatcher extends EventEmitter {
 			user: `${message.author.username}#${message.author.discriminator}`,
 			userID: message.author.id,
 			guild: message.guild ? message.guild.name : null,
-			guildID: message.guild ? message.guild.id : null
+			guildID: message.guild ? message.guild.id : null,
+			messageID: message.id
 		};
 
 		// Make sure the command is usable
@@ -313,7 +314,7 @@ export default class CommandDispatcher extends EventEmitter {
 		const escapedPrefix = escapeRegex(prefix);
 		const prefixPatternPiece = prefix ? `${escapedPrefix}\\s*|` : '';
 		const pattern = new RegExp(`^(${prefixPatternPiece}<@!?${user.id}>\\s+(?:${escapedPrefix})?)([^\\s]+)`, 'i');
-		this.bot.logger.info(`Guild command pattern built.`, {
+		this.bot.logger.verbose(`Guild command pattern built.`, {
 			guild: guild ? guild.name : null,
 			guildID: guild ? guild.id : null,
 			prefix: prefix, pattern: pattern.source
