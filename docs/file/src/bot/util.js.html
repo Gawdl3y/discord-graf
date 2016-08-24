@@ -134,7 +134,7 @@ export default class BotUtil {
 			if(prefix.length &gt; 1) prefix += &apos;\xa0&apos;;
 			prefixAddon = prefix ? `\`${prefix}${nbcmd}\` or ` : &apos;&apos;;
 		}
-		return `${prefixAddon ? prefixAddon : &apos;&apos;}\`@${this.nbsp(client.user.username)}#${client.user.discriminator}\xa0${nbcmd}\``;
+		return `${prefixAddon || &apos;&apos;}\`@${this.nbsp(client.user.username)}#${client.user.discriminator}\xa0${nbcmd}\``;
 	}
 
 	/**

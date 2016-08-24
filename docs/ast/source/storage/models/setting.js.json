@@ -1,7 +1,7 @@
 {
   "type": "Program",
   "start": 0,
-  "end": 570,
+  "end": 560,
   "loc": {
     "start": {
       "line": 1,
@@ -105,7 +105,7 @@
     {
       "type": "ExportDefaultDeclaration",
       "start": 64,
-      "end": 568,
+      "end": 558,
       "loc": {
         "start": {
           "line": 5,
@@ -119,7 +119,7 @@
       "declaration": {
         "type": "ClassDeclaration",
         "start": 79,
-        "end": 568,
+        "end": 558,
         "loc": {
           "start": {
             "line": 5,
@@ -151,7 +151,7 @@
         "body": {
           "type": "ClassBody",
           "start": 93,
-          "end": 568,
+          "end": 558,
           "loc": {
             "start": {
               "line": 5,
@@ -166,7 +166,7 @@
             {
               "type": "MethodDefinition",
               "start": 288,
-              "end": 565,
+              "end": 555,
               "loc": {
                 "start": {
                   "line": 11,
@@ -200,7 +200,7 @@
               "value": {
                 "type": "FunctionExpression",
                 "start": 299,
-                "end": 565,
+                "end": 555,
                 "loc": {
                   "start": {
                     "line": 11,
@@ -268,7 +268,7 @@
                 "body": {
                   "type": "BlockStatement",
                   "start": 319,
-                  "end": 565,
+                  "end": 555,
                   "loc": {
                     "start": {
                       "line": 11,
@@ -421,7 +421,7 @@
                     {
                       "type": "ExpressionStatement",
                       "start": 414,
-                      "end": 474,
+                      "end": 464,
                       "loc": {
                         "start": {
                           "line": 15,
@@ -429,13 +429,13 @@
                         },
                         "end": {
                           "line": 15,
-                          "column": 62
+                          "column": 52
                         }
                       },
                       "expression": {
                         "type": "AssignmentExpression",
                         "start": 414,
-                        "end": 473,
+                        "end": 463,
                         "loc": {
                           "start": {
                             "line": 15,
@@ -443,7 +443,7 @@
                           },
                           "end": {
                             "line": 15,
-                            "column": 61
+                            "column": 51
                           }
                         },
                         "operator": "=",
@@ -499,7 +499,7 @@
                         "right": {
                           "type": "ConditionalExpression",
                           "start": 427,
-                          "end": 473,
+                          "end": 463,
                           "loc": {
                             "start": {
                               "line": 15,
@@ -507,7 +507,7 @@
                             },
                             "end": {
                               "line": 15,
-                              "column": 61
+                              "column": 51
                             }
                           },
                           "test": {
@@ -527,9 +527,9 @@
                             "name": "guild"
                           },
                           "consequent": {
-                            "type": "ConditionalExpression",
+                            "type": "LogicalExpression",
                             "start": 435,
-                            "end": 462,
+                            "end": 452,
                             "loc": {
                               "start": {
                                 "line": 15,
@@ -537,10 +537,10 @@
                               },
                               "end": {
                                 "line": 15,
-                                "column": 50
+                                "column": 40
                               }
                             },
-                            "test": {
+                            "left": {
                               "type": "MemberExpression",
                               "start": 435,
                               "end": 443,
@@ -588,66 +588,19 @@
                               },
                               "computed": false
                             },
-                            "consequent": {
-                              "type": "MemberExpression",
-                              "start": 446,
-                              "end": 454,
-                              "loc": {
-                                "start": {
-                                  "line": 15,
-                                  "column": 34
-                                },
-                                "end": {
-                                  "line": 15,
-                                  "column": 42
-                                }
-                              },
-                              "object": {
-                                "type": "Identifier",
-                                "start": 446,
-                                "end": 451,
-                                "loc": {
-                                  "start": {
-                                    "line": 15,
-                                    "column": 34
-                                  },
-                                  "end": {
-                                    "line": 15,
-                                    "column": 39
-                                  }
-                                },
-                                "name": "guild"
-                              },
-                              "property": {
-                                "type": "Identifier",
-                                "start": 452,
-                                "end": 454,
-                                "loc": {
-                                  "start": {
-                                    "line": 15,
-                                    "column": 40
-                                  },
-                                  "end": {
-                                    "line": 15,
-                                    "column": 42
-                                  }
-                                },
-                                "name": "id"
-                              },
-                              "computed": false
-                            },
-                            "alternate": {
+                            "operator": "||",
+                            "right": {
                               "type": "Identifier",
-                              "start": 457,
-                              "end": 462,
+                              "start": 447,
+                              "end": 452,
                               "loc": {
                                 "start": {
                                   "line": 15,
-                                  "column": 45
+                                  "column": 35
                                 },
                                 "end": {
                                   "line": 15,
-                                  "column": 50
+                                  "column": 40
                                 }
                               },
                               "name": "guild"
@@ -655,16 +608,16 @@
                           },
                           "alternate": {
                             "type": "Literal",
-                            "start": 465,
-                            "end": 473,
+                            "start": 455,
+                            "end": 463,
                             "loc": {
                               "start": {
                                 "line": 15,
-                                "column": 53
+                                "column": 43
                               },
                               "end": {
                                 "line": 15,
-                                "column": 61
+                                "column": 51
                               }
                             },
                             "value": "global",
@@ -700,8 +653,8 @@
                         {
                           "type": "Block",
                           "value": "* @type {string} ",
-                          "start": 478,
-                          "end": 499,
+                          "start": 468,
+                          "end": 489,
                           "loc": {
                             "start": {
                               "line": 16,
@@ -713,16 +666,16 @@
                             }
                           },
                           "range": [
-                            478,
-                            499
+                            468,
+                            489
                           ]
                         }
                       ]
                     },
                     {
                       "type": "ExpressionStatement",
-                      "start": 503,
-                      "end": 518,
+                      "start": 493,
+                      "end": 508,
                       "loc": {
                         "start": {
                           "line": 17,
@@ -735,8 +688,8 @@
                       },
                       "expression": {
                         "type": "AssignmentExpression",
-                        "start": 503,
-                        "end": 517,
+                        "start": 493,
+                        "end": 507,
                         "loc": {
                           "start": {
                             "line": 17,
@@ -750,8 +703,8 @@
                         "operator": "=",
                         "left": {
                           "type": "MemberExpression",
-                          "start": 503,
-                          "end": 511,
+                          "start": 493,
+                          "end": 501,
                           "loc": {
                             "start": {
                               "line": 17,
@@ -764,8 +717,8 @@
                           },
                           "object": {
                             "type": "ThisExpression",
-                            "start": 503,
-                            "end": 507,
+                            "start": 493,
+                            "end": 497,
                             "loc": {
                               "start": {
                                 "line": 17,
@@ -780,8 +733,8 @@
                           },
                           "property": {
                             "type": "Identifier",
-                            "start": 508,
-                            "end": 511,
+                            "start": 498,
+                            "end": 501,
                             "loc": {
                               "start": {
                                 "line": 17,
@@ -799,8 +752,8 @@
                         },
                         "right": {
                           "type": "Identifier",
-                          "start": 514,
-                          "end": 517,
+                          "start": 504,
+                          "end": 507,
                           "loc": {
                             "start": {
                               "line": 17,
@@ -819,8 +772,8 @@
                         {
                           "type": "Block",
                           "value": "* @type {string} ",
-                          "start": 478,
-                          "end": 499,
+                          "start": 468,
+                          "end": 489,
                           "loc": {
                             "start": {
                               "line": 16,
@@ -832,8 +785,8 @@
                             }
                           },
                           "range": [
-                            478,
-                            499
+                            468,
+                            489
                           ]
                         }
                       ],
@@ -841,8 +794,8 @@
                         {
                           "type": "Block",
                           "value": "* @type {*} ",
-                          "start": 522,
-                          "end": 538,
+                          "start": 512,
+                          "end": 528,
                           "loc": {
                             "start": {
                               "line": 18,
@@ -854,16 +807,16 @@
                             }
                           },
                           "range": [
-                            522,
-                            538
+                            512,
+                            528
                           ]
                         }
                       ]
                     },
                     {
                       "type": "ExpressionStatement",
-                      "start": 542,
-                      "end": 561,
+                      "start": 532,
+                      "end": 551,
                       "loc": {
                         "start": {
                           "line": 19,
@@ -876,8 +829,8 @@
                       },
                       "expression": {
                         "type": "AssignmentExpression",
-                        "start": 542,
-                        "end": 560,
+                        "start": 532,
+                        "end": 550,
                         "loc": {
                           "start": {
                             "line": 19,
@@ -891,8 +844,8 @@
                         "operator": "=",
                         "left": {
                           "type": "MemberExpression",
-                          "start": 542,
-                          "end": 552,
+                          "start": 532,
+                          "end": 542,
                           "loc": {
                             "start": {
                               "line": 19,
@@ -905,8 +858,8 @@
                           },
                           "object": {
                             "type": "ThisExpression",
-                            "start": 542,
-                            "end": 546,
+                            "start": 532,
+                            "end": 536,
                             "loc": {
                               "start": {
                                 "line": 19,
@@ -921,8 +874,8 @@
                           },
                           "property": {
                             "type": "Identifier",
-                            "start": 547,
-                            "end": 552,
+                            "start": 537,
+                            "end": 542,
                             "loc": {
                               "start": {
                                 "line": 19,
@@ -940,8 +893,8 @@
                         },
                         "right": {
                           "type": "Identifier",
-                          "start": 555,
-                          "end": 560,
+                          "start": 545,
+                          "end": 550,
                           "loc": {
                             "start": {
                               "line": 19,
@@ -960,8 +913,8 @@
                         {
                           "type": "Block",
                           "value": "* @type {*} ",
-                          "start": 522,
-                          "end": 538,
+                          "start": 512,
+                          "end": 528,
                           "loc": {
                             "start": {
                               "line": 18,
@@ -973,8 +926,8 @@
                             }
                           },
                           "range": [
-                            522,
-                            538
+                            512,
+                            528
                           ]
                         }
                       ]

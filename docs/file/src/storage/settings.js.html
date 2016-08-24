@@ -156,10 +156,10 @@ export default class SettingStorage extends GuildStorage {
 
 	_getSettingGuildAndKey(setting, guild, requireSetting = true) {
 		if(setting instanceof Setting) {
-			return [!guild ? setting.guild : guild.id ? guild.id : guild, setting.key];
+			return [!guild ? setting.guild : guild.id || guild, setting.key];
 		} else {
 			if(!setting &amp;&amp; requireSetting) throw new Error(&apos;A setting or a key must be specified.&apos;);
-			return [guild ? guild.id ? guild.id : guild : &apos;global&apos;, setting];
+			return [guild ? guild.id || guild : &apos;global&apos;, setting];
 		}
 	}
 }

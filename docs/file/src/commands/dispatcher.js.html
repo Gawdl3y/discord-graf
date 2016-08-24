@@ -149,7 +149,9 @@ export default class CommandDispatcher extends EventEmitter {
 			// Cache the result
 			if(this.bot.config.values.commandEditable &gt; 0) {
 				if(result.editable) {
-					result.timeout = oldResult &amp;&amp; oldResult.timeout ? oldResult.timeout : setTimeout(() =&gt; { delete this._results[message.id]; }, this.bot.config.values.commandEditable * 1000);
+					result.timeout = oldResult &amp;&amp; oldResult.timeout
+						? oldResult.timeout
+						: setTimeout(() =&gt; { delete this._results[message.id]; }, this.bot.config.values.commandEditable * 1000);
 					this._results[message.id] = result;
 				} else {
 					delete this._results[message.id];
@@ -172,7 +174,8 @@ export default class CommandDispatcher extends EventEmitter {
 			user: `${message.author.username}#${message.author.discriminator}`,
 			userID: message.author.id,
 			guild: message.guild ? message.guild.name : null,
-			guildID: message.guild ? message.guild.id : null
+			guildID: message.guild ? message.guild.id : null,
+			messageID: message.id
 		};
 
 		// Make sure the command is usable
@@ -253,7 +256,7 @@ export default class CommandDispatcher extends EventEmitter {
 	async updateMessagesForResult(message, result, oldResult) {
 		// Update the messages
 		const messages = await Promise.all([
-			result.plain || result.reply ? this.updateMessages(message, oldResult.normalMessages, result.plain ? result.plain : result.reply, result.plain ? &apos;plain&apos; : &apos;reply&apos;) : null,
+			result.plain || result.reply ? this.updateMessages(message, oldResult.normalMessages, result.plain || result.reply, result.plain ? &apos;plain&apos; : &apos;reply&apos;) : null,
 			result.direct ? oldResult.direct ? this.updateMessages(message, oldResult.directMessages, result.direct, &apos;direct&apos;) : this.sendMessages(message, result.direct, &apos;direct&apos;) : null
 		]);
 		if(result.plain || result.reply) result.normalMessages = messages[0];
@@ -277,7 +280,7 @@ export default class CommandDispatcher extends EventEmitter {
 
 		// Update/send messages
 		for(let i = 0; i &lt; contents.length; i++) {
-			if(i &lt; oldMessages.length) updatedMessages.push(await oldMessages[i].update(type === &apos;reply&apos; ? `${message.author}, ${contents[i]}` : contents[i]));
+			if(i &lt; oldMessages.length) updatedMessages.push(await oldMessages[i].edit(type === &apos;reply&apos; ? `${message.author}, ${contents[i]}` : contents[i]));
 			else updatedMessages.push((await this.sendMessages(message, [contents[i]], type))[0]);
 		}
 
@@ -390,7 +393,7 @@ export default class CommandDispatcher extends EventEmitter {
 		const escapedPrefix = escapeRegex(prefix);
 		const prefixPatternPiece = prefix ? `${escapedPrefix}\\s*|` : &apos;&apos;;
 		const pattern = new RegExp(`^(${prefixPatternPiece}&lt;@!?${user.id}&gt;\\s+(?:${escapedPrefix})?)([^\\s]+)`, &apos;i&apos;);
-		this.bot.logger.info(`Guild command pattern built.`, {
+		this.bot.logger.verbose(`Guild command pattern built.`, {
 			guild: guild ? guild.name : null,
 			guildID: guild ? guild.id : null,
 			prefix: prefix, pattern: pattern.source
