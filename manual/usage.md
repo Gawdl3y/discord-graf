@@ -46,6 +46,7 @@ All commands extend the base [`Command`](../class/src/commands/command.js~Comman
 They must all override the [constructor](../class/src/commands/command.js~Command.html#instance-constructor-constructor)
 and [`run`](../class/src/commands/command.js~Command.html#instance-method-run) method.
 They may also optionally override the [`hasPermission`](../class/src/commands/command.js~Command.html#instance-method-hasPermission) method.
+If a command name or alias has hyphens (`-`) in it, the framework will automatically add aliases for de-hyphenated ones.
 
 - [List of command settings](../typedef/index.html#static-typedef-CommandInfo)
 

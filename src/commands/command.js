@@ -196,8 +196,8 @@ export default class Command {
 
 /**
  * @typedef {Object} CommandInfo
- * @property {string} name - The name of the command
- * @property {string[]} aliases - Alternative names for the command
+ * @property {string} name - The name of the command (must be lowercase)
+ * @property {string[]} aliases - Alternative names for the command (all must be lowercase)
  * @property {string} module - The ID of the module the command belongs to
  * @property {string} memberName - The member name of the command in the module
  * @property {string} description - A short description of the command

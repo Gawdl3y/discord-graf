@@ -129,7 +129,8 @@ You now have a fully-functioning bot.</p>
 <p>All commands extend the base <a href="./manual/../class/src/commands/command.js~Command.html"><code>Command</code></a> class.
 They must all override the <a href="./manual/../class/src/commands/command.js~Command.html#instance-constructor-constructor">constructor</a>
 and <a href="./manual/../class/src/commands/command.js~Command.html#instance-method-run"><code>run</code></a> method.
-They may also optionally override the <a href="./manual/../class/src/commands/command.js~Command.html#instance-method-hasPermission"><code>hasPermission</code></a> method.</p>
+They may also optionally override the <a href="./manual/../class/src/commands/command.js~Command.html#instance-method-hasPermission"><code>hasPermission</code></a> method.
+If a command name or alias has hyphens (<code>-</code>) in it, the framework will automatically add aliases for de-hyphenated ones.</p>
 <ul>
 <li><a href="./manual/../typedef/index.html#static-typedef-CommandInfo">List of command settings</a></li>
 </ul>
