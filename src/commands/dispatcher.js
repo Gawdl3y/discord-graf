@@ -201,7 +201,7 @@ export default class CommandDispatcher extends EventEmitter {
 
 		// Update/send messages
 		for(let i = 0; i < contents.length; i++) {
-			if(i < oldMessages.length) updatedMessages.push(await oldMessages[i].update(type === 'reply' ? `${message.author}, ${contents[i]}` : contents[i]));
+			if(i < oldMessages.length) updatedMessages.push(await oldMessages[i].edit(type === 'reply' ? `${message.author}, ${contents[i]}` : contents[i]));
 			else updatedMessages.push((await this.sendMessages(message, [contents[i]], type))[0]);
 		}
 
