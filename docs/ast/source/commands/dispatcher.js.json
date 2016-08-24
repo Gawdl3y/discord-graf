@@ -1,7 +1,7 @@
 {
   "type": "Program",
   "start": 0,
-  "end": 14909,
+  "end": 14918,
   "loc": {
     "start": {
       "line": 1,
@@ -30969,9 +30969,9 @@
       "trailingComments": [
         {
           "type": "Block",
-          "value": "*\r\n * @typedef CommandResult\r\n * @property {string[]} [plain] - Strings to send plain messages for\r\n * @property {string[]} [reply] - Strings to send reply messages for\r\n * @property {string[]} [direct] - Strings to send direct messages for\r\n * @property {boolean} [editable=true] - Whether or not the command message is editable\r\n ",
+          "value": "*\r\n * @typedef {Object} CommandResult\r\n * @property {string[]} [plain] - Strings to send plain messages for\r\n * @property {string[]} [reply] - Strings to send reply messages for\r\n * @property {string[]} [direct] - Strings to send direct messages for\r\n * @property {boolean} [editable=true] - Whether or not the command message is editable\r\n ",
           "start": 14571,
-          "end": 14907,
+          "end": 14916,
           "loc": {
             "start": {
               "line": 330,
@@ -30984,7 +30984,7 @@
           },
           "range": [
             14571,
-            14907
+            14916
           ]
         }
       ]

@@ -407,7 +407,7 @@ export default class CommandDispatcher extends EventEmitter {
 const unprefixedCommandPattern = /^([^\s]+)/i;
 
 /**
- * @typedef CommandResult
+ * @typedef {Object} CommandResult
  * @property {string[]} [plain] - Strings to send plain messages for
  * @property {string[]} [reply] - Strings to send reply messages for
  * @property {string[]} [direct] - Strings to send direct messages for
