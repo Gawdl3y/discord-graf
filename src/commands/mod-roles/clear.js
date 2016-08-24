@@ -6,7 +6,7 @@ import Command from '../command';
 export default class ClearModRolesCommand extends Command {
 	constructor(bot) {
 		super(bot, {
-			name: 'clearmodroles',
+			name: 'clear-mod-roles',
 			module: 'mod-roles',
 			memberName: 'clear',
 			description: 'Clears all of the moderator roles.',
@@ -24,7 +24,7 @@ export default class ClearModRolesCommand extends Command {
 
 	async run(message, args) {
 		if(message.author.equals(this.lastUser) && args[0] && args[0].toLowerCase() === 'confirm') {
-			this.bot.storage.clear(message.server);
+			this.bot.storage.clear(message.channel.server);
 			clearTimeout(this.timeout);
 			this.lastUser = null;
 			this.timeout = null;
@@ -36,7 +36,7 @@ export default class ClearModRolesCommand extends Command {
 			}
 			this.lastUser = message.author;
 			this.timeout = setTimeout(() => { this.lastUser = null; }, 30000);
-			return `Are you sure you want to clear all of the moderator roles? Use ${this.bot.util.usage('clearmodroles confirm', message.server)} within the next 30 seconds to continue.`;
+			return `Are you sure you want to clear all of the moderator roles? Use ${this.bot.util.usage('clearmodroles confirm', message.channel.server)} within the next 30 seconds to continue.`;
 		}
 	}
 }

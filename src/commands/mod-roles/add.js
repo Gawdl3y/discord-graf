@@ -7,7 +7,7 @@ import CommandFormatError from '../../errors/command-format';
 export default class AddModRoleCommand extends Command {
 	constructor(bot) {
 		super(bot, {
-			name: 'addmodrole',
+			name: 'add-mod-role',
 			module: 'mod-roles',
 			memberName: 'add',
 			description: 'Adds a moderator role.',
@@ -23,10 +23,10 @@ export default class AddModRoleCommand extends Command {
 	}
 
 	async run(message, args) {
-		if(!args[0]) throw new CommandFormatError(this, message.server);
+		if(!args[0]) throw new CommandFormatError(this, message.channel.server);
 		const matches = this.bot.util.patterns.roleID.exec(args[0]);
-		const idRole = matches ? message.server.roles.get(matches[1]) : null;
-		const roles = idRole ? [idRole] : this.bot.util.search(message.server.roles, args[0]);
+		const idRole = matches ? message.channel.server.roles.get(matches[1]) : null;
+		const roles = idRole ? [idRole] : this.bot.util.search(message.channel.server.roles, args[0]);
 
 		if(roles.length === 1) {
 			if(this.bot.storage.modRoles.save(roles[0])) {
@@ -37,7 +37,7 @@ export default class AddModRoleCommand extends Command {
 		} else if(roles.length > 1) {
 			return this.bot.util.disambiguation(roles, 'roles');
 		} else {
-			return `Unable to identify role. Use ${this.bot.util.usage('roles', message.server)} to view all of the server roles.`;
+			return `Unable to identify role. Use ${this.bot.util.usage('roles', message.channel.server)} to view all of the server roles.`;
 		}
 	}
 }

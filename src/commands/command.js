@@ -36,7 +36,7 @@ export default class Command {
 		 * @type {string[]}
 		 * @see {@link CommandInfo}
 		 */
-		this.aliases = info.aliases || null;
+		this.aliases = info.aliases || [];
 
 		/**
 		 * @type {string}
@@ -185,8 +185,8 @@ export default class Command {
 	 * @return {boolean} Whether or not the command is usable
 	 */
 	isUsable(message = null) {
-		if(this.serverOnly && message && !message.server) return false;
-		return !message || (this.isEnabled(message.server) && this.hasPermission(message.server, message.author));
+		if(this.serverOnly && message && !message.channel.server) return false;
+		return !message || (this.isEnabled(message.channel.server) && this.hasPermission(message.channel.server, message.author));
 	}
 }
 

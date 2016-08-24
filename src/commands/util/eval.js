@@ -33,7 +33,7 @@ export default class EvalCommand extends Command {
 	}
 
 	async run(message, args) {
-		if(!args[0]) throw new CommandFormatError(this, message.server);
+		if(!args[0]) throw new CommandFormatError(this, message.channel.server);
 
 		/* eslint-disable no-unused-vars */
 		const msg = message;

@@ -7,8 +7,8 @@ import CommandFormatError from '../../errors/command-format';
 export default class AllowChannelCommand extends Command {
 	constructor(bot) {
 		super(bot, {
-			name: 'allowchannel',
-			aliases: ['allowchan'],
+			name: 'allow-channel',
+			aliases: ['allow-chan'],
 			module: 'channels',
 			memberName: 'allow',
 			description: 'Allows command operation in a channel.',
@@ -23,10 +23,10 @@ export default class AllowChannelCommand extends Command {
 	}
 
 	async run(message, args) {
-		if(!args[0]) throw new CommandFormatError(this, message.server);
+		if(!args[0]) throw new CommandFormatError(this, message.channel.server);
 		const matches = this.bot.util.patterns.channelID.exec(args[0]);
-		const idChannel = matches ? message.server.channels.get(matches[1]) : null;
-		const channels = idChannel ? [idChannel] : this.bot.util.search(message.server.channels.getAll('type', 'text'), args[0]);
+		const idChannel = matches ? message.channel.server.channels.get(matches[1]) : null;
+		const channels = idChannel ? [idChannel] : this.bot.util.search(message.channel.server.channels.getAll('type', 'text'), args[0]);
 
 		if(channels.length === 1) {
 			if(this.bot.storage.allowedChannels.save(channels[0])) {

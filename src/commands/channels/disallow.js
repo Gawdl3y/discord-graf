@@ -8,8 +8,8 @@ import CommandFormatError from '../../errors/command-format';
 export default class DisallowChannelCommand extends Command {
 	constructor(bot) {
 		super(bot, {
-			name: 'disallowchannel',
-			aliases: ['disallowchan'],
+			name: 'disallow-channel',
+			aliases: ['disallow-chan'],
 			module: 'channels',
 			memberName: 'disallow',
 			description: 'Disallows command operation in a channel.',
@@ -25,17 +25,17 @@ export default class DisallowChannelCommand extends Command {
 	}
 
 	async run(message, args) {
-		if(!args[0]) throw new CommandFormatError(this, message.server);
+		if(!args[0]) throw new CommandFormatError(this, message.channel.server);
 		const matches = this.bot.util.patterns.channelID.exec(args[0]);
-		const idChannel = matches ? message.server.channels.get(matches[1]) : null;
-		const allowedChannels = this.bot.storage.allowedChannels.find(message.server);
+		const idChannel = matches ? message.channel.server.channels.get(matches[1]) : null;
+		const allowedChannels = this.bot.storage.allowedChannels.find(message.channel.server);
 		if(allowedChannels.length > 0) {
-			const channels = idChannel ? [idChannel] : this.bot.storage.allowedChannels.find(message.server, args[0]);
+			const channels = idChannel ? [idChannel] : this.bot.storage.allowedChannels.find(message.channel.server, args[0]);
 			if(channels.length === 1) {
 				if(this.bot.storage.allowedChannels.delete(channels[0])) {
 					return stripIndents`
 						Disallowed operation in ${channels[0]}.
-						${this.bot.storage.allowedChannels.find(message.server).length === 0 ? 'Since there are no longer any allowed channels, operation is now allowed in all channels.' : ''}
+						${this.bot.storage.allowedChannels.find(message.channel.server).length === 0 ? 'Since there are no longer any allowed channels, operation is now allowed in all channels.' : ''}
 					`;
 				} else {
 					return `Operation is already not allowed in ${channels[0]}.`;
@@ -43,10 +43,10 @@ export default class DisallowChannelCommand extends Command {
 			} else if(channels.length > 1) {
 				return this.bot.util.disambiguation(channels, 'channels');
 			} else {
-				return `Unable to identify channel. Use ${this.bot.util.usage('allowedchannels', message.server)} to view the allowed channels.`;
+				return `Unable to identify channel. Use ${this.bot.util.usage('allowedchannels', message.channel.server)} to view the allowed channels.`;
 			}
 		} else {
-			const serverChannels = message.server.channels.getAll('type', 'text');
+			const serverChannels = message.channel.server.channels.getAll('type', 'text');
 			const channels = idChannel ? [idChannel] : this.bot.util.search(serverChannels, args[0]);
 			if(channels.length === 1) {
 				const index = serverChannels.indexOf(channels[0]);
@@ -59,7 +59,7 @@ export default class DisallowChannelCommand extends Command {
 			} else if(channels.length > 1) {
 				return this.bot.util.disambiguation(channels, 'channels');
 			} else {
-				return `Unable to identify channel. Use ${this.bot.util.usage('allowedchannels', message.server)} to view the allowed channels.`;
+				return `Unable to identify channel. Use ${this.bot.util.usage('allowedchannels', message.channel.server)} to view the allowed channels.`;
 			}
 		}
 	}

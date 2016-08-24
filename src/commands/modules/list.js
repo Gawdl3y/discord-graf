@@ -8,7 +8,7 @@ export default class ListModulesCommand extends Command {
 	constructor(bot) {
 		super(bot, {
 			name: 'modules',
-			aliases: ['listmodules', 'showmodules'],
+			aliases: ['list-modules', 'show-modules'],
 			module: 'modules',
 			memberName: 'list',
 			description: 'Lists all modules.',
@@ -24,7 +24,7 @@ export default class ListModulesCommand extends Command {
 	async run(message) {
 		return stripIndents`
 			__**Modules**__
-			${this.bot.registry.modules.map(mod => `**${mod.name}:** ${mod.isEnabled(message.server) ? 'Enabled' : 'Disabled'}`).join('\n')}
+			${this.bot.registry.modules.map(mod => `**${mod.name}:** ${mod.isEnabled(message.channel.server) ? 'Enabled' : 'Disabled'}`).join('\n')}
 		`;
 	}
 }

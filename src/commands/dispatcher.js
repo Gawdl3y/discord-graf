@@ -31,11 +31,11 @@ export default class CommandDispatcher extends EventEmitter {
 		if(message.author.equals(this.bot.client.user)) return;
 
 		// Make sure the bot is allowed to run in the channel, or the user is an admin
-		if(message.server
-			&& Module.isEnabled(this.bot.storage.settings, message.server, 'channels')
-			&& !this.bot.storage.allowedChannels.isEmpty(message.server)
-			&& !this.bot.storage.allowedChannels.exists(message.server, message.channel)
-			&& !this.bot.permissions.isAdmin(message.server, message.author)) return;
+		if(message.channel.server
+			&& Module.isEnabled(this.bot.storage.settings, message.channel.server, 'channels')
+			&& !this.bot.storage.allowedChannels.isEmpty(message.channel.server)
+			&& !this.bot.storage.allowedChannels.exists(message.channel.server, message.channel)
+			&& !this.bot.permissions.isAdmin(message.channel.server, message.author)) return;
 
 		// Parse the message, and get the old result if it exists
 		const [command, args, fromPattern, isCommandMessage] = this._parseMessage(message);
@@ -44,17 +44,17 @@ export default class CommandDispatcher extends EventEmitter {
 		// Run the command, or make an error message result
 		let result;
 		if(command) {
-			if(!command.isEnabled(message.server)) result = { reply: [`The \`${command.name}\` command is disabled.`], editable: true };
+			if(!command.isEnabled(message.channel.server)) result = { reply: [`The \`${command.name}\` command is disabled.`], editable: true };
 			else if(!oldMessage || oldResult) result = await this.run(command, args, fromPattern, message);
 		} else if(isCommandMessage) {
-			result = { reply: [`Unknown command. Use ${this.bot.util.usage('help', message.server)} to view the list of all commands.`], editable: true };
+			result = { reply: [`Unknown command. Use ${this.bot.util.usage('help', message.channel.server)} to view the list of all commands.`], editable: true };
 		} else if(this.bot.config.values.nonCommandEdit) {
 			result = { editable: true };
 		}
 
 		if(result) {
 			// Change a plain or reply response into direct if there isn't a server
-			if(!message.server) {
+			if(!message.channel.server) {
 				if(!result.direct) result.direct = result.plain || result.reply;
 				delete result.plain;
 				delete result.reply;
@@ -92,16 +92,16 @@ export default class CommandDispatcher extends EventEmitter {
 			args: String(args),
 			user: `${message.author.username}#${message.author.discriminator}`,
 			userID: message.author.id,
-			server: message.server ? message.server.name : null,
-			serverID: message.server ? message.server.id : null
+			server: message.channel.server ? message.channel.server.name : null,
+			serverID: message.channel.server ? message.channel.server.id : null
 		};
 
 		// Make sure the command is usable
-		if(command.serverOnly && !message.server) {
+		if(command.serverOnly && !message.channel.server) {
 			this.bot.logger.info(`Not running ${command.module}:${command.memberName}; server only.`, logInfo);
 			return { reply: [`The \`${command.name}\` command must be used in a server channel.`], editable: true };
 		}
-		if(!command.hasPermission(message.server, message.author)) {
+		if(!command.hasPermission(message.channel.server, message.author)) {
 			this.bot.logger.info(`Not running ${command.module}:${command.memberName}; don't have permission.`, logInfo);
 			return { reply: [`You do not have permission to use the \`${command.name}\` command.`], editable: true };
 		}
@@ -226,10 +226,10 @@ export default class CommandDispatcher extends EventEmitter {
 		}
 
 		// Find the command to run with default command handling
-		const patternIndex = message.server ? message.server.id : '-';
-		if(!this._serverCommandPatterns[patternIndex]) this._serverCommandPatterns[patternIndex] = this._buildCommandPattern(message.server, message.client.user);
+		const patternIndex = message.channel.server ? message.channel.server.id : '-';
+		if(!this._serverCommandPatterns[patternIndex]) this._serverCommandPatterns[patternIndex] = this._buildCommandPattern(message.channel.server, message.client.user);
 		let [command, args, isCommandMessage] = this._matchDefault(message, this._serverCommandPatterns[patternIndex], 2);
-		if(!command && !message.server) [command, args, isCommandMessage] = this._matchDefault(message, unprefixedCommandPattern);
+		if(!command && !message.channel.server) [command, args, isCommandMessage] = this._matchDefault(message, unprefixedCommandPattern);
 		if(command) return [command, args, false, true];
 
 		return [null, null, false, isCommandMessage];

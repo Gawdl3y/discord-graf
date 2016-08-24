@@ -8,8 +8,8 @@ import CommandFormatError from '../../errors/command-format';
 export default class ToggleModuleCommand extends Command {
 	constructor(bot) {
 		super(bot, {
-			name: 'togglemodule',
-			aliases: ['togglemod', 'module'],
+			name: 'toggle-module',
+			aliases: ['toggle-mod', 'module'],
 			module: 'modules',
 			memberName: 'toggle',
 			description: 'Toggles a module or command.',
@@ -29,24 +29,24 @@ export default class ToggleModuleCommand extends Command {
 	}
 
 	async run(message, args) {
-		if(!args[0]) throw new CommandFormatError(this, message.server);
+		if(!args[0]) throw new CommandFormatError(this, message.channel.server);
 		const modules = this.bot.registry.findModules(args[0]);
 		if(modules.length === 1) {
 			if(modules[0].id === 'modules') return `You cannot toggle the ${modules[0].name} module.`;
-			modules[0].setEnabled(message.server, !modules[0].isEnabled(message.server));
-			return `${modules[0].isEnabled(message.server) ? 'Enabled' : 'Disabled'} ${modules[0].name} module.`;
+			modules[0].setEnabled(message.channel.server, !modules[0].isEnabled(message.channel.server));
+			return `${modules[0].isEnabled(message.channel.server) ? 'Enabled' : 'Disabled'} ${modules[0].name} module.`;
 		} else if(modules.length > 0) {
 			return this.bot.util.disambiguation(modules, 'modules');
 		} else {
 			const commands = this.bot.registry.findCommands(args[0]);
 			if(commands.length === 1) {
 				if(commands[0].module === 'modules') return `You cannot toggle the \`${commands[0].name}\` command.`;
-				commands[0].setEnabled(message.server, !commands[0].isEnabled(message.server));
-				return `${commands[0].isEnabled(message.server) ? 'Enabled' : 'Disabled'} \`${commands[0].name}\` command.`;
+				commands[0].setEnabled(message.channel.server, !commands[0].isEnabled(message.channel.server));
+				return `${commands[0].isEnabled(message.channel.server) ? 'Enabled' : 'Disabled'} \`${commands[0].name}\` command.`;
 			} else if(commands.length > 1) {
 				return `No modules found. ${this.bot.util.disambiguation(commands, 'commands')}`;
 			} else {
-				return `Unable to identify module or command. Use ${this.bot.util.usage('modules', message.server)} to view the list of modules.`;
+				return `Unable to identify module or command. Use ${this.bot.util.usage('modules', message.channel.server)} to view the list of modules.`;
 			}
 		}
 	}

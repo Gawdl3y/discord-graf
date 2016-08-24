@@ -7,8 +7,8 @@ import Command from '../command';
 export default class ListModRolesCommand extends Command {
 	constructor(bot) {
 		super(bot, {
-			name: 'modroles',
-			aliases: ['listmodroles', 'showmodroles'],
+			name: 'mod-roles',
+			aliases: ['list-mod-roles', 'show-mod-roles'],
 			module: 'mod-roles',
 			memberName: 'list',
 			description: 'Lists all moderator roles.',
@@ -22,7 +22,7 @@ export default class ListModRolesCommand extends Command {
 	}
 
 	async run(message) {
-		const roles = this.bot.storage.modRoles.find(message.server);
+		const roles = this.bot.storage.modRoles.find(message.channel.server);
 		if(roles.length > 0) {
 			return stripIndents`
 				__**Moderator roles**__

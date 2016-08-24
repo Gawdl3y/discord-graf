@@ -7,8 +7,8 @@ import Command from '../command';
 export default class ClearAllowedChannelsCommand extends Command {
 	constructor(bot) {
 		super(bot, {
-			name: 'clearallowedchannels',
-			aliases: ['clearallowedchans'],
+			name: 'clear-allowed-channels',
+			aliases: ['clear-allowed-chans'],
 			module: 'channels',
 			memberName: 'clear-allowed',
 			description: 'Clears all of the allowed channels.',
@@ -26,7 +26,7 @@ export default class ClearAllowedChannelsCommand extends Command {
 
 	async run(message, args) {
 		if(message.author.equals(this.lastUser) && args[0] && args[0].toLowerCase() === 'confirm') {
-			this.bot.storage.allowedChannels.clear(message.server);
+			this.bot.storage.allowedChannels.clear(message.channel.server);
 			clearTimeout(this.timeout);
 			this.lastUser = null;
 			this.timeout = null;
@@ -41,7 +41,7 @@ export default class ClearAllowedChannelsCommand extends Command {
 			return oneLine`
 				Are you sure you want to clear all of the allowed channels?
 				Operation will be permitted in all channels.
-				Use ${this.bot.util.usage('clearallowedchannels confirm', message.server)} to continue.
+				Use ${this.bot.util.usage('clearallowedchannels confirm', message.channel.server)} to continue.
 			`;
 		}
 	}

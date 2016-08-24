@@ -7,8 +7,8 @@ import Command from '../command';
 export default class ListAllowedChannelsCommand extends Command {
 	constructor(bot) {
 		super(bot, {
-			name: 'allowedchannels',
-			aliases: ['listallowedchannels', 'showallowedchannels', 'allowedchans'],
+			name: 'allowed-channels',
+			aliases: ['list-allowed-channels', 'show-allowed-channels', 'allowed-chans'],
 			module: 'channels',
 			memberName: 'list-allowed',
 			description: 'Lists all channels command operation is allowed in.',
@@ -17,7 +17,7 @@ export default class ListAllowedChannelsCommand extends Command {
 	}
 
 	async run(message) {
-		const channels = this.bot.storage.allowedChannels.find(message.server);
+		const channels = this.bot.storage.allowedChannels.find(message.channel.server);
 		if(channels.length > 0) {
 			return stripIndents`
 				__**Allowed channels**__

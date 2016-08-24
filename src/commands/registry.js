@@ -39,6 +39,13 @@ export default class CommandRegistry extends EventEmitter {
 			const module = this.modules.find(mod => mod.id === command.module);
 			if(!module) throw new Error(`Module "${command.module}" is not registered.`);
 			if(module.commands.some(cmd => cmd.memberName === command.memberName)) throw new Error(`A command with the member name "${command.memberName}" is already registered in ${module.id}`);
+
+			if(command.name.includes('-')) command.aliases.push(command.name.replace(/-/g, ''));
+			for(const alias of command.aliases) {
+				if(this.commands.some(cmd => cmd.aliases.some(ali => ali === alias))) throw new Error(`A command with the alias "${alias}" is already registered.`);
+				if(alias.includes('-')) command.aliases.push(alias.replace(/-/g, ''));
+			}
+
 			module.commands.push(command);
 			this.commands.push(command);
 			if(this.logger) this.logger.verbose(`Registered command ${command.module}:${command.memberName}.`);
