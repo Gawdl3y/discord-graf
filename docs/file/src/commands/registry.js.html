@@ -101,6 +101,7 @@ export default class CommandRegistry extends EventEmitter {
 	 * Registers a single command
 	 * @param {Command} command - The command to register
 	 * @return {void}
+	 * @see {@link CommandRegistry#registerCommands}
 	 */
 	registerCommand(command) {
 		this.registerCommands([command]);
@@ -110,6 +111,7 @@ export default class CommandRegistry extends EventEmitter {
 	 * Registers multiple commands
 	 * @param {Command[]} commands - The commands to register
 	 * @return {void}
+	 * @emits commandRegister When a command is registered, with the command and registry passed
 	 */
 	registerCommands(commands) {
 		if(!Array.isArray(commands)) throw new TypeError(&apos;Commands must be an array.&apos;);
@@ -136,6 +138,7 @@ export default class CommandRegistry extends EventEmitter {
 	 * Registers a single module
 	 * @param {Module} module - The module to register
 	 * @return {void}
+	 * @see {@link CommandRegistry#registerModules}
 	 */
 	registerModule(module) {
 		this.registerModules([module]);
@@ -145,6 +148,7 @@ export default class CommandRegistry extends EventEmitter {
 	 * Registers multiple modules
 	 * @param {Module[]} modules - The modules to register
 	 * @return {void}
+	 * @emits moduleRegister When a module is registered, with the module and registry passed
 	 */
 	registerModules(modules) {
 		if(!Array.isArray(modules)) throw new TypeError(&apos;Modules must be an array.&apos;);

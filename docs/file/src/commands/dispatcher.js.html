@@ -167,6 +167,8 @@ export default class CommandDispatcher extends EventEmitter {
 	 * @param {boolean} fromPattern - Whether or not the arguments are from a pattern match
 	 * @param {Message} message - The message that triggered the run
 	 * @return {Promise&lt;CommandResult&gt;} The result of running the command
+	 * @emits commandRun When a command is run, with the command, result, message, args, and fromPattern passed
+	 * @emits commandError When an error occurs while running a command, with the command, message, args, and fromPattern passed
 	 */
 	async run(command, args, fromPattern, message) {
 		const logInfo = {

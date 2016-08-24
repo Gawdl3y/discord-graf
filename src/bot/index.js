@@ -139,6 +139,7 @@ export default class Bot {
 	 * Registers a single command to the bot's registry
 	 * @param {Command|function} command - Either a Command instance, or a constructor for one
 	 * @return {Bot} This bot
+	 * @see {@link Bot#registerCommands}
 	 */
 	registerCommand(command) {
 		return this.registerCommands([command]);
@@ -160,6 +161,7 @@ export default class Bot {
 	 * Registers a single module to the bot's registry
 	 * @param {Module|function|Array} module - A Module instance, a constructor, or an array of [ID, Name]
 	 * @return {Bot} This bot
+	 * @see {@link Bot#registerModules}
 	 */
 	registerModule(module) {
 		return this.registerModules([module]);
@@ -241,6 +243,7 @@ export default class Bot {
 	 * @param {string} key - The key for the object
 	 * @param {Object} obj - The object
 	 * @return {Bot} This bot
+	 * @see {@link Bot#registerEvalObjects}
 	 */
 	registerEvalObject(key, obj) {
 		const registerObj = {};
