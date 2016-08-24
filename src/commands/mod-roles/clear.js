@@ -11,24 +11,24 @@ export default class ClearModRolesCommand extends Command {
 			memberName: 'clear',
 			description: 'Clears all of the moderator roles.',
 			details: 'Only administrators may use this command.',
-			serverOnly: true
+			guildOnly: true
 		});
 
 		this.lastUser = null;
 		this.timeout = null;
 	}
 
-	hasPermission(server, user) {
-		return this.bot.permissions.isAdmin(server, user);
+	hasPermission(guild, user) {
+		return this.bot.permissions.isAdmin(guild, user);
 	}
 
 	async run(message, args) {
 		if(message.author.equals(this.lastUser) && args[0] && args[0].toLowerCase() === 'confirm') {
-			this.bot.storage.clear(message.channel.server);
+			this.bot.storage.clear(message.guild);
 			clearTimeout(this.timeout);
 			this.lastUser = null;
 			this.timeout = null;
-			return 'Cleared the server\'s moderator roles. Moderators will be determined by the "Manage messages" permission.';
+			return 'Cleared the guild\'s moderator roles. Moderators will be determined by the "Manage messages" permission.';
 		} else {
 			if(this.timeout) {
 				clearTimeout(this.timeout);
@@ -36,7 +36,7 @@ export default class ClearModRolesCommand extends Command {
 			}
 			this.lastUser = message.author;
 			this.timeout = setTimeout(() => { this.lastUser = null; }, 30000);
-			return `Are you sure you want to clear all of the moderator roles? Use ${this.bot.util.usage('clearmodroles confirm', message.channel.server)} within the next 30 seconds to continue.`;
+			return `Are you sure you want to clear all of the moderator roles? Use ${this.bot.util.usage('clearmodroles confirm', message.guild)} within the next 30 seconds to continue.`;
 		}
 	}
 }

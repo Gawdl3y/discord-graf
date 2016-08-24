@@ -27,29 +27,29 @@ export default class PrefixCommand extends Command {
 		const storage = this.bot.storage.settings;
 		const config = this.bot.config.values;
 
-		if(args[0] && message.channel.server) {
-			if(!this.bot.permissions.isAdmin(message.channel.server, message.author)) return 'Only administrators may change the command prefix.';
+		if(args[0] && message.guild) {
+			if(!this.bot.permissions.isAdmin(message.guild, message.author)) return 'Only administrators may change the command prefix.';
 
 			// Save the prefix
 			const lowercase = args[0].toLowerCase();
 			const prefix = lowercase === 'none' ? '' : args[0];
 			let response;
 			if(lowercase === 'default') {
-				storage.delete('command-prefix', message.channel.server);
+				storage.delete('command-prefix', message.guild);
 				response = `Reset the command prefix to the default (currently \`${config.commandPrefix}\`).`;
 			} else {
-				storage.save(new Setting(message.channel.server, 'command-prefix', prefix));
+				storage.save(new Setting(message.guild, 'command-prefix', prefix));
 				response = prefix ? `Set the command prefix to \`${args[0]}\`.` : 'Removed the command prefix entirely.';
 			}
 
 			// Build the pattern
-			const pattern = this.bot.dispatcher._buildCommandPattern(message.channel.server, message.client.user);
-			this.bot.dispatcher._serverCommandPatterns[message.channel.server.id] = pattern;
+			const pattern = this.bot.dispatcher._buildCommandPattern(message.guild, message.client.user);
+			this.bot.dispatcher._guildCommandPatterns[message.guild.id] = pattern;
 
-			return `${response} To run commands, use ${this.bot.util.usage('command', message.channel.server)}.`;
+			return `${response} To run commands, use ${this.bot.util.usage('command', message.guild)}.`;
 		} else {
-			const prefix = message.channel.server ? storage.getValue(message.channel.server, 'command-prefix', config.commandPrefix) : config.commandPrefix;
-			return `${prefix ? `The command prefix is \`${prefix}\`.` : 'There is no command prefix.'} To run commands, use ${this.bot.util.usage('command', message.channel.server)}.`;
+			const prefix = message.guild ? storage.getValue(message.guild, 'command-prefix', config.commandPrefix) : config.commandPrefix;
+			return `${prefix ? `The command prefix is \`${prefix}\`.` : 'There is no command prefix.'} To run commands, use ${this.bot.util.usage('command', message.guild)}.`;
 		}
 	}
 }

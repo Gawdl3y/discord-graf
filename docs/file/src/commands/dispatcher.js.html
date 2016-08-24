@@ -42,13 +42,13 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Storage">Storage</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Util">Util</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-version">version</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_channel.html">Channel</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_client.html">Client</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Channel">Channel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Client">Client</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Storage">LocalStorage</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://github.com/winstonjs/winston/blob/master/README.md">Logger</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_message.html">Message</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_user.html">User</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Message">Message</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/User">User</a></span></span></li>
 <li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">bot</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/config.js~BotConfig.html">BotConfig</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/index.js~Bot.html">Bot</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/permissions.js~BotPermissions.html">BotPermissions</a></span></span></li>
@@ -95,7 +95,7 @@ export default class CommandDispatcher extends EventEmitter {
 		/** @type {Bot} */
 		this.bot = bot;
 
-		this._serverCommandPatterns = {};
+		this._guildCommandPatterns = {};
 		this._results = {};
 	}
 
@@ -109,11 +109,11 @@ export default class CommandDispatcher extends EventEmitter {
 		if(message.author.equals(this.bot.client.user)) return;
 
 		// Make sure the bot is allowed to run in the channel, or the user is an admin
-		if(message.server
-			&amp;&amp; Module.isEnabled(this.bot.storage.settings, message.server, &apos;channels&apos;)
-			&amp;&amp; !this.bot.storage.allowedChannels.isEmpty(message.server)
-			&amp;&amp; !this.bot.storage.allowedChannels.exists(message.server, message.channel)
-			&amp;&amp; !this.bot.permissions.isAdmin(message.server, message.author)) return;
+		if(message.guild
+			&amp;&amp; Module.isEnabled(this.bot.storage.settings, message.guild, &apos;channels&apos;)
+			&amp;&amp; !this.bot.storage.allowedChannels.isEmpty(message.guild)
+			&amp;&amp; !this.bot.storage.allowedChannels.exists(message.guild, message.channel)
+			&amp;&amp; !this.bot.permissions.isAdmin(message.guild, message.author)) return;
 
 		// Parse the message, and get the old result if it exists
 		const [command, args, fromPattern, isCommandMessage] = this._parseMessage(message);
@@ -122,17 +122,17 @@ export default class CommandDispatcher extends EventEmitter {
 		// Run the command, or make an error message result
 		let result;
 		if(command) {
-			if(!command.isEnabled(message.server)) result = { reply: [`The \`${command.name}\` command is disabled.`], editable: true };
+			if(!command.isEnabled(message.guild)) result = { reply: [`The \`${command.name}\` command is disabled.`], editable: true };
 			else if(!oldMessage || oldResult) result = await this.run(command, args, fromPattern, message);
 		} else if(isCommandMessage) {
-			result = { reply: [`Unknown command. Use ${this.bot.util.usage(&apos;help&apos;, message.server)} to view the list of all commands.`], editable: true };
+			result = { reply: [`Unknown command. Use ${this.bot.util.usage(&apos;help&apos;, message.guild)} to view the list of all commands.`], editable: true };
 		} else if(this.bot.config.values.nonCommandEdit) {
 			result = { editable: true };
 		}
 
 		if(result) {
-			// Change a plain or reply response into direct if there isn&apos;t a server
-			if(!message.server) {
+			// Change a plain or reply response into direct if there isn&apos;t a guild
+			if(!message.guild) {
 				if(!result.direct) result.direct = result.plain || result.reply;
 				delete result.plain;
 				delete result.reply;
@@ -170,16 +170,16 @@ export default class CommandDispatcher extends EventEmitter {
 			args: String(args),
 			user: `${message.author.username}#${message.author.discriminator}`,
 			userID: message.author.id,
-			server: message.server ? message.server.name : null,
-			serverID: message.server ? message.server.id : null
+			guild: message.guild ? message.guild.name : null,
+			guildID: message.guild ? message.guild.id : null
 		};
 
 		// Make sure the command is usable
-		if(command.serverOnly &amp;&amp; !message.server) {
-			this.bot.logger.info(`Not running ${command.module}:${command.memberName}; server only.`, logInfo);
-			return { reply: [`The \`${command.name}\` command must be used in a server channel.`], editable: true };
+		if(command.guildOnly &amp;&amp; !message.guild) {
+			this.bot.logger.info(`Not running ${command.module}:${command.memberName}; guild only.`, logInfo);
+			return { reply: [`The \`${command.name}\` command must be used in a guild channel.`], editable: true };
 		}
-		if(!command.hasPermission(message.server, message.author)) {
+		if(!command.hasPermission(message.guild, message.author)) {
 			this.bot.logger.info(`Not running ${command.module}:${command.memberName}; don&apos;t have permission.`, logInfo);
 			return { reply: [`You do not have permission to use the \`${command.name}\` command.`], editable: true };
 		}
@@ -200,7 +200,7 @@ export default class CommandDispatcher extends EventEmitter {
 				return {
 					reply: [stripIndents`
 						An error occurred while running the command: \`${err.name}: ${err.message}\`
-						${owner ? `Please contact ${owner.name}#${owner.discriminator}${this.bot.config.values.invite ? ` in this server: ${this.bot.config.values.invite}` : &apos;.&apos;}` : &apos;&apos;}
+						${owner ? `Please contact ${owner.name}#${owner.discriminator}${this.bot.config.values.invite ? ` in this guild: ${this.bot.config.values.invite}` : &apos;.&apos;}` : &apos;&apos;}
 					`],
 					editable: true
 				};
@@ -304,17 +304,17 @@ export default class CommandDispatcher extends EventEmitter {
 		}
 
 		// Find the command to run with default command handling
-		const patternIndex = message.server ? message.server.id : &apos;-&apos;;
-		if(!this._serverCommandPatterns[patternIndex]) this._serverCommandPatterns[patternIndex] = this._buildCommandPattern(message.server, message.client.user);
-		let [command, args, isCommandMessage] = this._matchDefault(message, this._serverCommandPatterns[patternIndex], 2);
-		if(!command &amp;&amp; !message.server) [command, args, isCommandMessage] = this._matchDefault(message, unprefixedCommandPattern);
+		const patternIndex = message.guild ? message.guild.id : &apos;-&apos;;
+		if(!this._guildCommandPatterns[patternIndex]) this._guildCommandPatterns[patternIndex] = this._buildCommandPattern(message.guild, message.client.user);
+		let [command, args, isCommandMessage] = this._matchDefault(message, this._guildCommandPatterns[patternIndex], 2);
+		if(!command &amp;&amp; !message.guild) [command, args, isCommandMessage] = this._matchDefault(message, unprefixedCommandPattern);
 		if(command) return [command, args, false, true];
 
 		return [null, null, false, isCommandMessage];
 	}
 
 	/**
-	 * Matches a message against a server command pattern
+	 * Matches a message against a guild command pattern
 	 * @param {Message} message - The message
 	 * @param {RegExp} pattern - The pattern to match against
 	 * @param {number} commandNameIndex - The index of the command name in the pattern matches
@@ -379,19 +379,19 @@ export default class CommandDispatcher extends EventEmitter {
 
 	/**
 	 * Creates a regular expression to match the command prefix and name in a message
-	 * @param {?Server} server - The Server that the message is from
+	 * @param {?Guild} guild - The Guild that the message is from
 	 * @param {User} user - The User that the bot is running for
 	 * @return {RegExp} Regular expression that matches a command prefix and name
 	 */
-	_buildCommandPattern(server, user) {
-		let prefix = server ? this.bot.storage.settings.getValue(server, &apos;command-prefix&apos;, this.bot.config.values.commandPrefix) : this.bot.config.values.commandPrefix;
+	_buildCommandPattern(guild, user) {
+		let prefix = guild ? this.bot.storage.settings.getValue(guild, &apos;command-prefix&apos;, this.bot.config.values.commandPrefix) : this.bot.config.values.commandPrefix;
 		if(prefix === &apos;none&apos;) prefix = &apos;&apos;;
 		const escapedPrefix = escapeRegex(prefix);
 		const prefixPatternPiece = prefix ? `${escapedPrefix}\\s*|` : &apos;&apos;;
 		const pattern = new RegExp(`^(${prefixPatternPiece}&lt;@!?${user.id}&gt;\\s+(?:${escapedPrefix})?)([^\\s]+)`, &apos;i&apos;);
-		this.bot.logger.info(`Server command pattern built.`, {
-			server: server ? server.name : null,
-			serverID: server ? server.id : null,
+		this.bot.logger.info(`Guild command pattern built.`, {
+			guild: guild ? guild.name : null,
+			guildID: guild ? guild.id : null,
 			prefix: prefix, pattern: pattern.source
 		});
 		return pattern;

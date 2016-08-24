@@ -14,19 +14,19 @@ export default class AddModRoleCommand extends Command {
 			usage: 'addmodrole <role>',
 			details: 'The role must be the name or ID of a role, or a role mention. Only administrators may use this command.',
 			examples: ['addmodrole cool', 'addmodrole 205536402341888001', 'addmodrole @CoolPeopleRole'],
-			serverOnly: true
+			guildOnly: true
 		});
 	}
 
-	hasPermission(server, user) {
-		return this.bot.permissions.isAdmin(server, user);
+	hasPermission(guild, user) {
+		return this.bot.permissions.isAdmin(guild, user);
 	}
 
 	async run(message, args) {
-		if(!args[0]) throw new CommandFormatError(this, message.channel.server);
+		if(!args[0]) throw new CommandFormatError(this, message.guild);
 		const matches = this.bot.util.patterns.roleID.exec(args[0]);
-		const idRole = matches ? message.channel.server.roles.get(matches[1]) : null;
-		const roles = idRole ? [idRole] : this.bot.util.search(message.channel.server.roles, args[0]);
+		const idRole = matches ? message.guild.roles.get(matches[1]) : null;
+		const roles = idRole ? [idRole] : this.bot.util.search(message.guild.roles, args[0]);
 
 		if(roles.length === 1) {
 			if(this.bot.storage.modRoles.save(roles[0])) {
@@ -37,7 +37,7 @@ export default class AddModRoleCommand extends Command {
 		} else if(roles.length > 1) {
 			return this.bot.util.disambiguation(roles, 'roles');
 		} else {
-			return `Unable to identify role. Use ${this.bot.util.usage('roles', message.channel.server)} to view all of the server roles.`;
+			return `Unable to identify role. Use ${this.bot.util.usage('roles', message.guild)} to view all of the guild roles.`;
 		}
 	}
 }

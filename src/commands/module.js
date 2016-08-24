@@ -26,48 +26,48 @@ export default class Module {
 	}
 
 	/**
-	 * Enables or disables the module on a server
-	 * @param {Server|string} server - The server or server ID
+	 * Enables or disables the module on a guild
+	 * @param {Guild|string} guild - The guild or guild ID
 	 * @param {boolean} enabled - Whether the module should be enabled or disabled
 	 * @return {void}
 	 * @see {@link Module.setEnabled}
 	 */
-	setEnabled(server, enabled) {
-		this.constructor.setEnabled(this.bot.storage.settings, server, this, enabled);
+	setEnabled(guild, enabled) {
+		this.constructor.setEnabled(this.bot.storage.settings, guild, this, enabled);
 	}
 
 	/**
-	 * Enables or disables a module on a server
+	 * Enables or disables a module on a guild
 	 * @param {SettingStorage} settings - The setting storage to use
-	 * @param {Server|string} server - The server or server ID
+	 * @param {Guild|string} guild - The guild or guild ID
 	 * @param {Module|string} module - The module or module ID
 	 * @param {boolean} enabled - Whether the module should be enabled or disabled
 	 * @return {void}
 	 * @see {@link Module#setEnabled}
 	 */
-	static setEnabled(settings, server, module, enabled) {
-		settings.save(new Setting(server, `mod-${module.id || module}`, enabled));
+	static setEnabled(settings, guild, module, enabled) {
+		settings.save(new Setting(guild, `mod-${module.id || module}`, enabled));
 	}
 
 	/**
-	 * Checks if the module is enabled on a server
-	 * @param {Server} server - The server
+	 * Checks if the module is enabled on a guild
+	 * @param {Guild} guild - The guild
 	 * @return {boolean} Whether or not the module is enabled
 	 * @see {@link Module.isEnabled}
 	 */
-	isEnabled(server) {
-		return this.constructor.isEnabled(this.bot.storage.settings, server, this);
+	isEnabled(guild) {
+		return this.constructor.isEnabled(this.bot.storage.settings, guild, this);
 	}
 
 	/**
-	 * Checks if a module is enabled on a server
+	 * Checks if a module is enabled on a guild
 	 * @param {SettingStorage} settings - The setting storage to use
-	 * @param {Server} server - The server
+	 * @param {Guild} guild - The guild
 	 * @param {Module|string} module - The module or module ID
 	 * @return {boolean} Whether or not the module is enabled
 	 * @see {@link Module#isEnabled}
 	 */
-	static isEnabled(settings, server, module) {
-		return settings.getValue(server, `mod-${module.id || module}`, true);
+	static isEnabled(settings, guild, module) {
+		return settings.getValue(guild, `mod-${module.id || module}`, true);
 	}
 }

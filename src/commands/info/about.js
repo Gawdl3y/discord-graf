@@ -18,8 +18,8 @@ export default class AboutCommand extends Command {
 	async run(message) {
 		const config = this.bot.config.values;
 		const owner = message.client.users.get(this.bot.config.values.owner);
-		const servers = message.client.servers.length.toLocaleString(), users = message.client.users.length.toLocaleString();
-		const serversLabel = servers !== 1 ? 'servers' : 'server', usersLabel = users !== 1 ? 'users' : 'user';
+		const guilds = message.client.guilds.length.toLocaleString(), users = message.client.users.length.toLocaleString();
+		const guildsLabel = guilds !== 1 ? 'guilds' : 'guild', usersLabel = users !== 1 ? 'users' : 'user';
 		const uptime = process.uptime();
 		const days = Math.floor(uptime / 60 / 60 / 24), hours = Math.floor(uptime / 60 / 60 % 24), minutes = Math.floor(uptime / 60 % 60);
 		const daysLabel = days !== 1 ? 'days' : 'day', hoursLabel = hours !== 1 ? 'hours' : 'hour', minutesLabel = minutes !== 1 ? 'minutes' : 'minute';
@@ -28,7 +28,7 @@ export default class AboutCommand extends Command {
 			direct: stripIndents`
 				${config.about ? config.about : ''}
 
-				This bot ${owner ? `is owned by ${owner.name}#${owner.discriminator}, and ` : ''}is serving ${users} ${usersLabel} across ${servers} ${serversLabel}.
+				This bot ${owner ? `is owned by ${owner.name}#${owner.discriminator}, and ` : ''}is serving ${users} ${usersLabel} across ${guilds} ${guildsLabel}.
 				It has been running without interruption for ${days > 0 ? `${daysStr} ` : ''}${hours > 0 ? `${hoursStr} ` : ''}${minutesStr}.
 				${config.invite ? `For bot feedback/help, use this invite: ${config.invite}` : ''}
 

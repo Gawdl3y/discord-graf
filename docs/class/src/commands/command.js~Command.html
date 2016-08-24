@@ -42,13 +42,13 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Storage">Storage</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Util">Util</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-version">version</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_channel.html">Channel</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_client.html">Client</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Channel">Channel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Client">Client</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Storage">LocalStorage</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://github.com/winstonjs/winston/blob/master/README.md">Logger</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_message.html">Message</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_user.html">User</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Message">Message</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/User">User</a></span></span></li>
 <li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">bot</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/config.js~BotConfig.html">BotConfig</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/index.js~Bot.html">Bot</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/permissions.js~BotPermissions.html">BotPermissions</a></span></span></li>
@@ -130,13 +130,13 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/commands/command.js~Command.html#static-method-isEnabled">isEnabled</a></span></span><span data-ice="signature">(settings: <span><a href="class/src/data/settings.js~SettingStorage.html">SettingStorage</a></span>, server: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span>, command: <span><a href="class/src/commands/command.js~Command.html">Command</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+           <span data-ice="name"><span><a href="class/src/commands/command.js~Command.html#static-method-isEnabled">isEnabled</a></span></span><span data-ice="signature">(settings: <span><a href="class/src/data/settings.js~SettingStorage.html">SettingStorage</a></span>, guild: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span>, command: <span><a href="class/src/commands/command.js~Command.html">Command</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Checks if a command is enabled on a server</p>
+        <div data-ice="description"><p>Checks if a command is enabled on a guild</p>
 </div>
       </div>
     </td>
@@ -156,13 +156,13 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/commands/command.js~Command.html#static-method-setEnabled">setEnabled</a></span></span><span data-ice="signature">(settings: <span><a href="class/src/data/settings.js~SettingStorage.html">SettingStorage</a></span>, server: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, command: <span><a href="class/src/commands/command.js~Command.html">Command</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, enabled: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span>void</span></span>
+           <span data-ice="name"><span><a href="class/src/commands/command.js~Command.html#static-method-setEnabled">setEnabled</a></span></span><span data-ice="signature">(settings: <span><a href="class/src/data/settings.js~SettingStorage.html">SettingStorage</a></span>, guild: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, command: <span><a href="class/src/commands/command.js~Command.html">Command</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, enabled: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span>void</span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Enables or disables a command on a server</p>
+        <div data-ice="description"><p>Enables or disables a command on a guild</p>
 </div>
       </div>
     </td>
@@ -446,6 +446,31 @@
     <td>
       <div>
         <p>
+           <span data-ice="name"><span><a href="class/src/commands/command.js~Command.html#instance-member-guildOnly">guildOnly</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
            <span data-ice="name"><span><a href="class/src/commands/command.js~Command.html#instance-member-memberName">memberName</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
         </p>
       </div>
@@ -546,31 +571,6 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/commands/command.js~Command.html#instance-member-serverOnly">serverOnly</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
            <span data-ice="name"><span><a href="class/src/commands/command.js~Command.html#instance-member-usage">usage</a></span></span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
         </p>
       </div>
@@ -603,13 +603,13 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/commands/command.js~Command.html#instance-method-hasPermission">hasPermission</a></span></span><span data-ice="signature">(server: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span>, user: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_user.html">User</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+           <span data-ice="name"><span><a href="class/src/commands/command.js~Command.html#instance-method-hasPermission">hasPermission</a></span></span><span data-ice="signature">(guild: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span>, user: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/User">User</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Checks a user&apos;s permission on a server</p>
+        <div data-ice="description"><p>Checks a user&apos;s permission on a guild</p>
 </div>
       </div>
     </td>
@@ -629,13 +629,13 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/commands/command.js~Command.html#instance-method-isEnabled">isEnabled</a></span></span><span data-ice="signature">(server: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+           <span data-ice="name"><span><a href="class/src/commands/command.js~Command.html#instance-method-isEnabled">isEnabled</a></span></span><span data-ice="signature">(guild: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Checks if the command is enabled on a server</p>
+        <div data-ice="description"><p>Checks if the command is enabled on a guild</p>
 </div>
       </div>
     </td>
@@ -655,7 +655,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/commands/command.js~Command.html#instance-method-isUsable">isUsable</a></span></span><span data-ice="signature">(message: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_message.html">Message</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+           <span data-ice="name"><span><a href="class/src/commands/command.js~Command.html#instance-method-isUsable">isUsable</a></span></span><span data-ice="signature">(message: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Message">Message</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
         </p>
       </div>
       <div>
@@ -681,7 +681,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/commands/command.js~Command.html#instance-method-run">run</a></span></span><span data-ice="signature">(message: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_message.html">Message</a></span>, args: <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span>, fromPattern: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span>Promise&lt;CommandResult</span> | <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span> | <span>string&gt;</span></span>
+           <span data-ice="name"><span><a href="class/src/commands/command.js~Command.html#instance-method-run">run</a></span></span><span data-ice="signature">(message: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Message">Message</a></span>, args: <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span>, fromPattern: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span>Promise&lt;CommandResult</span> | <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span> | <span>string&gt;</span></span>
         </p>
       </div>
       <div>
@@ -707,13 +707,13 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/commands/command.js~Command.html#instance-method-setEnabled">setEnabled</a></span></span><span data-ice="signature">(server: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, enabled: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span>void</span></span>
+           <span data-ice="name"><span><a href="class/src/commands/command.js~Command.html#instance-method-setEnabled">setEnabled</a></span></span><span data-ice="signature">(guild: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, enabled: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span>void</span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Enables or disables the command on a server</p>
+        <div data-ice="description"><p>Enables or disables the command on a guild</p>
 </div>
       </div>
     </td>
@@ -738,7 +738,7 @@
     
     
     
-    <span data-ice="name">isEnabled</span><span data-ice="signature">(settings: <span><a href="class/src/data/settings.js~SettingStorage.html">SettingStorage</a></span>, server: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span>, command: <span><a href="class/src/commands/command.js~Command.html">Command</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+    <span data-ice="name">isEnabled</span><span data-ice="signature">(settings: <span><a href="class/src/data/settings.js~SettingStorage.html">SettingStorage</a></span>, guild: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span>, command: <span><a href="class/src/commands/command.js~Command.html">Command</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
     <span class="right-info">
       
       
@@ -749,7 +749,7 @@
   
   
   
-  <div data-ice="description"><p>Checks if a command is enabled on a server</p>
+  <div data-ice="description"><p>Checks if a command is enabled on a guild</p>
 </div>
 
   
@@ -770,10 +770,10 @@
 </td>
     </tr>
 <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">server</td>
-      <td data-ice="type"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span></td>
+      <td data-ice="name" data-depth="0">guild</td>
+      <td data-ice="type"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"><p>The server</p>
+      <td data-ice="description"><p>The guild</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="0">
@@ -821,7 +821,7 @@
     
     
     
-    <span data-ice="name">setEnabled</span><span data-ice="signature">(settings: <span><a href="class/src/data/settings.js~SettingStorage.html">SettingStorage</a></span>, server: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, command: <span><a href="class/src/commands/command.js~Command.html">Command</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, enabled: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span>void</span></span>
+    <span data-ice="name">setEnabled</span><span data-ice="signature">(settings: <span><a href="class/src/data/settings.js~SettingStorage.html">SettingStorage</a></span>, guild: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, command: <span><a href="class/src/commands/command.js~Command.html">Command</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, enabled: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span>void</span></span>
     <span class="right-info">
       
       
@@ -832,7 +832,7 @@
   
   
   
-  <div data-ice="description"><p>Enables or disables a command on a server</p>
+  <div data-ice="description"><p>Enables or disables a command on a guild</p>
 </div>
 
   
@@ -853,10 +853,10 @@
 </td>
     </tr>
 <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">server</td>
-      <td data-ice="type"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="name" data-depth="0">guild</td>
+      <td data-ice="type"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"><p>The server or server ID</p>
+      <td data-ice="description"><p>The guild or guild ID</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="0">
@@ -1334,6 +1334,46 @@
   
 </div>
 <div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-member-guildOnly">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">guildOnly</span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/commands/command.js.html#lineNumber81">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  
+
+  
+
+  <div data-ice="properties">
+</div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  <div data-ice="see"><h4>See:</h4><ul><li><span><span><a href="typedef/index.html#static-typedef-CommandInfo">CommandInfo</a></span></span></li></ul></div>
+  
+</div>
+<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="instance-member-memberName">
     <span class="access" data-ice="access">public</span>
     
@@ -1494,46 +1534,6 @@
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-member-serverOnly">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    <span data-ice="name">serverOnly</span><span data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/commands/command.js.html#lineNumber81">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  <div data-ice="see"><h4>See:</h4><ul><li><span><span><a href="typedef/index.html#static-typedef-CommandInfo">CommandInfo</a></span></span></li></ul></div>
-  
-</div>
-<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="instance-member-usage">
     <span class="access" data-ice="access">public</span>
     
@@ -1583,7 +1583,7 @@
     
     
     
-    <span data-ice="name">hasPermission</span><span data-ice="signature">(server: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span>, user: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_user.html">User</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+    <span data-ice="name">hasPermission</span><span data-ice="signature">(guild: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span>, user: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/User">User</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
     <span class="right-info">
       
       
@@ -1594,7 +1594,7 @@
   
   
   
-  <div data-ice="description"><p>Checks a user&apos;s permission on a server</p>
+  <div data-ice="description"><p>Checks a user&apos;s permission on a guild</p>
 </div>
 
   
@@ -1608,15 +1608,15 @@
     <tbody>
     
     <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">server</td>
-      <td data-ice="type"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span></td>
+      <td data-ice="name" data-depth="0">guild</td>
+      <td data-ice="type"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"><p>The server to test the user&apos;s permission in</p>
+      <td data-ice="description"><p>The guild to test the user&apos;s permission in</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">user</td>
-      <td data-ice="type"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_user.html">User</a></span></td>
+      <td data-ice="type"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/User">User</a></span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"><p>The user to test the permission of</p>
 </td>
@@ -1631,7 +1631,7 @@
     <table>
       <tr>
         <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></td>
-        <td class="return-desc" data-ice="returnDescription"><p>Whether or not the user has permission to use the command in a server</p>
+        <td class="return-desc" data-ice="returnDescription"><p>Whether or not the user has permission to use the command in a guild</p>
 </td>
       </tr>
     </table>
@@ -1659,7 +1659,7 @@
     
     
     
-    <span data-ice="name">isEnabled</span><span data-ice="signature">(server: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+    <span data-ice="name">isEnabled</span><span data-ice="signature">(guild: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
     <span class="right-info">
       
       
@@ -1670,7 +1670,7 @@
   
   
   
-  <div data-ice="description"><p>Checks if the command is enabled on a server</p>
+  <div data-ice="description"><p>Checks if the command is enabled on a guild</p>
 </div>
 
   
@@ -1684,10 +1684,10 @@
     <tbody>
     
     <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">server</td>
-      <td data-ice="type"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span></td>
+      <td data-ice="name" data-depth="0">guild</td>
+      <td data-ice="type"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"><p>The server</p>
+      <td data-ice="description"><p>The guild</p>
 </td>
     </tr>
 </tbody>
@@ -1728,7 +1728,7 @@
     
     
     
-    <span data-ice="name">isUsable</span><span data-ice="signature">(message: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_message.html">Message</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+    <span data-ice="name">isUsable</span><span data-ice="signature">(message: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Message">Message</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
     <span class="right-info">
       
       
@@ -1754,7 +1754,7 @@
     
     <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">message</td>
-      <td data-ice="type"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_message.html">Message</a></span></td>
+      <td data-ice="type"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Message">Message</a></span></td>
       <td data-ice="appendix"><ul><li>nullable: true</li></ul></td>
       <td data-ice="description"><p>The message</p>
 </td>
@@ -1797,7 +1797,7 @@
     
     
     
-    <span data-ice="name">run</span><span data-ice="signature">(message: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_message.html">Message</a></span>, args: <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span>, fromPattern: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span>Promise&lt;CommandResult</span> | <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span> | <span>string&gt;</span></span>
+    <span data-ice="name">run</span><span data-ice="signature">(message: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Message">Message</a></span>, args: <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span>, fromPattern: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span>Promise&lt;CommandResult</span> | <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span> | <span>string&gt;</span></span>
     <span class="right-info">
       
       
@@ -1823,7 +1823,7 @@
     
     <tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">message</td>
-      <td data-ice="type"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_message.html">Message</a></span></td>
+      <td data-ice="type"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Message">Message</a></span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"><p>The message the command is being run for</p>
 </td>
@@ -1880,7 +1880,7 @@
     
     
     
-    <span data-ice="name">setEnabled</span><span data-ice="signature">(server: <span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, enabled: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span>void</span></span>
+    <span data-ice="name">setEnabled</span><span data-ice="signature">(guild: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, enabled: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span>void</span></span>
     <span class="right-info">
       
       
@@ -1891,7 +1891,7 @@
   
   
   
-  <div data-ice="description"><p>Enables or disables the command on a server</p>
+  <div data-ice="description"><p>Enables or disables the command on a guild</p>
 </div>
 
   
@@ -1905,10 +1905,10 @@
     <tbody>
     
     <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">server</td>
-      <td data-ice="type"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="name" data-depth="0">guild</td>
+      <td data-ice="type"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"><p>The server or server ID</p>
+      <td data-ice="description"><p>The guild or guild ID</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="0">

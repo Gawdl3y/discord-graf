@@ -28,12 +28,12 @@ export default class EvalCommand extends Command {
 		this.objects = bot.evalObjects;
 	}
 
-	hasPermission(server, user) {
+	hasPermission(guild, user) {
 		return this.bot.permissions.isOwner(user);
 	}
 
 	async run(message, args) {
-		if(!args[0]) throw new CommandFormatError(this, message.channel.server);
+		if(!args[0]) throw new CommandFormatError(this, message.guild);
 
 		/* eslint-disable no-unused-vars */
 		const msg = message;

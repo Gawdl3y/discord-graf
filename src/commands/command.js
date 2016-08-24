@@ -78,7 +78,7 @@ export default class Command {
 		 * @type {boolean}
 		 * @see {@link CommandInfo}
 		 */
-		this.serverOnly = !!info.serverOnly;
+		this.guildOnly = !!info.guildOnly;
 
 		/**
 		 * @type {boolean}
@@ -112,12 +112,12 @@ export default class Command {
 	}
 
 	/**
-	 * Checks a user's permission on a server
-	 * @param {Server} server - The server to test the user's permission in
+	 * Checks a user's permission on a guild
+	 * @param {Guild} guild - The guild to test the user's permission in
 	 * @param {User} user - The user to test the permission of
-	 * @return {boolean} Whether or not the user has permission to use the command in a server
+	 * @return {boolean} Whether or not the user has permission to use the command in a guild
 	 */
-	hasPermission(server, user) { // eslint-disable-line no-unused-vars
+	hasPermission(guild, user) { // eslint-disable-line no-unused-vars
 		return true;
 	}
 
@@ -134,49 +134,49 @@ export default class Command {
 
 
 	/**
-	 * Enables or disables the command on a server
-	 * @param {Server|string} server - The server or server ID
+	 * Enables or disables the command on a guild
+	 * @param {Guild|string} guild - The guild or guild ID
 	 * @param {boolean} enabled - Whether the command should be enabled or disabled
 	 * @return {void}
 	 * @see {@link Command.setEnabled}
 	 */
-	setEnabled(server, enabled) {
-		this.constructor.setEnabled(this.bot.storage.settings, server, this, enabled);
+	setEnabled(guild, enabled) {
+		this.constructor.setEnabled(this.bot.storage.settings, guild, this, enabled);
 	}
 
 	/**
-	 * Enables or disables a command on a server
+	 * Enables or disables a command on a guild
 	 * @param {SettingStorage} settings - The setting storage to use
-	 * @param {Server|string} server - The server or server ID
+	 * @param {Guild|string} guild - The guild or guild ID
 	 * @param {Command|string} command - The command or command name
 	 * @param {boolean} enabled - Whether the command should be enabled or disabled
 	 * @return {void}
 	 * @see {@link Command#setEnabled}
 	 */
-	static setEnabled(settings, server, command, enabled) {
-		settings.save(new Setting(server, `cmd-${command.name || command}`, enabled));
+	static setEnabled(settings, guild, command, enabled) {
+		settings.save(new Setting(guild, `cmd-${command.name || command}`, enabled));
 	}
 
 	/**
-	 * Checks if the command is enabled on a server
-	 * @param {Server} server - The server
+	 * Checks if the command is enabled on a guild
+	 * @param {Guild} guild - The guild
 	 * @return {boolean} Whether or not the command is enabled
 	 * @see {@link Command.isEnabled}
 	 */
-	isEnabled(server) {
-		return this.constructor.isEnabled(this.bot.storage.settings, server, this);
+	isEnabled(guild) {
+		return this.constructor.isEnabled(this.bot.storage.settings, guild, this);
 	}
 
 	/**
-	 * Checks if a command is enabled on a server
+	 * Checks if a command is enabled on a guild
 	 * @param {SettingStorage} settings - The setting storage to use
-	 * @param {Server} server - The server
+	 * @param {Guild} guild - The guild
 	 * @param {Command|string} command - The command or command name
 	 * @return {boolean} Whether or not the command is enabled
 	 * @see {@link Command#isEnabled}
 	 */
-	static isEnabled(settings, server, command) {
-		return settings.getValue(server, `cmd-${command.name || command}`, true);
+	static isEnabled(settings, guild, command) {
+		return settings.getValue(guild, `cmd-${command.name || command}`, true);
 	}
 
 	/**
@@ -185,8 +185,8 @@ export default class Command {
 	 * @return {boolean} Whether or not the command is usable
 	 */
 	isUsable(message = null) {
-		if(this.serverOnly && message && !message.channel.server) return false;
-		return !message || (this.isEnabled(message.channel.server) && this.hasPermission(message.channel.server, message.author));
+		if(this.guildOnly && message && !message.guild) return false;
+		return !message || (this.isEnabled(message.guild) && this.hasPermission(message.guild, message.author));
 	}
 }
 
@@ -200,7 +200,7 @@ export default class Command {
  * @property {string} [usage=name] - The command usage format string
  * @property {string} [details] - A detailed description of the command and its functionality
  * @property {string[]} [examples] - Usage examples of the command
- * @property {boolean} [serverOnly=false] - Whether or not the command should only function in a server channel
+ * @property {boolean} [guildOnly=false] - Whether or not the command should only function in a guild channel
  * @property {boolean} [defaultHandling=true] - Whether or not the default command handling should be used. If false, then only patterns will trigger the command.
  * @property {string} [argsType=single] - One of 'single' or 'multiple'. When 'single', the entire argument string will be passed to run as one argument.
  * When 'multiple', it will be passed as multiple arguments.

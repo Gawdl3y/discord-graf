@@ -13,16 +13,16 @@ export default class ListModRolesCommand extends Command {
 			memberName: 'list',
 			description: 'Lists all moderator roles.',
 			details: 'Only administrators may use this command.',
-			serverOnly: true
+			guildOnly: true
 		});
 	}
 
-	hasPermission(server, user) {
-		return this.bot.permissions.isAdmin(server, user);
+	hasPermission(guild, user) {
+		return this.bot.permissions.isAdmin(guild, user);
 	}
 
 	async run(message) {
-		const roles = this.bot.storage.modRoles.find(message.channel.server);
+		const roles = this.bot.storage.modRoles.find(message.guild);
 		if(roles.length > 0) {
 			return stripIndents`
 				__**Moderator roles**__

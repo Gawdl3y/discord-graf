@@ -74,10 +74,10 @@ export const FriendlyError = _FriendlyError;
  */
 export const CommandFormatError = _CommandFormatError;
 
-/** @external {Client} http://discordjs.readthedocs.io/en/latest/docs_client.html */
-/** @external {User} http://discordjs.readthedocs.io/en/latest/docs_user.html */
-/** @external {Server} http://discordjs.readthedocs.io/en/latest/docs_server.html */
-/** @external {Channel} http://discordjs.readthedocs.io/en/latest/docs_channel.html */
-/** @external {Message} http://discordjs.readthedocs.io/en/latest/docs_message.html */
+/** @external {Client} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Client */
+/** @external {User} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/User */
+/** @external {Guild} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild */
+/** @external {Channel} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Channel */
+/** @external {Message} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Message */
 /** @external {Logger} https://github.com/winstonjs/winston/blob/master/README.md */
 /** @external {LocalStorage} https://developer.mozilla.org/en-US/docs/Web/API/Storage */

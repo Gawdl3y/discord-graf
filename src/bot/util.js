@@ -26,13 +26,13 @@ export default class BotUtil {
 
 	/**
 	 * @param {string} command - The short command string (ex. "roll d20")
-	 * @param {?Server} [server=null] - The Discord.js Server instance of the server to use the prefix of
+	 * @param {?Guild} [guild=null] - The Discord.js Guild instance of the guild to use the prefix of
 	 * @param {boolean} [onlyMention=false] - Whether or not the usage string should only show the mention form
 	 * @return {string} The command usage string
 	 * @see {@link Util.usage}
 	 */
-	usage(command, server = null, onlyMention = false) {
-		return this.constructor.usage(this.client, this.settings, this.config, command, server, onlyMention);
+	usage(command, guild = null, onlyMention = false) {
+		return this.constructor.usage(this.client, this.settings, this.config, command, guild, onlyMention);
 	}
 
 	/**
@@ -41,17 +41,17 @@ export default class BotUtil {
 	 * @param {SettingStorage} settings - The setting storage to use
 	 * @param {BotConfig} config - The bot config to use
 	 * @param {string} command - The short command string (ex. "roll d20")
-	 * @param {?Server} [server=null] - The Discord.js Server instance of the server to use the prefix of
+	 * @param {?Guild} [guild=null] - The Discord.js Guild instance of the guild to use the prefix of
 	 * @param {boolean} [onlyMention=false] - Whether or not the usage string should only show the mention form
 	 * @return {string} The command usage string
 	 * @see {@link Util#usage}
 	 */
-	static usage(client, settings, config, command, server = null, onlyMention = false) {
+	static usage(client, settings, config, command, guild = null, onlyMention = false) {
 		const nbcmd = this.nbsp(command);
-		if(!server && !onlyMention) return `\`${nbcmd}\``;
+		if(!guild && !onlyMention) return `\`${nbcmd}\``;
 		let prefixAddon;
 		if(!onlyMention) {
-			let prefix = this.nbsp(settings.getValue(server, 'command-prefix', config.values.commandPrefix));
+			let prefix = this.nbsp(settings.getValue(guild, 'command-prefix', config.values.commandPrefix));
 			if(prefix.length > 1) prefix += '\xa0';
 			prefixAddon = prefix ? `\`${prefix}${nbcmd}\` or ` : '';
 		}

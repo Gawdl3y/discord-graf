@@ -12,12 +12,12 @@ export default class ListAllowedChannelsCommand extends Command {
 			module: 'channels',
 			memberName: 'list-allowed',
 			description: 'Lists all channels command operation is allowed in.',
-			serverOnly: true
+			guildOnly: true
 		});
 	}
 
 	async run(message) {
-		const channels = this.bot.storage.allowedChannels.find(message.channel.server);
+		const channels = this.bot.storage.allowedChannels.find(message.guild);
 		if(channels.length > 0) {
 			return stripIndents`
 				__**Allowed channels**__

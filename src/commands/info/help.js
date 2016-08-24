@@ -26,9 +26,9 @@ export default class HelpCommand extends Command {
 		if(args[0] && !showAll) {
 			if(commands.length === 1) {
 				let help = stripIndents`
-					__Command **${commands[0].name}**:__ ${commands[0].description}${commands[0].serverOnly ? ' (Usable only in servers)' : ''}
+					__Command **${commands[0].name}**:__ ${commands[0].description}${commands[0].guildOnly ? ' (Usable only in guilds)' : ''}
 
-					**Usage:** ${util.usage(commands[0].usage, message.channel.server)}
+					**Usage:** ${util.usage(commands[0].usage, message.guild)}
 				`;
 				if(commands[0].aliases) help += `\n**Aliases:** ${commands[0].aliases.join(', ')}`;
 				if(commands[0].details) help += `\n**Details:** ${commands[0].details}`;
@@ -37,22 +37,22 @@ export default class HelpCommand extends Command {
 			} else if(commands.length > 1) {
 				return util.disambiguation(commands, 'commands');
 			} else {
-				return `Unable to identify command. Use ${util.usage('help', message.channel.server)} to view the list of all commands.`;
+				return `Unable to identify command. Use ${util.usage('help', message.guild)} to view the list of all commands.`;
 			}
 		} else {
 			return {
 				direct: util.split(stripIndents`
 					${oneLine`
-						To run a command in ${message.channel.server ? message.channel.server : 'any server'},
-						use ${util.usage('command', message.channel.server, !message.channel.server)}.
-						For example, ${util.usage('roll d20', message.channel.server, !message.channel.server)}.
+						To run a command in ${message.guild ? message.guild : 'any guild'},
+						use ${util.usage('command', message.guild, !message.guild)}.
+						For example, ${util.usage('roll d20', message.guild, !message.guild)}.
 					`}
 					To run a command in this DM, simply use ${util.usage('command')} with no prefix. For example, ${util.usage('roll d20')}.
 
 					Use ${util.usage('help <command>')} to view detailed information about a specific command.
 					Use ${util.usage('help all')} to view a list of *all* commands, not just available ones.
 
-					__**${showAll ? 'All commands' : `Available commands in ${message.channel.server ? `${message.channel.server}` : 'this DM'}`}**__
+					__**${showAll ? 'All commands' : `Available commands in ${message.guild ? `${message.guild}` : 'this DM'}`}**__
 
 					${(showAll ? modules : modules.filter(mod => mod.commands.some(cmd => cmd.isUsable(message)))).map(mod => stripIndents`
 						__${mod.name}__
@@ -61,7 +61,7 @@ export default class HelpCommand extends Command {
 						}
 					`).join('\n\n')}
 				`),
-				reply: message.channel.server ? 'Sent a DM to you with information.' : null
+				reply: message.guild ? 'Sent a DM to you with information.' : null
 			};
 		}
 	}

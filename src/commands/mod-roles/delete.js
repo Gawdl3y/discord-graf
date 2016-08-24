@@ -16,25 +16,25 @@ export default class DeleteModRoleCommand extends Command {
 			usage: 'deletemodrole <role>',
 			details: 'The role must be the name or ID of a role, or a role mention. Only administrators may use this command.',
 			examples: ['deletemodrole cool', 'deletemodrole 205536402341888001', 'deletemodrole @CoolPeopleRole'],
-			serverOnly: true
+			guildOnly: true
 		});
 	}
 
-	hasPermission(server, user) {
-		return this.bot.permissions.isAdmin(server, user);
+	hasPermission(guild, user) {
+		return this.bot.permissions.isAdmin(guild, user);
 	}
 
 	async run(message, args) {
-		if(!args[0]) throw new CommandFormatError(this, message.channel.server);
+		if(!args[0]) throw new CommandFormatError(this, message.guild);
 		const matches = this.bot.util.patterns.roleID.exec(args[0]);
-		const idRole = matches ? message.channel.server.roles.get(matches[1]) : null;
-		const roles = idRole ? [idRole] : this.bot.storage.modRoles.find(message.channel.server, args[0]);
+		const idRole = matches ? message.guild.roles.get(matches[1]) : null;
+		const roles = idRole ? [idRole] : this.bot.storage.modRoles.find(message.guild, args[0]);
 
 		if(roles.length === 1) {
 			if(this.bot.storage.modRoles.delete(roles[0])) {
 				return stripIndents`
 					Removed "${roles[0].name}" from the moderator roles.
-					${this.bot.storage.modRoles.find(message.channel.server).length === 0
+					${this.bot.storage.modRoles.find(message.guild).length === 0
 						? 'Since there are no longer any moderator roles, moderators will be determined by the "Manage messages" permission.'
 					: ''}
 				`;
@@ -46,8 +46,8 @@ export default class DeleteModRoleCommand extends Command {
 		} else {
 			return oneLine`
 				Unable to identify role.
-				Use ${this.bot.util.usage('modroles', message.channel.server)} to view the moderator roles,
-				and ${this.bot.util.usage('roles', message.channel.server)} to view all of the server roles.
+				Use ${this.bot.util.usage('modroles', message.guild)} to view the moderator roles,
+				and ${this.bot.util.usage('roles', message.guild)} to view all of the guild roles.
 			`;
 		}
 	}

@@ -42,13 +42,13 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Storage">Storage</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Util">Util</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-version">version</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_channel.html">Channel</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_client.html">Client</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Channel">Channel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Client">Client</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Storage">LocalStorage</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://github.com/winstonjs/winston/blob/master/README.md">Logger</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_message.html">Message</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_user.html">User</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Message">Message</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/User">User</a></span></span></li>
 <li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">bot</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/config.js~BotConfig.html">BotConfig</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/index.js~Bot.html">Bot</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/permissions.js~BotPermissions.html">BotPermissions</a></span></span></li>
@@ -114,7 +114,7 @@ export default class Command {
 		 * @type {string[]}
 		 * @see {@link CommandInfo}
 		 */
-		this.aliases = info.aliases || null;
+		this.aliases = info.aliases || [];
 
 		/**
 		 * @type {string}
@@ -156,7 +156,7 @@ export default class Command {
 		 * @type {boolean}
 		 * @see {@link CommandInfo}
 		 */
-		this.serverOnly = !!info.serverOnly;
+		this.guildOnly = !!info.guildOnly;
 
 		/**
 		 * @type {boolean}
@@ -190,12 +190,12 @@ export default class Command {
 	}
 
 	/**
-	 * Checks a user&apos;s permission on a server
-	 * @param {Server} server - The server to test the user&apos;s permission in
+	 * Checks a user&apos;s permission on a guild
+	 * @param {Guild} guild - The guild to test the user&apos;s permission in
 	 * @param {User} user - The user to test the permission of
-	 * @return {boolean} Whether or not the user has permission to use the command in a server
+	 * @return {boolean} Whether or not the user has permission to use the command in a guild
 	 */
-	hasPermission(server, user) { // eslint-disable-line no-unused-vars
+	hasPermission(guild, user) { // eslint-disable-line no-unused-vars
 		return true;
 	}
 
@@ -212,49 +212,49 @@ export default class Command {
 
 
 	/**
-	 * Enables or disables the command on a server
-	 * @param {Server|string} server - The server or server ID
+	 * Enables or disables the command on a guild
+	 * @param {Guild|string} guild - The guild or guild ID
 	 * @param {boolean} enabled - Whether the command should be enabled or disabled
 	 * @return {void}
 	 * @see {@link Command.setEnabled}
 	 */
-	setEnabled(server, enabled) {
-		this.constructor.setEnabled(this.bot.storage.settings, server, this, enabled);
+	setEnabled(guild, enabled) {
+		this.constructor.setEnabled(this.bot.storage.settings, guild, this, enabled);
 	}
 
 	/**
-	 * Enables or disables a command on a server
+	 * Enables or disables a command on a guild
 	 * @param {SettingStorage} settings - The setting storage to use
-	 * @param {Server|string} server - The server or server ID
+	 * @param {Guild|string} guild - The guild or guild ID
 	 * @param {Command|string} command - The command or command name
 	 * @param {boolean} enabled - Whether the command should be enabled or disabled
 	 * @return {void}
 	 * @see {@link Command#setEnabled}
 	 */
-	static setEnabled(settings, server, command, enabled) {
-		settings.save(new Setting(server, `cmd-${command.name || command}`, enabled));
+	static setEnabled(settings, guild, command, enabled) {
+		settings.save(new Setting(guild, `cmd-${command.name || command}`, enabled));
 	}
 
 	/**
-	 * Checks if the command is enabled on a server
-	 * @param {Server} server - The server
+	 * Checks if the command is enabled on a guild
+	 * @param {Guild} guild - The guild
 	 * @return {boolean} Whether or not the command is enabled
 	 * @see {@link Command.isEnabled}
 	 */
-	isEnabled(server) {
-		return this.constructor.isEnabled(this.bot.storage.settings, server, this);
+	isEnabled(guild) {
+		return this.constructor.isEnabled(this.bot.storage.settings, guild, this);
 	}
 
 	/**
-	 * Checks if a command is enabled on a server
+	 * Checks if a command is enabled on a guild
 	 * @param {SettingStorage} settings - The setting storage to use
-	 * @param {Server} server - The server
+	 * @param {Guild} guild - The guild
 	 * @param {Command|string} command - The command or command name
 	 * @return {boolean} Whether or not the command is enabled
 	 * @see {@link Command#isEnabled}
 	 */
-	static isEnabled(settings, server, command) {
-		return settings.getValue(server, `cmd-${command.name || command}`, true);
+	static isEnabled(settings, guild, command) {
+		return settings.getValue(guild, `cmd-${command.name || command}`, true);
 	}
 
 	/**
@@ -263,8 +263,8 @@ export default class Command {
 	 * @return {boolean} Whether or not the command is usable
 	 */
 	isUsable(message = null) {
-		if(this.serverOnly &amp;&amp; message &amp;&amp; !message.server) return false;
-		return !message || (this.isEnabled(message.server) &amp;&amp; this.hasPermission(message.server, message.author));
+		if(this.guildOnly &amp;&amp; message &amp;&amp; !message.guild) return false;
+		return !message || (this.isEnabled(message.guild) &amp;&amp; this.hasPermission(message.guild, message.author));
 	}
 }
 
@@ -278,7 +278,7 @@ export default class Command {
  * @property {string} [usage=name] - The command usage format string
  * @property {string} [details] - A detailed description of the command and its functionality
  * @property {string[]} [examples] - Usage examples of the command
- * @property {boolean} [serverOnly=false] - Whether or not the command should only function in a server channel
+ * @property {boolean} [guildOnly=false] - Whether or not the command should only function in a guild channel
  * @property {boolean} [defaultHandling=true] - Whether or not the default command handling should be used. If false, then only patterns will trigger the command.
  * @property {string} [argsType=single] - One of &apos;single&apos; or &apos;multiple&apos;. When &apos;single&apos;, the entire argument string will be passed to run as one argument.
  * When &apos;multiple&apos;, it will be passed as multiple arguments.

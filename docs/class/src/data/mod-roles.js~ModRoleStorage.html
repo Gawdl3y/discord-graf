@@ -42,13 +42,13 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Storage">Storage</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Util">Util</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-version">version</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_channel.html">Channel</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_client.html">Client</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Channel">Channel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Client">Client</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Storage">LocalStorage</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://github.com/winstonjs/winston/blob/master/README.md">Logger</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_message.html">Message</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_user.html">User</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Message">Message</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/User">User</a></span></span></li>
 <li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">bot</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/config.js~BotConfig.html">BotConfig</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/index.js~Bot.html">Bot</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/permissions.js~BotPermissions.html">BotPermissions</a></span></span></li>
@@ -188,7 +188,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/data/mod-roles.js~ModRoleStorage.html#instance-method-find">find</a></span></span><span data-ice="signature">(server: <span>*</span>, searchString: <span>*</span>): <span>*</span></span>
+           <span data-ice="name"><span><a href="class/src/data/mod-roles.js~ModRoleStorage.html#instance-method-find">find</a></span></span><span data-ice="signature">(guild: <span>*</span>, searchString: <span>*</span>): <span>*</span></span>
         </p>
       </div>
       <div>
@@ -236,6 +236,31 @@
   <tbody>
   
   <tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/src/data/storage.js~Storage.html#instance-member-guildsMap">guildsMap</a></span></span><span data-ice="signature">: <span>*</span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
     <td>
       <span class="access" data-ice="access">public</span>
       
@@ -346,32 +371,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/data/storage.js~Storage.html#instance-member-serversMap">serversMap</a></span></span><span data-ice="signature">: <span>*</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-           <span data-ice="name"><span><a href="class/src/data/storage.js~Storage.html#instance-method-clear">clear</a></span></span><span data-ice="signature">(server: <span>*</span>)</span>
+           <span data-ice="name"><span><a href="class/src/data/storage.js~Storage.html#instance-method-clear">clear</a></span></span><span data-ice="signature">(guild: <span>*</span>)</span>
         </p>
       </div>
       <div>
@@ -421,7 +421,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/data/storage.js~Storage.html#instance-method-delete">delete</a></span></span><span data-ice="signature">(server: <span>*</span>, entry: <span>*</span>, searchFunction: <span>*</span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+           <span data-ice="name"><span><a href="class/src/data/storage.js~Storage.html#instance-method-delete">delete</a></span></span><span data-ice="signature">(guild: <span>*</span>, entry: <span>*</span>, searchFunction: <span>*</span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
         </p>
       </div>
       <div>
@@ -446,7 +446,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/data/storage.js~Storage.html#instance-method-exists">exists</a></span></span><span data-ice="signature">(server: <span>*</span>, entry: <span>*</span>, searchFunction: <span>*</span>): <span>*</span></span>
+           <span data-ice="name"><span><a href="class/src/data/storage.js~Storage.html#instance-method-exists">exists</a></span></span><span data-ice="signature">(guild: <span>*</span>, entry: <span>*</span>, searchFunction: <span>*</span>): <span>*</span></span>
         </p>
       </div>
       <div>
@@ -471,7 +471,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/data/storage.js~Storage.html#instance-method-find">find</a></span></span><span data-ice="signature">(server: <span>*</span>, searchString: <span>*</span>, searchOptions: {}): <span>*</span></span>
+           <span data-ice="name"><span><a href="class/src/data/storage.js~Storage.html#instance-method-find">find</a></span></span><span data-ice="signature">(guild: <span>*</span>, searchString: <span>*</span>, searchOptions: {}): <span>*</span></span>
         </p>
       </div>
       <div>
@@ -496,7 +496,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/data/storage.js~Storage.html#instance-method-isEmpty">isEmpty</a></span></span><span data-ice="signature">(server: <span>*</span>): <span>*</span></span>
+           <span data-ice="name"><span><a href="class/src/data/storage.js~Storage.html#instance-method-isEmpty">isEmpty</a></span></span><span data-ice="signature">(guild: <span>*</span>): <span>*</span></span>
         </p>
       </div>
       <div>
@@ -546,7 +546,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/data/storage.js~Storage.html#instance-method-save">save</a></span></span><span data-ice="signature">(server: <span>*</span>, entry: <span>*</span>, searchFunction: <span>*</span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+           <span data-ice="name"><span><a href="class/src/data/storage.js~Storage.html#instance-method-save">save</a></span></span><span data-ice="signature">(guild: <span>*</span>, entry: <span>*</span>, searchFunction: <span>*</span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
         </p>
       </div>
       <div>
@@ -732,7 +732,7 @@
     
     
     
-    <span data-ice="name">find</span><span data-ice="signature">(server: <span>*</span>, searchString: <span>*</span>): <span>*</span></span>
+    <span data-ice="name">find</span><span data-ice="signature">(guild: <span>*</span>, searchString: <span>*</span>): <span>*</span></span>
     <span class="right-info">
       
       
@@ -756,7 +756,7 @@
     <tbody>
     
     <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">server</td>
+      <td data-ice="name" data-depth="0">guild</td>
       <td data-ice="type"><span>*</span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"></td>

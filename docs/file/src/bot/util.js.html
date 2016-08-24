@@ -42,13 +42,13 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Storage">Storage</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-Util">Util</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-version">version</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_channel.html">Channel</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_client.html">Client</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Channel">Channel</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Client">Client</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Storage">LocalStorage</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="https://github.com/winstonjs/winston/blob/master/README.md">Logger</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_message.html">Message</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_server.html">Server</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_user.html">User</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Message">Message</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/User">User</a></span></span></li>
 <li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">bot</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/config.js~BotConfig.html">BotConfig</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/index.js~Bot.html">Bot</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/bot/permissions.js~BotPermissions.html">BotPermissions</a></span></span></li>
@@ -104,13 +104,13 @@ export default class BotUtil {
 
 	/**
 	 * @param {string} command - The short command string (ex. &quot;roll d20&quot;)
-	 * @param {?Server} [server=null] - The Discord.js Server instance of the server to use the prefix of
+	 * @param {?Guild} [guild=null] - The Discord.js Guild instance of the guild to use the prefix of
 	 * @param {boolean} [onlyMention=false] - Whether or not the usage string should only show the mention form
 	 * @return {string} The command usage string
 	 * @see {@link Util.usage}
 	 */
-	usage(command, server = null, onlyMention = false) {
-		return this.constructor.usage(this.client, this.settings, this.config, command, server, onlyMention);
+	usage(command, guild = null, onlyMention = false) {
+		return this.constructor.usage(this.client, this.settings, this.config, command, guild, onlyMention);
 	}
 
 	/**
@@ -119,21 +119,21 @@ export default class BotUtil {
 	 * @param {SettingStorage} settings - The setting storage to use
 	 * @param {BotConfig} config - The bot config to use
 	 * @param {string} command - The short command string (ex. &quot;roll d20&quot;)
-	 * @param {?Server} [server=null] - The Discord.js Server instance of the server to use the prefix of
+	 * @param {?Guild} [guild=null] - The Discord.js Guild instance of the guild to use the prefix of
 	 * @param {boolean} [onlyMention=false] - Whether or not the usage string should only show the mention form
 	 * @return {string} The command usage string
 	 * @see {@link Util#usage}
 	 */
-	static usage(client, settings, config, command, server = null, onlyMention = false) {
+	static usage(client, settings, config, command, guild = null, onlyMention = false) {
 		const nbcmd = this.nbsp(command);
-		if(!server &amp;&amp; !onlyMention) return `\`${nbcmd}\``;
+		if(!guild &amp;&amp; !onlyMention) return `\`${nbcmd}\``;
 		let prefixAddon;
 		if(!onlyMention) {
-			let prefix = this.nbsp(settings.getValue(server, &apos;command-prefix&apos;, config.values.commandPrefix));
+			let prefix = this.nbsp(settings.getValue(guild, &apos;command-prefix&apos;, config.values.commandPrefix));
 			if(prefix.length &gt; 1) prefix += &apos;\xa0&apos;;
 			prefixAddon = prefix ? `\`${prefix}${nbcmd}\` or ` : &apos;&apos;;
 		}
-		return `${prefixAddon ? prefixAddon : &apos;&apos;}\`@${this.nbsp(client.user.name)}#${client.user.discriminator}\xa0${nbcmd}\``;
+		return `${prefixAddon ? prefixAddon : &apos;&apos;}\`@${this.nbsp(client.user.username)}#${client.user.discriminator}\xa0${nbcmd}\``;
 	}
 
 	/**

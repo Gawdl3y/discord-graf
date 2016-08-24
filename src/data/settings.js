@@ -10,38 +10,38 @@ export default class SettingStorage extends Storage {
 	}
 
 	save(setting) {
-		return super.save(setting.server, setting);
+		return super.save(setting.guild, setting);
 	}
 
-	delete(server, setting) {
-		[server, setting] = this.getSettingServerAndKey(setting, server);
-		return super.delete(server, setting);
+	delete(guild, setting) {
+		[guild, setting] = this.getSettingGuildAndKey(setting, guild);
+		return super.delete(guild, setting);
 	}
 
-	find(server, setting) {
-		[server, setting] = this.getSettingServerAndKey(setting, server);
-		return super.find(server, setting);
+	find(guild, setting) {
+		[guild, setting] = this.getSettingGuildAndKey(setting, guild);
+		return super.find(guild, setting);
 	}
 
-	exists(server, setting) {
-		[server, setting] = this.getSettingServerAndKey(setting, server);
-		return super.exists(server, setting);
+	exists(guild, setting) {
+		[guild, setting] = this.getSettingGuildAndKey(setting, guild);
+		return super.exists(guild, setting);
 	}
 
-	getValue(server, setting, defaultValue = null) {
-		[server, setting] = this.getSettingServerAndKey(setting, server);
-		if(!this.serversMap) this.loadStorage();
-		if(!this.serversMap[server]) return defaultValue;
-		if(!(setting in this.serversMap[server])) return defaultValue;
-		return this.serversMap[server][setting];
+	getValue(guild, setting, defaultValue = null) {
+		[guild, setting] = this.getSettingGuildAndKey(setting, guild);
+		if(!this.guildsMap) this.loadStorage();
+		if(!this.guildsMap[guild]) return defaultValue;
+		if(!(setting in this.guildsMap[guild])) return defaultValue;
+		return this.guildsMap[guild][setting];
 	}
 
-	getSettingServerAndKey(setting, server) {
+	getSettingGuildAndKey(setting, guild) {
 		if(setting instanceof Setting) {
-			return [!server ? setting.server : server.id ? server.id : server, setting.key];
+			return [!guild ? setting.guild : guild.id ? guild.id : guild, setting.key];
 		} else {
 			if(!setting) throw new Error('A setting or a key must be specified.');
-			return [server ? server.id ? server.id : server : 'global', setting];
+			return [guild ? guild.id ? guild.id : guild : 'global', setting];
 		}
 	}
 }

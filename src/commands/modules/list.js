@@ -13,18 +13,18 @@ export default class ListModulesCommand extends Command {
 			memberName: 'list',
 			description: 'Lists all modules.',
 			details: 'Only administrators may use this command.',
-			serverOnly: true
+			guildOnly: true
 		});
 	}
 
-	hasPermission(server, user) {
-		return this.bot.permissions.isAdmin(server, user);
+	hasPermission(guild, user) {
+		return this.bot.permissions.isAdmin(guild, user);
 	}
 
 	async run(message) {
 		return stripIndents`
 			__**Modules**__
-			${this.bot.registry.modules.map(mod => `**${mod.name}:** ${mod.isEnabled(message.channel.server) ? 'Enabled' : 'Disabled'}`).join('\n')}
+			${this.bot.registry.modules.map(mod => `**${mod.name}:** ${mod.isEnabled(message.guild) ? 'Enabled' : 'Disabled'}`).join('\n')}
 		`;
 	}
 }

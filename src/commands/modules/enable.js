@@ -20,33 +20,33 @@ export default class EnableModuleCommand extends Command {
 				Only administrators may use this command.
 			`,
 			examples: ['enablemodule mod-roles', 'enablemodule Moderator roles', 'enablemodule prefix'],
-			serverOnly: true
+			guildOnly: true
 		});
 	}
 
-	hasPermission(server, user) {
-		return this.bot.permissions.isAdmin(server, user);
+	hasPermission(guild, user) {
+		return this.bot.permissions.isAdmin(guild, user);
 	}
 
 	async run(message, args) {
-		if(!args[0]) throw new CommandFormatError(this, message.channel.server);
+		if(!args[0]) throw new CommandFormatError(this, message.guild);
 		const modules = this.bot.registry.findModules(args[0]);
 		if(modules.length === 1) {
-			if(modules[0].isEnabled(message.channel.server)) return `The ${modules[0].name} module is already enabled.`;
-			modules[0].setEnabled(message.channel.server, true);
+			if(modules[0].isEnabled(message.guild)) return `The ${modules[0].name} module is already enabled.`;
+			modules[0].setEnabled(message.guild, true);
 			return `Enabled ${modules[0].name} module.`;
 		} else if(modules.length > 0) {
 			return this.bot.util.disambiguation(modules, 'modules');
 		} else {
 			const commands = this.bot.registry.findCommands(args[0]);
 			if(commands.length === 1) {
-				if(commands[0].isEnabled(message.channel.server)) return `The \`${commands[0].name}\` command is already enabled.`;
-				commands[0].setEnabled(message.channel.server, true);
+				if(commands[0].isEnabled(message.guild)) return `The \`${commands[0].name}\` command is already enabled.`;
+				commands[0].setEnabled(message.guild, true);
 				return `Enabled \`${commands[0].name}\` command.`;
 			} else if(commands.length > 1) {
 				return `No modules found. ${this.bot.util.disambiguation(commands, 'commands')}`;
 			} else {
-				return `Unable to identify module or command. Use ${this.bot.util.usage('modules', message.channel.server)} to view the list of modules.`;
+				return `Unable to identify module or command. Use ${this.bot.util.usage('modules', message.guild)} to view the list of modules.`;
 			}
 		}
 	}

@@ -70,7 +70,7 @@ export default class AddNumbersCommand extends Command {
 	}
 
 	async run(message, args) {
-		if(!args[0]) throw new CommandFormatError(this, message.server);
+		if(!args[0]) throw new CommandFormatError(this, message.guild);
 		const total = args.reduce((prev, arg) => prev + parseFloat(arg), 0);
 		return `Sum: ${total}`;
 	}

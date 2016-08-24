@@ -17,7 +17,7 @@ export default class CommandDispatcher extends EventEmitter {
 		/** @type {Bot} */
 		this.bot = bot;
 
-		this._serverCommandPatterns = {};
+		this._guildCommandPatterns = {};
 		this._results = {};
 	}
 
@@ -31,11 +31,11 @@ export default class CommandDispatcher extends EventEmitter {
 		if(message.author.equals(this.bot.client.user)) return;
 
 		// Make sure the bot is allowed to run in the channel, or the user is an admin
-		if(message.channel.server
-			&& Module.isEnabled(this.bot.storage.settings, message.channel.server, 'channels')
-			&& !this.bot.storage.allowedChannels.isEmpty(message.channel.server)
-			&& !this.bot.storage.allowedChannels.exists(message.channel.server, message.channel)
-			&& !this.bot.permissions.isAdmin(message.channel.server, message.author)) return;
+		if(message.guild
+			&& Module.isEnabled(this.bot.storage.settings, message.guild, 'channels')
+			&& !this.bot.storage.allowedChannels.isEmpty(message.guild)
+			&& !this.bot.storage.allowedChannels.exists(message.guild, message.channel)
+			&& !this.bot.permissions.isAdmin(message.guild, message.author)) return;
 
 		// Parse the message, and get the old result if it exists
 		const [command, args, fromPattern, isCommandMessage] = this._parseMessage(message);
@@ -44,17 +44,17 @@ export default class CommandDispatcher extends EventEmitter {
 		// Run the command, or make an error message result
 		let result;
 		if(command) {
-			if(!command.isEnabled(message.channel.server)) result = { reply: [`The \`${command.name}\` command is disabled.`], editable: true };
+			if(!command.isEnabled(message.guild)) result = { reply: [`The \`${command.name}\` command is disabled.`], editable: true };
 			else if(!oldMessage || oldResult) result = await this.run(command, args, fromPattern, message);
 		} else if(isCommandMessage) {
-			result = { reply: [`Unknown command. Use ${this.bot.util.usage('help', message.channel.server)} to view the list of all commands.`], editable: true };
+			result = { reply: [`Unknown command. Use ${this.bot.util.usage('help', message.guild)} to view the list of all commands.`], editable: true };
 		} else if(this.bot.config.values.nonCommandEdit) {
 			result = { editable: true };
 		}
 
 		if(result) {
-			// Change a plain or reply response into direct if there isn't a server
-			if(!message.channel.server) {
+			// Change a plain or reply response into direct if there isn't a guild
+			if(!message.guild) {
 				if(!result.direct) result.direct = result.plain || result.reply;
 				delete result.plain;
 				delete result.reply;
@@ -92,16 +92,16 @@ export default class CommandDispatcher extends EventEmitter {
 			args: String(args),
 			user: `${message.author.username}#${message.author.discriminator}`,
 			userID: message.author.id,
-			server: message.channel.server ? message.channel.server.name : null,
-			serverID: message.channel.server ? message.channel.server.id : null
+			guild: message.guild ? message.guild.name : null,
+			guildID: message.guild ? message.guild.id : null
 		};
 
 		// Make sure the command is usable
-		if(command.serverOnly && !message.channel.server) {
-			this.bot.logger.info(`Not running ${command.module}:${command.memberName}; server only.`, logInfo);
-			return { reply: [`The \`${command.name}\` command must be used in a server channel.`], editable: true };
+		if(command.guildOnly && !message.guild) {
+			this.bot.logger.info(`Not running ${command.module}:${command.memberName}; guild only.`, logInfo);
+			return { reply: [`The \`${command.name}\` command must be used in a guild channel.`], editable: true };
 		}
-		if(!command.hasPermission(message.channel.server, message.author)) {
+		if(!command.hasPermission(message.guild, message.author)) {
 			this.bot.logger.info(`Not running ${command.module}:${command.memberName}; don't have permission.`, logInfo);
 			return { reply: [`You do not have permission to use the \`${command.name}\` command.`], editable: true };
 		}
@@ -122,7 +122,7 @@ export default class CommandDispatcher extends EventEmitter {
 				return {
 					reply: [stripIndents`
 						An error occurred while running the command: \`${err.name}: ${err.message}\`
-						${owner ? `Please contact ${owner.name}#${owner.discriminator}${this.bot.config.values.invite ? ` in this server: ${this.bot.config.values.invite}` : '.'}` : ''}
+						${owner ? `Please contact ${owner.name}#${owner.discriminator}${this.bot.config.values.invite ? ` in this guild: ${this.bot.config.values.invite}` : '.'}` : ''}
 					`],
 					editable: true
 				};
@@ -226,17 +226,17 @@ export default class CommandDispatcher extends EventEmitter {
 		}
 
 		// Find the command to run with default command handling
-		const patternIndex = message.channel.server ? message.channel.server.id : '-';
-		if(!this._serverCommandPatterns[patternIndex]) this._serverCommandPatterns[patternIndex] = this._buildCommandPattern(message.channel.server, message.client.user);
-		let [command, args, isCommandMessage] = this._matchDefault(message, this._serverCommandPatterns[patternIndex], 2);
-		if(!command && !message.channel.server) [command, args, isCommandMessage] = this._matchDefault(message, unprefixedCommandPattern);
+		const patternIndex = message.guild ? message.guild.id : '-';
+		if(!this._guildCommandPatterns[patternIndex]) this._guildCommandPatterns[patternIndex] = this._buildCommandPattern(message.guild, message.client.user);
+		let [command, args, isCommandMessage] = this._matchDefault(message, this._guildCommandPatterns[patternIndex], 2);
+		if(!command && !message.guild) [command, args, isCommandMessage] = this._matchDefault(message, unprefixedCommandPattern);
 		if(command) return [command, args, false, true];
 
 		return [null, null, false, isCommandMessage];
 	}
 
 	/**
-	 * Matches a message against a server command pattern
+	 * Matches a message against a guild command pattern
 	 * @param {Message} message - The message
 	 * @param {RegExp} pattern - The pattern to match against
 	 * @param {number} commandNameIndex - The index of the command name in the pattern matches
@@ -301,19 +301,19 @@ export default class CommandDispatcher extends EventEmitter {
 
 	/**
 	 * Creates a regular expression to match the command prefix and name in a message
-	 * @param {?Server} server - The Server that the message is from
+	 * @param {?Guild} guild - The Guild that the message is from
 	 * @param {User} user - The User that the bot is running for
 	 * @return {RegExp} Regular expression that matches a command prefix and name
 	 */
-	_buildCommandPattern(server, user) {
-		let prefix = server ? this.bot.storage.settings.getValue(server, 'command-prefix', this.bot.config.values.commandPrefix) : this.bot.config.values.commandPrefix;
+	_buildCommandPattern(guild, user) {
+		let prefix = guild ? this.bot.storage.settings.getValue(guild, 'command-prefix', this.bot.config.values.commandPrefix) : this.bot.config.values.commandPrefix;
 		if(prefix === 'none') prefix = '';
 		const escapedPrefix = escapeRegex(prefix);
 		const prefixPatternPiece = prefix ? `${escapedPrefix}\\s*|` : '';
 		const pattern = new RegExp(`^(${prefixPatternPiece}<@!?${user.id}>\\s+(?:${escapedPrefix})?)([^\\s]+)`, 'i');
-		this.bot.logger.info(`Server command pattern built.`, {
-			server: server ? server.name : null,
-			serverID: server ? server.id : null,
+		this.bot.logger.info(`Guild command pattern built.`, {
+			guild: guild ? guild.name : null,
+			guildID: guild ? guild.id : null,
 			prefix: prefix, pattern: pattern.source
 		});
 		return pattern;

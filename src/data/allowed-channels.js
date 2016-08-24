@@ -10,20 +10,20 @@ export default class AllowedChannelStorage extends Storage {
 	}
 
 	save(channel) {
-		return super.save(channel.server, channel.id);
+		return super.save(channel.guild, channel.id);
 	}
 
 	delete(channel) {
-		return super.delete(channel.server, channel.id);
+		return super.delete(channel.guild, channel.id);
 	}
 
-	find(server, searchString = null) {
-		if(!server) throw new Error('A server must be specified.');
-		if(!this.serversMap) this.loadStorage();
-		if(!this.serversMap[server.id]) return [];
+	find(guild, searchString = null) {
+		if(!guild) throw new Error('A guild must be specified.');
+		if(!this.guildsMap) this.loadStorage();
+		if(!this.guildsMap[guild.id]) return [];
 
-		// Find all of the server's channels that match, and filter them to ones that are usable channels
-		const channels = Util.search(server.channels.getAll('type', 'text'), searchString, { searchExact: false }).filter(channel => this.serversMap[server.id].includes(channel.id));
+		// Find all of the guild's channels that match, and filter them to ones that are usable channels
+		const channels = Util.search(guild.channels.getAll('type', 'text'), searchString, { searchExact: false }).filter(channel => this.guildsMap[guild.id].includes(channel.id));
 		return Util.search(channels, searchString, { searchInexact: false });
 	}
 }

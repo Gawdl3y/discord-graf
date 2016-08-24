@@ -505,13 +505,13 @@ window.esdocSearchIndex = [
   ],
   [
     "src/bot/config.js~botconfig#values",
-    "class/src/bot/config.js~BotConfig.html#instance-get-values",
+    "class/src/bot/config.js~BotConfig.html#instance-set-values",
     "src/bot/config.js~BotConfig#values",
     "member"
   ],
   [
     "src/bot/config.js~botconfig#values",
-    "class/src/bot/config.js~BotConfig.html#instance-set-values",
+    "class/src/bot/config.js~BotConfig.html#instance-get-values",
     "src/bot/config.js~BotConfig#values",
     "member"
   ],
@@ -948,6 +948,12 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
+    "src/commands/command.js~command#guildonly",
+    "class/src/commands/command.js~Command.html#instance-member-guildOnly",
+    "src/commands/command.js~Command#guildOnly",
+    "member"
+  ],
+  [
     "src/commands/command.js~command#haspermission",
     "class/src/commands/command.js~Command.html#instance-method-hasPermission",
     "src/commands/command.js~Command#hasPermission",
@@ -994,12 +1000,6 @@ window.esdocSearchIndex = [
     "class/src/commands/command.js~Command.html#instance-method-run",
     "src/commands/command.js~Command#run",
     "method"
-  ],
-  [
-    "src/commands/command.js~command#serveronly",
-    "class/src/commands/command.js~Command.html#instance-member-serverOnly",
-    "src/commands/command.js~Command#serverOnly",
-    "member"
   ],
   [
     "src/commands/command.js~command#setenabled",
@@ -1302,15 +1302,15 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "src/data/models/setting.js~setting#key",
-    "class/src/data/models/setting.js~Setting.html#instance-member-key",
-    "src/data/models/setting.js~Setting#key",
+    "src/data/models/setting.js~setting#guild",
+    "class/src/data/models/setting.js~Setting.html#instance-member-guild",
+    "src/data/models/setting.js~Setting#guild",
     "member"
   ],
   [
-    "src/data/models/setting.js~setting#server",
-    "class/src/data/models/setting.js~Setting.html#instance-member-server",
-    "src/data/models/setting.js~Setting#server",
+    "src/data/models/setting.js~setting#key",
+    "class/src/data/models/setting.js~Setting.html#instance-member-key",
+    "src/data/models/setting.js~Setting#key",
     "member"
   ],
   [
@@ -1350,9 +1350,9 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "src/data/settings.js~settingstorage#getsettingserverandkey",
-    "class/src/data/settings.js~SettingStorage.html#instance-method-getSettingServerAndKey",
-    "src/data/settings.js~SettingStorage#getSettingServerAndKey",
+    "src/data/settings.js~settingstorage#getsettingguildandkey",
+    "class/src/data/settings.js~SettingStorage.html#instance-method-getSettingGuildAndKey",
+    "src/data/settings.js~SettingStorage#getSettingGuildAndKey",
     "method"
   ],
   [
@@ -1410,6 +1410,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "src/data/storage.js~storage#guildsmap",
+    "class/src/data/storage.js~Storage.html#instance-member-guildsMap",
+    "src/data/storage.js~Storage#guildsMap",
+    "member"
+  ],
+  [
     "src/data/storage.js~storage#isempty",
     "class/src/data/storage.js~Storage.html#instance-method-isEmpty",
     "src/data/storage.js~Storage#isEmpty",
@@ -1458,12 +1464,6 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "src/data/storage.js~storage#serversmap",
-    "class/src/data/storage.js~Storage.html#instance-member-serversMap",
-    "src/data/storage.js~Storage#serversMap",
-    "member"
-  ],
-  [
     "src/errors/command-format.js",
     "file/src/errors/command-format.js.html",
     "src/errors/command-format.js",
@@ -1506,6 +1506,12 @@ window.esdocSearchIndex = [
     "external"
   ],
   [
+    "src/index.js~guild",
+    "external/index.html",
+    "src/index.js~Guild",
+    "external"
+  ],
+  [
     "src/index.js~localstorage",
     "external/index.html",
     "src/index.js~LocalStorage",
@@ -1521,12 +1527,6 @@ window.esdocSearchIndex = [
     "src/index.js~message",
     "external/index.html",
     "src/index.js~Message",
-    "external"
-  ],
-  [
-    "src/index.js~server",
-    "external/index.html",
-    "src/index.js~Server",
     "external"
   ],
   [
