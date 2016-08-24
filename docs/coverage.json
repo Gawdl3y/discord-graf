@@ -1,18 +1,12 @@
 {
-  "coverage": "80.11%",
-  "expectCount": 171,
-  "actualCount": 137,
+  "coverage": "100%",
+  "expectCount": 170,
+  "actualCount": 170,
   "files": {
-    "src/data/allowed-channels.js": {
+    "src/storage/allowed-channels.js": {
       "expectCount": 5,
-      "actualCount": 0,
-      "undocumentLines": [
-        7,
-        8,
-        16,
-        20,
-        12
-      ]
+      "actualCount": 5,
+      "undocumentLines": []
     },
     "src/index.js": {
       "expectCount": 10,
@@ -64,62 +58,30 @@
       "actualCount": 2,
       "undocumentLines": []
     },
-    "src/data/mod-roles.js": {
+    "src/storage/index.js": {
+      "expectCount": 16,
+      "actualCount": 16,
+      "undocumentLines": []
+    },
+    "src/storage/mod-roles.js": {
       "expectCount": 5,
-      "actualCount": 0,
-      "undocumentLines": [
-        7,
-        8,
-        16,
-        20,
-        12
-      ]
+      "actualCount": 5,
+      "undocumentLines": []
     },
     "src/commands/module.js": {
       "expectCount": 10,
       "actualCount": 10,
       "undocumentLines": []
     },
-    "src/data/models/setting.js": {
+    "src/storage/models/setting.js": {
       "expectCount": 5,
       "actualCount": 5,
       "undocumentLines": []
     },
-    "src/data/settings.js": {
-      "expectCount": 8,
-      "actualCount": 0,
-      "undocumentLines": [
-        7,
-        8,
-        16,
-        26,
-        21,
-        39,
-        31,
-        12
-      ]
-    },
-    "src/data/storage.js": {
-      "expectCount": 16,
-      "actualCount": 0,
-      "undocumentLines": [
-        6,
-        76,
-        84,
-        7,
-        43,
-        105,
-        91,
-        16,
-        124,
-        9,
-        15,
-        10,
-        11,
-        12,
-        25,
-        20
-      ]
+    "src/storage/settings.js": {
+      "expectCount": 7,
+      "actualCount": 7,
+      "undocumentLines": []
     }
   }
 }

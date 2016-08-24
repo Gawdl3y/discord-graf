@@ -3,25 +3,55 @@
 
 import Util from '../bot/util';
 
-export default class Storage {
+/** Stores data entries associated with guilds */
+export default class GuildStorage {
+	/**
+	 * @param {string} key - The key of the storage in the LocalStorage
+	 * @param {LocalStorage} localStorage - The LocalStorage instance to use
+	 * @param {Logger} [logger] - The logger to use
+	 * @param {boolean} [objectBased=false] - If true, the storage will be object based. If false, it will be array-based.
+	 */
 	constructor(key, localStorage, logger, objectBased = false) {
 		if(!key || !localStorage) throw new Error('A key and localStorage must be specified.');
+		/** @type {string} */
 		this.key = key;
+		/** @type {LocalStorage} */
 		this.localStorage = localStorage;
+		/** @type {?Logger} */
 		this.logger = logger;
-		this.objectBased = objectBased;
+		/** @type {boolean} */
+		this.objectBased = objectBased || false;
+		/** @type {Object} */
+		this.guildsMap = null;
 	}
 
+	/**
+	 * Loads the data from LocalStorage
+	 * @return {void}
+	 */
 	loadStorage() {
 		this.guildsMap = JSON.parse(this.localStorage.getItem(this.key));
 		if(!this.guildsMap) this.guildsMap = {};
 	}
 
+	/**
+	 * Saves the data to LocalStorage
+	 * @return {void}
+	 */
 	saveStorage() {
+		if(!this.guildsMap) throw new Error('Trying to save before load');
 		this.localStorage.setItem(this.key, JSON.stringify(this.guildsMap));
 		if(this.logger) this.logger.debug(`Saved ${this.key} storage.`, this.guildsMap);
 	}
 
+	/**
+	 * Saves an entry associated with a guild
+	 * @param {Guild|string} guild - The guild or guild ID the entry should be associated with
+	 * @param {*|Object} entry - If the storage is array-based, this can be any value to store.
+	 * If it is object-based, this must be an object with "key" and "value" properties to store.
+	 * @param {function} [searchFunction] - The function to find existing entries (See {@link GuildStorage#exists})
+	 * @return {boolean} Whether or not the entry was saved (will be false only if the storage is array-based and the entry already exists)
+	 */
 	save(guild, entry, searchFunction = null) {
 		if(!guild || !entry) throw new Error('A guild and entry must be specified.');
 		if(!this.guildsMap) this.loadStorage();
@@ -40,6 +70,14 @@ export default class Storage {
 		}
 	}
 
+	/**
+	 * Deletes an entry associated with a guild
+	 * @param {Guild|string} guild - The guild or guild ID the entry is associated with
+	 * @param {*|Object|string} entry - If the storage is array-based, this can be any value to find and delete.
+	 * If it is object-based, this must be an object with a "key" property, or a string that is the key.
+	 * @param {function} [searchFunction] - The function to find existing entries (See {@link GuildStorage#exists})
+	 * @return {boolean} Whether or not the entry was deleted
+	 */
 	delete(guild, entry, searchFunction = null) {
 		if(!guild || !entry) throw new Error('A guild and entry must be specified.');
 		if(!this.guildsMap) this.loadStorage();
@@ -73,6 +111,11 @@ export default class Storage {
 		}
 	}
 
+	/**
+	 * Clears all entries associated with a guild
+	 * @param {Guild|string} guild - The guild or guild ID to clear the entries of
+	 * @return {void}
+	 */
 	clear(guild) {
 		if(!guild) throw new Error('A guild must be specified.');
 		if(!this.guildsMap) this.loadStorage();
@@ -81,6 +124,10 @@ export default class Storage {
 		this.saveStorage();
 	}
 
+	/**
+	 * Clears all entries
+	 * @return {void}
+	 */
 	clearAll() {
 		if(!this.guildsMap) this.loadStorage();
 		for(const key of Object.keys(this.guildsMap)) delete this.guildsMap[key];
@@ -88,6 +135,13 @@ export default class Storage {
 		this.saveStorage();
 	}
 
+	/**
+	 * Finds all entries in a storage that optionally match a search string
+	 * @param {Guild|string} guild - The guild or guild ID to find the entries of
+	 * @param {string} [searchString] - The string to match entries against
+	 * @param {SearchOptions} [searchOptions] - Options for the search
+	 * @return {*[]} - All found entries
+	 */
 	find(guild, searchString = null, searchOptions = {}) {
 		if(!guild) throw new Error('A guild must be specified.');
 		if(!this.guildsMap) this.loadStorage();
@@ -102,6 +156,15 @@ export default class Storage {
 		}
 	}
 
+	/**
+	 * Checks if an entry associated with a guild exists
+	 * @param {Guild|string} guild - The guild or guild ID the entry is associated with
+	 * @param {*|Object|string} entry - If the storage is array-based, this can be any value to check existence of.
+	 * If it is object-based, this must be an object with a "key" property, or a string that is the key.
+	 * @param {function} [searchFunction] - The function to find existing entries. If the storage is array-based, it will be passed the value of each entry.
+	 * If it is object-based, it will be passed the key and value of each entry.
+	 * @return {boolean} Whether or not the entry exists
+	 */
 	exists(guild, entry, searchFunction = null) {
 		if(!guild || !entry) throw new Error('A guild and entry must be specified.');
 		if(!this.guildsMap) this.loadStorage();
@@ -109,7 +172,7 @@ export default class Storage {
 		if(!this.guildsMap[guild]) return false;
 		if(this.objectBased) {
 			if(searchFunction) {
-				for(const entryKey of Object.keys(this.guildsMap)) {
+				for(const entryKey of Object.keys(this.guildsMap[guild])) {
 					if(searchFunction(entryKey, this.guildsMap[guild][entryKey])) return true;
 				}
 				return false;
@@ -121,6 +184,11 @@ export default class Storage {
 		}
 	}
 
+	/**
+	 * Checks if there are no entries associated with a guild
+	 * @param {Guild|string} guild - The guild or guild ID to check emptiness of
+	 * @return {boolean} Whether or not there are no entries associated with the guild
+	 */
 	isEmpty(guild) {
 		if(!guild) throw new Error('A guild must be specified.');
 		if(!this.guildsMap) this.loadStorage();

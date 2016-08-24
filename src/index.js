@@ -8,8 +8,8 @@ import _Permissions from './bot/permissions';
 import _Util from './bot/util';
 import _Command from './commands/command';
 import _Module from './commands/module';
-import _Setting from './data/models/setting';
-import _Storage from './data/storage';
+import _GuildStorage from './storage';
+import _Setting from './storage/models/setting';
 import _FriendlyError from './errors/friendly';
 import _CommandFormatError from './errors/command-format';
 
@@ -51,10 +51,10 @@ export const Permissions = _Permissions;
 export const Util = _Util;
 
 /**
- * The {@link Storage} class
+ * The {@link GuildStorage} class
  * @type {function}
  */
-export const Storage = _Storage;
+export const GuildStorage = _GuildStorage;
 
 /**
  * The {@link Setting} class
@@ -79,5 +79,6 @@ export const CommandFormatError = _CommandFormatError;
 /** @external {Guild} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild */
 /** @external {Channel} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Channel */
 /** @external {Message} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Message */
+/** @external {Role} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Role */
 /** @external {Logger} https://github.com/winstonjs/winston/blob/master/README.md */
 /** @external {LocalStorage} https://developer.mozilla.org/en-US/docs/Web/API/Storage */

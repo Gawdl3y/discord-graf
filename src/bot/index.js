@@ -12,10 +12,11 @@ import Util from './util';
 import Registry from '../commands/registry';
 import Dispatcher from '../commands/dispatcher';
 import Module from '../commands/module';
-import Setting from '../data/models/setting';
-import SettingStorage from '../data/settings';
-import ModRoleStorage from '../data/mod-roles';
-import AllowedChannelStorage from '../data/allowed-channels';
+import Setting from '../storage/models/setting';
+import GuildStorage from '../storage';
+import SettingStorage from '../storage/settings';
+import ModRoleStorage from '../storage/mod-roles';
+import AllowedChannelStorage from '../storage/allowed-channels';
 
 import HelpCommand from '../commands/info/help';
 import AboutCommand from '../commands/info/about';

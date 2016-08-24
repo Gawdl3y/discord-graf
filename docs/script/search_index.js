@@ -1,8 +1,8 @@
 window.esdocSearchIndex = [
   [
-    "discord-graf/src/data/allowed-channels.js~allowedchannelstorage",
-    "class/src/data/allowed-channels.js~AllowedChannelStorage.html",
-    "<span>AllowedChannelStorage</span> <span class=\"search-result-import-path\">discord-graf/src/data/allowed-channels.js</span>",
+    "discord-graf/src/storage/allowed-channels.js~allowedchannelstorage",
+    "class/src/storage/allowed-channels.js~AllowedChannelStorage.html",
+    "<span>AllowedChannelStorage</span> <span class=\"search-result-import-path\">discord-graf/src/storage/allowed-channels.js</span>",
     "class"
   ],
   [
@@ -84,9 +84,21 @@ window.esdocSearchIndex = [
     "variable"
   ],
   [
-    "discord-graf/src/data/mod-roles.js~modrolestorage",
-    "class/src/data/mod-roles.js~ModRoleStorage.html",
-    "<span>ModRoleStorage</span> <span class=\"search-result-import-path\">discord-graf/src/data/mod-roles.js</span>",
+    "discord-graf/src/index.js~guildstorage",
+    "variable/index.html#static-variable-GuildStorage",
+    "<span>GuildStorage</span> <span class=\"search-result-import-path\">discord-graf/src/index.js</span>",
+    "variable"
+  ],
+  [
+    "discord-graf/src/storage/index.js~guildstorage",
+    "class/src/storage/index.js~GuildStorage.html",
+    "<span>GuildStorage</span> <span class=\"search-result-import-path\">discord-graf/src/storage/index.js</span>",
+    "class"
+  ],
+  [
+    "discord-graf/src/storage/mod-roles.js~modrolestorage",
+    "class/src/storage/mod-roles.js~ModRoleStorage.html",
+    "<span>ModRoleStorage</span> <span class=\"search-result-import-path\">discord-graf/src/storage/mod-roles.js</span>",
     "class"
   ],
   [
@@ -108,34 +120,22 @@ window.esdocSearchIndex = [
     "variable"
   ],
   [
-    "discord-graf/src/data/models/setting.js~setting",
-    "class/src/data/models/setting.js~Setting.html",
-    "<span>Setting</span> <span class=\"search-result-import-path\">discord-graf/src/data/models/setting.js</span>",
-    "class"
-  ],
-  [
     "discord-graf/src/index.js~setting",
     "variable/index.html#static-variable-Setting",
     "<span>Setting</span> <span class=\"search-result-import-path\">discord-graf/src/index.js</span>",
     "variable"
   ],
   [
-    "discord-graf/src/data/settings.js~settingstorage",
-    "class/src/data/settings.js~SettingStorage.html",
-    "<span>SettingStorage</span> <span class=\"search-result-import-path\">discord-graf/src/data/settings.js</span>",
+    "discord-graf/src/storage/models/setting.js~setting",
+    "class/src/storage/models/setting.js~Setting.html",
+    "<span>Setting</span> <span class=\"search-result-import-path\">discord-graf/src/storage/models/setting.js</span>",
     "class"
   ],
   [
-    "discord-graf/src/data/storage.js~storage",
-    "class/src/data/storage.js~Storage.html",
-    "<span>Storage</span> <span class=\"search-result-import-path\">discord-graf/src/data/storage.js</span>",
+    "discord-graf/src/storage/settings.js~settingstorage",
+    "class/src/storage/settings.js~SettingStorage.html",
+    "<span>SettingStorage</span> <span class=\"search-result-import-path\">discord-graf/src/storage/settings.js</span>",
     "class"
-  ],
-  [
-    "discord-graf/src/index.js~storage",
-    "variable/index.html#static-variable-Storage",
-    "<span>Storage</span> <span class=\"search-result-import-path\">discord-graf/src/index.js</span>",
-    "variable"
   ],
   [
     "discord-graf/src/index.js~util",
@@ -1230,240 +1230,6 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "src/data/allowed-channels.js",
-    "file/src/data/allowed-channels.js.html",
-    "src/data/allowed-channels.js",
-    "file"
-  ],
-  [
-    "src/data/allowed-channels.js~allowedchannelstorage#constructor",
-    "class/src/data/allowed-channels.js~AllowedChannelStorage.html#instance-constructor-constructor",
-    "src/data/allowed-channels.js~AllowedChannelStorage#constructor",
-    "method"
-  ],
-  [
-    "src/data/allowed-channels.js~allowedchannelstorage#delete",
-    "class/src/data/allowed-channels.js~AllowedChannelStorage.html#instance-method-delete",
-    "src/data/allowed-channels.js~AllowedChannelStorage#delete",
-    "method"
-  ],
-  [
-    "src/data/allowed-channels.js~allowedchannelstorage#find",
-    "class/src/data/allowed-channels.js~AllowedChannelStorage.html#instance-method-find",
-    "src/data/allowed-channels.js~AllowedChannelStorage#find",
-    "method"
-  ],
-  [
-    "src/data/allowed-channels.js~allowedchannelstorage#save",
-    "class/src/data/allowed-channels.js~AllowedChannelStorage.html#instance-method-save",
-    "src/data/allowed-channels.js~AllowedChannelStorage#save",
-    "method"
-  ],
-  [
-    "src/data/mod-roles.js",
-    "file/src/data/mod-roles.js.html",
-    "src/data/mod-roles.js",
-    "file"
-  ],
-  [
-    "src/data/mod-roles.js~modrolestorage#constructor",
-    "class/src/data/mod-roles.js~ModRoleStorage.html#instance-constructor-constructor",
-    "src/data/mod-roles.js~ModRoleStorage#constructor",
-    "method"
-  ],
-  [
-    "src/data/mod-roles.js~modrolestorage#delete",
-    "class/src/data/mod-roles.js~ModRoleStorage.html#instance-method-delete",
-    "src/data/mod-roles.js~ModRoleStorage#delete",
-    "method"
-  ],
-  [
-    "src/data/mod-roles.js~modrolestorage#find",
-    "class/src/data/mod-roles.js~ModRoleStorage.html#instance-method-find",
-    "src/data/mod-roles.js~ModRoleStorage#find",
-    "method"
-  ],
-  [
-    "src/data/mod-roles.js~modrolestorage#save",
-    "class/src/data/mod-roles.js~ModRoleStorage.html#instance-method-save",
-    "src/data/mod-roles.js~ModRoleStorage#save",
-    "method"
-  ],
-  [
-    "src/data/models/setting.js",
-    "file/src/data/models/setting.js.html",
-    "src/data/models/setting.js",
-    "file"
-  ],
-  [
-    "src/data/models/setting.js~setting#constructor",
-    "class/src/data/models/setting.js~Setting.html#instance-constructor-constructor",
-    "src/data/models/setting.js~Setting#constructor",
-    "method"
-  ],
-  [
-    "src/data/models/setting.js~setting#guild",
-    "class/src/data/models/setting.js~Setting.html#instance-member-guild",
-    "src/data/models/setting.js~Setting#guild",
-    "member"
-  ],
-  [
-    "src/data/models/setting.js~setting#key",
-    "class/src/data/models/setting.js~Setting.html#instance-member-key",
-    "src/data/models/setting.js~Setting#key",
-    "member"
-  ],
-  [
-    "src/data/models/setting.js~setting#value",
-    "class/src/data/models/setting.js~Setting.html#instance-member-value",
-    "src/data/models/setting.js~Setting#value",
-    "member"
-  ],
-  [
-    "src/data/settings.js",
-    "file/src/data/settings.js.html",
-    "src/data/settings.js",
-    "file"
-  ],
-  [
-    "src/data/settings.js~settingstorage#constructor",
-    "class/src/data/settings.js~SettingStorage.html#instance-constructor-constructor",
-    "src/data/settings.js~SettingStorage#constructor",
-    "method"
-  ],
-  [
-    "src/data/settings.js~settingstorage#delete",
-    "class/src/data/settings.js~SettingStorage.html#instance-method-delete",
-    "src/data/settings.js~SettingStorage#delete",
-    "method"
-  ],
-  [
-    "src/data/settings.js~settingstorage#exists",
-    "class/src/data/settings.js~SettingStorage.html#instance-method-exists",
-    "src/data/settings.js~SettingStorage#exists",
-    "method"
-  ],
-  [
-    "src/data/settings.js~settingstorage#find",
-    "class/src/data/settings.js~SettingStorage.html#instance-method-find",
-    "src/data/settings.js~SettingStorage#find",
-    "method"
-  ],
-  [
-    "src/data/settings.js~settingstorage#getsettingguildandkey",
-    "class/src/data/settings.js~SettingStorage.html#instance-method-getSettingGuildAndKey",
-    "src/data/settings.js~SettingStorage#getSettingGuildAndKey",
-    "method"
-  ],
-  [
-    "src/data/settings.js~settingstorage#getvalue",
-    "class/src/data/settings.js~SettingStorage.html#instance-method-getValue",
-    "src/data/settings.js~SettingStorage#getValue",
-    "method"
-  ],
-  [
-    "src/data/settings.js~settingstorage#save",
-    "class/src/data/settings.js~SettingStorage.html#instance-method-save",
-    "src/data/settings.js~SettingStorage#save",
-    "method"
-  ],
-  [
-    "src/data/storage.js",
-    "file/src/data/storage.js.html",
-    "src/data/storage.js",
-    "file"
-  ],
-  [
-    "src/data/storage.js~storage#clear",
-    "class/src/data/storage.js~Storage.html#instance-method-clear",
-    "src/data/storage.js~Storage#clear",
-    "method"
-  ],
-  [
-    "src/data/storage.js~storage#clearall",
-    "class/src/data/storage.js~Storage.html#instance-method-clearAll",
-    "src/data/storage.js~Storage#clearAll",
-    "method"
-  ],
-  [
-    "src/data/storage.js~storage#constructor",
-    "class/src/data/storage.js~Storage.html#instance-constructor-constructor",
-    "src/data/storage.js~Storage#constructor",
-    "method"
-  ],
-  [
-    "src/data/storage.js~storage#delete",
-    "class/src/data/storage.js~Storage.html#instance-method-delete",
-    "src/data/storage.js~Storage#delete",
-    "method"
-  ],
-  [
-    "src/data/storage.js~storage#exists",
-    "class/src/data/storage.js~Storage.html#instance-method-exists",
-    "src/data/storage.js~Storage#exists",
-    "method"
-  ],
-  [
-    "src/data/storage.js~storage#find",
-    "class/src/data/storage.js~Storage.html#instance-method-find",
-    "src/data/storage.js~Storage#find",
-    "method"
-  ],
-  [
-    "src/data/storage.js~storage#guildsmap",
-    "class/src/data/storage.js~Storage.html#instance-member-guildsMap",
-    "src/data/storage.js~Storage#guildsMap",
-    "member"
-  ],
-  [
-    "src/data/storage.js~storage#isempty",
-    "class/src/data/storage.js~Storage.html#instance-method-isEmpty",
-    "src/data/storage.js~Storage#isEmpty",
-    "method"
-  ],
-  [
-    "src/data/storage.js~storage#key",
-    "class/src/data/storage.js~Storage.html#instance-member-key",
-    "src/data/storage.js~Storage#key",
-    "member"
-  ],
-  [
-    "src/data/storage.js~storage#loadstorage",
-    "class/src/data/storage.js~Storage.html#instance-method-loadStorage",
-    "src/data/storage.js~Storage#loadStorage",
-    "method"
-  ],
-  [
-    "src/data/storage.js~storage#localstorage",
-    "class/src/data/storage.js~Storage.html#instance-member-localStorage",
-    "src/data/storage.js~Storage#localStorage",
-    "member"
-  ],
-  [
-    "src/data/storage.js~storage#logger",
-    "class/src/data/storage.js~Storage.html#instance-member-logger",
-    "src/data/storage.js~Storage#logger",
-    "member"
-  ],
-  [
-    "src/data/storage.js~storage#objectbased",
-    "class/src/data/storage.js~Storage.html#instance-member-objectBased",
-    "src/data/storage.js~Storage#objectBased",
-    "member"
-  ],
-  [
-    "src/data/storage.js~storage#save",
-    "class/src/data/storage.js~Storage.html#instance-method-save",
-    "src/data/storage.js~Storage#save",
-    "method"
-  ],
-  [
-    "src/data/storage.js~storage#savestorage",
-    "class/src/data/storage.js~Storage.html#instance-method-saveStorage",
-    "src/data/storage.js~Storage#saveStorage",
-    "method"
-  ],
-  [
     "src/errors/command-format.js",
     "file/src/errors/command-format.js.html",
     "src/errors/command-format.js",
@@ -1530,9 +1296,243 @@ window.esdocSearchIndex = [
     "external"
   ],
   [
+    "src/index.js~role",
+    "external/index.html",
+    "src/index.js~Role",
+    "external"
+  ],
+  [
     "src/index.js~user",
     "external/index.html",
     "src/index.js~User",
     "external"
+  ],
+  [
+    "src/storage/allowed-channels.js",
+    "file/src/storage/allowed-channels.js.html",
+    "src/storage/allowed-channels.js",
+    "file"
+  ],
+  [
+    "src/storage/allowed-channels.js~allowedchannelstorage#constructor",
+    "class/src/storage/allowed-channels.js~AllowedChannelStorage.html#instance-constructor-constructor",
+    "src/storage/allowed-channels.js~AllowedChannelStorage#constructor",
+    "method"
+  ],
+  [
+    "src/storage/allowed-channels.js~allowedchannelstorage#delete",
+    "class/src/storage/allowed-channels.js~AllowedChannelStorage.html#instance-method-delete",
+    "src/storage/allowed-channels.js~AllowedChannelStorage#delete",
+    "method"
+  ],
+  [
+    "src/storage/allowed-channels.js~allowedchannelstorage#find",
+    "class/src/storage/allowed-channels.js~AllowedChannelStorage.html#instance-method-find",
+    "src/storage/allowed-channels.js~AllowedChannelStorage#find",
+    "method"
+  ],
+  [
+    "src/storage/allowed-channels.js~allowedchannelstorage#save",
+    "class/src/storage/allowed-channels.js~AllowedChannelStorage.html#instance-method-save",
+    "src/storage/allowed-channels.js~AllowedChannelStorage#save",
+    "method"
+  ],
+  [
+    "src/storage/index.js",
+    "file/src/storage/index.js.html",
+    "src/storage/index.js",
+    "file"
+  ],
+  [
+    "src/storage/index.js~guildstorage#clear",
+    "class/src/storage/index.js~GuildStorage.html#instance-method-clear",
+    "src/storage/index.js~GuildStorage#clear",
+    "method"
+  ],
+  [
+    "src/storage/index.js~guildstorage#clearall",
+    "class/src/storage/index.js~GuildStorage.html#instance-method-clearAll",
+    "src/storage/index.js~GuildStorage#clearAll",
+    "method"
+  ],
+  [
+    "src/storage/index.js~guildstorage#constructor",
+    "class/src/storage/index.js~GuildStorage.html#instance-constructor-constructor",
+    "src/storage/index.js~GuildStorage#constructor",
+    "method"
+  ],
+  [
+    "src/storage/index.js~guildstorage#delete",
+    "class/src/storage/index.js~GuildStorage.html#instance-method-delete",
+    "src/storage/index.js~GuildStorage#delete",
+    "method"
+  ],
+  [
+    "src/storage/index.js~guildstorage#exists",
+    "class/src/storage/index.js~GuildStorage.html#instance-method-exists",
+    "src/storage/index.js~GuildStorage#exists",
+    "method"
+  ],
+  [
+    "src/storage/index.js~guildstorage#find",
+    "class/src/storage/index.js~GuildStorage.html#instance-method-find",
+    "src/storage/index.js~GuildStorage#find",
+    "method"
+  ],
+  [
+    "src/storage/index.js~guildstorage#guildsmap",
+    "class/src/storage/index.js~GuildStorage.html#instance-member-guildsMap",
+    "src/storage/index.js~GuildStorage#guildsMap",
+    "member"
+  ],
+  [
+    "src/storage/index.js~guildstorage#isempty",
+    "class/src/storage/index.js~GuildStorage.html#instance-method-isEmpty",
+    "src/storage/index.js~GuildStorage#isEmpty",
+    "method"
+  ],
+  [
+    "src/storage/index.js~guildstorage#key",
+    "class/src/storage/index.js~GuildStorage.html#instance-member-key",
+    "src/storage/index.js~GuildStorage#key",
+    "member"
+  ],
+  [
+    "src/storage/index.js~guildstorage#loadstorage",
+    "class/src/storage/index.js~GuildStorage.html#instance-method-loadStorage",
+    "src/storage/index.js~GuildStorage#loadStorage",
+    "method"
+  ],
+  [
+    "src/storage/index.js~guildstorage#localstorage",
+    "class/src/storage/index.js~GuildStorage.html#instance-member-localStorage",
+    "src/storage/index.js~GuildStorage#localStorage",
+    "member"
+  ],
+  [
+    "src/storage/index.js~guildstorage#logger",
+    "class/src/storage/index.js~GuildStorage.html#instance-member-logger",
+    "src/storage/index.js~GuildStorage#logger",
+    "member"
+  ],
+  [
+    "src/storage/index.js~guildstorage#objectbased",
+    "class/src/storage/index.js~GuildStorage.html#instance-member-objectBased",
+    "src/storage/index.js~GuildStorage#objectBased",
+    "member"
+  ],
+  [
+    "src/storage/index.js~guildstorage#save",
+    "class/src/storage/index.js~GuildStorage.html#instance-method-save",
+    "src/storage/index.js~GuildStorage#save",
+    "method"
+  ],
+  [
+    "src/storage/index.js~guildstorage#savestorage",
+    "class/src/storage/index.js~GuildStorage.html#instance-method-saveStorage",
+    "src/storage/index.js~GuildStorage#saveStorage",
+    "method"
+  ],
+  [
+    "src/storage/mod-roles.js",
+    "file/src/storage/mod-roles.js.html",
+    "src/storage/mod-roles.js",
+    "file"
+  ],
+  [
+    "src/storage/mod-roles.js~modrolestorage#constructor",
+    "class/src/storage/mod-roles.js~ModRoleStorage.html#instance-constructor-constructor",
+    "src/storage/mod-roles.js~ModRoleStorage#constructor",
+    "method"
+  ],
+  [
+    "src/storage/mod-roles.js~modrolestorage#delete",
+    "class/src/storage/mod-roles.js~ModRoleStorage.html#instance-method-delete",
+    "src/storage/mod-roles.js~ModRoleStorage#delete",
+    "method"
+  ],
+  [
+    "src/storage/mod-roles.js~modrolestorage#find",
+    "class/src/storage/mod-roles.js~ModRoleStorage.html#instance-method-find",
+    "src/storage/mod-roles.js~ModRoleStorage#find",
+    "method"
+  ],
+  [
+    "src/storage/mod-roles.js~modrolestorage#save",
+    "class/src/storage/mod-roles.js~ModRoleStorage.html#instance-method-save",
+    "src/storage/mod-roles.js~ModRoleStorage#save",
+    "method"
+  ],
+  [
+    "src/storage/models/setting.js",
+    "file/src/storage/models/setting.js.html",
+    "src/storage/models/setting.js",
+    "file"
+  ],
+  [
+    "src/storage/models/setting.js~setting#constructor",
+    "class/src/storage/models/setting.js~Setting.html#instance-constructor-constructor",
+    "src/storage/models/setting.js~Setting#constructor",
+    "method"
+  ],
+  [
+    "src/storage/models/setting.js~setting#guild",
+    "class/src/storage/models/setting.js~Setting.html#instance-member-guild",
+    "src/storage/models/setting.js~Setting#guild",
+    "member"
+  ],
+  [
+    "src/storage/models/setting.js~setting#key",
+    "class/src/storage/models/setting.js~Setting.html#instance-member-key",
+    "src/storage/models/setting.js~Setting#key",
+    "member"
+  ],
+  [
+    "src/storage/models/setting.js~setting#value",
+    "class/src/storage/models/setting.js~Setting.html#instance-member-value",
+    "src/storage/models/setting.js~Setting#value",
+    "member"
+  ],
+  [
+    "src/storage/settings.js",
+    "file/src/storage/settings.js.html",
+    "src/storage/settings.js",
+    "file"
+  ],
+  [
+    "src/storage/settings.js~settingstorage#constructor",
+    "class/src/storage/settings.js~SettingStorage.html#instance-constructor-constructor",
+    "src/storage/settings.js~SettingStorage#constructor",
+    "method"
+  ],
+  [
+    "src/storage/settings.js~settingstorage#delete",
+    "class/src/storage/settings.js~SettingStorage.html#instance-method-delete",
+    "src/storage/settings.js~SettingStorage#delete",
+    "method"
+  ],
+  [
+    "src/storage/settings.js~settingstorage#exists",
+    "class/src/storage/settings.js~SettingStorage.html#instance-method-exists",
+    "src/storage/settings.js~SettingStorage#exists",
+    "method"
+  ],
+  [
+    "src/storage/settings.js~settingstorage#find",
+    "class/src/storage/settings.js~SettingStorage.html#instance-method-find",
+    "src/storage/settings.js~SettingStorage#find",
+    "method"
+  ],
+  [
+    "src/storage/settings.js~settingstorage#getvalue",
+    "class/src/storage/settings.js~SettingStorage.html#instance-method-getValue",
+    "src/storage/settings.js~SettingStorage#getValue",
+    "method"
+  ],
+  [
+    "src/storage/settings.js~settingstorage#save",
+    "class/src/storage/settings.js~SettingStorage.html#instance-method-save",
+    "src/storage/settings.js~SettingStorage#save",
+    "method"
   ]
 ]

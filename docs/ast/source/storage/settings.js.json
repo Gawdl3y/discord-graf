@@ -1,0 +1,4122 @@
+{
+  "type": "Program",
+  "start": 0,
+  "end": 3283,
+  "loc": {
+    "start": {
+      "line": 1,
+      "column": 0
+    },
+    "end": {
+      "line": 87,
+      "column": 0
+    }
+  },
+  "sourceType": "module",
+  "body": [
+    {
+      "type": "ExpressionStatement",
+      "start": 0,
+      "end": 12,
+      "loc": {
+        "start": {
+          "line": 1,
+          "column": 0
+        },
+        "end": {
+          "line": 1,
+          "column": 12
+        }
+      },
+      "expression": {
+        "type": "Literal",
+        "start": 0,
+        "end": 11,
+        "loc": {
+          "start": {
+            "line": 1,
+            "column": 0
+          },
+          "end": {
+            "line": 1,
+            "column": 11
+          }
+        },
+        "value": "use babel",
+        "rawValue": "use babel",
+        "raw": "'use babel'"
+      }
+    },
+    {
+      "type": "ExpressionStatement",
+      "start": 14,
+      "end": 27,
+      "loc": {
+        "start": {
+          "line": 2,
+          "column": 0
+        },
+        "end": {
+          "line": 2,
+          "column": 13
+        }
+      },
+      "expression": {
+        "type": "Literal",
+        "start": 14,
+        "end": 26,
+        "loc": {
+          "start": {
+            "line": 2,
+            "column": 0
+          },
+          "end": {
+            "line": 2,
+            "column": 12
+          }
+        },
+        "value": "use strict",
+        "rawValue": "use strict",
+        "raw": "'use strict'"
+      }
+    },
+    {
+      "type": "ImportDeclaration",
+      "start": 31,
+      "end": 55,
+      "loc": {
+        "start": {
+          "line": 4,
+          "column": 0
+        },
+        "end": {
+          "line": 4,
+          "column": 24
+        }
+      },
+      "specifiers": [
+        {
+          "type": "ImportDefaultSpecifier",
+          "start": 38,
+          "end": 45,
+          "loc": {
+            "start": {
+              "line": 4,
+              "column": 7
+            },
+            "end": {
+              "line": 4,
+              "column": 14
+            }
+          },
+          "local": {
+            "type": "Identifier",
+            "start": 38,
+            "end": 45,
+            "loc": {
+              "start": {
+                "line": 4,
+                "column": 7
+              },
+              "end": {
+                "line": 4,
+                "column": 14
+              }
+            },
+            "name": "Storage"
+          }
+        }
+      ],
+      "importKind": "value",
+      "source": {
+        "type": "Literal",
+        "start": 51,
+        "end": 54,
+        "loc": {
+          "start": {
+            "line": 4,
+            "column": 20
+          },
+          "end": {
+            "line": 4,
+            "column": 23
+          }
+        },
+        "value": ".",
+        "rawValue": ".",
+        "raw": "'.'"
+      }
+    },
+    {
+      "type": "ImportDeclaration",
+      "start": 57,
+      "end": 96,
+      "loc": {
+        "start": {
+          "line": 5,
+          "column": 0
+        },
+        "end": {
+          "line": 5,
+          "column": 39
+        }
+      },
+      "specifiers": [
+        {
+          "type": "ImportDefaultSpecifier",
+          "start": 64,
+          "end": 71,
+          "loc": {
+            "start": {
+              "line": 5,
+              "column": 7
+            },
+            "end": {
+              "line": 5,
+              "column": 14
+            }
+          },
+          "local": {
+            "type": "Identifier",
+            "start": 64,
+            "end": 71,
+            "loc": {
+              "start": {
+                "line": 5,
+                "column": 7
+              },
+              "end": {
+                "line": 5,
+                "column": 14
+              }
+            },
+            "name": "Setting"
+          }
+        }
+      ],
+      "importKind": "value",
+      "source": {
+        "type": "Literal",
+        "start": 77,
+        "end": 95,
+        "loc": {
+          "start": {
+            "line": 5,
+            "column": 20
+          },
+          "end": {
+            "line": 5,
+            "column": 38
+          }
+        },
+        "value": "./models/setting",
+        "rawValue": "./models/setting",
+        "raw": "'./models/setting'"
+      },
+      "trailingComments": [
+        {
+          "type": "Block",
+          "value": "* Stores settings within a guild ",
+          "start": 100,
+          "end": 137,
+          "loc": {
+            "start": {
+              "line": 7,
+              "column": 0
+            },
+            "end": {
+              "line": 7,
+              "column": 37
+            }
+          },
+          "range": [
+            100,
+            137
+          ]
+        }
+      ]
+    },
+    {
+      "type": "ExportDefaultDeclaration",
+      "start": 139,
+      "end": 3281,
+      "loc": {
+        "start": {
+          "line": 8,
+          "column": 0
+        },
+        "end": {
+          "line": 86,
+          "column": 1
+        }
+      },
+      "declaration": {
+        "type": "ClassDeclaration",
+        "start": 154,
+        "end": 3281,
+        "loc": {
+          "start": {
+            "line": 8,
+            "column": 15
+          },
+          "end": {
+            "line": 86,
+            "column": 1
+          }
+        },
+        "id": {
+          "type": "Identifier",
+          "start": 160,
+          "end": 174,
+          "loc": {
+            "start": {
+              "line": 8,
+              "column": 21
+            },
+            "end": {
+              "line": 8,
+              "column": 35
+            }
+          },
+          "name": "SettingStorage",
+          "leadingComments": null
+        },
+        "superClass": {
+          "type": "Identifier",
+          "start": 183,
+          "end": 190,
+          "loc": {
+            "start": {
+              "line": 8,
+              "column": 44
+            },
+            "end": {
+              "line": 8,
+              "column": 51
+            }
+          },
+          "name": "Storage"
+        },
+        "body": {
+          "type": "ClassBody",
+          "start": 191,
+          "end": 3281,
+          "loc": {
+            "start": {
+              "line": 8,
+              "column": 52
+            },
+            "end": {
+              "line": 86,
+              "column": 1
+            }
+          },
+          "body": [
+            {
+              "type": "MethodDefinition",
+              "start": 332,
+              "end": 421,
+              "loc": {
+                "start": {
+                  "line": 13,
+                  "column": 1
+                },
+                "end": {
+                  "line": 15,
+                  "column": 2
+                }
+              },
+              "computed": false,
+              "key": {
+                "type": "Identifier",
+                "start": 332,
+                "end": 343,
+                "loc": {
+                  "start": {
+                    "line": 13,
+                    "column": 1
+                  },
+                  "end": {
+                    "line": 13,
+                    "column": 12
+                  }
+                },
+                "name": "constructor",
+                "leadingComments": null
+              },
+              "static": false,
+              "kind": "constructor",
+              "value": {
+                "type": "FunctionExpression",
+                "start": 343,
+                "end": 421,
+                "loc": {
+                  "start": {
+                    "line": 13,
+                    "column": 12
+                  },
+                  "end": {
+                    "line": 15,
+                    "column": 2
+                  }
+                },
+                "id": null,
+                "generator": false,
+                "expression": false,
+                "async": false,
+                "params": [
+                  {
+                    "type": "Identifier",
+                    "start": 344,
+                    "end": 356,
+                    "loc": {
+                      "start": {
+                        "line": 13,
+                        "column": 13
+                      },
+                      "end": {
+                        "line": 13,
+                        "column": 25
+                      }
+                    },
+                    "name": "localStorage"
+                  },
+                  {
+                    "type": "Identifier",
+                    "start": 358,
+                    "end": 364,
+                    "loc": {
+                      "start": {
+                        "line": 13,
+                        "column": 27
+                      },
+                      "end": {
+                        "line": 13,
+                        "column": 33
+                      }
+                    },
+                    "name": "logger"
+                  }
+                ],
+                "body": {
+                  "type": "BlockStatement",
+                  "start": 366,
+                  "end": 421,
+                  "loc": {
+                    "start": {
+                      "line": 13,
+                      "column": 35
+                    },
+                    "end": {
+                      "line": 15,
+                      "column": 2
+                    }
+                  },
+                  "body": [
+                    {
+                      "type": "ExpressionStatement",
+                      "start": 371,
+                      "end": 417,
+                      "loc": {
+                        "start": {
+                          "line": 14,
+                          "column": 2
+                        },
+                        "end": {
+                          "line": 14,
+                          "column": 48
+                        }
+                      },
+                      "expression": {
+                        "type": "CallExpression",
+                        "start": 371,
+                        "end": 416,
+                        "loc": {
+                          "start": {
+                            "line": 14,
+                            "column": 2
+                          },
+                          "end": {
+                            "line": 14,
+                            "column": 47
+                          }
+                        },
+                        "callee": {
+                          "type": "Super",
+                          "start": 371,
+                          "end": 376,
+                          "loc": {
+                            "start": {
+                              "line": 14,
+                              "column": 2
+                            },
+                            "end": {
+                              "line": 14,
+                              "column": 7
+                            }
+                          }
+                        },
+                        "arguments": [
+                          {
+                            "type": "Literal",
+                            "start": 377,
+                            "end": 387,
+                            "loc": {
+                              "start": {
+                                "line": 14,
+                                "column": 8
+                              },
+                              "end": {
+                                "line": 14,
+                                "column": 18
+                              }
+                            },
+                            "value": "settings",
+                            "rawValue": "settings",
+                            "raw": "'settings'"
+                          },
+                          {
+                            "type": "Identifier",
+                            "start": 389,
+                            "end": 401,
+                            "loc": {
+                              "start": {
+                                "line": 14,
+                                "column": 20
+                              },
+                              "end": {
+                                "line": 14,
+                                "column": 32
+                              }
+                            },
+                            "name": "localStorage"
+                          },
+                          {
+                            "type": "Identifier",
+                            "start": 403,
+                            "end": 409,
+                            "loc": {
+                              "start": {
+                                "line": 14,
+                                "column": 34
+                              },
+                              "end": {
+                                "line": 14,
+                                "column": 40
+                              }
+                            },
+                            "name": "logger"
+                          },
+                          {
+                            "type": "Literal",
+                            "start": 411,
+                            "end": 415,
+                            "loc": {
+                              "start": {
+                                "line": 14,
+                                "column": 42
+                              },
+                              "end": {
+                                "line": 14,
+                                "column": 46
+                              }
+                            },
+                            "value": true,
+                            "rawValue": true,
+                            "raw": "true"
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "trailingComments": null
+                },
+                "trailingComments": null
+              },
+              "leadingComments": [
+                {
+                  "type": "Block",
+                  "value": "*\r\n\t * @param {LocalStorage} localStorage - The LocalStorage instance to use\r\n\t * @param {Logger} [logger] - The logger to use\r\n\t ",
+                  "start": 195,
+                  "end": 329,
+                  "loc": {
+                    "start": {
+                      "line": 9,
+                      "column": 1
+                    },
+                    "end": {
+                      "line": 12,
+                      "column": 4
+                    }
+                  },
+                  "range": [
+                    195,
+                    329
+                  ]
+                }
+              ],
+              "trailingComments": [
+                {
+                  "type": "Block",
+                  "value": "*\r\n\t * Saves a setting to the storage\r\n\t * @param {Setting} setting - The setting to save\r\n\t * @return {boolean} Whether or not the setting was saved\r\n\t * @see {@link GuildStorage#save}\r\n\t ",
+                  "start": 426,
+                  "end": 619,
+                  "loc": {
+                    "start": {
+                      "line": 17,
+                      "column": 1
+                    },
+                    "end": {
+                      "line": 22,
+                      "column": 4
+                    }
+                  },
+                  "range": [
+                    426,
+                    619
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "MethodDefinition",
+              "start": 622,
+              "end": 687,
+              "loc": {
+                "start": {
+                  "line": 23,
+                  "column": 1
+                },
+                "end": {
+                  "line": 25,
+                  "column": 2
+                }
+              },
+              "computed": false,
+              "key": {
+                "type": "Identifier",
+                "start": 622,
+                "end": 626,
+                "loc": {
+                  "start": {
+                    "line": 23,
+                    "column": 1
+                  },
+                  "end": {
+                    "line": 23,
+                    "column": 5
+                  }
+                },
+                "name": "save",
+                "leadingComments": null
+              },
+              "static": false,
+              "kind": "method",
+              "value": {
+                "type": "FunctionExpression",
+                "start": 626,
+                "end": 687,
+                "loc": {
+                  "start": {
+                    "line": 23,
+                    "column": 5
+                  },
+                  "end": {
+                    "line": 25,
+                    "column": 2
+                  }
+                },
+                "id": null,
+                "generator": false,
+                "expression": false,
+                "async": false,
+                "params": [
+                  {
+                    "type": "Identifier",
+                    "start": 627,
+                    "end": 634,
+                    "loc": {
+                      "start": {
+                        "line": 23,
+                        "column": 6
+                      },
+                      "end": {
+                        "line": 23,
+                        "column": 13
+                      }
+                    },
+                    "name": "setting"
+                  }
+                ],
+                "body": {
+                  "type": "BlockStatement",
+                  "start": 636,
+                  "end": 687,
+                  "loc": {
+                    "start": {
+                      "line": 23,
+                      "column": 15
+                    },
+                    "end": {
+                      "line": 25,
+                      "column": 2
+                    }
+                  },
+                  "body": [
+                    {
+                      "type": "ReturnStatement",
+                      "start": 641,
+                      "end": 683,
+                      "loc": {
+                        "start": {
+                          "line": 24,
+                          "column": 2
+                        },
+                        "end": {
+                          "line": 24,
+                          "column": 44
+                        }
+                      },
+                      "argument": {
+                        "type": "CallExpression",
+                        "start": 648,
+                        "end": 682,
+                        "loc": {
+                          "start": {
+                            "line": 24,
+                            "column": 9
+                          },
+                          "end": {
+                            "line": 24,
+                            "column": 43
+                          }
+                        },
+                        "callee": {
+                          "type": "MemberExpression",
+                          "start": 648,
+                          "end": 658,
+                          "loc": {
+                            "start": {
+                              "line": 24,
+                              "column": 9
+                            },
+                            "end": {
+                              "line": 24,
+                              "column": 19
+                            }
+                          },
+                          "object": {
+                            "type": "Super",
+                            "start": 648,
+                            "end": 653,
+                            "loc": {
+                              "start": {
+                                "line": 24,
+                                "column": 9
+                              },
+                              "end": {
+                                "line": 24,
+                                "column": 14
+                              }
+                            }
+                          },
+                          "property": {
+                            "type": "Identifier",
+                            "start": 654,
+                            "end": 658,
+                            "loc": {
+                              "start": {
+                                "line": 24,
+                                "column": 15
+                              },
+                              "end": {
+                                "line": 24,
+                                "column": 19
+                              }
+                            },
+                            "name": "save"
+                          },
+                          "computed": false
+                        },
+                        "arguments": [
+                          {
+                            "type": "MemberExpression",
+                            "start": 659,
+                            "end": 672,
+                            "loc": {
+                              "start": {
+                                "line": 24,
+                                "column": 20
+                              },
+                              "end": {
+                                "line": 24,
+                                "column": 33
+                              }
+                            },
+                            "object": {
+                              "type": "Identifier",
+                              "start": 659,
+                              "end": 666,
+                              "loc": {
+                                "start": {
+                                  "line": 24,
+                                  "column": 20
+                                },
+                                "end": {
+                                  "line": 24,
+                                  "column": 27
+                                }
+                              },
+                              "name": "setting"
+                            },
+                            "property": {
+                              "type": "Identifier",
+                              "start": 667,
+                              "end": 672,
+                              "loc": {
+                                "start": {
+                                  "line": 24,
+                                  "column": 28
+                                },
+                                "end": {
+                                  "line": 24,
+                                  "column": 33
+                                }
+                              },
+                              "name": "guild"
+                            },
+                            "computed": false
+                          },
+                          {
+                            "type": "Identifier",
+                            "start": 674,
+                            "end": 681,
+                            "loc": {
+                              "start": {
+                                "line": 24,
+                                "column": 35
+                              },
+                              "end": {
+                                "line": 24,
+                                "column": 42
+                              }
+                            },
+                            "name": "setting"
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "trailingComments": null
+                },
+                "trailingComments": null
+              },
+              "leadingComments": [
+                {
+                  "type": "Block",
+                  "value": "*\r\n\t * Saves a setting to the storage\r\n\t * @param {Setting} setting - The setting to save\r\n\t * @return {boolean} Whether or not the setting was saved\r\n\t * @see {@link GuildStorage#save}\r\n\t ",
+                  "start": 426,
+                  "end": 619,
+                  "loc": {
+                    "start": {
+                      "line": 17,
+                      "column": 1
+                    },
+                    "end": {
+                      "line": 22,
+                      "column": 4
+                    }
+                  },
+                  "range": [
+                    426,
+                    619
+                  ]
+                }
+              ],
+              "trailingComments": [
+                {
+                  "type": "Block",
+                  "value": "*\r\n\t * Deletes a setting from the storage\r\n\t * @param {Guild|string} [guild] - The guild or guild ID the setting is associated with\r\n\t * @param {Setting|string} setting - The setting or setting key (must be a setting instance if the guild isn't specified)\r\n\t * @return {boolean} Whether or not the setting was deleted\r\n\t * @see {@link GuildStorage#delete}\r\n\t ",
+                  "start": 692,
+                  "end": 1055,
+                  "loc": {
+                    "start": {
+                      "line": 27,
+                      "column": 1
+                    },
+                    "end": {
+                      "line": 33,
+                      "column": 4
+                    }
+                  },
+                  "range": [
+                    692,
+                    1055
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "MethodDefinition",
+              "start": 1058,
+              "end": 1193,
+              "loc": {
+                "start": {
+                  "line": 34,
+                  "column": 1
+                },
+                "end": {
+                  "line": 37,
+                  "column": 2
+                }
+              },
+              "computed": false,
+              "key": {
+                "type": "Identifier",
+                "start": 1058,
+                "end": 1064,
+                "loc": {
+                  "start": {
+                    "line": 34,
+                    "column": 1
+                  },
+                  "end": {
+                    "line": 34,
+                    "column": 7
+                  }
+                },
+                "name": "delete",
+                "leadingComments": null
+              },
+              "static": false,
+              "kind": "method",
+              "value": {
+                "type": "FunctionExpression",
+                "start": 1064,
+                "end": 1193,
+                "loc": {
+                  "start": {
+                    "line": 34,
+                    "column": 7
+                  },
+                  "end": {
+                    "line": 37,
+                    "column": 2
+                  }
+                },
+                "id": null,
+                "generator": false,
+                "expression": false,
+                "async": false,
+                "params": [
+                  {
+                    "type": "Identifier",
+                    "start": 1065,
+                    "end": 1070,
+                    "loc": {
+                      "start": {
+                        "line": 34,
+                        "column": 8
+                      },
+                      "end": {
+                        "line": 34,
+                        "column": 13
+                      }
+                    },
+                    "name": "guild"
+                  },
+                  {
+                    "type": "Identifier",
+                    "start": 1072,
+                    "end": 1079,
+                    "loc": {
+                      "start": {
+                        "line": 34,
+                        "column": 15
+                      },
+                      "end": {
+                        "line": 34,
+                        "column": 22
+                      }
+                    },
+                    "name": "setting"
+                  }
+                ],
+                "body": {
+                  "type": "BlockStatement",
+                  "start": 1081,
+                  "end": 1193,
+                  "loc": {
+                    "start": {
+                      "line": 34,
+                      "column": 24
+                    },
+                    "end": {
+                      "line": 37,
+                      "column": 2
+                    }
+                  },
+                  "body": [
+                    {
+                      "type": "ExpressionStatement",
+                      "start": 1086,
+                      "end": 1149,
+                      "loc": {
+                        "start": {
+                          "line": 35,
+                          "column": 2
+                        },
+                        "end": {
+                          "line": 35,
+                          "column": 65
+                        }
+                      },
+                      "expression": {
+                        "type": "AssignmentExpression",
+                        "start": 1086,
+                        "end": 1148,
+                        "loc": {
+                          "start": {
+                            "line": 35,
+                            "column": 2
+                          },
+                          "end": {
+                            "line": 35,
+                            "column": 64
+                          }
+                        },
+                        "operator": "=",
+                        "left": {
+                          "type": "ArrayPattern",
+                          "start": 1086,
+                          "end": 1102,
+                          "loc": {
+                            "start": {
+                              "line": 35,
+                              "column": 2
+                            },
+                            "end": {
+                              "line": 35,
+                              "column": 18
+                            }
+                          },
+                          "elements": [
+                            {
+                              "type": "Identifier",
+                              "start": 1087,
+                              "end": 1092,
+                              "loc": {
+                                "start": {
+                                  "line": 35,
+                                  "column": 3
+                                },
+                                "end": {
+                                  "line": 35,
+                                  "column": 8
+                                }
+                              },
+                              "name": "guild"
+                            },
+                            {
+                              "type": "Identifier",
+                              "start": 1094,
+                              "end": 1101,
+                              "loc": {
+                                "start": {
+                                  "line": 35,
+                                  "column": 10
+                                },
+                                "end": {
+                                  "line": 35,
+                                  "column": 17
+                                }
+                              },
+                              "name": "setting"
+                            }
+                          ]
+                        },
+                        "right": {
+                          "type": "CallExpression",
+                          "start": 1105,
+                          "end": 1148,
+                          "loc": {
+                            "start": {
+                              "line": 35,
+                              "column": 21
+                            },
+                            "end": {
+                              "line": 35,
+                              "column": 64
+                            }
+                          },
+                          "callee": {
+                            "type": "MemberExpression",
+                            "start": 1105,
+                            "end": 1132,
+                            "loc": {
+                              "start": {
+                                "line": 35,
+                                "column": 21
+                              },
+                              "end": {
+                                "line": 35,
+                                "column": 48
+                              }
+                            },
+                            "object": {
+                              "type": "ThisExpression",
+                              "start": 1105,
+                              "end": 1109,
+                              "loc": {
+                                "start": {
+                                  "line": 35,
+                                  "column": 21
+                                },
+                                "end": {
+                                  "line": 35,
+                                  "column": 25
+                                }
+                              }
+                            },
+                            "property": {
+                              "type": "Identifier",
+                              "start": 1110,
+                              "end": 1132,
+                              "loc": {
+                                "start": {
+                                  "line": 35,
+                                  "column": 26
+                                },
+                                "end": {
+                                  "line": 35,
+                                  "column": 48
+                                }
+                              },
+                              "name": "_getSettingGuildAndKey"
+                            },
+                            "computed": false
+                          },
+                          "arguments": [
+                            {
+                              "type": "Identifier",
+                              "start": 1133,
+                              "end": 1140,
+                              "loc": {
+                                "start": {
+                                  "line": 35,
+                                  "column": 49
+                                },
+                                "end": {
+                                  "line": 35,
+                                  "column": 56
+                                }
+                              },
+                              "name": "setting"
+                            },
+                            {
+                              "type": "Identifier",
+                              "start": 1142,
+                              "end": 1147,
+                              "loc": {
+                                "start": {
+                                  "line": 35,
+                                  "column": 58
+                                },
+                                "end": {
+                                  "line": 35,
+                                  "column": 63
+                                }
+                              },
+                              "name": "guild"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ReturnStatement",
+                      "start": 1153,
+                      "end": 1189,
+                      "loc": {
+                        "start": {
+                          "line": 36,
+                          "column": 2
+                        },
+                        "end": {
+                          "line": 36,
+                          "column": 38
+                        }
+                      },
+                      "argument": {
+                        "type": "CallExpression",
+                        "start": 1160,
+                        "end": 1188,
+                        "loc": {
+                          "start": {
+                            "line": 36,
+                            "column": 9
+                          },
+                          "end": {
+                            "line": 36,
+                            "column": 37
+                          }
+                        },
+                        "callee": {
+                          "type": "MemberExpression",
+                          "start": 1160,
+                          "end": 1172,
+                          "loc": {
+                            "start": {
+                              "line": 36,
+                              "column": 9
+                            },
+                            "end": {
+                              "line": 36,
+                              "column": 21
+                            }
+                          },
+                          "object": {
+                            "type": "Super",
+                            "start": 1160,
+                            "end": 1165,
+                            "loc": {
+                              "start": {
+                                "line": 36,
+                                "column": 9
+                              },
+                              "end": {
+                                "line": 36,
+                                "column": 14
+                              }
+                            }
+                          },
+                          "property": {
+                            "type": "Identifier",
+                            "start": 1166,
+                            "end": 1172,
+                            "loc": {
+                              "start": {
+                                "line": 36,
+                                "column": 15
+                              },
+                              "end": {
+                                "line": 36,
+                                "column": 21
+                              }
+                            },
+                            "name": "delete"
+                          },
+                          "computed": false
+                        },
+                        "arguments": [
+                          {
+                            "type": "Identifier",
+                            "start": 1173,
+                            "end": 1178,
+                            "loc": {
+                              "start": {
+                                "line": 36,
+                                "column": 22
+                              },
+                              "end": {
+                                "line": 36,
+                                "column": 27
+                              }
+                            },
+                            "name": "guild"
+                          },
+                          {
+                            "type": "Identifier",
+                            "start": 1180,
+                            "end": 1187,
+                            "loc": {
+                              "start": {
+                                "line": 36,
+                                "column": 29
+                              },
+                              "end": {
+                                "line": 36,
+                                "column": 36
+                              }
+                            },
+                            "name": "setting"
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "trailingComments": null
+                },
+                "trailingComments": null
+              },
+              "leadingComments": [
+                {
+                  "type": "Block",
+                  "value": "*\r\n\t * Deletes a setting from the storage\r\n\t * @param {Guild|string} [guild] - The guild or guild ID the setting is associated with\r\n\t * @param {Setting|string} setting - The setting or setting key (must be a setting instance if the guild isn't specified)\r\n\t * @return {boolean} Whether or not the setting was deleted\r\n\t * @see {@link GuildStorage#delete}\r\n\t ",
+                  "start": 692,
+                  "end": 1055,
+                  "loc": {
+                    "start": {
+                      "line": 27,
+                      "column": 1
+                    },
+                    "end": {
+                      "line": 33,
+                      "column": 4
+                    }
+                  },
+                  "range": [
+                    692,
+                    1055
+                  ]
+                }
+              ],
+              "trailingComments": [
+                {
+                  "type": "Block",
+                  "value": "*\r\n\t * Finds all settings associated with a guild or a single one with a key\r\n\t * @param {Guild|string} [guild] - The guild or guild ID to find the settings of\r\n\t * @param {Setting|string} setting - The setting or setting key (must be a setting instance if the guild isn't specified)\r\n\t * @return {*[]} - All found setting values\r\n\t * @see {@link GuildStorage#find}\r\n\t ",
+                  "start": 1198,
+                  "end": 1571,
+                  "loc": {
+                    "start": {
+                      "line": 39,
+                      "column": 1
+                    },
+                    "end": {
+                      "line": 45,
+                      "column": 4
+                    }
+                  },
+                  "range": [
+                    1198,
+                    1571
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "MethodDefinition",
+              "start": 1574,
+              "end": 1712,
+              "loc": {
+                "start": {
+                  "line": 46,
+                  "column": 1
+                },
+                "end": {
+                  "line": 49,
+                  "column": 2
+                }
+              },
+              "computed": false,
+              "key": {
+                "type": "Identifier",
+                "start": 1574,
+                "end": 1578,
+                "loc": {
+                  "start": {
+                    "line": 46,
+                    "column": 1
+                  },
+                  "end": {
+                    "line": 46,
+                    "column": 5
+                  }
+                },
+                "name": "find",
+                "leadingComments": null
+              },
+              "static": false,
+              "kind": "method",
+              "value": {
+                "type": "FunctionExpression",
+                "start": 1578,
+                "end": 1712,
+                "loc": {
+                  "start": {
+                    "line": 46,
+                    "column": 5
+                  },
+                  "end": {
+                    "line": 49,
+                    "column": 2
+                  }
+                },
+                "id": null,
+                "generator": false,
+                "expression": false,
+                "async": false,
+                "params": [
+                  {
+                    "type": "Identifier",
+                    "start": 1579,
+                    "end": 1584,
+                    "loc": {
+                      "start": {
+                        "line": 46,
+                        "column": 6
+                      },
+                      "end": {
+                        "line": 46,
+                        "column": 11
+                      }
+                    },
+                    "name": "guild"
+                  },
+                  {
+                    "type": "Identifier",
+                    "start": 1586,
+                    "end": 1593,
+                    "loc": {
+                      "start": {
+                        "line": 46,
+                        "column": 13
+                      },
+                      "end": {
+                        "line": 46,
+                        "column": 20
+                      }
+                    },
+                    "name": "setting"
+                  }
+                ],
+                "body": {
+                  "type": "BlockStatement",
+                  "start": 1595,
+                  "end": 1712,
+                  "loc": {
+                    "start": {
+                      "line": 46,
+                      "column": 22
+                    },
+                    "end": {
+                      "line": 49,
+                      "column": 2
+                    }
+                  },
+                  "body": [
+                    {
+                      "type": "ExpressionStatement",
+                      "start": 1600,
+                      "end": 1670,
+                      "loc": {
+                        "start": {
+                          "line": 47,
+                          "column": 2
+                        },
+                        "end": {
+                          "line": 47,
+                          "column": 72
+                        }
+                      },
+                      "expression": {
+                        "type": "AssignmentExpression",
+                        "start": 1600,
+                        "end": 1669,
+                        "loc": {
+                          "start": {
+                            "line": 47,
+                            "column": 2
+                          },
+                          "end": {
+                            "line": 47,
+                            "column": 71
+                          }
+                        },
+                        "operator": "=",
+                        "left": {
+                          "type": "ArrayPattern",
+                          "start": 1600,
+                          "end": 1616,
+                          "loc": {
+                            "start": {
+                              "line": 47,
+                              "column": 2
+                            },
+                            "end": {
+                              "line": 47,
+                              "column": 18
+                            }
+                          },
+                          "elements": [
+                            {
+                              "type": "Identifier",
+                              "start": 1601,
+                              "end": 1606,
+                              "loc": {
+                                "start": {
+                                  "line": 47,
+                                  "column": 3
+                                },
+                                "end": {
+                                  "line": 47,
+                                  "column": 8
+                                }
+                              },
+                              "name": "guild"
+                            },
+                            {
+                              "type": "Identifier",
+                              "start": 1608,
+                              "end": 1615,
+                              "loc": {
+                                "start": {
+                                  "line": 47,
+                                  "column": 10
+                                },
+                                "end": {
+                                  "line": 47,
+                                  "column": 17
+                                }
+                              },
+                              "name": "setting"
+                            }
+                          ]
+                        },
+                        "right": {
+                          "type": "CallExpression",
+                          "start": 1619,
+                          "end": 1669,
+                          "loc": {
+                            "start": {
+                              "line": 47,
+                              "column": 21
+                            },
+                            "end": {
+                              "line": 47,
+                              "column": 71
+                            }
+                          },
+                          "callee": {
+                            "type": "MemberExpression",
+                            "start": 1619,
+                            "end": 1646,
+                            "loc": {
+                              "start": {
+                                "line": 47,
+                                "column": 21
+                              },
+                              "end": {
+                                "line": 47,
+                                "column": 48
+                              }
+                            },
+                            "object": {
+                              "type": "ThisExpression",
+                              "start": 1619,
+                              "end": 1623,
+                              "loc": {
+                                "start": {
+                                  "line": 47,
+                                  "column": 21
+                                },
+                                "end": {
+                                  "line": 47,
+                                  "column": 25
+                                }
+                              }
+                            },
+                            "property": {
+                              "type": "Identifier",
+                              "start": 1624,
+                              "end": 1646,
+                              "loc": {
+                                "start": {
+                                  "line": 47,
+                                  "column": 26
+                                },
+                                "end": {
+                                  "line": 47,
+                                  "column": 48
+                                }
+                              },
+                              "name": "_getSettingGuildAndKey"
+                            },
+                            "computed": false
+                          },
+                          "arguments": [
+                            {
+                              "type": "Identifier",
+                              "start": 1647,
+                              "end": 1654,
+                              "loc": {
+                                "start": {
+                                  "line": 47,
+                                  "column": 49
+                                },
+                                "end": {
+                                  "line": 47,
+                                  "column": 56
+                                }
+                              },
+                              "name": "setting"
+                            },
+                            {
+                              "type": "Identifier",
+                              "start": 1656,
+                              "end": 1661,
+                              "loc": {
+                                "start": {
+                                  "line": 47,
+                                  "column": 58
+                                },
+                                "end": {
+                                  "line": 47,
+                                  "column": 63
+                                }
+                              },
+                              "name": "guild"
+                            },
+                            {
+                              "type": "Literal",
+                              "start": 1663,
+                              "end": 1668,
+                              "loc": {
+                                "start": {
+                                  "line": 47,
+                                  "column": 65
+                                },
+                                "end": {
+                                  "line": 47,
+                                  "column": 70
+                                }
+                              },
+                              "value": false,
+                              "rawValue": false,
+                              "raw": "false"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ReturnStatement",
+                      "start": 1674,
+                      "end": 1708,
+                      "loc": {
+                        "start": {
+                          "line": 48,
+                          "column": 2
+                        },
+                        "end": {
+                          "line": 48,
+                          "column": 36
+                        }
+                      },
+                      "argument": {
+                        "type": "CallExpression",
+                        "start": 1681,
+                        "end": 1707,
+                        "loc": {
+                          "start": {
+                            "line": 48,
+                            "column": 9
+                          },
+                          "end": {
+                            "line": 48,
+                            "column": 35
+                          }
+                        },
+                        "callee": {
+                          "type": "MemberExpression",
+                          "start": 1681,
+                          "end": 1691,
+                          "loc": {
+                            "start": {
+                              "line": 48,
+                              "column": 9
+                            },
+                            "end": {
+                              "line": 48,
+                              "column": 19
+                            }
+                          },
+                          "object": {
+                            "type": "Super",
+                            "start": 1681,
+                            "end": 1686,
+                            "loc": {
+                              "start": {
+                                "line": 48,
+                                "column": 9
+                              },
+                              "end": {
+                                "line": 48,
+                                "column": 14
+                              }
+                            }
+                          },
+                          "property": {
+                            "type": "Identifier",
+                            "start": 1687,
+                            "end": 1691,
+                            "loc": {
+                              "start": {
+                                "line": 48,
+                                "column": 15
+                              },
+                              "end": {
+                                "line": 48,
+                                "column": 19
+                              }
+                            },
+                            "name": "find"
+                          },
+                          "computed": false
+                        },
+                        "arguments": [
+                          {
+                            "type": "Identifier",
+                            "start": 1692,
+                            "end": 1697,
+                            "loc": {
+                              "start": {
+                                "line": 48,
+                                "column": 20
+                              },
+                              "end": {
+                                "line": 48,
+                                "column": 25
+                              }
+                            },
+                            "name": "guild"
+                          },
+                          {
+                            "type": "Identifier",
+                            "start": 1699,
+                            "end": 1706,
+                            "loc": {
+                              "start": {
+                                "line": 48,
+                                "column": 27
+                              },
+                              "end": {
+                                "line": 48,
+                                "column": 34
+                              }
+                            },
+                            "name": "setting"
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "trailingComments": null
+                },
+                "trailingComments": null
+              },
+              "leadingComments": [
+                {
+                  "type": "Block",
+                  "value": "*\r\n\t * Finds all settings associated with a guild or a single one with a key\r\n\t * @param {Guild|string} [guild] - The guild or guild ID to find the settings of\r\n\t * @param {Setting|string} setting - The setting or setting key (must be a setting instance if the guild isn't specified)\r\n\t * @return {*[]} - All found setting values\r\n\t * @see {@link GuildStorage#find}\r\n\t ",
+                  "start": 1198,
+                  "end": 1571,
+                  "loc": {
+                    "start": {
+                      "line": 39,
+                      "column": 1
+                    },
+                    "end": {
+                      "line": 45,
+                      "column": 4
+                    }
+                  },
+                  "range": [
+                    1198,
+                    1571
+                  ]
+                }
+              ],
+              "trailingComments": [
+                {
+                  "type": "Block",
+                  "value": "*\r\n\t * Checks if a setting associated with a guild exists\r\n\t * @param {Guild|string} [guild] - The guild or guild ID the setting is associated with\r\n\t * @param {Setting|string} setting - The setting or setting key\r\n\t * @return {boolean} Whether or not the setting exists\r\n\t * @see {@link GuildStorage#exists}\r\n\t ",
+                  "start": 1717,
+                  "end": 2033,
+                  "loc": {
+                    "start": {
+                      "line": 51,
+                      "column": 1
+                    },
+                    "end": {
+                      "line": 57,
+                      "column": 4
+                    }
+                  },
+                  "range": [
+                    1717,
+                    2033
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "MethodDefinition",
+              "start": 2036,
+              "end": 2171,
+              "loc": {
+                "start": {
+                  "line": 58,
+                  "column": 1
+                },
+                "end": {
+                  "line": 61,
+                  "column": 2
+                }
+              },
+              "computed": false,
+              "key": {
+                "type": "Identifier",
+                "start": 2036,
+                "end": 2042,
+                "loc": {
+                  "start": {
+                    "line": 58,
+                    "column": 1
+                  },
+                  "end": {
+                    "line": 58,
+                    "column": 7
+                  }
+                },
+                "name": "exists",
+                "leadingComments": null
+              },
+              "static": false,
+              "kind": "method",
+              "value": {
+                "type": "FunctionExpression",
+                "start": 2042,
+                "end": 2171,
+                "loc": {
+                  "start": {
+                    "line": 58,
+                    "column": 7
+                  },
+                  "end": {
+                    "line": 61,
+                    "column": 2
+                  }
+                },
+                "id": null,
+                "generator": false,
+                "expression": false,
+                "async": false,
+                "params": [
+                  {
+                    "type": "Identifier",
+                    "start": 2043,
+                    "end": 2048,
+                    "loc": {
+                      "start": {
+                        "line": 58,
+                        "column": 8
+                      },
+                      "end": {
+                        "line": 58,
+                        "column": 13
+                      }
+                    },
+                    "name": "guild"
+                  },
+                  {
+                    "type": "Identifier",
+                    "start": 2050,
+                    "end": 2057,
+                    "loc": {
+                      "start": {
+                        "line": 58,
+                        "column": 15
+                      },
+                      "end": {
+                        "line": 58,
+                        "column": 22
+                      }
+                    },
+                    "name": "setting"
+                  }
+                ],
+                "body": {
+                  "type": "BlockStatement",
+                  "start": 2059,
+                  "end": 2171,
+                  "loc": {
+                    "start": {
+                      "line": 58,
+                      "column": 24
+                    },
+                    "end": {
+                      "line": 61,
+                      "column": 2
+                    }
+                  },
+                  "body": [
+                    {
+                      "type": "ExpressionStatement",
+                      "start": 2064,
+                      "end": 2127,
+                      "loc": {
+                        "start": {
+                          "line": 59,
+                          "column": 2
+                        },
+                        "end": {
+                          "line": 59,
+                          "column": 65
+                        }
+                      },
+                      "expression": {
+                        "type": "AssignmentExpression",
+                        "start": 2064,
+                        "end": 2126,
+                        "loc": {
+                          "start": {
+                            "line": 59,
+                            "column": 2
+                          },
+                          "end": {
+                            "line": 59,
+                            "column": 64
+                          }
+                        },
+                        "operator": "=",
+                        "left": {
+                          "type": "ArrayPattern",
+                          "start": 2064,
+                          "end": 2080,
+                          "loc": {
+                            "start": {
+                              "line": 59,
+                              "column": 2
+                            },
+                            "end": {
+                              "line": 59,
+                              "column": 18
+                            }
+                          },
+                          "elements": [
+                            {
+                              "type": "Identifier",
+                              "start": 2065,
+                              "end": 2070,
+                              "loc": {
+                                "start": {
+                                  "line": 59,
+                                  "column": 3
+                                },
+                                "end": {
+                                  "line": 59,
+                                  "column": 8
+                                }
+                              },
+                              "name": "guild"
+                            },
+                            {
+                              "type": "Identifier",
+                              "start": 2072,
+                              "end": 2079,
+                              "loc": {
+                                "start": {
+                                  "line": 59,
+                                  "column": 10
+                                },
+                                "end": {
+                                  "line": 59,
+                                  "column": 17
+                                }
+                              },
+                              "name": "setting"
+                            }
+                          ]
+                        },
+                        "right": {
+                          "type": "CallExpression",
+                          "start": 2083,
+                          "end": 2126,
+                          "loc": {
+                            "start": {
+                              "line": 59,
+                              "column": 21
+                            },
+                            "end": {
+                              "line": 59,
+                              "column": 64
+                            }
+                          },
+                          "callee": {
+                            "type": "MemberExpression",
+                            "start": 2083,
+                            "end": 2110,
+                            "loc": {
+                              "start": {
+                                "line": 59,
+                                "column": 21
+                              },
+                              "end": {
+                                "line": 59,
+                                "column": 48
+                              }
+                            },
+                            "object": {
+                              "type": "ThisExpression",
+                              "start": 2083,
+                              "end": 2087,
+                              "loc": {
+                                "start": {
+                                  "line": 59,
+                                  "column": 21
+                                },
+                                "end": {
+                                  "line": 59,
+                                  "column": 25
+                                }
+                              }
+                            },
+                            "property": {
+                              "type": "Identifier",
+                              "start": 2088,
+                              "end": 2110,
+                              "loc": {
+                                "start": {
+                                  "line": 59,
+                                  "column": 26
+                                },
+                                "end": {
+                                  "line": 59,
+                                  "column": 48
+                                }
+                              },
+                              "name": "_getSettingGuildAndKey"
+                            },
+                            "computed": false
+                          },
+                          "arguments": [
+                            {
+                              "type": "Identifier",
+                              "start": 2111,
+                              "end": 2118,
+                              "loc": {
+                                "start": {
+                                  "line": 59,
+                                  "column": 49
+                                },
+                                "end": {
+                                  "line": 59,
+                                  "column": 56
+                                }
+                              },
+                              "name": "setting"
+                            },
+                            {
+                              "type": "Identifier",
+                              "start": 2120,
+                              "end": 2125,
+                              "loc": {
+                                "start": {
+                                  "line": 59,
+                                  "column": 58
+                                },
+                                "end": {
+                                  "line": 59,
+                                  "column": 63
+                                }
+                              },
+                              "name": "guild"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "ReturnStatement",
+                      "start": 2131,
+                      "end": 2167,
+                      "loc": {
+                        "start": {
+                          "line": 60,
+                          "column": 2
+                        },
+                        "end": {
+                          "line": 60,
+                          "column": 38
+                        }
+                      },
+                      "argument": {
+                        "type": "CallExpression",
+                        "start": 2138,
+                        "end": 2166,
+                        "loc": {
+                          "start": {
+                            "line": 60,
+                            "column": 9
+                          },
+                          "end": {
+                            "line": 60,
+                            "column": 37
+                          }
+                        },
+                        "callee": {
+                          "type": "MemberExpression",
+                          "start": 2138,
+                          "end": 2150,
+                          "loc": {
+                            "start": {
+                              "line": 60,
+                              "column": 9
+                            },
+                            "end": {
+                              "line": 60,
+                              "column": 21
+                            }
+                          },
+                          "object": {
+                            "type": "Super",
+                            "start": 2138,
+                            "end": 2143,
+                            "loc": {
+                              "start": {
+                                "line": 60,
+                                "column": 9
+                              },
+                              "end": {
+                                "line": 60,
+                                "column": 14
+                              }
+                            }
+                          },
+                          "property": {
+                            "type": "Identifier",
+                            "start": 2144,
+                            "end": 2150,
+                            "loc": {
+                              "start": {
+                                "line": 60,
+                                "column": 15
+                              },
+                              "end": {
+                                "line": 60,
+                                "column": 21
+                              }
+                            },
+                            "name": "exists"
+                          },
+                          "computed": false
+                        },
+                        "arguments": [
+                          {
+                            "type": "Identifier",
+                            "start": 2151,
+                            "end": 2156,
+                            "loc": {
+                              "start": {
+                                "line": 60,
+                                "column": 22
+                              },
+                              "end": {
+                                "line": 60,
+                                "column": 27
+                              }
+                            },
+                            "name": "guild"
+                          },
+                          {
+                            "type": "Identifier",
+                            "start": 2158,
+                            "end": 2165,
+                            "loc": {
+                              "start": {
+                                "line": 60,
+                                "column": 29
+                              },
+                              "end": {
+                                "line": 60,
+                                "column": 36
+                              }
+                            },
+                            "name": "setting"
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "trailingComments": null
+                },
+                "trailingComments": null
+              },
+              "leadingComments": [
+                {
+                  "type": "Block",
+                  "value": "*\r\n\t * Checks if a setting associated with a guild exists\r\n\t * @param {Guild|string} [guild] - The guild or guild ID the setting is associated with\r\n\t * @param {Setting|string} setting - The setting or setting key\r\n\t * @return {boolean} Whether or not the setting exists\r\n\t * @see {@link GuildStorage#exists}\r\n\t ",
+                  "start": 1717,
+                  "end": 2033,
+                  "loc": {
+                    "start": {
+                      "line": 51,
+                      "column": 1
+                    },
+                    "end": {
+                      "line": 57,
+                      "column": 4
+                    }
+                  },
+                  "range": [
+                    1717,
+                    2033
+                  ]
+                }
+              ],
+              "trailingComments": [
+                {
+                  "type": "Block",
+                  "value": "*\r\n\t * Gets the value of a setting associated with a guild\r\n\t * @param {Guild|string} [guild] - The guild or guild ID the setting is associated with\r\n\t * @param {Setting|string} setting - The setting or setting key (must be a setting instance if the guild isn't specified)\r\n\t * @param {*} [defaultValue=null] - The value to default to if the setting doesn't exist\r\n\t * @return {*} The value of the setting\r\n\t ",
+                  "start": 2176,
+                  "end": 2589,
+                  "loc": {
+                    "start": {
+                      "line": 63,
+                      "column": 1
+                    },
+                    "end": {
+                      "line": 69,
+                      "column": 4
+                    }
+                  },
+                  "range": [
+                    2176,
+                    2589
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "MethodDefinition",
+              "start": 2592,
+              "end": 2910,
+              "loc": {
+                "start": {
+                  "line": 70,
+                  "column": 1
+                },
+                "end": {
+                  "line": 76,
+                  "column": 2
+                }
+              },
+              "computed": false,
+              "key": {
+                "type": "Identifier",
+                "start": 2592,
+                "end": 2600,
+                "loc": {
+                  "start": {
+                    "line": 70,
+                    "column": 1
+                  },
+                  "end": {
+                    "line": 70,
+                    "column": 9
+                  }
+                },
+                "name": "getValue",
+                "leadingComments": null
+              },
+              "static": false,
+              "kind": "method",
+              "value": {
+                "type": "FunctionExpression",
+                "start": 2600,
+                "end": 2910,
+                "loc": {
+                  "start": {
+                    "line": 70,
+                    "column": 9
+                  },
+                  "end": {
+                    "line": 76,
+                    "column": 2
+                  }
+                },
+                "id": null,
+                "generator": false,
+                "expression": false,
+                "async": false,
+                "params": [
+                  {
+                    "type": "Identifier",
+                    "start": 2601,
+                    "end": 2606,
+                    "loc": {
+                      "start": {
+                        "line": 70,
+                        "column": 10
+                      },
+                      "end": {
+                        "line": 70,
+                        "column": 15
+                      }
+                    },
+                    "name": "guild"
+                  },
+                  {
+                    "type": "Identifier",
+                    "start": 2608,
+                    "end": 2615,
+                    "loc": {
+                      "start": {
+                        "line": 70,
+                        "column": 17
+                      },
+                      "end": {
+                        "line": 70,
+                        "column": 24
+                      }
+                    },
+                    "name": "setting"
+                  },
+                  {
+                    "type": "AssignmentPattern",
+                    "start": 2617,
+                    "end": 2636,
+                    "loc": {
+                      "start": {
+                        "line": 70,
+                        "column": 26
+                      },
+                      "end": {
+                        "line": 70,
+                        "column": 45
+                      }
+                    },
+                    "operator": "=",
+                    "left": {
+                      "type": "Identifier",
+                      "start": 2617,
+                      "end": 2629,
+                      "loc": {
+                        "start": {
+                          "line": 70,
+                          "column": 26
+                        },
+                        "end": {
+                          "line": 70,
+                          "column": 38
+                        }
+                      },
+                      "name": "defaultValue"
+                    },
+                    "right": {
+                      "type": "Literal",
+                      "start": 2632,
+                      "end": 2636,
+                      "loc": {
+                        "start": {
+                          "line": 70,
+                          "column": 41
+                        },
+                        "end": {
+                          "line": 70,
+                          "column": 45
+                        }
+                      },
+                      "value": null,
+                      "rawValue": null,
+                      "raw": "null"
+                    }
+                  }
+                ],
+                "body": {
+                  "type": "BlockStatement",
+                  "start": 2638,
+                  "end": 2910,
+                  "loc": {
+                    "start": {
+                      "line": 70,
+                      "column": 47
+                    },
+                    "end": {
+                      "line": 76,
+                      "column": 2
+                    }
+                  },
+                  "body": [
+                    {
+                      "type": "ExpressionStatement",
+                      "start": 2643,
+                      "end": 2706,
+                      "loc": {
+                        "start": {
+                          "line": 71,
+                          "column": 2
+                        },
+                        "end": {
+                          "line": 71,
+                          "column": 65
+                        }
+                      },
+                      "expression": {
+                        "type": "AssignmentExpression",
+                        "start": 2643,
+                        "end": 2705,
+                        "loc": {
+                          "start": {
+                            "line": 71,
+                            "column": 2
+                          },
+                          "end": {
+                            "line": 71,
+                            "column": 64
+                          }
+                        },
+                        "operator": "=",
+                        "left": {
+                          "type": "ArrayPattern",
+                          "start": 2643,
+                          "end": 2659,
+                          "loc": {
+                            "start": {
+                              "line": 71,
+                              "column": 2
+                            },
+                            "end": {
+                              "line": 71,
+                              "column": 18
+                            }
+                          },
+                          "elements": [
+                            {
+                              "type": "Identifier",
+                              "start": 2644,
+                              "end": 2649,
+                              "loc": {
+                                "start": {
+                                  "line": 71,
+                                  "column": 3
+                                },
+                                "end": {
+                                  "line": 71,
+                                  "column": 8
+                                }
+                              },
+                              "name": "guild"
+                            },
+                            {
+                              "type": "Identifier",
+                              "start": 2651,
+                              "end": 2658,
+                              "loc": {
+                                "start": {
+                                  "line": 71,
+                                  "column": 10
+                                },
+                                "end": {
+                                  "line": 71,
+                                  "column": 17
+                                }
+                              },
+                              "name": "setting"
+                            }
+                          ]
+                        },
+                        "right": {
+                          "type": "CallExpression",
+                          "start": 2662,
+                          "end": 2705,
+                          "loc": {
+                            "start": {
+                              "line": 71,
+                              "column": 21
+                            },
+                            "end": {
+                              "line": 71,
+                              "column": 64
+                            }
+                          },
+                          "callee": {
+                            "type": "MemberExpression",
+                            "start": 2662,
+                            "end": 2689,
+                            "loc": {
+                              "start": {
+                                "line": 71,
+                                "column": 21
+                              },
+                              "end": {
+                                "line": 71,
+                                "column": 48
+                              }
+                            },
+                            "object": {
+                              "type": "ThisExpression",
+                              "start": 2662,
+                              "end": 2666,
+                              "loc": {
+                                "start": {
+                                  "line": 71,
+                                  "column": 21
+                                },
+                                "end": {
+                                  "line": 71,
+                                  "column": 25
+                                }
+                              }
+                            },
+                            "property": {
+                              "type": "Identifier",
+                              "start": 2667,
+                              "end": 2689,
+                              "loc": {
+                                "start": {
+                                  "line": 71,
+                                  "column": 26
+                                },
+                                "end": {
+                                  "line": 71,
+                                  "column": 48
+                                }
+                              },
+                              "name": "_getSettingGuildAndKey"
+                            },
+                            "computed": false
+                          },
+                          "arguments": [
+                            {
+                              "type": "Identifier",
+                              "start": 2690,
+                              "end": 2697,
+                              "loc": {
+                                "start": {
+                                  "line": 71,
+                                  "column": 49
+                                },
+                                "end": {
+                                  "line": 71,
+                                  "column": 56
+                                }
+                              },
+                              "name": "setting"
+                            },
+                            {
+                              "type": "Identifier",
+                              "start": 2699,
+                              "end": 2704,
+                              "loc": {
+                                "start": {
+                                  "line": 71,
+                                  "column": 58
+                                },
+                                "end": {
+                                  "line": 71,
+                                  "column": 63
+                                }
+                              },
+                              "name": "guild"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "IfStatement",
+                      "start": 2710,
+                      "end": 2749,
+                      "loc": {
+                        "start": {
+                          "line": 72,
+                          "column": 2
+                        },
+                        "end": {
+                          "line": 72,
+                          "column": 41
+                        }
+                      },
+                      "test": {
+                        "type": "UnaryExpression",
+                        "start": 2713,
+                        "end": 2728,
+                        "loc": {
+                          "start": {
+                            "line": 72,
+                            "column": 5
+                          },
+                          "end": {
+                            "line": 72,
+                            "column": 20
+                          }
+                        },
+                        "operator": "!",
+                        "prefix": true,
+                        "argument": {
+                          "type": "MemberExpression",
+                          "start": 2714,
+                          "end": 2728,
+                          "loc": {
+                            "start": {
+                              "line": 72,
+                              "column": 6
+                            },
+                            "end": {
+                              "line": 72,
+                              "column": 20
+                            }
+                          },
+                          "object": {
+                            "type": "ThisExpression",
+                            "start": 2714,
+                            "end": 2718,
+                            "loc": {
+                              "start": {
+                                "line": 72,
+                                "column": 6
+                              },
+                              "end": {
+                                "line": 72,
+                                "column": 10
+                              }
+                            }
+                          },
+                          "property": {
+                            "type": "Identifier",
+                            "start": 2719,
+                            "end": 2728,
+                            "loc": {
+                              "start": {
+                                "line": 72,
+                                "column": 11
+                              },
+                              "end": {
+                                "line": 72,
+                                "column": 20
+                              }
+                            },
+                            "name": "guildsMap"
+                          },
+                          "computed": false
+                        }
+                      },
+                      "consequent": {
+                        "type": "ExpressionStatement",
+                        "start": 2730,
+                        "end": 2749,
+                        "loc": {
+                          "start": {
+                            "line": 72,
+                            "column": 22
+                          },
+                          "end": {
+                            "line": 72,
+                            "column": 41
+                          }
+                        },
+                        "expression": {
+                          "type": "CallExpression",
+                          "start": 2730,
+                          "end": 2748,
+                          "loc": {
+                            "start": {
+                              "line": 72,
+                              "column": 22
+                            },
+                            "end": {
+                              "line": 72,
+                              "column": 40
+                            }
+                          },
+                          "callee": {
+                            "type": "MemberExpression",
+                            "start": 2730,
+                            "end": 2746,
+                            "loc": {
+                              "start": {
+                                "line": 72,
+                                "column": 22
+                              },
+                              "end": {
+                                "line": 72,
+                                "column": 38
+                              }
+                            },
+                            "object": {
+                              "type": "ThisExpression",
+                              "start": 2730,
+                              "end": 2734,
+                              "loc": {
+                                "start": {
+                                  "line": 72,
+                                  "column": 22
+                                },
+                                "end": {
+                                  "line": 72,
+                                  "column": 26
+                                }
+                              }
+                            },
+                            "property": {
+                              "type": "Identifier",
+                              "start": 2735,
+                              "end": 2746,
+                              "loc": {
+                                "start": {
+                                  "line": 72,
+                                  "column": 27
+                                },
+                                "end": {
+                                  "line": 72,
+                                  "column": 38
+                                }
+                              },
+                              "name": "loadStorage"
+                            },
+                            "computed": false
+                          },
+                          "arguments": []
+                        }
+                      },
+                      "alternate": null
+                    },
+                    {
+                      "type": "IfStatement",
+                      "start": 2753,
+                      "end": 2800,
+                      "loc": {
+                        "start": {
+                          "line": 73,
+                          "column": 2
+                        },
+                        "end": {
+                          "line": 73,
+                          "column": 49
+                        }
+                      },
+                      "test": {
+                        "type": "UnaryExpression",
+                        "start": 2756,
+                        "end": 2778,
+                        "loc": {
+                          "start": {
+                            "line": 73,
+                            "column": 5
+                          },
+                          "end": {
+                            "line": 73,
+                            "column": 27
+                          }
+                        },
+                        "operator": "!",
+                        "prefix": true,
+                        "argument": {
+                          "type": "MemberExpression",
+                          "start": 2757,
+                          "end": 2778,
+                          "loc": {
+                            "start": {
+                              "line": 73,
+                              "column": 6
+                            },
+                            "end": {
+                              "line": 73,
+                              "column": 27
+                            }
+                          },
+                          "object": {
+                            "type": "MemberExpression",
+                            "start": 2757,
+                            "end": 2771,
+                            "loc": {
+                              "start": {
+                                "line": 73,
+                                "column": 6
+                              },
+                              "end": {
+                                "line": 73,
+                                "column": 20
+                              }
+                            },
+                            "object": {
+                              "type": "ThisExpression",
+                              "start": 2757,
+                              "end": 2761,
+                              "loc": {
+                                "start": {
+                                  "line": 73,
+                                  "column": 6
+                                },
+                                "end": {
+                                  "line": 73,
+                                  "column": 10
+                                }
+                              }
+                            },
+                            "property": {
+                              "type": "Identifier",
+                              "start": 2762,
+                              "end": 2771,
+                              "loc": {
+                                "start": {
+                                  "line": 73,
+                                  "column": 11
+                                },
+                                "end": {
+                                  "line": 73,
+                                  "column": 20
+                                }
+                              },
+                              "name": "guildsMap"
+                            },
+                            "computed": false
+                          },
+                          "property": {
+                            "type": "Identifier",
+                            "start": 2772,
+                            "end": 2777,
+                            "loc": {
+                              "start": {
+                                "line": 73,
+                                "column": 21
+                              },
+                              "end": {
+                                "line": 73,
+                                "column": 26
+                              }
+                            },
+                            "name": "guild"
+                          },
+                          "computed": true
+                        }
+                      },
+                      "consequent": {
+                        "type": "ReturnStatement",
+                        "start": 2780,
+                        "end": 2800,
+                        "loc": {
+                          "start": {
+                            "line": 73,
+                            "column": 29
+                          },
+                          "end": {
+                            "line": 73,
+                            "column": 49
+                          }
+                        },
+                        "argument": {
+                          "type": "Identifier",
+                          "start": 2787,
+                          "end": 2799,
+                          "loc": {
+                            "start": {
+                              "line": 73,
+                              "column": 36
+                            },
+                            "end": {
+                              "line": 73,
+                              "column": 48
+                            }
+                          },
+                          "name": "defaultValue"
+                        }
+                      },
+                      "alternate": null
+                    },
+                    {
+                      "type": "IfStatement",
+                      "start": 2804,
+                      "end": 2864,
+                      "loc": {
+                        "start": {
+                          "line": 74,
+                          "column": 2
+                        },
+                        "end": {
+                          "line": 74,
+                          "column": 62
+                        }
+                      },
+                      "test": {
+                        "type": "UnaryExpression",
+                        "start": 2807,
+                        "end": 2842,
+                        "loc": {
+                          "start": {
+                            "line": 74,
+                            "column": 5
+                          },
+                          "end": {
+                            "line": 74,
+                            "column": 40
+                          }
+                        },
+                        "operator": "!",
+                        "prefix": true,
+                        "argument": {
+                          "type": "BinaryExpression",
+                          "start": 2809,
+                          "end": 2841,
+                          "loc": {
+                            "start": {
+                              "line": 74,
+                              "column": 7
+                            },
+                            "end": {
+                              "line": 74,
+                              "column": 39
+                            }
+                          },
+                          "left": {
+                            "type": "Identifier",
+                            "start": 2809,
+                            "end": 2816,
+                            "loc": {
+                              "start": {
+                                "line": 74,
+                                "column": 7
+                              },
+                              "end": {
+                                "line": 74,
+                                "column": 14
+                              }
+                            },
+                            "name": "setting"
+                          },
+                          "operator": "in",
+                          "right": {
+                            "type": "MemberExpression",
+                            "start": 2820,
+                            "end": 2841,
+                            "loc": {
+                              "start": {
+                                "line": 74,
+                                "column": 18
+                              },
+                              "end": {
+                                "line": 74,
+                                "column": 39
+                              }
+                            },
+                            "object": {
+                              "type": "MemberExpression",
+                              "start": 2820,
+                              "end": 2834,
+                              "loc": {
+                                "start": {
+                                  "line": 74,
+                                  "column": 18
+                                },
+                                "end": {
+                                  "line": 74,
+                                  "column": 32
+                                }
+                              },
+                              "object": {
+                                "type": "ThisExpression",
+                                "start": 2820,
+                                "end": 2824,
+                                "loc": {
+                                  "start": {
+                                    "line": 74,
+                                    "column": 18
+                                  },
+                                  "end": {
+                                    "line": 74,
+                                    "column": 22
+                                  }
+                                }
+                              },
+                              "property": {
+                                "type": "Identifier",
+                                "start": 2825,
+                                "end": 2834,
+                                "loc": {
+                                  "start": {
+                                    "line": 74,
+                                    "column": 23
+                                  },
+                                  "end": {
+                                    "line": 74,
+                                    "column": 32
+                                  }
+                                },
+                                "name": "guildsMap"
+                              },
+                              "computed": false
+                            },
+                            "property": {
+                              "type": "Identifier",
+                              "start": 2835,
+                              "end": 2840,
+                              "loc": {
+                                "start": {
+                                  "line": 74,
+                                  "column": 33
+                                },
+                                "end": {
+                                  "line": 74,
+                                  "column": 38
+                                }
+                              },
+                              "name": "guild"
+                            },
+                            "computed": true
+                          },
+                          "parenthesizedExpression": true
+                        }
+                      },
+                      "consequent": {
+                        "type": "ReturnStatement",
+                        "start": 2844,
+                        "end": 2864,
+                        "loc": {
+                          "start": {
+                            "line": 74,
+                            "column": 42
+                          },
+                          "end": {
+                            "line": 74,
+                            "column": 62
+                          }
+                        },
+                        "argument": {
+                          "type": "Identifier",
+                          "start": 2851,
+                          "end": 2863,
+                          "loc": {
+                            "start": {
+                              "line": 74,
+                              "column": 49
+                            },
+                            "end": {
+                              "line": 74,
+                              "column": 61
+                            }
+                          },
+                          "name": "defaultValue"
+                        }
+                      },
+                      "alternate": null
+                    },
+                    {
+                      "type": "ReturnStatement",
+                      "start": 2868,
+                      "end": 2906,
+                      "loc": {
+                        "start": {
+                          "line": 75,
+                          "column": 2
+                        },
+                        "end": {
+                          "line": 75,
+                          "column": 40
+                        }
+                      },
+                      "argument": {
+                        "type": "MemberExpression",
+                        "start": 2875,
+                        "end": 2905,
+                        "loc": {
+                          "start": {
+                            "line": 75,
+                            "column": 9
+                          },
+                          "end": {
+                            "line": 75,
+                            "column": 39
+                          }
+                        },
+                        "object": {
+                          "type": "MemberExpression",
+                          "start": 2875,
+                          "end": 2896,
+                          "loc": {
+                            "start": {
+                              "line": 75,
+                              "column": 9
+                            },
+                            "end": {
+                              "line": 75,
+                              "column": 30
+                            }
+                          },
+                          "object": {
+                            "type": "MemberExpression",
+                            "start": 2875,
+                            "end": 2889,
+                            "loc": {
+                              "start": {
+                                "line": 75,
+                                "column": 9
+                              },
+                              "end": {
+                                "line": 75,
+                                "column": 23
+                              }
+                            },
+                            "object": {
+                              "type": "ThisExpression",
+                              "start": 2875,
+                              "end": 2879,
+                              "loc": {
+                                "start": {
+                                  "line": 75,
+                                  "column": 9
+                                },
+                                "end": {
+                                  "line": 75,
+                                  "column": 13
+                                }
+                              }
+                            },
+                            "property": {
+                              "type": "Identifier",
+                              "start": 2880,
+                              "end": 2889,
+                              "loc": {
+                                "start": {
+                                  "line": 75,
+                                  "column": 14
+                                },
+                                "end": {
+                                  "line": 75,
+                                  "column": 23
+                                }
+                              },
+                              "name": "guildsMap"
+                            },
+                            "computed": false
+                          },
+                          "property": {
+                            "type": "Identifier",
+                            "start": 2890,
+                            "end": 2895,
+                            "loc": {
+                              "start": {
+                                "line": 75,
+                                "column": 24
+                              },
+                              "end": {
+                                "line": 75,
+                                "column": 29
+                              }
+                            },
+                            "name": "guild"
+                          },
+                          "computed": true
+                        },
+                        "property": {
+                          "type": "Identifier",
+                          "start": 2897,
+                          "end": 2904,
+                          "loc": {
+                            "start": {
+                              "line": 75,
+                              "column": 31
+                            },
+                            "end": {
+                              "line": 75,
+                              "column": 38
+                            }
+                          },
+                          "name": "setting"
+                        },
+                        "computed": true
+                      }
+                    }
+                  ]
+                }
+              },
+              "leadingComments": [
+                {
+                  "type": "Block",
+                  "value": "*\r\n\t * Gets the value of a setting associated with a guild\r\n\t * @param {Guild|string} [guild] - The guild or guild ID the setting is associated with\r\n\t * @param {Setting|string} setting - The setting or setting key (must be a setting instance if the guild isn't specified)\r\n\t * @param {*} [defaultValue=null] - The value to default to if the setting doesn't exist\r\n\t * @return {*} The value of the setting\r\n\t ",
+                  "start": 2176,
+                  "end": 2589,
+                  "loc": {
+                    "start": {
+                      "line": 63,
+                      "column": 1
+                    },
+                    "end": {
+                      "line": 69,
+                      "column": 4
+                    }
+                  },
+                  "range": [
+                    2176,
+                    2589
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "MethodDefinition",
+              "start": 2915,
+              "end": 3278,
+              "loc": {
+                "start": {
+                  "line": 78,
+                  "column": 1
+                },
+                "end": {
+                  "line": 85,
+                  "column": 2
+                }
+              },
+              "computed": false,
+              "key": {
+                "type": "Identifier",
+                "start": 2915,
+                "end": 2937,
+                "loc": {
+                  "start": {
+                    "line": 78,
+                    "column": 1
+                  },
+                  "end": {
+                    "line": 78,
+                    "column": 23
+                  }
+                },
+                "name": "_getSettingGuildAndKey"
+              },
+              "static": false,
+              "kind": "method",
+              "value": {
+                "type": "FunctionExpression",
+                "start": 2937,
+                "end": 3278,
+                "loc": {
+                  "start": {
+                    "line": 78,
+                    "column": 23
+                  },
+                  "end": {
+                    "line": 85,
+                    "column": 2
+                  }
+                },
+                "id": null,
+                "generator": false,
+                "expression": false,
+                "async": false,
+                "params": [
+                  {
+                    "type": "Identifier",
+                    "start": 2938,
+                    "end": 2945,
+                    "loc": {
+                      "start": {
+                        "line": 78,
+                        "column": 24
+                      },
+                      "end": {
+                        "line": 78,
+                        "column": 31
+                      }
+                    },
+                    "name": "setting"
+                  },
+                  {
+                    "type": "Identifier",
+                    "start": 2947,
+                    "end": 2952,
+                    "loc": {
+                      "start": {
+                        "line": 78,
+                        "column": 33
+                      },
+                      "end": {
+                        "line": 78,
+                        "column": 38
+                      }
+                    },
+                    "name": "guild"
+                  },
+                  {
+                    "type": "AssignmentPattern",
+                    "start": 2954,
+                    "end": 2975,
+                    "loc": {
+                      "start": {
+                        "line": 78,
+                        "column": 40
+                      },
+                      "end": {
+                        "line": 78,
+                        "column": 61
+                      }
+                    },
+                    "operator": "=",
+                    "left": {
+                      "type": "Identifier",
+                      "start": 2954,
+                      "end": 2968,
+                      "loc": {
+                        "start": {
+                          "line": 78,
+                          "column": 40
+                        },
+                        "end": {
+                          "line": 78,
+                          "column": 54
+                        }
+                      },
+                      "name": "requireSetting"
+                    },
+                    "right": {
+                      "type": "Literal",
+                      "start": 2971,
+                      "end": 2975,
+                      "loc": {
+                        "start": {
+                          "line": 78,
+                          "column": 57
+                        },
+                        "end": {
+                          "line": 78,
+                          "column": 61
+                        }
+                      },
+                      "value": true,
+                      "rawValue": true,
+                      "raw": "true"
+                    }
+                  }
+                ],
+                "body": {
+                  "type": "BlockStatement",
+                  "start": 2977,
+                  "end": 3278,
+                  "loc": {
+                    "start": {
+                      "line": 78,
+                      "column": 63
+                    },
+                    "end": {
+                      "line": 85,
+                      "column": 2
+                    }
+                  },
+                  "body": [
+                    {
+                      "type": "IfStatement",
+                      "start": 2982,
+                      "end": 3274,
+                      "loc": {
+                        "start": {
+                          "line": 79,
+                          "column": 2
+                        },
+                        "end": {
+                          "line": 84,
+                          "column": 3
+                        }
+                      },
+                      "test": {
+                        "type": "BinaryExpression",
+                        "start": 2985,
+                        "end": 3011,
+                        "loc": {
+                          "start": {
+                            "line": 79,
+                            "column": 5
+                          },
+                          "end": {
+                            "line": 79,
+                            "column": 31
+                          }
+                        },
+                        "left": {
+                          "type": "Identifier",
+                          "start": 2985,
+                          "end": 2992,
+                          "loc": {
+                            "start": {
+                              "line": 79,
+                              "column": 5
+                            },
+                            "end": {
+                              "line": 79,
+                              "column": 12
+                            }
+                          },
+                          "name": "setting"
+                        },
+                        "operator": "instanceof",
+                        "right": {
+                          "type": "Identifier",
+                          "start": 3004,
+                          "end": 3011,
+                          "loc": {
+                            "start": {
+                              "line": 79,
+                              "column": 24
+                            },
+                            "end": {
+                              "line": 79,
+                              "column": 31
+                            }
+                          },
+                          "name": "Setting"
+                        }
+                      },
+                      "consequent": {
+                        "type": "BlockStatement",
+                        "start": 3013,
+                        "end": 3099,
+                        "loc": {
+                          "start": {
+                            "line": 79,
+                            "column": 33
+                          },
+                          "end": {
+                            "line": 81,
+                            "column": 3
+                          }
+                        },
+                        "body": [
+                          {
+                            "type": "ReturnStatement",
+                            "start": 3019,
+                            "end": 3094,
+                            "loc": {
+                              "start": {
+                                "line": 80,
+                                "column": 3
+                              },
+                              "end": {
+                                "line": 80,
+                                "column": 78
+                              }
+                            },
+                            "argument": {
+                              "type": "ArrayExpression",
+                              "start": 3026,
+                              "end": 3093,
+                              "loc": {
+                                "start": {
+                                  "line": 80,
+                                  "column": 10
+                                },
+                                "end": {
+                                  "line": 80,
+                                  "column": 77
+                                }
+                              },
+                              "elements": [
+                                {
+                                  "type": "ConditionalExpression",
+                                  "start": 3027,
+                                  "end": 3079,
+                                  "loc": {
+                                    "start": {
+                                      "line": 80,
+                                      "column": 11
+                                    },
+                                    "end": {
+                                      "line": 80,
+                                      "column": 63
+                                    }
+                                  },
+                                  "test": {
+                                    "type": "UnaryExpression",
+                                    "start": 3027,
+                                    "end": 3033,
+                                    "loc": {
+                                      "start": {
+                                        "line": 80,
+                                        "column": 11
+                                      },
+                                      "end": {
+                                        "line": 80,
+                                        "column": 17
+                                      }
+                                    },
+                                    "operator": "!",
+                                    "prefix": true,
+                                    "argument": {
+                                      "type": "Identifier",
+                                      "start": 3028,
+                                      "end": 3033,
+                                      "loc": {
+                                        "start": {
+                                          "line": 80,
+                                          "column": 12
+                                        },
+                                        "end": {
+                                          "line": 80,
+                                          "column": 17
+                                        }
+                                      },
+                                      "name": "guild"
+                                    }
+                                  },
+                                  "consequent": {
+                                    "type": "MemberExpression",
+                                    "start": 3036,
+                                    "end": 3049,
+                                    "loc": {
+                                      "start": {
+                                        "line": 80,
+                                        "column": 20
+                                      },
+                                      "end": {
+                                        "line": 80,
+                                        "column": 33
+                                      }
+                                    },
+                                    "object": {
+                                      "type": "Identifier",
+                                      "start": 3036,
+                                      "end": 3043,
+                                      "loc": {
+                                        "start": {
+                                          "line": 80,
+                                          "column": 20
+                                        },
+                                        "end": {
+                                          "line": 80,
+                                          "column": 27
+                                        }
+                                      },
+                                      "name": "setting"
+                                    },
+                                    "property": {
+                                      "type": "Identifier",
+                                      "start": 3044,
+                                      "end": 3049,
+                                      "loc": {
+                                        "start": {
+                                          "line": 80,
+                                          "column": 28
+                                        },
+                                        "end": {
+                                          "line": 80,
+                                          "column": 33
+                                        }
+                                      },
+                                      "name": "guild"
+                                    },
+                                    "computed": false
+                                  },
+                                  "alternate": {
+                                    "type": "ConditionalExpression",
+                                    "start": 3052,
+                                    "end": 3079,
+                                    "loc": {
+                                      "start": {
+                                        "line": 80,
+                                        "column": 36
+                                      },
+                                      "end": {
+                                        "line": 80,
+                                        "column": 63
+                                      }
+                                    },
+                                    "test": {
+                                      "type": "MemberExpression",
+                                      "start": 3052,
+                                      "end": 3060,
+                                      "loc": {
+                                        "start": {
+                                          "line": 80,
+                                          "column": 36
+                                        },
+                                        "end": {
+                                          "line": 80,
+                                          "column": 44
+                                        }
+                                      },
+                                      "object": {
+                                        "type": "Identifier",
+                                        "start": 3052,
+                                        "end": 3057,
+                                        "loc": {
+                                          "start": {
+                                            "line": 80,
+                                            "column": 36
+                                          },
+                                          "end": {
+                                            "line": 80,
+                                            "column": 41
+                                          }
+                                        },
+                                        "name": "guild"
+                                      },
+                                      "property": {
+                                        "type": "Identifier",
+                                        "start": 3058,
+                                        "end": 3060,
+                                        "loc": {
+                                          "start": {
+                                            "line": 80,
+                                            "column": 42
+                                          },
+                                          "end": {
+                                            "line": 80,
+                                            "column": 44
+                                          }
+                                        },
+                                        "name": "id"
+                                      },
+                                      "computed": false
+                                    },
+                                    "consequent": {
+                                      "type": "MemberExpression",
+                                      "start": 3063,
+                                      "end": 3071,
+                                      "loc": {
+                                        "start": {
+                                          "line": 80,
+                                          "column": 47
+                                        },
+                                        "end": {
+                                          "line": 80,
+                                          "column": 55
+                                        }
+                                      },
+                                      "object": {
+                                        "type": "Identifier",
+                                        "start": 3063,
+                                        "end": 3068,
+                                        "loc": {
+                                          "start": {
+                                            "line": 80,
+                                            "column": 47
+                                          },
+                                          "end": {
+                                            "line": 80,
+                                            "column": 52
+                                          }
+                                        },
+                                        "name": "guild"
+                                      },
+                                      "property": {
+                                        "type": "Identifier",
+                                        "start": 3069,
+                                        "end": 3071,
+                                        "loc": {
+                                          "start": {
+                                            "line": 80,
+                                            "column": 53
+                                          },
+                                          "end": {
+                                            "line": 80,
+                                            "column": 55
+                                          }
+                                        },
+                                        "name": "id"
+                                      },
+                                      "computed": false
+                                    },
+                                    "alternate": {
+                                      "type": "Identifier",
+                                      "start": 3074,
+                                      "end": 3079,
+                                      "loc": {
+                                        "start": {
+                                          "line": 80,
+                                          "column": 58
+                                        },
+                                        "end": {
+                                          "line": 80,
+                                          "column": 63
+                                        }
+                                      },
+                                      "name": "guild"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "MemberExpression",
+                                  "start": 3081,
+                                  "end": 3092,
+                                  "loc": {
+                                    "start": {
+                                      "line": 80,
+                                      "column": 65
+                                    },
+                                    "end": {
+                                      "line": 80,
+                                      "column": 76
+                                    }
+                                  },
+                                  "object": {
+                                    "type": "Identifier",
+                                    "start": 3081,
+                                    "end": 3088,
+                                    "loc": {
+                                      "start": {
+                                        "line": 80,
+                                        "column": 65
+                                      },
+                                      "end": {
+                                        "line": 80,
+                                        "column": 72
+                                      }
+                                    },
+                                    "name": "setting"
+                                  },
+                                  "property": {
+                                    "type": "Identifier",
+                                    "start": 3089,
+                                    "end": 3092,
+                                    "loc": {
+                                      "start": {
+                                        "line": 80,
+                                        "column": 73
+                                      },
+                                      "end": {
+                                        "line": 80,
+                                        "column": 76
+                                      }
+                                    },
+                                    "name": "key"
+                                  },
+                                  "computed": false
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      },
+                      "alternate": {
+                        "type": "BlockStatement",
+                        "start": 3105,
+                        "end": 3274,
+                        "loc": {
+                          "start": {
+                            "line": 81,
+                            "column": 9
+                          },
+                          "end": {
+                            "line": 84,
+                            "column": 3
+                          }
+                        },
+                        "body": [
+                          {
+                            "type": "IfStatement",
+                            "start": 3111,
+                            "end": 3199,
+                            "loc": {
+                              "start": {
+                                "line": 82,
+                                "column": 3
+                              },
+                              "end": {
+                                "line": 82,
+                                "column": 91
+                              }
+                            },
+                            "test": {
+                              "type": "LogicalExpression",
+                              "start": 3114,
+                              "end": 3140,
+                              "loc": {
+                                "start": {
+                                  "line": 82,
+                                  "column": 6
+                                },
+                                "end": {
+                                  "line": 82,
+                                  "column": 32
+                                }
+                              },
+                              "left": {
+                                "type": "UnaryExpression",
+                                "start": 3114,
+                                "end": 3122,
+                                "loc": {
+                                  "start": {
+                                    "line": 82,
+                                    "column": 6
+                                  },
+                                  "end": {
+                                    "line": 82,
+                                    "column": 14
+                                  }
+                                },
+                                "operator": "!",
+                                "prefix": true,
+                                "argument": {
+                                  "type": "Identifier",
+                                  "start": 3115,
+                                  "end": 3122,
+                                  "loc": {
+                                    "start": {
+                                      "line": 82,
+                                      "column": 7
+                                    },
+                                    "end": {
+                                      "line": 82,
+                                      "column": 14
+                                    }
+                                  },
+                                  "name": "setting"
+                                }
+                              },
+                              "operator": "&&",
+                              "right": {
+                                "type": "Identifier",
+                                "start": 3126,
+                                "end": 3140,
+                                "loc": {
+                                  "start": {
+                                    "line": 82,
+                                    "column": 18
+                                  },
+                                  "end": {
+                                    "line": 82,
+                                    "column": 32
+                                  }
+                                },
+                                "name": "requireSetting"
+                              }
+                            },
+                            "consequent": {
+                              "type": "ThrowStatement",
+                              "start": 3142,
+                              "end": 3199,
+                              "loc": {
+                                "start": {
+                                  "line": 82,
+                                  "column": 34
+                                },
+                                "end": {
+                                  "line": 82,
+                                  "column": 91
+                                }
+                              },
+                              "argument": {
+                                "type": "NewExpression",
+                                "start": 3148,
+                                "end": 3198,
+                                "loc": {
+                                  "start": {
+                                    "line": 82,
+                                    "column": 40
+                                  },
+                                  "end": {
+                                    "line": 82,
+                                    "column": 90
+                                  }
+                                },
+                                "callee": {
+                                  "type": "Identifier",
+                                  "start": 3152,
+                                  "end": 3157,
+                                  "loc": {
+                                    "start": {
+                                      "line": 82,
+                                      "column": 44
+                                    },
+                                    "end": {
+                                      "line": 82,
+                                      "column": 49
+                                    }
+                                  },
+                                  "name": "Error"
+                                },
+                                "arguments": [
+                                  {
+                                    "type": "Literal",
+                                    "start": 3158,
+                                    "end": 3197,
+                                    "loc": {
+                                      "start": {
+                                        "line": 82,
+                                        "column": 50
+                                      },
+                                      "end": {
+                                        "line": 82,
+                                        "column": 89
+                                      }
+                                    },
+                                    "value": "A setting or a key must be specified.",
+                                    "rawValue": "A setting or a key must be specified.",
+                                    "raw": "'A setting or a key must be specified.'"
+                                  }
+                                ]
+                              }
+                            },
+                            "alternate": null
+                          },
+                          {
+                            "type": "ReturnStatement",
+                            "start": 3204,
+                            "end": 3269,
+                            "loc": {
+                              "start": {
+                                "line": 83,
+                                "column": 3
+                              },
+                              "end": {
+                                "line": 83,
+                                "column": 68
+                              }
+                            },
+                            "argument": {
+                              "type": "ArrayExpression",
+                              "start": 3211,
+                              "end": 3268,
+                              "loc": {
+                                "start": {
+                                  "line": 83,
+                                  "column": 10
+                                },
+                                "end": {
+                                  "line": 83,
+                                  "column": 67
+                                }
+                              },
+                              "elements": [
+                                {
+                                  "type": "ConditionalExpression",
+                                  "start": 3212,
+                                  "end": 3258,
+                                  "loc": {
+                                    "start": {
+                                      "line": 83,
+                                      "column": 11
+                                    },
+                                    "end": {
+                                      "line": 83,
+                                      "column": 57
+                                    }
+                                  },
+                                  "test": {
+                                    "type": "Identifier",
+                                    "start": 3212,
+                                    "end": 3217,
+                                    "loc": {
+                                      "start": {
+                                        "line": 83,
+                                        "column": 11
+                                      },
+                                      "end": {
+                                        "line": 83,
+                                        "column": 16
+                                      }
+                                    },
+                                    "name": "guild"
+                                  },
+                                  "consequent": {
+                                    "type": "ConditionalExpression",
+                                    "start": 3220,
+                                    "end": 3247,
+                                    "loc": {
+                                      "start": {
+                                        "line": 83,
+                                        "column": 19
+                                      },
+                                      "end": {
+                                        "line": 83,
+                                        "column": 46
+                                      }
+                                    },
+                                    "test": {
+                                      "type": "MemberExpression",
+                                      "start": 3220,
+                                      "end": 3228,
+                                      "loc": {
+                                        "start": {
+                                          "line": 83,
+                                          "column": 19
+                                        },
+                                        "end": {
+                                          "line": 83,
+                                          "column": 27
+                                        }
+                                      },
+                                      "object": {
+                                        "type": "Identifier",
+                                        "start": 3220,
+                                        "end": 3225,
+                                        "loc": {
+                                          "start": {
+                                            "line": 83,
+                                            "column": 19
+                                          },
+                                          "end": {
+                                            "line": 83,
+                                            "column": 24
+                                          }
+                                        },
+                                        "name": "guild"
+                                      },
+                                      "property": {
+                                        "type": "Identifier",
+                                        "start": 3226,
+                                        "end": 3228,
+                                        "loc": {
+                                          "start": {
+                                            "line": 83,
+                                            "column": 25
+                                          },
+                                          "end": {
+                                            "line": 83,
+                                            "column": 27
+                                          }
+                                        },
+                                        "name": "id"
+                                      },
+                                      "computed": false
+                                    },
+                                    "consequent": {
+                                      "type": "MemberExpression",
+                                      "start": 3231,
+                                      "end": 3239,
+                                      "loc": {
+                                        "start": {
+                                          "line": 83,
+                                          "column": 30
+                                        },
+                                        "end": {
+                                          "line": 83,
+                                          "column": 38
+                                        }
+                                      },
+                                      "object": {
+                                        "type": "Identifier",
+                                        "start": 3231,
+                                        "end": 3236,
+                                        "loc": {
+                                          "start": {
+                                            "line": 83,
+                                            "column": 30
+                                          },
+                                          "end": {
+                                            "line": 83,
+                                            "column": 35
+                                          }
+                                        },
+                                        "name": "guild"
+                                      },
+                                      "property": {
+                                        "type": "Identifier",
+                                        "start": 3237,
+                                        "end": 3239,
+                                        "loc": {
+                                          "start": {
+                                            "line": 83,
+                                            "column": 36
+                                          },
+                                          "end": {
+                                            "line": 83,
+                                            "column": 38
+                                          }
+                                        },
+                                        "name": "id"
+                                      },
+                                      "computed": false
+                                    },
+                                    "alternate": {
+                                      "type": "Identifier",
+                                      "start": 3242,
+                                      "end": 3247,
+                                      "loc": {
+                                        "start": {
+                                          "line": 83,
+                                          "column": 41
+                                        },
+                                        "end": {
+                                          "line": 83,
+                                          "column": 46
+                                        }
+                                      },
+                                      "name": "guild"
+                                    }
+                                  },
+                                  "alternate": {
+                                    "type": "Literal",
+                                    "start": 3250,
+                                    "end": 3258,
+                                    "loc": {
+                                      "start": {
+                                        "line": 83,
+                                        "column": 49
+                                      },
+                                      "end": {
+                                        "line": 83,
+                                        "column": 57
+                                      }
+                                    },
+                                    "value": "global",
+                                    "rawValue": "global",
+                                    "raw": "'global'"
+                                  }
+                                },
+                                {
+                                  "type": "Identifier",
+                                  "start": 3260,
+                                  "end": 3267,
+                                  "loc": {
+                                    "start": {
+                                      "line": 83,
+                                      "column": 59
+                                    },
+                                    "end": {
+                                      "line": 83,
+                                      "column": 66
+                                    }
+                                  },
+                                  "name": "setting"
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "leadingComments": [
+          {
+            "type": "Block",
+            "value": "* Stores settings within a guild ",
+            "start": 100,
+            "end": 137,
+            "loc": {
+              "start": {
+                "line": 7,
+                "column": 0
+              },
+              "end": {
+                "line": 7,
+                "column": 37
+              }
+            },
+            "range": [
+              100,
+              137
+            ]
+          }
+        ],
+        "trailingComments": []
+      },
+      "leadingComments": [
+        {
+          "type": "Block",
+          "value": "* Stores settings within a guild ",
+          "start": 100,
+          "end": 137,
+          "loc": {
+            "start": {
+              "line": 7,
+              "column": 0
+            },
+            "end": {
+              "line": 7,
+              "column": 37
+            }
+          },
+          "range": [
+            100,
+            137
+          ]
+        }
+      ]
+    }
+  ]
+}

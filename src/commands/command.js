@@ -1,7 +1,7 @@
 'use babel';
 'use strict';
 
-import Setting from '../data/models/setting';
+import Setting from '../storage/models/setting';
 
 /** A command that can be run in a bot */
 export default class Command {

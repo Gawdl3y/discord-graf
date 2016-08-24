@@ -3,7 +3,7 @@
 
 import { oneLine } from 'common-tags';
 import Command from '../command';
-import Setting from '../../data/models/setting';
+import Setting from '../../storage/models/setting';
 
 export default class PrefixCommand extends Command {
 	constructor(bot) {

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../">
-  <title data-ice="title">BotConfig | GRAF API Document</title>
+  <title data-ice="title">AllowedChannelStorage | GRAF API Document</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -77,23 +77,23 @@
 </nav>
 
 <div class="content" data-ice="content"><div class="header-notice">
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import BotConfig from &apos;<span><a href="file/src/bot/config.js.html#lineNumber5">discord-graf/src/bot/config.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import AllowedChannelStorage from &apos;<span><a href="file/src/storage/allowed-channels.js.html#lineNumber8">discord-graf/src/storage/allowed-channels.js</a></span>&apos;</code></pre></div>
   <span data-ice="access">public</span>
   <span data-ice="kind">class</span>
   
   
   
-  <span data-ice="source">| <span><a href="file/src/bot/config.js.html#lineNumber5">source</a></span></span>
+  <span data-ice="source">| <span><a href="file/src/storage/allowed-channels.js.html#lineNumber8">source</a></span></span>
 </div>
 
 <div class="self-detail detail">
-  <h1 data-ice="name">BotConfig</h1>
+  <h1 data-ice="name">AllowedChannelStorage</h1>
 
   
 
   
   
-  
+  <div class="flat-list" data-ice="extendsChain"><h4>Extends:</h4><div><span>src/storage/..js~GuildStorage</span> &#x2192; AllowedChannelStorage</div></div>
   
   
   
@@ -103,7 +103,7 @@
 
   
   
-  <div class="description" data-ice="description"><p>Configuration for a bot</p>
+  <div class="description" data-ice="description"><p>Stores channels that the bot is allowed to operate in within a guild</p>
 </div>
 
   
@@ -132,7 +132,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/bot/config.js~BotConfig.html#instance-constructor-constructor">constructor</a></span></span><span data-ice="signature">(values: <span><a href="typedef/index.html#static-typedef-ConfigObject">ConfigObject</a></span>, defaults: <span><a href="typedef/index.html#static-typedef-ConfigObject">ConfigObject</a></span>)</span>
+           <span data-ice="name"><span><a href="class/src/storage/allowed-channels.js~AllowedChannelStorage.html#instance-constructor-constructor">constructor</a></span></span><span data-ice="signature">(localStorage: <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Storage">LocalStorage</a></span>, logger: <span><a href="https://github.com/winstonjs/winston/blob/master/README.md">Logger</a></span>)</span>
         </p>
       </div>
       <div>
@@ -149,89 +149,7 @@
 </tbody>
 </table>
 </div>
-<div data-ice="memberSummary"><h2>Member Summary</h2><table class="summary" data-ice="summary">
-  <thead><tr><td data-ice="title" colspan="3">Public Members</td></tr></thead>
-  <tbody>
-  
-  <tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-           <span data-ice="name"><span><a href="class/src/bot/config.js~BotConfig.html#instance-member-defaults">defaults</a></span></span><span data-ice="signature">: <span><a href="typedef/index.html#static-typedef-ConfigObject">ConfigObject</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      <span class="kind" data-ice="kind">set</span>
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-           <span data-ice="name"><span><a href="class/src/bot/config.js~BotConfig.html#instance-set-values">values</a></span></span><span data-ice="signature">(values: <span><a href="typedef/index.html#static-typedef-ConfigObject">ConfigObject</a></span>): <span>*</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>Adds to the current values, overwriting existing ones</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      <span class="kind" data-ice="kind">get</span>
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-           <span data-ice="name"><span><a href="class/src/bot/config.js~BotConfig.html#instance-get-values">values</a></span></span><span data-ice="signature">: <span><a href="typedef/index.html#static-typedef-ConfigObject">ConfigObject</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-</tbody>
-</table>
-</div>
+
 <div data-ice="methodSummary"><h2>Method Summary</h2><table class="summary" data-ice="summary">
   <thead><tr><td data-ice="title" colspan="3">Public Methods</td></tr></thead>
   <tbody>
@@ -247,13 +165,13 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/bot/config.js~BotConfig.html#instance-method-loadDefaults">loadDefaults</a></span></span><span data-ice="signature">(overwrite: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span>void</span></span>
+           <span data-ice="name"><span><a href="class/src/storage/allowed-channels.js~AllowedChannelStorage.html#instance-method-delete">delete</a></span></span><span data-ice="signature">(channel: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Channel">Channel</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Adds the defaults to the current values</p>
+        <div data-ice="description"><p>Deletes a channel from the storage</p>
 </div>
       </div>
     </td>
@@ -273,13 +191,39 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/bot/config.js~BotConfig.html#instance-method-yargs">yargs</a></span></span><span data-ice="signature">(yargs: <span><a href="http://yargs.js.org/docs/">Yargs</a></span>, addOptions: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span><a href="http://yargs.js.org/docs/">Yargs</a></span></span>
+           <span data-ice="name"><span><a href="class/src/storage/allowed-channels.js~AllowedChannelStorage.html#instance-method-find">find</a></span></span><span data-ice="signature">(guild: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, searchString: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Channel">Channel</a></span><span>[]</span></span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Loads configuration from yargs, adding a bunch of default bot options</p>
+        <div data-ice="description"><p>Finds all channels associated with a guild that optionally match a search string</p>
+</div>
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/src/storage/allowed-channels.js~AllowedChannelStorage.html#instance-method-save">save</a></span></span><span data-ice="signature">(channel: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Channel">Channel</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        <div data-ice="description"><p>Saves a channel to the storage</p>
 </div>
       </div>
     </td>
@@ -305,11 +249,11 @@
     
     
     
-    <span data-ice="name">constructor</span><span data-ice="signature">(values: <span><a href="typedef/index.html#static-typedef-ConfigObject">ConfigObject</a></span>, defaults: <span><a href="typedef/index.html#static-typedef-ConfigObject">ConfigObject</a></span>)</span>
+    <span data-ice="name">constructor</span><span data-ice="signature">(localStorage: <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Storage">LocalStorage</a></span>, logger: <span><a href="https://github.com/winstonjs/winston/blob/master/README.md">Logger</a></span>)</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/bot/config.js.html#lineNumber10">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/storage/allowed-channels.js.html#lineNumber13">source</a></span></span>
     </span>
   </h3>
 
@@ -329,17 +273,17 @@
     <tbody>
     
     <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">values</td>
-      <td data-ice="type"><span><a href="typedef/index.html#static-typedef-ConfigObject">ConfigObject</a></span></td>
-      <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>The configuration to start with</p>
+      <td data-ice="name" data-depth="0">localStorage</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Storage">LocalStorage</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The LocalStorage instance to use</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">defaults</td>
-      <td data-ice="type"><span><a href="typedef/index.html#static-typedef-ConfigObject">ConfigObject</a></span></td>
+      <td data-ice="name" data-depth="0">logger</td>
+      <td data-ice="type"><span><a href="https://github.com/winstonjs/winston/blob/master/README.md">Logger</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>The defaults to start with</p>
+      <td data-ice="description"><p>The logger to use</p>
 </td>
     </tr>
 </tbody>
@@ -363,151 +307,28 @@
   
 </div>
 </div>
-<div data-ice="memberDetails"><h2 data-ice="title">Public Members</h2>
 
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-member-defaults">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    <span data-ice="name">defaults</span><span data-ice="signature">: <span><a href="typedef/index.html#static-typedef-ConfigObject">ConfigObject</a></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/bot/config.js.html#lineNumber13">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-set-values">
-    <span class="access" data-ice="access">public</span>
-    
-    <span class="kind" data-ice="kind">set</span>
-    
-    
-    <span data-ice="name">values</span><span data-ice="signature">(values: <span><a href="typedef/index.html#static-typedef-ConfigObject">ConfigObject</a></span>): <span>*</span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/bot/config.js.html#lineNumber22">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>Adds to the current values, overwriting existing ones</p>
-</div>
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-get-values">
-    <span class="access" data-ice="access">public</span>
-    
-    <span class="kind" data-ice="kind">get</span>
-    
-    
-    <span data-ice="name">values</span><span data-ice="signature">: <span><a href="typedef/index.html#static-typedef-ConfigObject">ConfigObject</a></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/bot/config.js.html#lineNumber27">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-</div>
 <div data-ice="methodDetails"><h2 data-ice="title">Public Methods</h2>
 
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-loadDefaults">
+  <h3 data-ice="anchor" id="instance-method-delete">
     <span class="access" data-ice="access">public</span>
     
     
     
     
-    <span data-ice="name">loadDefaults</span><span data-ice="signature">(overwrite: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span>void</span></span>
+    <span data-ice="name">delete</span><span data-ice="signature">(channel: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Channel">Channel</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/bot/config.js.html#lineNumber36">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/storage/allowed-channels.js.html#lineNumber33">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  <div data-ice="description"><p>Adds the defaults to the current values</p>
+  <div data-ice="description"><p>Deletes a channel from the storage</p>
 </div>
 
   
@@ -521,11 +342,10 @@
     <tbody>
     
     <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">overwrite</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></td>
-      <td data-ice="appendix"><ul><li>optional</li>
-<li>default: false</li></ul></td>
-      <td data-ice="description"><p>Whether or not the defaults should overwrite existing values</p>
+      <td data-ice="name" data-depth="0">channel</td>
+      <td data-ice="type"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Channel">Channel</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The channel to delete</p>
 </td>
     </tr>
 </tbody>
@@ -537,8 +357,9 @@
     <h4>Return:</h4>
     <table>
       <tr>
-        <td class="return-type" data-ice="returnType"><span>void</span></td>
-        
+        <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>Whether or not the channel was deleted</p>
+</td>
       </tr>
     </table>
     <div data-ice="returnProperties">
@@ -555,28 +376,28 @@
 
   
 
-  
+  <div data-ice="see"><h4>See:</h4><ul><li><span><span><a href="class/src/storage/index.js~GuildStorage.html#instance-method-delete">GuildStorage#delete</a></span></span></li></ul></div>
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-yargs">
+  <h3 data-ice="anchor" id="instance-method-find">
     <span class="access" data-ice="access">public</span>
     
     
     
     
-    <span data-ice="name">yargs</span><span data-ice="signature">(yargs: <span><a href="http://yargs.js.org/docs/">Yargs</a></span>, addOptions: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span>): <span><a href="http://yargs.js.org/docs/">Yargs</a></span></span>
+    <span data-ice="name">find</span><span data-ice="signature">(guild: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, searchString: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Channel">Channel</a></span><span>[]</span></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/bot/config.js.html#lineNumber52">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/storage/allowed-channels.js.html#lineNumber44">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  <div data-ice="description"><p>Loads configuration from yargs, adding a bunch of default bot options</p>
+  <div data-ice="description"><p>Finds all channels associated with a guild that optionally match a search string</p>
 </div>
 
   
@@ -590,18 +411,17 @@
     <tbody>
     
     <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">yargs</td>
-      <td data-ice="type"><span><a href="http://yargs.js.org/docs/">Yargs</a></span></td>
+      <td data-ice="name" data-depth="0">guild</td>
+      <td data-ice="type"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"><p>The yargs instance to use</p>
+      <td data-ice="description"><p>The guild or guild ID to find the channels of</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">addOptions</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></td>
-      <td data-ice="appendix"><ul><li>optional</li>
-<li>default: true</li></ul></td>
-      <td data-ice="description"><p>Whether or not to add options for GRAF&apos;s config</p>
+      <td data-ice="name" data-depth="0">searchString</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>The string to match channels against</p>
 </td>
     </tr>
 </tbody>
@@ -613,8 +433,8 @@
     <h4>Return:</h4>
     <table>
       <tr>
-        <td class="return-type" data-ice="returnType"><span><a href="http://yargs.js.org/docs/">Yargs</a></span></td>
-        <td class="return-desc" data-ice="returnDescription"><p>The yargs instance</p>
+        <td class="return-type" data-ice="returnType"><span><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Channel">Channel</a></span><span>[]</span></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>All found channels</p>
 </td>
       </tr>
     </table>
@@ -632,7 +452,76 @@
 
   
 
+  <div data-ice="see"><h4>See:</h4><ul><li><span><span><a href="class/src/storage/index.js~GuildStorage.html#instance-method-find">GuildStorage#find</a></span></span></li></ul></div>
   
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-save">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">save</span><span data-ice="signature">(channel: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Channel">Channel</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/storage/allowed-channels.js.html#lineNumber23">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>Saves a channel to the storage</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">channel</td>
+      <td data-ice="type"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Channel">Channel</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The channel to save</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>Whether or not the channel was saved</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  <div data-ice="see"><h4>See:</h4><ul><li><span><span><a href="class/src/storage/index.js~GuildStorage.html#instance-method-save">GuildStorage#save</a></span></span></li></ul></div>
   
 </div>
 </div>

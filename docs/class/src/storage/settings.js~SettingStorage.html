@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../">
-  <title data-ice="title">CommandRegistry | GRAF API Document</title>
+  <title data-ice="title">SettingStorage | GRAF API Document</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -77,23 +77,23 @@
 </nav>
 
 <div class="content" data-ice="content"><div class="header-notice">
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import CommandRegistry from &apos;<span><a href="file/src/commands/registry.js.html#lineNumber8">discord-graf/src/commands/registry.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import SettingStorage from &apos;<span><a href="file/src/storage/settings.js.html#lineNumber8">discord-graf/src/storage/settings.js</a></span>&apos;</code></pre></div>
   <span data-ice="access">public</span>
   <span data-ice="kind">class</span>
   
   
   
-  <span data-ice="source">| <span><a href="file/src/commands/registry.js.html#lineNumber8">source</a></span></span>
+  <span data-ice="source">| <span><a href="file/src/storage/settings.js.html#lineNumber8">source</a></span></span>
 </div>
 
 <div class="self-detail detail">
-  <h1 data-ice="name">CommandRegistry</h1>
+  <h1 data-ice="name">SettingStorage</h1>
 
   
 
   
   
-  <div class="flat-list" data-ice="extendsChain"><h4>Extends:</h4><div><span>events~EventEmitter</span> &#x2192; CommandRegistry</div></div>
+  <div class="flat-list" data-ice="extendsChain"><h4>Extends:</h4><div><span>src/storage/..js~Storage</span> &#x2192; SettingStorage</div></div>
   
   
   
@@ -103,7 +103,7 @@
 
   
   
-  <div class="description" data-ice="description"><p>Handles registration and searching of commands and modules</p>
+  <div class="description" data-ice="description"><p>Stores settings within a guild</p>
 </div>
 
   
@@ -132,7 +132,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html#instance-constructor-constructor">constructor</a></span></span><span data-ice="signature">(logger: <span><a href="https://github.com/winstonjs/winston/blob/master/README.md">Logger</a></span>)</span>
+           <span data-ice="name"><span><a href="class/src/storage/settings.js~SettingStorage.html#instance-constructor-constructor">constructor</a></span></span><span data-ice="signature">(localStorage: <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Storage">LocalStorage</a></span>, logger: <span><a href="https://github.com/winstonjs/winston/blob/master/README.md">Logger</a></span>)</span>
         </p>
       </div>
       <div>
@@ -149,88 +149,7 @@
 </tbody>
 </table>
 </div>
-<div data-ice="memberSummary"><h2>Member Summary</h2><table class="summary" data-ice="summary">
-  <thead><tr><td data-ice="title" colspan="3">Public Members</td></tr></thead>
-  <tbody>
-  
-  <tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-           <span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html#instance-member-commands">commands</a></span></span><span data-ice="signature">: <span><span><a href="class/src/commands/command.js~Command.html">Command</a></span><span>[]</span></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-           <span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html#instance-member-logger">logger</a></span></span><span data-ice="signature">: <span><a href="https://github.com/winstonjs/winston/blob/master/README.md">Logger</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-           <span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html#instance-member-modules">modules</a></span></span><span data-ice="signature">: <span><span><a href="class/src/commands/module.js~Module.html">Module</a></span><span>[]</span></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-</tbody>
-</table>
-</div>
+
 <div data-ice="methodSummary"><h2>Method Summary</h2><table class="summary" data-ice="summary">
   <thead><tr><td data-ice="title" colspan="3">Public Methods</td></tr></thead>
   <tbody>
@@ -246,13 +165,13 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html#instance-method-findCommands">findCommands</a></span></span><span data-ice="signature">(searchString: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, message: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Message">Message</a></span>): <span><span><a href="class/src/commands/command.js~Command.html">Command</a></span><span>[]</span></span></span>
+           <span data-ice="name"><span><a href="class/src/storage/settings.js~SettingStorage.html#instance-method-delete">delete</a></span></span><span data-ice="signature">(guild: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, setting: <span><a href="variable/index.html#static-variable-Setting">Setting</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Finds all commands that match the search string</p>
+        <div data-ice="description"><p>Deletes a setting from the storage</p>
 </div>
       </div>
     </td>
@@ -272,13 +191,13 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html#instance-method-findModules">findModules</a></span></span><span data-ice="signature">(searchString: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><span><a href="class/src/commands/module.js~Module.html">Module</a></span><span>[]</span></span></span>
+           <span data-ice="name"><span><a href="class/src/storage/settings.js~SettingStorage.html#instance-method-exists">exists</a></span></span><span data-ice="signature">(guild: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, setting: <span><a href="variable/index.html#static-variable-Setting">Setting</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Finds all modules that match the search string</p>
+        <div data-ice="description"><p>Checks if a setting associated with a guild exists</p>
 </div>
       </div>
     </td>
@@ -298,13 +217,13 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html#instance-method-registerCommand">registerCommand</a></span></span><span data-ice="signature">(command: <span><a href="class/src/commands/command.js~Command.html">Command</a></span>): <span>void</span></span>
+           <span data-ice="name"><span><a href="class/src/storage/settings.js~SettingStorage.html#instance-method-find">find</a></span></span><span data-ice="signature">(guild: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, setting: <span><a href="variable/index.html#static-variable-Setting">Setting</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><span>*</span><span>[]</span></span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Registers a single command</p>
+        <div data-ice="description"><p>Finds all settings associated with a guild or a single one with a key</p>
 </div>
       </div>
     </td>
@@ -324,13 +243,13 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html#instance-method-registerCommands">registerCommands</a></span></span><span data-ice="signature">(commands: <span><span><a href="class/src/commands/command.js~Command.html">Command</a></span><span>[]</span></span>): <span>void</span></span>
+           <span data-ice="name"><span><a href="class/src/storage/settings.js~SettingStorage.html#instance-method-getValue">getValue</a></span></span><span data-ice="signature">(guild: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, setting: <span><a href="variable/index.html#static-variable-Setting">Setting</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, defaultValue: <span>*</span>): <span>*</span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Registers multiple commands</p>
+        <div data-ice="description"><p>Gets the value of a setting associated with a guild</p>
 </div>
       </div>
     </td>
@@ -350,39 +269,13 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html#instance-method-registerModule">registerModule</a></span></span><span data-ice="signature">(module: <span><a href="class/src/commands/module.js~Module.html">Module</a></span>): <span>void</span></span>
+           <span data-ice="name"><span><a href="class/src/storage/settings.js~SettingStorage.html#instance-method-save">save</a></span></span><span data-ice="signature">(setting: <span><a href="variable/index.html#static-variable-Setting">Setting</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Registers a single module</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-           <span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html#instance-method-registerModules">registerModules</a></span></span><span data-ice="signature">(modules: <span><span><a href="class/src/commands/module.js~Module.html">Module</a></span><span>[]</span></span>): <span>void</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>Registers multiple modules</p>
+        <div data-ice="description"><p>Saves a setting to the storage</p>
 </div>
       </div>
     </td>
@@ -408,11 +301,11 @@
     
     
     
-    <span data-ice="name">constructor</span><span data-ice="signature">(logger: <span><a href="https://github.com/winstonjs/winston/blob/master/README.md">Logger</a></span>)</span>
+    <span data-ice="name">constructor</span><span data-ice="signature">(localStorage: <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Storage">LocalStorage</a></span>, logger: <span><a href="https://github.com/winstonjs/winston/blob/master/README.md">Logger</a></span>)</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/commands/registry.js.html#lineNumber10">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/storage/settings.js.html#lineNumber13">source</a></span></span>
     </span>
   </h3>
 
@@ -432,10 +325,16 @@
     <tbody>
     
     <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">localStorage</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Storage">LocalStorage</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The LocalStorage instance to use</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
       <td data-ice="name" data-depth="0">logger</td>
       <td data-ice="type"><span><a href="https://github.com/winstonjs/winston/blob/master/README.md">Logger</a></span></td>
-      <td data-ice="appendix"><ul><li>optional</li>
-<li>nullable: true</li></ul></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
       <td data-ice="description"><p>The logger to use</p>
 </td>
     </tr>
@@ -460,150 +359,28 @@
   
 </div>
 </div>
-<div data-ice="memberDetails"><h2 data-ice="title">Public Members</h2>
 
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-member-commands">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    <span data-ice="name">commands</span><span data-ice="signature">: <span><span><a href="class/src/commands/command.js~Command.html">Command</a></span><span>[]</span></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/commands/registry.js.html#lineNumber16">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-member-logger">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    <span data-ice="name">logger</span><span data-ice="signature">: <span><a href="https://github.com/winstonjs/winston/blob/master/README.md">Logger</a></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/commands/registry.js.html#lineNumber14">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-member-modules">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    <span data-ice="name">modules</span><span data-ice="signature">: <span><span><a href="class/src/commands/module.js~Module.html">Module</a></span><span>[]</span></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/commands/registry.js.html#lineNumber18">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-</div>
 <div data-ice="methodDetails"><h2 data-ice="title">Public Methods</h2>
 
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-findCommands">
+  <h3 data-ice="anchor" id="instance-method-delete">
     <span class="access" data-ice="access">public</span>
     
     
     
     
-    <span data-ice="name">findCommands</span><span data-ice="signature">(searchString: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, message: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Message">Message</a></span>): <span><span><a href="class/src/commands/command.js~Command.html">Command</a></span><span>[]</span></span></span>
+    <span data-ice="name">delete</span><span data-ice="signature">(guild: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, setting: <span><a href="variable/index.html#static-variable-Setting">Setting</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/commands/registry.js.html#lineNumber87">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/storage/settings.js.html#lineNumber34">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  <div data-ice="description"><p>Finds all commands that match the search string</p>
+  <div data-ice="description"><p>Deletes a setting from the storage</p>
 </div>
 
   
@@ -617,17 +394,93 @@
     <tbody>
     
     <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">searchString</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="name" data-depth="0">guild</td>
+      <td data-ice="type"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>The string to search for</p>
+      <td data-ice="description"><p>The guild or guild ID the setting is associated with</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">message</td>
-      <td data-ice="type"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Message">Message</a></span></td>
+      <td data-ice="name" data-depth="0">setting</td>
+      <td data-ice="type"><span><a href="variable/index.html#static-variable-Setting">Setting</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The setting or setting key (must be a setting instance if the guild isn&apos;t specified)</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>Whether or not the setting was deleted</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  <div data-ice="see"><h4>See:</h4><ul><li><span><span><a href="class/src/storage/index.js~GuildStorage.html#instance-method-delete">GuildStorage#delete</a></span></span></li></ul></div>
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-exists">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">exists</span><span data-ice="signature">(guild: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, setting: <span><a href="variable/index.html#static-variable-Setting">Setting</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/storage/settings.js.html#lineNumber58">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>Checks if a setting associated with a guild exists</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">guild</td>
+      <td data-ice="type"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>The message to check usability against</p>
+      <td data-ice="description"><p>The guild or guild ID the setting is associated with</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">setting</td>
+      <td data-ice="type"><span><a href="variable/index.html#static-variable-Setting">Setting</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The setting or setting key</p>
 </td>
     </tr>
 </tbody>
@@ -639,8 +492,8 @@
     <h4>Return:</h4>
     <table>
       <tr>
-        <td class="return-type" data-ice="returnType"><span><span><a href="class/src/commands/command.js~Command.html">Command</a></span><span>[]</span></span></td>
-        <td class="return-desc" data-ice="returnDescription"><p>All commands that are found</p>
+        <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>Whether or not the setting exists</p>
 </td>
       </tr>
     </table>
@@ -658,28 +511,28 @@
 
   
 
-  
+  <div data-ice="see"><h4>See:</h4><ul><li><span><span><a href="class/src/storage/index.js~GuildStorage.html#instance-method-exists">GuildStorage#exists</a></span></span></li></ul></div>
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-findModules">
+  <h3 data-ice="anchor" id="instance-method-find">
     <span class="access" data-ice="access">public</span>
     
     
     
     
-    <span data-ice="name">findModules</span><span data-ice="signature">(searchString: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><span><a href="class/src/commands/module.js~Module.html">Module</a></span><span>[]</span></span></span>
+    <span data-ice="name">find</span><span data-ice="signature">(guild: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, setting: <span><a href="variable/index.html#static-variable-Setting">Setting</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><span>*</span><span>[]</span></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/commands/registry.js.html#lineNumber111">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/storage/settings.js.html#lineNumber46">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  <div data-ice="description"><p>Finds all modules that match the search string</p>
+  <div data-ice="description"><p>Finds all settings associated with a guild or a single one with a key</p>
 </div>
 
   
@@ -693,10 +546,17 @@
     <tbody>
     
     <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">searchString</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="name" data-depth="0">guild</td>
+      <td data-ice="type"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
       <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>The string to search for</p>
+      <td data-ice="description"><p>The guild or guild ID to find the settings of</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">setting</td>
+      <td data-ice="type"><span><a href="variable/index.html#static-variable-Setting">Setting</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The setting or setting key (must be a setting instance if the guild isn&apos;t specified)</p>
 </td>
     </tr>
 </tbody>
@@ -708,8 +568,92 @@
     <h4>Return:</h4>
     <table>
       <tr>
-        <td class="return-type" data-ice="returnType"><span><span><a href="class/src/commands/module.js~Module.html">Module</a></span><span>[]</span></span></td>
-        <td class="return-desc" data-ice="returnDescription"><p>All modules that are found</p>
+        <td class="return-type" data-ice="returnType"><span><span>*</span><span>[]</span></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>All found setting values</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  <div data-ice="see"><h4>See:</h4><ul><li><span><span><a href="class/src/storage/index.js~GuildStorage.html#instance-method-find">GuildStorage#find</a></span></span></li></ul></div>
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-getValue">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">getValue</span><span data-ice="signature">(guild: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, setting: <span><a href="variable/index.html#static-variable-Setting">Setting</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, defaultValue: <span>*</span>): <span>*</span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/storage/settings.js.html#lineNumber70">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>Gets the value of a setting associated with a guild</p>
+</div>
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">guild</td>
+      <td data-ice="type"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild">Guild</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>The guild or guild ID the setting is associated with</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">setting</td>
+      <td data-ice="type"><span><a href="variable/index.html#static-variable-Setting">Setting</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The setting or setting key (must be a setting instance if the guild isn&apos;t specified)</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">defaultValue</td>
+      <td data-ice="type"><span>*</span></td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: null</li></ul></td>
+      <td data-ice="description"><p>The value to default to if the setting doesn&apos;t exist</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span>*</span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>The value of the setting</p>
 </td>
       </tr>
     </table>
@@ -731,24 +675,24 @@
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-registerCommand">
+  <h3 data-ice="anchor" id="instance-method-save">
     <span class="access" data-ice="access">public</span>
     
     
     
     
-    <span data-ice="name">registerCommand</span><span data-ice="signature">(command: <span><a href="class/src/commands/command.js~Command.html">Command</a></span>): <span>void</span></span>
+    <span data-ice="name">save</span><span data-ice="signature">(setting: <span><a href="variable/index.html#static-variable-Setting">Setting</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/commands/registry.js.html#lineNumber26">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/storage/settings.js.html#lineNumber23">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  <div data-ice="description"><p>Registers a single command</p>
+  <div data-ice="description"><p>Saves a setting to the storage</p>
 </div>
 
   
@@ -762,10 +706,10 @@
     <tbody>
     
     <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">command</td>
-      <td data-ice="type"><span><a href="class/src/commands/command.js~Command.html">Command</a></span></td>
+      <td data-ice="name" data-depth="0">setting</td>
+      <td data-ice="type"><span><a href="variable/index.html#static-variable-Setting">Setting</a></span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"><p>The command to register</p>
+      <td data-ice="description"><p>The setting to save</p>
 </td>
     </tr>
 </tbody>
@@ -777,8 +721,9 @@
     <h4>Return:</h4>
     <table>
       <tr>
-        <td class="return-type" data-ice="returnType"><span>void</span></td>
-        
+        <td class="return-type" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>Whether or not the setting was saved</p>
+</td>
       </tr>
     </table>
     <div data-ice="returnProperties">
@@ -795,211 +740,7 @@
 
   
 
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-registerCommands">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    <span data-ice="name">registerCommands</span><span data-ice="signature">(commands: <span><span><a href="class/src/commands/command.js~Command.html">Command</a></span><span>[]</span></span>): <span>void</span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/commands/registry.js.html#lineNumber35">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>Registers multiple commands</p>
-</div>
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">commands</td>
-      <td data-ice="type"><span><span><a href="class/src/commands/command.js~Command.html">Command</a></span><span>[]</span></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"><p>The commands to register</p>
-</td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tr>
-        <td class="return-type" data-ice="returnType"><span>void</span></td>
-        
-      </tr>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-registerModule">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    <span data-ice="name">registerModule</span><span data-ice="signature">(module: <span><a href="class/src/commands/module.js~Module.html">Module</a></span>): <span>void</span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/commands/registry.js.html#lineNumber61">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>Registers a single module</p>
-</div>
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">module</td>
-      <td data-ice="type"><span><a href="class/src/commands/module.js~Module.html">Module</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"><p>The module to register</p>
-</td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tr>
-        <td class="return-type" data-ice="returnType"><span>void</span></td>
-        
-      </tr>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-registerModules">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    <span data-ice="name">registerModules</span><span data-ice="signature">(modules: <span><span><a href="class/src/commands/module.js~Module.html">Module</a></span><span>[]</span></span>): <span>void</span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/commands/registry.js.html#lineNumber70">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>Registers multiple modules</p>
-</div>
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">modules</td>
-      <td data-ice="type"><span><span><a href="class/src/commands/module.js~Module.html">Module</a></span><span>[]</span></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"><p>The modules to register</p>
-</td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tr>
-        <td class="return-type" data-ice="returnType"><span>void</span></td>
-        
-      </tr>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
+  <div data-ice="see"><h4>See:</h4><ul><li><span><span><a href="class/src/storage/index.js~GuildStorage.html#instance-method-save">GuildStorage#save</a></span></span></li></ul></div>
   
 </div>
 </div>
