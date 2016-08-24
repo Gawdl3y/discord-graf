@@ -103,10 +103,10 @@ export default class GuildStorage {
 		if((this.objectBased && index) || (!this.objectBased && index >= 0)) {
 			if(this.objectBased) delete this.guildsMap[guild][index]; else this.guildsMap[guild].splice(index, 1);
 			this.saveStorage();
-			if(this.logger) this.logger.info(`Deleted entry from ${this.key} storage.`, { guild: guild, entry: entry });
+			if(this.logger) this.logger.verbose(`Deleted entry from ${this.key} storage.`, { guild: guild, entry: entry });
 			return true;
 		} else {
-			if(this.logger) this.logger.info(`Not deleting entry from ${this.key} storage, because it doesn\'t exist.`, { guild: guild, entry: entry });
+			if(this.logger) this.logger.verbose(`Not deleting entry from ${this.key} storage, because it doesn\'t exist.`, { guild: guild, entry: entry });
 			return false;
 		}
 	}
@@ -120,7 +120,7 @@ export default class GuildStorage {
 		if(!guild) throw new Error('A guild must be specified.');
 		if(!this.guildsMap) this.loadStorage();
 		delete this.guildsMap[guild.id || guild];
-		if(this.logger) this.logger.info(`Cleared a guild in ${this.key} storage.`, { guild: guild.id || guild });
+		if(this.logger) this.logger.verbose(`Cleared a guild in ${this.key} storage.`, { guild: guild.id || guild });
 		this.saveStorage();
 	}
 
@@ -131,7 +131,7 @@ export default class GuildStorage {
 	clearAll() {
 		if(!this.guildsMap) this.loadStorage();
 		for(const key of Object.keys(this.guildsMap)) delete this.guildsMap[key];
-		if(this.logger) this.logger.info(`Cleared all of ${this.key} storage.`);
+		if(this.logger) this.logger.verbose(`Cleared all of ${this.key} storage.`);
 		this.saveStorage();
 	}
 
