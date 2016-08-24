@@ -580,7 +580,7 @@
     "access": null,
     "description": null,
     "lineNumber": 1,
-    "content": "'use babel';\r\n'use strict';\r\n\r\nimport Discord from 'discord.js';\r\nimport { LocalStorage } from 'node-localstorage';\r\nimport winston from 'winston';\r\nimport request from 'request-promise-native';\r\nimport semver from 'semver';\r\nimport Config from './config';\r\nimport Permissions from './permissions';\r\nimport Util from './util';\r\nimport Registry from '../commands/registry';\r\nimport Dispatcher from '../commands/dispatcher';\r\nimport Module from '../commands/module';\r\nimport Setting from '../storage/models/setting';\r\nimport GuildStorage from '../storage';\r\nimport SettingStorage from '../storage/settings';\r\nimport ModRoleStorage from '../storage/mod-roles';\r\nimport AllowedChannelStorage from '../storage/allowed-channels';\r\n\r\nimport HelpCommand from '../commands/info/help';\r\nimport AboutCommand from '../commands/info/about';\r\nimport ListModulesCommand from '../commands/modules/list';\r\nimport ToggleModuleCommand from '../commands/modules/toggle';\r\nimport EnableModuleCommand from '../commands/modules/enable';\r\nimport DisableModuleCommand from '../commands/modules/disable';\r\nimport ListModRolesCommand from '../commands/mod-roles/list';\r\nimport AddModRoleCommand from '../commands/mod-roles/add';\r\nimport DeleteModRoleCommand from '../commands/mod-roles/delete';\r\nimport ClearModRolesCommand from '../commands/mod-roles/clear';\r\nimport ListAllowedChannelsCommand from '../commands/channels/list-allowed';\r\nimport AllowChannelCommand from '../commands/channels/allow';\r\nimport DisallowChannelCommand from '../commands/channels/disallow';\r\nimport ClearAllowedChannelsCommand from '../commands/channels/clear-allowed';\r\nimport PrefixCommand from '../commands/util/prefix';\r\nimport EvalCommand from '../commands/util/eval';\r\n\r\n/** A Discord bot that has its own command registry, storage, utilities, etc. */\r\nexport default class Bot {\r\n\t/** @param {ConfigObject} config - The configuration to use */\r\n\tconstructor(config) {\r\n\t\t/** @type {Client} */\r\n\t\tthis.client = null;\r\n\t\t/** @type {CommandDispatcher} */\r\n\t\tthis.dispatcher = null;\r\n\t\t/** @type {BotConfig} */\r\n\t\tthis.config = new Config(config);\r\n\t\t/** @type {BotPermissions} */\r\n\t\tthis.permissions = null;\r\n\t\t/** @type {BotUtil} */\r\n\t\tthis.util = null;\r\n\t\t/** @type {LocalStorage} */\r\n\t\tthis.localStorage = null;\r\n\t\t/**\r\n\t\t * @type {Object}\r\n\t\t * @property {SettingStorage} settings\r\n\t\t * @property {ModRoleStorage} modRoles\r\n\t\t * @property {AllowedChannelStorage} allowedChannels\r\n\t\t */\r\n\t\tthis.storage = {\r\n\t\t\tsettings: null,\r\n\t\t\tmodRoles: null,\r\n\t\t\tallowedChannels: null\r\n\t\t};\r\n\t\t/** @type {Object} */\r\n\t\tthis.evalObjects = {};\r\n\t}\r\n\r\n\t/**\r\n\t * Instantiates all bot classes and storages, and creates the client\r\n\t * @return {Client} The bot client\r\n\t */\r\n\tcreateClient() {\r\n\t\tif(this.client) throw new Error('Client has already been created.');\r\n\t\tconst config = this.config.values;\r\n\r\n\t\t// Verify some stuff\r\n\t\tif(!config.token && (!config.email || !config.password)) throw new Error('Invalid credentials; either \"token\" or both \"email\" and \"password\" must be specified on the config.');\r\n\t\tif(!config.name) throw new Error('\"name\" must be specified on the config.');\r\n\t\tif(!config.version) throw new Error('\"version\" must be specified on the config.');\r\n\r\n\t\t// Output safe config\r\n\t\tconst debugConfig = Object.assign({}, config);\r\n\t\tif(debugConfig.email) debugConfig.email = '--snip--';\r\n\t\tif(debugConfig.password) debugConfig.password = '--snip--';\r\n\t\tif(debugConfig.token) debugConfig.token = '--snip--';\r\n\t\tfor(const key of Object.keys(debugConfig)) if(key.length === 1 || key.includes('-')) delete debugConfig[key];\r\n\t\tthis.logger.debug('Configuration:', debugConfig);\r\n\r\n\t\t// Create client and bot classes\r\n\t\tconst clientOptions = Object.assign({}, defaultClientOptions, config.clientOptions, { autoReconnect: config.autoReconnect });\r\n\t\tconst client = new Discord.Client(clientOptions);\r\n\t\tthis.client = client;\r\n\t\tthis.localStorage = new LocalStorage(config.storage);\r\n\t\tthis.storage.settings = new SettingStorage(this.localStorage, this.logger);\r\n\t\tthis.storage.modRoles = new ModRoleStorage(this.localStorage, this.logger);\r\n\t\tthis.storage.allowedChannels = new AllowedChannelStorage(this.localStorage, this.logger);\r\n\t\tthis.dispatcher = new Dispatcher(this);\r\n\t\tthis.permissions = new Permissions(client, this.storage.modRoles, this.storage.settings, this.config);\r\n\t\tthis.util = new Util(client, this.storage.settings, this.config);\r\n\t\tthis.logger.info('Client created.', clientOptions);\r\n\r\n\t\t// Set up logging, playing game text, and update checking\r\n\t\tclient.on('error', err => { this.logger.error(err); });\r\n\t\tclient.on('warn', msg => { this.logger.warn(msg); });\r\n\t\tclient.on('debug', msg => { this.logger.debug(msg); });\r\n\t\tclient.on('disconnected', () => { this.logger.warn('Disconnected.'); });\r\n\t\tclient.on('reconnecting', () => { this.logger.warn('Reconnecting...'); });\r\n\t\tclient.on('ready', () => {\r\n\t\t\tthis.logger.info(`Bot is ready; logged in as ${client.user.username}#${client.user.discriminator} (ID: ${client.user.id})`);\r\n\t\t\tif(config.playingGame) client.user.setStatus('online', config.playingGame);\r\n\t\t\tif(config.updateURL) {\r\n\t\t\t\tthis._checkForUpdate();\r\n\t\t\t\tif(config.updateCheck > 0) setInterval(this._checkForUpdate.bind(this), config.updateCheck * 60 * 1000);\r\n\t\t\t}\r\n\t\t});\r\n\r\n\t\t// Set up command handling\r\n\t\tclient.on('message', message => {\r\n\t\t\tthis.dispatcher.handleMessage(message).catch(err => { this.logger.error(err); });\r\n\t\t});\r\n\t\tclient.on('messageUpdated', (oldMessage, newMessage) => {\r\n\t\t\tthis.dispatcher.handleMessage(newMessage, oldMessage).catch(err => { this.logger.error(err); });\r\n\t\t});\r\n\r\n\t\t// Log in\r\n\t\tconst loginErr = err => {\r\n\t\t\tthis.logger.error('Failed to login.');\r\n\t\t\tthis.logger.error(err);\r\n\t\t};\r\n\t\tif(config.token) {\r\n\t\t\tthis.logger.info('Logging in with token...');\r\n\t\t\tclient.login(config.token).catch(loginErr);\r\n\t\t} else {\r\n\t\t\tthis.logger.info('Logging in with email and password...');\r\n\t\t\tclient.login(config.email, config.password).catch(loginErr);\r\n\t\t}\r\n\r\n\t\treturn client;\r\n\t}\r\n\r\n\t/**\r\n\t * Registers a single command to the bot's registry\r\n\t * @param {Command|function} command - Either a Command instance, or a constructor for one\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterCommand(command) {\r\n\t\treturn this.registerCommands([command]);\r\n\t}\r\n\r\n\t/**\r\n\t * Registers multiple commands to the bot's registry\r\n\t * @param {Command[]|function[]} commands - An array of Command instances or constructors\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterCommands(commands) {\r\n\t\tif(!Array.isArray(commands)) throw new TypeError('Commands must be an array.');\r\n\t\tfor(let i = 0; i < commands.length; i++) if(typeof commands[i] === 'function') commands[i] = new commands[i](this);\r\n\t\tthis.registry.registerCommands(commands);\r\n\t\treturn this;\r\n\t}\r\n\r\n\t/**\r\n\t * Registers a single module to the bot's registry\r\n\t * @param {Module|function|Array} module - A Module instance, a constructor, or an array of [ID, Name]\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterModule(module) {\r\n\t\treturn this.registerModules([module]);\r\n\t}\r\n\r\n\t/**\r\n\t * Registers multiple modules to the bot's registry\r\n\t * @param {Module[]|function[]|Array[]} modules - An array of Module instances, constructors, or arrays of [ID, Name]\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterModules(modules) {\r\n\t\tif(!Array.isArray(modules)) throw new TypeError('Modules must be an array.');\r\n\t\tfor(let i = 0; i < modules.length; i++) {\r\n\t\t\tif(typeof modules[i] === 'function') {\r\n\t\t\t\tmodules[i] = new modules[i](this);\r\n\t\t\t} else if(Array.isArray(modules[i])) {\r\n\t\t\t\tmodules[i] = new Module(this, ...modules[i]);\r\n\t\t\t} else if(!(modules[i] instanceof Module)) {\r\n\t\t\t\tmodules[i] = new Module(this, modules[i].id, modules[i].name, modules[i].commands);\r\n\t\t\t}\r\n\t\t}\r\n\t\tthis.registry.registerModules(modules);\r\n\t\treturn this;\r\n\t}\r\n\r\n\t/**\r\n\t * Registers both the default modules and commands to the bot's registry\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterDefaults() {\r\n\t\tthis.registerDefaultModules();\r\n\t\tthis.registerDefaultCommands();\r\n\t\treturn this;\r\n\t}\r\n\r\n\t/**\r\n\t * Registers the default modules to the bot's registry\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterDefaultModules() {\r\n\t\tthis.registerModules([\r\n\t\t\t['info', 'Information'],\r\n\t\t\t['modules', 'Modules'],\r\n\t\t\t['mod-roles', 'Moderator roles'],\r\n\t\t\t['channels', 'Channels'],\r\n\t\t\t['util', 'Utility']\r\n\t\t]);\r\n\t\treturn this;\r\n\t}\r\n\r\n\t/**\r\n\t * Registers the default commands to the bot's registry\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterDefaultCommands() {\r\n\t\tthis.registerCommands([\r\n\t\t\tHelpCommand,\r\n\t\t\tAboutCommand,\r\n\t\t\tListModulesCommand,\r\n\t\t\tToggleModuleCommand,\r\n\t\t\tEnableModuleCommand,\r\n\t\t\tDisableModuleCommand,\r\n\t\t\tListModRolesCommand,\r\n\t\t\tAddModRoleCommand,\r\n\t\t\tDeleteModRoleCommand,\r\n\t\t\tClearModRolesCommand,\r\n\t\t\tListAllowedChannelsCommand,\r\n\t\t\tAllowChannelCommand,\r\n\t\t\tDisallowChannelCommand,\r\n\t\t\tClearAllowedChannelsCommand,\r\n\t\t\tPrefixCommand,\r\n\t\t\tEvalCommand\r\n\t\t]);\r\n\t\treturn this;\r\n\t}\r\n\r\n\t/**\r\n\t * Registers a single object to be usable by the eval command\r\n\t * @param {string} key - The key for the object\r\n\t * @param {Object} obj - The object\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterEvalObject(key, obj) {\r\n\t\tconst registerObj = {};\r\n\t\tregisterObj[key] = obj;\r\n\t\treturn this.registerEvalObjects(registerObj);\r\n\t}\r\n\r\n\t/**\r\n\t * Registers multiple objects to be usable by the eval command\r\n\t * @param {Object} obj - An object of keys: values\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterEvalObjects(obj) {\r\n\t\tObject.assign(this.evalObjects, obj);\r\n\t\treturn this;\r\n\t}\r\n\r\n\t/** @type {CommandRegistry} */\r\n\tget registry() {\r\n\t\tif(!this._registry) this._registry = new Registry(this.logger);\r\n\t\treturn this._registry;\r\n\t}\r\n\r\n\t/** @type {Logger} */\r\n\tget logger() {\r\n\t\tif(!this._logger) {\r\n\t\t\tthis._logger = new winston.Logger({\r\n\t\t\t\ttransports: [\r\n\t\t\t\t\tnew winston.transports.Console({\r\n\t\t\t\t\t\tlevel: this.config.values.consoleLevel,\r\n\t\t\t\t\t\tcolorize: true,\r\n\t\t\t\t\t\ttimestamp: true,\r\n\t\t\t\t\t\thandleExceptions: true,\r\n\t\t\t\t\t\thumanReadableUnhandledException: true\r\n\t\t\t\t\t})\r\n\t\t\t\t]\r\n\t\t\t});\r\n\t\t\tif(this.config.values.log) {\r\n\t\t\t\tthis._logger.add(winston.transports.File, {\r\n\t\t\t\t\tlevel: this.config.values.logLevel,\r\n\t\t\t\t\tfilename: this.config.values.log,\r\n\t\t\t\t\tmaxsize: this.config.values.logMaxSize,\r\n\t\t\t\t\tmaxFiles: this.config.values.logMaxFiles,\r\n\t\t\t\t\ttailable: true,\r\n\t\t\t\t\tjson: false,\r\n\t\t\t\t\thandleExceptions: true,\r\n\t\t\t\t\thumanReadableUnhandledException: true\r\n\t\t\t\t});\r\n\t\t\t}\r\n\t\t}\r\n\t\treturn this._logger;\r\n\t}\r\n\r\n\t/**\r\n\t * Checks for an update for the bot\r\n\t * @return {void}\r\n\t */\r\n\t_checkForUpdate() {\r\n\t\tconst config = this.config.values;\r\n\t\trequest(config.updateURL).then(body => {\r\n\t\t\tconst masterVersion = JSON.parse(body).version;\r\n\t\t\tif(!semver.gt(masterVersion, config.version)) return;\r\n\t\t\tconst message = `An update for ${config.name} is available! Current version is ${config.version}, latest available is ${masterVersion}.`;\r\n\t\t\tthis.logger.warn(message);\r\n\t\t\tconst savedVersion = this.storage.settings.getValue(null, 'notified-version');\r\n\t\t\tif(savedVersion !== masterVersion && this.client && config.owner) {\r\n\t\t\t\tthis.client.users.get(config.owner).sendMessage(message);\r\n\t\t\t\tthis.storage.settings.save(new Setting(null, 'notified-version', masterVersion));\r\n\t\t\t}\r\n\t\t}).catch(err => {\r\n\t\t\tthis.logger.error(err);\r\n\t\t});\r\n\t}\r\n}\r\n\r\nconst defaultClientOptions = {\r\n\tforceFetchUsers: true,\r\n\tbot: true\r\n};\r\n"
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport Discord from 'discord.js';\r\nimport { LocalStorage } from 'node-localstorage';\r\nimport winston from 'winston';\r\nimport request from 'request-promise-native';\r\nimport semver from 'semver';\r\nimport Config from './config';\r\nimport Permissions from './permissions';\r\nimport Util from './util';\r\nimport Registry from '../commands/registry';\r\nimport Dispatcher from '../commands/dispatcher';\r\nimport Module from '../commands/module';\r\nimport Setting from '../storage/models/setting';\r\nimport SettingStorage from '../storage/settings';\r\nimport ModRoleStorage from '../storage/mod-roles';\r\nimport AllowedChannelStorage from '../storage/allowed-channels';\r\n\r\nimport HelpCommand from '../commands/info/help';\r\nimport AboutCommand from '../commands/info/about';\r\nimport ListModulesCommand from '../commands/modules/list';\r\nimport ToggleModuleCommand from '../commands/modules/toggle';\r\nimport EnableModuleCommand from '../commands/modules/enable';\r\nimport DisableModuleCommand from '../commands/modules/disable';\r\nimport ListModRolesCommand from '../commands/mod-roles/list';\r\nimport AddModRoleCommand from '../commands/mod-roles/add';\r\nimport DeleteModRoleCommand from '../commands/mod-roles/delete';\r\nimport ClearModRolesCommand from '../commands/mod-roles/clear';\r\nimport ListAllowedChannelsCommand from '../commands/channels/list-allowed';\r\nimport AllowChannelCommand from '../commands/channels/allow';\r\nimport DisallowChannelCommand from '../commands/channels/disallow';\r\nimport ClearAllowedChannelsCommand from '../commands/channels/clear-allowed';\r\nimport PrefixCommand from '../commands/util/prefix';\r\nimport EvalCommand from '../commands/util/eval';\r\n\r\n/** A Discord bot that has its own command registry, storage, utilities, etc. */\r\nexport default class Bot {\r\n\t/** @param {ConfigObject} config - The configuration to use */\r\n\tconstructor(config) {\r\n\t\t/** @type {Client} */\r\n\t\tthis.client = null;\r\n\t\t/** @type {CommandDispatcher} */\r\n\t\tthis.dispatcher = null;\r\n\t\t/** @type {BotConfig} */\r\n\t\tthis.config = new Config(config);\r\n\t\t/** @type {BotPermissions} */\r\n\t\tthis.permissions = null;\r\n\t\t/** @type {BotUtil} */\r\n\t\tthis.util = null;\r\n\t\t/** @type {LocalStorage} */\r\n\t\tthis.localStorage = null;\r\n\t\t/**\r\n\t\t * @type {Object}\r\n\t\t * @property {SettingStorage} settings\r\n\t\t * @property {ModRoleStorage} modRoles\r\n\t\t * @property {AllowedChannelStorage} allowedChannels\r\n\t\t */\r\n\t\tthis.storage = {\r\n\t\t\tsettings: null,\r\n\t\t\tmodRoles: null,\r\n\t\t\tallowedChannels: null\r\n\t\t};\r\n\t\t/** @type {Object} */\r\n\t\tthis.evalObjects = {};\r\n\t}\r\n\r\n\t/**\r\n\t * Instantiates all bot classes and storages, and creates the client\r\n\t * @return {Client} The bot client\r\n\t */\r\n\tcreateClient() {\r\n\t\tif(this.client) throw new Error('Client has already been created.');\r\n\t\tconst config = this.config.values;\r\n\r\n\t\t// Verify some stuff\r\n\t\tif(!config.token && (!config.email || !config.password)) throw new Error('Invalid credentials; either \"token\" or both \"email\" and \"password\" must be specified on the config.');\r\n\t\tif(!config.name) throw new Error('\"name\" must be specified on the config.');\r\n\t\tif(!config.version) throw new Error('\"version\" must be specified on the config.');\r\n\r\n\t\t// Output safe config\r\n\t\tconst debugConfig = Object.assign({}, config);\r\n\t\tif(debugConfig.email) debugConfig.email = '--snip--';\r\n\t\tif(debugConfig.password) debugConfig.password = '--snip--';\r\n\t\tif(debugConfig.token) debugConfig.token = '--snip--';\r\n\t\tfor(const key of Object.keys(debugConfig)) if(key.length === 1 || key.includes('-')) delete debugConfig[key];\r\n\t\tthis.logger.debug('Configuration:', debugConfig);\r\n\r\n\t\t// Create client and bot classes\r\n\t\tconst clientOptions = Object.assign({}, defaultClientOptions, config.clientOptions, { autoReconnect: config.autoReconnect });\r\n\t\tconst client = new Discord.Client(clientOptions);\r\n\t\tthis.client = client;\r\n\t\tthis.localStorage = new LocalStorage(config.storage);\r\n\t\tthis.storage.settings = new SettingStorage(this.localStorage, this.logger);\r\n\t\tthis.storage.modRoles = new ModRoleStorage(this.localStorage, this.logger);\r\n\t\tthis.storage.allowedChannels = new AllowedChannelStorage(this.localStorage, this.logger);\r\n\t\tthis.dispatcher = new Dispatcher(this);\r\n\t\tthis.permissions = new Permissions(client, this.storage.modRoles, this.storage.settings, this.config);\r\n\t\tthis.util = new Util(client, this.storage.settings, this.config);\r\n\t\tthis.logger.info('Client created.', clientOptions);\r\n\r\n\t\t// Set up logging, playing game text, and update checking\r\n\t\tclient.on('error', err => { this.logger.error(err); });\r\n\t\tclient.on('warn', msg => { this.logger.warn(msg); });\r\n\t\tclient.on('debug', msg => { this.logger.debug(msg); });\r\n\t\tclient.on('disconnected', () => { this.logger.warn('Disconnected.'); });\r\n\t\tclient.on('reconnecting', () => { this.logger.warn('Reconnecting...'); });\r\n\t\tclient.on('ready', () => {\r\n\t\t\tthis.logger.info(`Bot is ready; logged in as ${client.user.username}#${client.user.discriminator} (ID: ${client.user.id})`);\r\n\t\t\tif(config.playingGame) client.user.setStatus('online', config.playingGame);\r\n\t\t\tif(config.updateURL) {\r\n\t\t\t\tthis._checkForUpdate();\r\n\t\t\t\tif(config.updateCheck > 0) setInterval(this._checkForUpdate.bind(this), config.updateCheck * 60 * 1000);\r\n\t\t\t}\r\n\t\t});\r\n\r\n\t\t// Set up command handling\r\n\t\tclient.on('message', message => {\r\n\t\t\tthis.dispatcher.handleMessage(message).catch(err => { this.logger.error(err); });\r\n\t\t});\r\n\t\tclient.on('messageUpdated', (oldMessage, newMessage) => {\r\n\t\t\tthis.dispatcher.handleMessage(newMessage, oldMessage).catch(err => { this.logger.error(err); });\r\n\t\t});\r\n\r\n\t\t// Log in\r\n\t\tconst loginErr = err => {\r\n\t\t\tthis.logger.error('Failed to login.');\r\n\t\t\tthis.logger.error(err);\r\n\t\t};\r\n\t\tif(config.token) {\r\n\t\t\tthis.logger.info('Logging in with token...');\r\n\t\t\tclient.login(config.token).catch(loginErr);\r\n\t\t} else {\r\n\t\t\tthis.logger.info('Logging in with email and password...');\r\n\t\t\tclient.login(config.email, config.password).catch(loginErr);\r\n\t\t}\r\n\r\n\t\treturn client;\r\n\t}\r\n\r\n\t/**\r\n\t * Registers a single command to the bot's registry\r\n\t * @param {Command|function} command - Either a Command instance, or a constructor for one\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterCommand(command) {\r\n\t\treturn this.registerCommands([command]);\r\n\t}\r\n\r\n\t/**\r\n\t * Registers multiple commands to the bot's registry\r\n\t * @param {Command[]|function[]} commands - An array of Command instances or constructors\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterCommands(commands) {\r\n\t\tif(!Array.isArray(commands)) throw new TypeError('Commands must be an array.');\r\n\t\tfor(let i = 0; i < commands.length; i++) if(typeof commands[i] === 'function') commands[i] = new commands[i](this);\r\n\t\tthis.registry.registerCommands(commands);\r\n\t\treturn this;\r\n\t}\r\n\r\n\t/**\r\n\t * Registers a single module to the bot's registry\r\n\t * @param {Module|function|Array} module - A Module instance, a constructor, or an array of [ID, Name]\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterModule(module) {\r\n\t\treturn this.registerModules([module]);\r\n\t}\r\n\r\n\t/**\r\n\t * Registers multiple modules to the bot's registry\r\n\t * @param {Module[]|function[]|Array[]} modules - An array of Module instances, constructors, or arrays of [ID, Name]\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterModules(modules) {\r\n\t\tif(!Array.isArray(modules)) throw new TypeError('Modules must be an array.');\r\n\t\tfor(let i = 0; i < modules.length; i++) {\r\n\t\t\tif(typeof modules[i] === 'function') {\r\n\t\t\t\tmodules[i] = new modules[i](this);\r\n\t\t\t} else if(Array.isArray(modules[i])) {\r\n\t\t\t\tmodules[i] = new Module(this, ...modules[i]);\r\n\t\t\t} else if(!(modules[i] instanceof Module)) {\r\n\t\t\t\tmodules[i] = new Module(this, modules[i].id, modules[i].name, modules[i].commands);\r\n\t\t\t}\r\n\t\t}\r\n\t\tthis.registry.registerModules(modules);\r\n\t\treturn this;\r\n\t}\r\n\r\n\t/**\r\n\t * Registers both the default modules and commands to the bot's registry\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterDefaults() {\r\n\t\tthis.registerDefaultModules();\r\n\t\tthis.registerDefaultCommands();\r\n\t\treturn this;\r\n\t}\r\n\r\n\t/**\r\n\t * Registers the default modules to the bot's registry\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterDefaultModules() {\r\n\t\tthis.registerModules([\r\n\t\t\t['info', 'Information'],\r\n\t\t\t['modules', 'Modules'],\r\n\t\t\t['mod-roles', 'Moderator roles'],\r\n\t\t\t['channels', 'Channels'],\r\n\t\t\t['util', 'Utility']\r\n\t\t]);\r\n\t\treturn this;\r\n\t}\r\n\r\n\t/**\r\n\t * Registers the default commands to the bot's registry\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterDefaultCommands() {\r\n\t\tthis.registerCommands([\r\n\t\t\tHelpCommand,\r\n\t\t\tAboutCommand,\r\n\t\t\tListModulesCommand,\r\n\t\t\tToggleModuleCommand,\r\n\t\t\tEnableModuleCommand,\r\n\t\t\tDisableModuleCommand,\r\n\t\t\tListModRolesCommand,\r\n\t\t\tAddModRoleCommand,\r\n\t\t\tDeleteModRoleCommand,\r\n\t\t\tClearModRolesCommand,\r\n\t\t\tListAllowedChannelsCommand,\r\n\t\t\tAllowChannelCommand,\r\n\t\t\tDisallowChannelCommand,\r\n\t\t\tClearAllowedChannelsCommand,\r\n\t\t\tPrefixCommand,\r\n\t\t\tEvalCommand\r\n\t\t]);\r\n\t\treturn this;\r\n\t}\r\n\r\n\t/**\r\n\t * Registers a single object to be usable by the eval command\r\n\t * @param {string} key - The key for the object\r\n\t * @param {Object} obj - The object\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterEvalObject(key, obj) {\r\n\t\tconst registerObj = {};\r\n\t\tregisterObj[key] = obj;\r\n\t\treturn this.registerEvalObjects(registerObj);\r\n\t}\r\n\r\n\t/**\r\n\t * Registers multiple objects to be usable by the eval command\r\n\t * @param {Object} obj - An object of keys: values\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterEvalObjects(obj) {\r\n\t\tObject.assign(this.evalObjects, obj);\r\n\t\treturn this;\r\n\t}\r\n\r\n\t/** @type {CommandRegistry} */\r\n\tget registry() {\r\n\t\tif(!this._registry) this._registry = new Registry(this.logger);\r\n\t\treturn this._registry;\r\n\t}\r\n\r\n\t/** @type {Logger} */\r\n\tget logger() {\r\n\t\tif(!this._logger) {\r\n\t\t\tthis._logger = new winston.Logger({\r\n\t\t\t\ttransports: [\r\n\t\t\t\t\tnew winston.transports.Console({\r\n\t\t\t\t\t\tlevel: this.config.values.consoleLevel,\r\n\t\t\t\t\t\tcolorize: true,\r\n\t\t\t\t\t\ttimestamp: true,\r\n\t\t\t\t\t\thandleExceptions: true,\r\n\t\t\t\t\t\thumanReadableUnhandledException: true\r\n\t\t\t\t\t})\r\n\t\t\t\t]\r\n\t\t\t});\r\n\t\t\tif(this.config.values.log) {\r\n\t\t\t\tthis._logger.add(winston.transports.File, {\r\n\t\t\t\t\tlevel: this.config.values.logLevel,\r\n\t\t\t\t\tfilename: this.config.values.log,\r\n\t\t\t\t\tmaxsize: this.config.values.logMaxSize,\r\n\t\t\t\t\tmaxFiles: this.config.values.logMaxFiles,\r\n\t\t\t\t\ttailable: true,\r\n\t\t\t\t\tjson: false,\r\n\t\t\t\t\thandleExceptions: true,\r\n\t\t\t\t\thumanReadableUnhandledException: true\r\n\t\t\t\t});\r\n\t\t\t}\r\n\t\t}\r\n\t\treturn this._logger;\r\n\t}\r\n\r\n\t/**\r\n\t * Checks for an update for the bot\r\n\t * @return {void}\r\n\t */\r\n\t_checkForUpdate() {\r\n\t\tconst config = this.config.values;\r\n\t\trequest(config.updateURL).then(body => {\r\n\t\t\tconst masterVersion = JSON.parse(body).version;\r\n\t\t\tif(!semver.gt(masterVersion, config.version)) return;\r\n\t\t\tconst message = `An update for ${config.name} is available! Current version is ${config.version}, latest available is ${masterVersion}.`;\r\n\t\t\tthis.logger.warn(message);\r\n\t\t\tconst savedVersion = this.storage.settings.getValue(null, 'notified-version');\r\n\t\t\tif(savedVersion !== masterVersion && this.client && config.owner) {\r\n\t\t\t\tthis.client.users.get(config.owner).sendMessage(message);\r\n\t\t\t\tthis.storage.settings.save(new Setting(null, 'notified-version', masterVersion));\r\n\t\t\t}\r\n\t\t}).catch(err => {\r\n\t\t\tthis.logger.error(err);\r\n\t\t});\r\n\t}\r\n}\r\n\r\nconst defaultClientOptions = {\r\n\tforceFetchUsers: true,\r\n\tbot: true\r\n};\r\n"
   },
   {
     "__docId__": 16,
@@ -595,7 +595,7 @@
     "importPath": "discord-graf/src/bot/index.js",
     "importStyle": "Bot",
     "description": "A Discord bot that has its own command registry, storage, utilities, etc.",
-    "lineNumber": 39,
+    "lineNumber": 38,
     "interface": false
   },
   {
@@ -608,7 +608,7 @@
     "longname": "src/bot/index.js~Bot#constructor",
     "access": null,
     "description": null,
-    "lineNumber": 41,
+    "lineNumber": 40,
     "params": [
       {
         "nullable": null,
@@ -633,7 +633,7 @@
     "longname": "src/bot/index.js~Bot#client",
     "access": null,
     "description": null,
-    "lineNumber": 43,
+    "lineNumber": 42,
     "type": {
       "nullable": null,
       "types": [
@@ -653,7 +653,7 @@
     "longname": "src/bot/index.js~Bot#dispatcher",
     "access": null,
     "description": null,
-    "lineNumber": 45,
+    "lineNumber": 44,
     "type": {
       "nullable": null,
       "types": [
@@ -673,7 +673,7 @@
     "longname": "src/bot/index.js~Bot#config",
     "access": null,
     "description": null,
-    "lineNumber": 47,
+    "lineNumber": 46,
     "type": {
       "nullable": null,
       "types": [
@@ -693,7 +693,7 @@
     "longname": "src/bot/index.js~Bot#permissions",
     "access": null,
     "description": null,
-    "lineNumber": 49,
+    "lineNumber": 48,
     "type": {
       "nullable": null,
       "types": [
@@ -713,7 +713,7 @@
     "longname": "src/bot/index.js~Bot#util",
     "access": null,
     "description": null,
-    "lineNumber": 51,
+    "lineNumber": 50,
     "type": {
       "nullable": null,
       "types": [
@@ -733,7 +733,7 @@
     "longname": "src/bot/index.js~Bot#localStorage",
     "access": null,
     "description": null,
-    "lineNumber": 53,
+    "lineNumber": 52,
     "type": {
       "nullable": null,
       "types": [
@@ -753,7 +753,7 @@
     "longname": "src/bot/index.js~Bot#storage",
     "access": null,
     "description": "",
-    "lineNumber": 60,
+    "lineNumber": 59,
     "properties": [
       {
         "nullable": null,
@@ -805,7 +805,7 @@
     "longname": "src/bot/index.js~Bot#evalObjects",
     "access": null,
     "description": null,
-    "lineNumber": 66,
+    "lineNumber": 65,
     "type": {
       "nullable": null,
       "types": [
@@ -825,7 +825,7 @@
     "longname": "src/bot/index.js~Bot#createClient",
     "access": null,
     "description": "Instantiates all bot classes and storages, and creates the client",
-    "lineNumber": 73,
+    "lineNumber": 72,
     "params": [],
     "return": {
       "nullable": null,
@@ -847,7 +847,7 @@
     "longname": "src/bot/index.js~Bot#client",
     "access": null,
     "description": null,
-    "lineNumber": 93,
+    "lineNumber": 92,
     "undocument": true,
     "type": {
       "types": [
@@ -865,7 +865,7 @@
     "longname": "src/bot/index.js~Bot#localStorage",
     "access": null,
     "description": null,
-    "lineNumber": 94,
+    "lineNumber": 93,
     "undocument": true,
     "type": {
       "types": [
@@ -883,7 +883,7 @@
     "longname": "src/bot/index.js~Bot#dispatcher",
     "access": null,
     "description": null,
-    "lineNumber": 98,
+    "lineNumber": 97,
     "undocument": true,
     "type": {
       "types": [
@@ -901,7 +901,7 @@
     "longname": "src/bot/index.js~Bot#permissions",
     "access": null,
     "description": null,
-    "lineNumber": 99,
+    "lineNumber": 98,
     "undocument": true,
     "type": {
       "types": [
@@ -919,7 +919,7 @@
     "longname": "src/bot/index.js~Bot#util",
     "access": null,
     "description": null,
-    "lineNumber": 100,
+    "lineNumber": 99,
     "undocument": true,
     "type": {
       "types": [
@@ -937,7 +937,7 @@
     "longname": "src/bot/index.js~Bot#registerCommand",
     "access": null,
     "description": "Registers a single command to the bot's registry",
-    "lineNumber": 147,
+    "lineNumber": 146,
     "params": [
       {
         "nullable": null,
@@ -971,7 +971,7 @@
     "longname": "src/bot/index.js~Bot#registerCommands",
     "access": null,
     "description": "Registers multiple commands to the bot's registry",
-    "lineNumber": 156,
+    "lineNumber": 155,
     "params": [
       {
         "nullable": null,
@@ -1005,7 +1005,7 @@
     "longname": "src/bot/index.js~Bot#registerModule",
     "access": null,
     "description": "Registers a single module to the bot's registry",
-    "lineNumber": 168,
+    "lineNumber": 167,
     "params": [
       {
         "nullable": null,
@@ -1040,7 +1040,7 @@
     "longname": "src/bot/index.js~Bot#registerModules",
     "access": null,
     "description": "Registers multiple modules to the bot's registry",
-    "lineNumber": 177,
+    "lineNumber": 176,
     "params": [
       {
         "nullable": null,
@@ -1075,7 +1075,7 @@
     "longname": "src/bot/index.js~Bot#registerDefaults",
     "access": null,
     "description": "Registers both the default modules and commands to the bot's registry",
-    "lineNumber": 196,
+    "lineNumber": 195,
     "params": [],
     "return": {
       "nullable": null,
@@ -1097,7 +1097,7 @@
     "longname": "src/bot/index.js~Bot#registerDefaultModules",
     "access": null,
     "description": "Registers the default modules to the bot's registry",
-    "lineNumber": 206,
+    "lineNumber": 205,
     "params": [],
     "return": {
       "nullable": null,
@@ -1119,7 +1119,7 @@
     "longname": "src/bot/index.js~Bot#registerDefaultCommands",
     "access": null,
     "description": "Registers the default commands to the bot's registry",
-    "lineNumber": 221,
+    "lineNumber": 220,
     "params": [],
     "return": {
       "nullable": null,
@@ -1141,7 +1141,7 @@
     "longname": "src/bot/index.js~Bot#registerEvalObject",
     "access": null,
     "description": "Registers a single object to be usable by the eval command",
-    "lineNumber": 249,
+    "lineNumber": 248,
     "params": [
       {
         "nullable": null,
@@ -1184,7 +1184,7 @@
     "longname": "src/bot/index.js~Bot#registerEvalObjects",
     "access": null,
     "description": "Registers multiple objects to be usable by the eval command",
-    "lineNumber": 260,
+    "lineNumber": 259,
     "params": [
       {
         "nullable": null,
@@ -1217,7 +1217,7 @@
     "longname": "src/bot/index.js~Bot#registry",
     "access": null,
     "description": null,
-    "lineNumber": 266,
+    "lineNumber": 265,
     "type": {
       "nullable": null,
       "types": [
@@ -1238,7 +1238,7 @@
     "longname": "src/bot/index.js~Bot#_registry",
     "access": null,
     "description": null,
-    "lineNumber": 267,
+    "lineNumber": 266,
     "undocument": true,
     "type": {
       "types": [
@@ -1256,7 +1256,7 @@
     "longname": "src/bot/index.js~Bot#logger",
     "access": null,
     "description": null,
-    "lineNumber": 272,
+    "lineNumber": 271,
     "type": {
       "nullable": null,
       "types": [
@@ -1277,7 +1277,7 @@
     "longname": "src/bot/index.js~Bot#_logger",
     "access": null,
     "description": null,
-    "lineNumber": 274,
+    "lineNumber": 273,
     "undocument": true,
     "type": {
       "types": [
@@ -1295,7 +1295,7 @@
     "longname": "src/bot/index.js~Bot#_checkForUpdate",
     "access": null,
     "description": "Checks for an update for the bot",
-    "lineNumber": 305,
+    "lineNumber": 304,
     "params": [],
     "return": {
       "nullable": null,
@@ -1320,7 +1320,7 @@
     "importPath": "discord-graf/src/bot/index.js",
     "importStyle": null,
     "description": null,
-    "lineNumber": 323,
+    "lineNumber": 322,
     "undocument": true,
     "type": {
       "types": [
