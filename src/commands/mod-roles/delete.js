@@ -1,7 +1,7 @@
 'use babel';
 'use strict';
 
-import { stripIndents, oneLine } from 'common-tags';
+import { stripIndents } from 'common-tags';
 import Command from '../command';
 import CommandFormatError from '../../errors/command-format';
 
@@ -13,9 +13,9 @@ export default class DeleteModRoleCommand extends Command {
 			module: 'mod-roles',
 			memberName: 'delete',
 			description: 'Deletes a moderator role.',
-			usage: 'deletemodrole <role>',
+			usage: 'delete-mod-role <role>',
 			details: 'The role must be the name or ID of a role, or a role mention. Only administrators may use this command.',
-			examples: ['deletemodrole cool', 'deletemodrole 205536402341888001', 'deletemodrole @CoolPeopleRole'],
+			examples: ['delete-mod-role cool', 'delete-mod-role 205536402341888001', 'delete-mod-role @CoolPeopleRole'],
 			guildOnly: true
 		});
 	}
@@ -44,11 +44,7 @@ export default class DeleteModRoleCommand extends Command {
 		} else if(roles.length > 1) {
 			return this.bot.util.disambiguation(roles, 'roles');
 		} else {
-			return oneLine`
-				Unable to identify role.
-				Use ${this.bot.util.usage('modroles', message.guild)} to view the moderator roles,
-				and ${this.bot.util.usage('roles', message.guild)} to view all of the guild roles.
-			`;
+			return `Unable to identify role. Use ${this.bot.util.usage('mod-roles', message.guild)} to view the moderator roles.`;
 		}
 	}
 }

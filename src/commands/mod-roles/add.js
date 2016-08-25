@@ -11,9 +11,9 @@ export default class AddModRoleCommand extends Command {
 			module: 'mod-roles',
 			memberName: 'add',
 			description: 'Adds a moderator role.',
-			usage: 'addmodrole <role>',
+			usage: 'add-mod-role <role>',
 			details: 'The role must be the name or ID of a role, or a role mention. Only administrators may use this command.',
-			examples: ['addmodrole cool', 'addmodrole 205536402341888001', 'addmodrole @CoolPeopleRole'],
+			examples: ['add-mod-role cool', 'add-mod-role 205536402341888001', 'add-mod-role @CoolPeopleRole'],
 			guildOnly: true
 		});
 	}
@@ -37,7 +37,7 @@ export default class AddModRoleCommand extends Command {
 		} else if(roles.length > 1) {
 			return this.bot.util.disambiguation(roles, 'roles');
 		} else {
-			return `Unable to identify role. Use ${this.bot.util.usage('roles', message.guild)} to view all of the guild roles.`;
+			return `Unable to identify role.`;
 		}
 	}
 }

@@ -13,13 +13,13 @@ export default class EnableModuleCommand extends Command {
 			module: 'modules',
 			memberName: 'enable',
 			description: 'Enables a module or command.',
-			usage: 'enablemodule <module|command>',
+			usage: 'enable-module <module|command>',
 			details: oneLine`
 				The module must be the name (partial or whole) or ID of a module.
 				A command name may also be provided instead of a module in order to enable a single command.
 				Only administrators may use this command.
 			`,
-			examples: ['enablemodule mod-roles', 'enablemodule Moderator roles', 'enablemodule prefix'],
+			examples: ['enable-module mod-roles', 'enable-module Moderator roles', 'enable-module prefix'],
 			guildOnly: true
 		});
 	}

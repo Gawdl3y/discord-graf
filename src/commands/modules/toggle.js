@@ -13,13 +13,13 @@ export default class ToggleModuleCommand extends Command {
 			module: 'modules',
 			memberName: 'toggle',
 			description: 'Toggles a module or command.',
-			usage: 'togglemodule <module|command>',
+			usage: 'toggle-module <module|command>',
 			details: oneLine`
 				The module must be the name (partial or whole) or ID of a module.
 				A command name may also be provided instead of a module in order to toggle a single command.
 				Only administrators may use this command.
 			`,
-			examples: ['togglemodule mod-roles', 'togglemodule Moderator roles', 'togglemodule prefix'],
+			examples: ['toggle-module mod-roles', 'toggle-module Moderator roles', 'toggle-module prefix'],
 			guildOnly: true
 		});
 	}

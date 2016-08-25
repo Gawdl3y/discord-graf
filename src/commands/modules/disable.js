@@ -13,13 +13,13 @@ export default class DisableModuleCommand extends Command {
 			module: 'modules',
 			memberName: 'disable',
 			description: 'Disables a module or command.',
-			usage: 'disablemodule <module|command>',
+			usage: 'disable-module <module|command>',
 			details: oneLine`
 				The module must be the name (partial or whole) or ID of a module.
 				A command name may also be provided instead of a module in order to disable a single command.
 				Only administrators may use this command.
 			`,
-			examples: ['disablemodule mod-roles', 'disablemodule Moderator roles', 'disablemodule prefix'],
+			examples: ['disable-module mod-roles', 'disable-module Moderator roles', 'disable-module prefix'],
 			guildOnly: true
 		});
 	}

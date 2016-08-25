@@ -13,9 +13,9 @@ export default class DisallowChannelCommand extends Command {
 			module: 'channels',
 			memberName: 'disallow',
 			description: 'Disallows command operation in a channel.',
-			usage: 'disallowchannel <channel>',
+			usage: 'disallow-channel <channel>',
 			details: 'The channel must be the name or ID of a channel, or a channel mention. Only administrators may use command.',
-			examples: ['disallowchannel #CoolChannel', 'disallowchannel cool', 'disallowchannel 205536402341888001'],
+			examples: ['disallow-channel #CoolChannel', 'disallow-channel cool', 'disallow-channel 205536402341888001'],
 			guildOnly: true
 		});
 	}
@@ -43,7 +43,7 @@ export default class DisallowChannelCommand extends Command {
 			} else if(channels.length > 1) {
 				return this.bot.util.disambiguation(channels, 'channels');
 			} else {
-				return `Unable to identify channel. Use ${this.bot.util.usage('allowedchannels', message.guild)} to view the allowed channels.`;
+				return `Unable to identify channel. Use ${this.bot.util.usage('allowed-channels', message.guild)} to view the allowed channels.`;
 			}
 		} else {
 			const guildChannels = message.guild.channels.getAll('type', 'text');
@@ -59,7 +59,7 @@ export default class DisallowChannelCommand extends Command {
 			} else if(channels.length > 1) {
 				return this.bot.util.disambiguation(channels, 'channels');
 			} else {
-				return `Unable to identify channel. Use ${this.bot.util.usage('allowedchannels', message.guild)} to view the allowed channels.`;
+				return `Unable to identify channel. Use ${this.bot.util.usage('allowed-channels', message.guild)} to view the allowed channels.`;
 			}
 		}
 	}

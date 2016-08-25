@@ -30,7 +30,7 @@ export default class ClearAllowedChannelsCommand extends Command {
 			clearTimeout(this.timeout);
 			this.lastUser = null;
 			this.timeout = null;
-			return 'Cleared the guild\'s allowed channels. Operation is now allowed in all channels.';
+			return 'Cleared the server\'s allowed channels. Operation is now allowed in all channels.';
 		} else {
 			if(this.timeout) {
 				clearTimeout(this.timeout);
@@ -41,7 +41,7 @@ export default class ClearAllowedChannelsCommand extends Command {
 			return oneLine`
 				Are you sure you want to clear all of the allowed channels?
 				Operation will be permitted in all channels.
-				Use ${this.bot.util.usage('clearallowedchannels confirm', message.guild)} to continue.
+				Use ${this.bot.util.usage('clear-allowed-channels confirm', message.guild)} to continue.
 			`;
 		}
 	}

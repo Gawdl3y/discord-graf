@@ -12,8 +12,9 @@ export default class AllowChannelCommand extends Command {
 			module: 'channels',
 			memberName: 'allow',
 			description: 'Allows command operation in a channel.',
-			usage: 'allowchannel <channel>',
+			usage: 'allow-channel <channel>',
 			details: 'The channel must be the name or ID of a channel, or a channel mention. Only administrators may use this command.',
+			examples: ['allow-channel #CoolChannel', 'allow-channel cool', 'allow-channel 205536402341888001'],
 			guildOnly: true
 		});
 	}
