@@ -28,7 +28,7 @@ export default class CommandDispatcher extends EventEmitter {
 	 * @return {Promise} Nothing
 	 */
 	async handleMessage(message, oldMessage = null) {
-		if(message.author.equals(this.bot.client.user)) return;
+		if(message.author.id === this.bot.client.user.id) return;
 
 		// Make sure the bot is allowed to run in the channel, or the user is an admin
 		if(message.guild
