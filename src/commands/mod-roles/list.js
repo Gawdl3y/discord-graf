@@ -26,7 +26,7 @@ export default class ListModRolesCommand extends Command {
 		if(roles.length > 0) {
 			return stripIndents`
 				__**Moderator roles**__
-				${roles.map(role => `**-** ${role ? `${role.name} (ID: ${role.id})` : 'Unknown'}`).join('\n')}
+				${roles.map(role => `**-** ${role.name} (ID: ${role.id})`).join('\n')}
 			`;
 		} else {
 			return 'There are no moderator roles, therefore moderators are determined by the "Manage messages" permission.';
