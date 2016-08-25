@@ -127,7 +127,7 @@ export default class CommandDispatcher extends EventEmitter {
 				return {
 					reply: [stripIndents`
 						An error occurred while running the command: \`${err.name}: ${err.message}\`
-						${owner ? `Please contact ${owner.name}#${owner.discriminator}${this.bot.config.values.invite ? ` in this server: ${this.bot.config.values.invite}` : '.'}` : ''}
+						${owner ? `Please contact ${owner.username}#${owner.discriminator}${this.bot.config.values.invite ? ` in this server: ${this.bot.config.values.invite}` : '.'}` : ''}
 					`],
 					editable: true
 				};
