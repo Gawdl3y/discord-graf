@@ -47,7 +47,7 @@ export default class ModRoleStorage extends GuildStorage {
 		if(!this.guildsMap[guild.id]) return [];
 
 		// Find all of the guild's roles that match, and filter them to ones that are mod roles
-		const roles = Util.search(guild.roles, searchString, { searchExact: false }).filter(role => this.guildsMap[guild.id].includes(role.id));
+		const roles = Util.search(guild.roles.array(), searchString, { searchExact: false }).filter(role => this.guildsMap[guild.id].includes(role.id));
 		return Util.search(roles, searchString, { searchInexact: false });
 	}
 }

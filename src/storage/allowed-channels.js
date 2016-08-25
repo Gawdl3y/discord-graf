@@ -47,7 +47,7 @@ export default class AllowedChannelStorage extends GuildStorage {
 		if(!this.guildsMap[guild.id]) return [];
 
 		// Find all of the guild's channels that match, and filter them to ones that are usable channels
-		const channels = Util.search(guild.channels.getAll('type', 'text'), searchString, { searchExact: false }).filter(channel => this.guildsMap[guild.id].includes(channel.id));
+		const channels = Util.search(guild.channels.findAll('type', 'text'), searchString, { searchExact: false }).filter(channel => this.guildsMap[guild.id].includes(channel.id));
 		return Util.search(channels, searchString, { searchInexact: false });
 	}
 }

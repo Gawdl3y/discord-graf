@@ -46,7 +46,7 @@ export default class DisallowChannelCommand extends Command {
 				return `Unable to identify channel. Use ${this.bot.util.usage('allowed-channels', message.guild)} to view the allowed channels.`;
 			}
 		} else {
-			const guildChannels = message.guild.channels.getAll('type', 'text');
+			const guildChannels = message.guild.channels.findAll('type', 'text');
 			const channels = idChannel ? [idChannel] : this.bot.util.search(guildChannels, args[0]);
 			if(channels.length === 1) {
 				const index = guildChannels.indexOf(channels[0]);
