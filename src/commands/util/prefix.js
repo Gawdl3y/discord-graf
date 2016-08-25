@@ -35,7 +35,7 @@ export default class PrefixCommand extends Command {
 			const prefix = lowercase === 'none' ? '' : args[0];
 			let response;
 			if(lowercase === 'default') {
-				storage.delete('command-prefix', message.guild);
+				storage.delete(message.guild, 'command-prefix');
 				response = `Reset the command prefix to the default (currently \`${config.commandPrefix}\`).`;
 			} else {
 				storage.save(new Setting(message.guild, 'command-prefix', prefix));
