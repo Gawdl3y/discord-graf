@@ -186,7 +186,7 @@ export default class Bot {
 		client.on(&apos;reconnecting&apos;, () =&gt; { this.logger.warn(&apos;Reconnecting...&apos;); });
 		client.on(&apos;ready&apos;, () =&gt; {
 			this.logger.info(`Bot is ready; logged in as ${client.user.username}#${client.user.discriminator} (ID: ${client.user.id})`);
-			if(config.playingGame) client.user.setStatus(&apos;online&apos;, config.playingGame);
+			if(config.playingGame) client.user.setStatus(null, config.playingGame);
 			if(config.updateURL) {
 				this._checkForUpdate();
 				if(config.updateCheck &gt; 0) setInterval(this._checkForUpdate.bind(this), config.updateCheck * 60 * 1000);

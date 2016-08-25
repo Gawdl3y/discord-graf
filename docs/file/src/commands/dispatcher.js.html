@@ -206,7 +206,7 @@ export default class CommandDispatcher extends EventEmitter {
 				return {
 					reply: [stripIndents`
 						An error occurred while running the command: \`${err.name}: ${err.message}\`
-						${owner ? `Please contact ${owner.name}#${owner.discriminator}${this.bot.config.values.invite ? ` in this server: ${this.bot.config.values.invite}` : &apos;.&apos;}` : &apos;&apos;}
+						${owner ? `Please contact ${owner.username}#${owner.discriminator}${this.bot.config.values.invite ? ` in this server: ${this.bot.config.values.invite}` : &apos;.&apos;}` : &apos;&apos;}
 					`],
 					editable: true
 				};
@@ -313,7 +313,7 @@ export default class CommandDispatcher extends EventEmitter {
 		const patternIndex = message.guild ? message.guild.id : &apos;-&apos;;
 		if(!this._guildCommandPatterns[patternIndex]) this._guildCommandPatterns[patternIndex] = this._buildCommandPattern(message.guild, message.client.user);
 		let [command, args, isCommandMessage] = this._matchDefault(message, this._guildCommandPatterns[patternIndex], 2);
-		if(!command &amp;&amp; !message.guild) [command, args, isCommandMessage] = this._matchDefault(message, unprefixedCommandPattern);
+		if(!command &amp;&amp; !message.guild) [command, args, isCommandMessage] = this._matchDefault(message, /^([^\s]+)/i);
 		if(command) return [command, args, false, true];
 
 		return [null, null, false, isCommandMessage];
@@ -403,8 +403,6 @@ export default class CommandDispatcher extends EventEmitter {
 		return pattern;
 	}
 }
-
-const unprefixedCommandPattern = /^([^\s]+)/i;
 
 /**
  * @typedef {Object} CommandResult
