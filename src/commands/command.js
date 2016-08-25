@@ -180,7 +180,7 @@ export default class Command {
 	 * @see {@link Command#isEnabled}
 	 */
 	static isEnabled(settings, guild, command) {
-		return settings.getValue(guild, `cmd-${command.name || command}`, true);
+		return (!command.module || settings.getValue(guild, `mod-${command.module}`, true)) && settings.getValue(guild, `cmd-${command.name || command}`, true);
 	}
 
 	/**
