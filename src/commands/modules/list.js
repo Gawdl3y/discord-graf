@@ -8,7 +8,7 @@ export default class ListModulesCommand extends Command {
 	constructor(bot) {
 		super(bot, {
 			name: 'modules',
-			aliases: ['list-modules', 'show-modules'],
+			aliases: ['list-modules', 'show-modules', 'mods'],
 			module: 'modules',
 			memberName: 'list',
 			description: 'Lists all modules.',
