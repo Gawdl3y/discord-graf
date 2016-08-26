@@ -21,7 +21,7 @@ export default class ListAllowedChannelsCommand extends Command {
 		if(channels.length > 0) {
 			return stripIndents`
 				__**Allowed channels**__
-				${channels.map(channel => `**-** <#${channel.id}>`).join('\n')}
+				${channels.map(channel => `**-** ${channel}`).join('\n')}
 			`;
 		} else {
 			return 'There are no channels specifically allowed, therefore operation is allowed in any channel.';
