@@ -130,10 +130,11 @@ export default class BotPermissions {
 	static isMod(client, modRoles, settings, config, guild, user) {
 		[guild, user] = this.resolve(client, guild, user);
 		if(user.id === config.values.owner) return true;
-		const userRoles = guild.rolesOfUser(user);
-		if(userRoles.some(role =&gt; role.hasPermission(&apos;administrator&apos;))) return true;
-		if(!Module.isEnabled(settings, guild, &apos;mod-roles&apos;) || modRoles.isEmpty(guild)) return userRoles.some(role =&gt; role.hasPermission(&apos;manageMessages&apos;));
-		return modRoles.find(guild).some(role =&gt; userRoles.some(role2 =&gt; role.id === role2.id));
+		const member = guild.member(user);
+		if(!member) return false;
+		if(member.roles.some(role =&gt; role.hasPermission(&apos;administrator&apos;))) return true;
+		if(!Module.isEnabled(settings, guild, &apos;mod-roles&apos;) || modRoles.isEmpty(guild)) return member.roles.some(role =&gt; role.hasPermission(&apos;manageMessages&apos;));
+		return modRoles.find(guild).some(role =&gt; member.roles.some(role2 =&gt; role.id === role2.id));
 	}
 
 	/**
@@ -159,7 +160,9 @@ export default class BotPermissions {
 	static isAdmin(client, config, guild, user) {
 		[guild, user] = this.resolve(client, guild, user);
 		if(user.id === config.values.owner) return true;
-		return guild.rolesOfUser(user).some(role =&gt; role.hasPermission(&apos;administrator&apos;));
+		const member = guild.member(user);
+		if(!member) return false;
+		return member.roles.some(role =&gt; role.hasPermission(&apos;administrator&apos;));
 	}
 
 	/**
