@@ -150,7 +150,7 @@ export default class CommandDispatcher extends EventEmitter {
 	 * Sends messages for a command result
 	 * @param {Message} message - The message the result is for
 	 * @param {CommandResult} result - The command result
-	 * @return {Promise} Nothing
+	 * @return {Promise<void>} Nothing
 	 */
 	async sendMessagesForResult(message, result) {
 		const messages = await Promise.all([
@@ -185,7 +185,7 @@ export default class CommandDispatcher extends EventEmitter {
 	 * @param {Message} message - The message the result is for
 	 * @param {CommandResult} result - The command result
 	 * @param {CommandResult} oldResult - The old command result
-	 * @return {Promise} Nothing
+	 * @return {Promise<void>} Nothing
 	 */
 	async updateMessagesForResult(message, result, oldResult) {
 		// Update the messages

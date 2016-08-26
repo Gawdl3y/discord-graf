@@ -159,7 +159,7 @@ export default class Bot {
 
 	/**
 	 * Registers a single module to the bot's registry
-	 * @param {Module|function|Array} module - A Module instance, a constructor, or an array of [ID, Name]
+	 * @param {Module|function|string[]} module - A Module instance, a constructor, or an array of [ID, Name]
 	 * @return {Bot} This bot
 	 * @see {@link Bot#registerModules}
 	 */
