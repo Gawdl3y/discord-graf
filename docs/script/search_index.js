@@ -1056,6 +1056,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "src/commands/dispatcher.js~commanddispatcher#handlemessageresult",
+    "class/src/commands/dispatcher.js~CommandDispatcher.html#instance-method-handleMessageResult",
+    "src/commands/dispatcher.js~CommandDispatcher#handleMessageResult",
+    "method"
+  ],
+  [
     "src/commands/dispatcher.js~commanddispatcher#run",
     "class/src/commands/dispatcher.js~CommandDispatcher.html#instance-method-run",
     "src/commands/dispatcher.js~CommandDispatcher#run",

@@ -104,10 +104,10 @@ export default class CommandDispatcher extends EventEmitter {
 	 * Handle a new message or a message update
 	 * @param {Message} message - The message to handle
 	 * @param {Message} [oldMessage] - The old message before the update
-	 * @return {Promise} Nothing
+	 * @return {Promise&lt;void&gt;} Nothing
 	 */
 	async handleMessage(message, oldMessage = null) {
-		if(message.author.equals(this.bot.client.user)) return;
+		if(message.author.id === this.bot.client.user.id || message.author.bot) return;
 
 		// Make sure the bot is allowed to run in the channel, or the user is an admin
 		if(message.guild
@@ -131,6 +131,17 @@ export default class CommandDispatcher extends EventEmitter {
 			result = { editable: true };
 		}
 
+		this.handleMessageResult(message, result, oldResult);
+	}
+
+	/**
+	 * Handle a message result
+	 * @param {Message} message - The message the result is from
+	 * @param {?CommandResult} result - The result
+	 * @param {CommandResult} [oldResult] - The old result
+	 * @return {Promise&lt;void&gt;} Nothing
+	 */
+	async handleMessageResult(message, result, oldResult = null) {
 		if(result) {
 			// Change a plain or reply response into direct if there isn&apos;t a guild
 			if(!message.guild) {
@@ -218,7 +229,7 @@ export default class CommandDispatcher extends EventEmitter {
 	 * Sends messages for a command result
 	 * @param {Message} message - The message the result is for
 	 * @param {CommandResult} result - The command result
-	 * @return {Promise} Nothing
+	 * @return {Promise&lt;void&gt;} Nothing
 	 */
 	async sendMessagesForResult(message, result) {
 		const messages = await Promise.all([
@@ -253,7 +264,7 @@ export default class CommandDispatcher extends EventEmitter {
 	 * @param {Message} message - The message the result is for
 	 * @param {CommandResult} result - The command result
 	 * @param {CommandResult} oldResult - The old command result
-	 * @return {Promise} Nothing
+	 * @return {Promise&lt;void&gt;} Nothing
 	 */
 	async updateMessagesForResult(message, result, oldResult) {
 		// Update the messages
