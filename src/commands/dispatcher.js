@@ -138,7 +138,7 @@ export default class CommandDispatcher extends EventEmitter {
 				return {
 					reply: [stripIndents`
 						An error occurred while running the command: \`${err.name}: ${err.message}\`
-						You should not ever receive an error like this.
+						You shouldn't ever receive an error like this.
 						${owner ? `Please contact ${owner.username}#${owner.discriminator}${this.bot.config.values.invite ? ` in this server: ${this.bot.config.values.invite}` : '.'}` : ''}
 					`],
 					editable: true
