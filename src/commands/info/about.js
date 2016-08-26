@@ -28,7 +28,7 @@ export default class AboutCommand extends Command {
 			direct: stripIndents`
 				${config.about || ''}
 
-				This bot ${owner ? `is owned by ${owner.name}#${owner.discriminator}, and ` : ''}is serving ${users} ${usersLabel} across ${guilds} ${guildsLabel}.
+				This bot ${owner ? `is owned by ${owner.username}#${owner.discriminator}, and ` : ''}is serving ${users} ${usersLabel} across ${guilds} ${guildsLabel}.
 				It has been running without interruption for ${days > 0 ? `${daysStr} ` : ''}${hours > 0 ? `${hoursStr} ` : ''}${minutesStr}.
 				${config.invite ? `For bot feedback/help, use this invite: ${config.invite}` : ''}
 
