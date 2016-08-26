@@ -25,10 +25,10 @@ export default class CommandDispatcher extends EventEmitter {
 	 * Handle a new message or a message update
 	 * @param {Message} message - The message to handle
 	 * @param {Message} [oldMessage] - The old message before the update
-	 * @return {Promise} Nothing
+	 * @return {Promise<void>} Nothing
 	 */
 	async handleMessage(message, oldMessage = null) {
-		if(message.author.id === this.bot.client.user.id) return;
+		if(message.author.id === this.bot.client.user.id || message.author.bot) return;
 
 		// Make sure the bot is allowed to run in the channel, or the user is an admin
 		if(message.guild
@@ -52,6 +52,17 @@ export default class CommandDispatcher extends EventEmitter {
 			result = { editable: true };
 		}
 
+		this.handleMessageResult(message, result, oldResult);
+	}
+
+	/**
+	 * Handle a message result
+	 * @param {Message} message - The message the result is from
+	 * @param {?CommandResult} result - The result
+	 * @param {CommandResult} [oldResult] - The old result
+	 * @return {Promise<void>} Nothing
+	 */
+	async handleMessageResult(message, result, oldResult = null) {
 		if(result) {
 			// Change a plain or reply response into direct if there isn't a guild
 			if(!message.guild) {
