@@ -35,6 +35,7 @@ export default class EvalCommand extends Command {
 	async run(message, args) {
 		if(!args[0]) throw new CommandFormatError(this, message.guild);
 
+		// Make a bunch of helpers
 		/* eslint-disable no-unused-vars */
 		const msg = message;
 		const bot = this.bot;
@@ -44,9 +45,10 @@ export default class EvalCommand extends Command {
 			if(val instanceof Error) {
 				message.reply(`Callback error: \`${val}\``);
 			} else {
+				const hrDiff = process.hrtime(this.hrStart);
 				const inspected = util.inspect(val, { depth: 0 });
 				message.reply(tags.stripIndents`
-					Callback result:
+					${hrDiff ? `*Callback executed after ${hrDiff[0] > 0 ? `${hrDiff[0]}s ` : ''}${hrDiff[1] / 1000000}ms.*` : '*Callback*'}
 					\`\`\`javascript
 					${inspected.length < 1925 ? inspected : val}
 					\`\`\`
@@ -55,12 +57,17 @@ export default class EvalCommand extends Command {
 		};
 		/* eslint-enable no-unused-vars */
 
+		// Run the code and measure its execution time
+		let hrDiff;
 		try {
+			const hrStart = process.hrtime();
 			this.lastResult = eval(args[0]);
+			hrDiff = process.hrtime(hrStart);
 		} catch(err) {
 			return `Error while evaluating: \`${err}\``;
 		}
 
+		// Inspect the return value, split it, and format each part properly
 		const inspected = util.inspect(this.lastResult, { depth: 0 }).replace(nlPattern, '\n');
 		const split = inspected.split('\n');
 		const last = inspected.length - 1;
@@ -68,11 +75,16 @@ export default class EvalCommand extends Command {
 		const appendPart = inspected[last] !== '}' && inspected[last] !== ']' && inspected[last] !== "'" ? split[split.length - 1] : inspected[last];
 		const prepend = `\`\`\`javascript\n${prependPart}\n`;
 		const append = `\n${appendPart}\n\`\`\``;
-		return this.bot.util.split(tags.stripIndents`
-			Result:
+		const response = this.bot.util.split(tags.stripIndents`
+			*Executed in ${hrDiff[0] > 0 ? `${hrDiff[0]}s ` : ''}${hrDiff[1] / 1000000}ms.*
 			\`\`\`javascript
 			${inspected}
 			\`\`\`
 		`, 1900, '\n', prepend, append);
+
+		// Prepare for callback execution time
+		this.hrStart = process.hrtime();
+
+		return response;
 	}
 }
