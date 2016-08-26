@@ -117,11 +117,11 @@ export default class Bot {
 		// Set up command handling
 		const messageErr = err => { this.logger.error('Error while handling message. This may be an issue with GRAF.', err); };
 		client.on('message', message => {
-			if(config.logMessages) this.logger.message(`[${message.guild.name}][${message.channel.name}] ${message.author.username}#${message.author.discriminator}: ${message.content}`);
+			if(config.logMessages) this._logMessage(message);
 			this.dispatcher.handleMessage(message).catch(messageErr);
 		});
 		client.on('messageUpdate', (oldMessage, newMessage) => {
-			if(config.logMessages) this.logger.message(`[${newMessage.guild.name}][${newMessage.channel.name}] ${newMessage.author.username}#${newMessage.author.discriminator} EDIT: ${newMessage.content}`);
+			if(config.logMessages) this._logMessage(newMessage, true);
 			this.dispatcher.handleMessage(newMessage, oldMessage).catch(messageErr);
 		});
 
@@ -338,6 +338,17 @@ export default class Bot {
 		}).catch(err => {
 			this.logger.error(err);
 		});
+	}
+
+	/**
+	 * Logs a message
+	 * @param {Message} message - The message
+	 * @param {boolean} [edited=false] - Whether or not the message is from an edit
+	 * @return {void}
+	 */
+	_logMessage(message, edited = false) {
+		const prefix = `[${message.guild.name}][${message.channel.name}]`;
+		this.logger.message(`${prefix} ${message.author.username}#${message.author.discriminator}${edited ? ' EDIT' : ''}: ${message.content}`);
 	}
 }
 
