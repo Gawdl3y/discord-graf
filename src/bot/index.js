@@ -116,8 +116,14 @@ export default class Bot {
 
 		// Set up command handling
 		const messageErr = err => { this.logger.error('Error while handling message. This may be an issue with GRAF.', err); };
-		client.on('message', message => { this.dispatcher.handleMessage(message).catch(messageErr); });
-		client.on('messageUpdate', (oldMessage, newMessage) => { this.dispatcher.handleMessage(newMessage, oldMessage).catch(messageErr); });
+		client.on('message', message => {
+			if(config.logMessages) this.logger.message(`[${message.guild.name}][${message.channel.name}] ${message.author.username}#${message.author.discriminator}: ${message.content}`);
+			this.dispatcher.handleMessage(message).catch(messageErr);
+		});
+		client.on('messageUpdate', (oldMessage, newMessage) => {
+			if(config.logMessages) this.logger.message(`[${newMessage.guild.name}][${newMessage.channel.name}] ${newMessage.author.username}#${newMessage.author.discriminator} EDIT: ${newMessage.content}`);
+			this.dispatcher.handleMessage(newMessage, oldMessage).catch(messageErr);
+		});
 
 		// Log in
 		const loginErr = err => {
@@ -271,6 +277,22 @@ export default class Bot {
 	get logger() {
 		if(!this._logger) {
 			this._logger = new winston.Logger({
+				levels: {
+					error: 0,
+					warn: 1,
+					info: 2,
+					verbose: 3,
+					message: 4,
+					debug: 5
+				},
+				colors: {
+					error: 'red',
+					warn: 'yellow',
+					info: 'green',
+					verbose: 'blue',
+					message: 'cyan',
+					debug: 'magenta'
+				},
 				transports: [
 					new winston.transports.Console({
 						level: this.config.values.consoleLevel,

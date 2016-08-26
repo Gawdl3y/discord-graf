@@ -174,16 +174,24 @@ export default class BotConfig {
 					type: 'string',
 					default: this.defaults.logLevel,
 					alias: 'L',
-					describe: 'Log level to output to the log file (error, warn, info, verbose, debug)',
+					describe: 'Log level to output to the log file (error, warn, info, verbose, message, debug)',
 					group: 'Logging:'
 				})
 				.option('console-level', {
 					type: 'string',
 					default: this.defaults.consoleLevel,
 					alias: 'C',
-					describe: 'Log level to output to the console (error, warn, info, verbose, debug)',
+					describe: 'Log level to output to the console (error, warn, info, verbose, message, debug)',
 					group: 'Logging:'
 				})
+				.option('log-messages', {
+					type: 'boolean',
+					default: false,
+					alias: 'M',
+					describe: 'Whether or not all chat messages should be logged',
+					group: 'Logging:'
+				})
+
 				.option('config', {
 					type: 'string',
 					alias: 'c',
@@ -235,6 +243,7 @@ const defaultDefaults = {
  * @property {string} [password] - The bot account password to log in with
  * @property {ClientOptions} [clientOptions] - The options to pass to the Client constructor
  * @property {boolean} [autoReconnect=true] - Whether or not the bot should automatically reconnect upon disconnection
+ * @property {boolean} [logMessages=true] - Whether or not all chat messages should be printed to the console
  * @property {string} [storage=bot-storage] - Path to the local storage directory
  * @property {string} [playingGame=Message-for-help] - Text to show the bot playing
  * @property {number} [paginationItems=10] - Maximum number of items per page the default commands use when paginating
@@ -245,8 +254,8 @@ const defaultDefaults = {
  * @property {string} [log=bot.log] - Path to the log file
  * @property {number} [logMaxSize=5242880] - Maximum size of the log file before splitting it (in bytes)
  * @property {number} [logMaxFiles=5] - Maximum log files to keep
- * @property {string} [logLevel=info] - The log level to output to the log file (error, warn, info, verbose, debug)
- * @property {string} [consoleLevel=info] - The log level to output to the console (error, warn, info, verbose, debug)
+ * @property {string} [logLevel=info] - The log level to output to the log file (error, warn, info, verbose, message, debug)
+ * @property {string} [consoleLevel=info] - The log level to output to the console (error, warn, info, verbose, message, debug)
  */
 
 /** @external {ClientOptions} http://discordjs.readthedocs.io/en/latest/docs_client.html#parameters */
