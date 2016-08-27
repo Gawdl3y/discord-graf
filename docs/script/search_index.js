@@ -907,7 +907,7 @@ window.esdocSearchIndex = [
   ],
   [
     "src/commands/builder.js~commandbuilder#command",
-    "class/src/commands/builder.js~CommandBuilder.html#instance-get-command",
+    "class/src/commands/builder.js~CommandBuilder.html#instance-member-command",
     "src/commands/builder.js~CommandBuilder#command",
     "member"
   ],

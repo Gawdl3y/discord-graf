@@ -98,7 +98,10 @@ export default class CommandBuilder {
 		this.bot = bot;
 		/** @type {CommandInfo} */
 		this.commandInfo = info;
+		/** @type {Command} */
+		this.command = null;
 
+		if(info) this.command = new Command(bot, info);
 		if(funcs) {
 			if(funcs.run) this.run(funcs.run);
 			if(funcs.hasPermission) this.hasPermission(funcs.hasPermission);
@@ -112,6 +115,7 @@ export default class CommandBuilder {
 	 */
 	info(info) {
 		this.commandInfo = info;
+		this.command = new Command(this.bot, info);
 		return this;
 	}
 
@@ -123,6 +127,7 @@ export default class CommandBuilder {
 	 */
 	run(fn, extras = []) {
 		if(typeof fn !== &apos;function&apos;) throw new TypeError(&apos;run must be provided a function.&apos;);
+		if(!this.command) throw new Error(&apos;.info(obj) must be called first.&apos;);
 		this.command.run = _bindAppend(fn, this.command, ...extras);
 		return this;
 	}
@@ -135,6 +140,7 @@ export default class CommandBuilder {
 	 */
 	hasPermission(fn, extras = []) {
 		if(typeof fn !== &apos;function&apos;) throw new TypeError(&apos;hasPermission must be provided a function.&apos;);
+		if(!this.command) throw new Error(&apos;.info(obj) must be called first.&apos;);
 		this.command.hasPermission = _bindAppend(fn, this.command, ...extras);
 		return this;
 	}
@@ -145,12 +151,6 @@ export default class CommandBuilder {
 	 */
 	register() {
 		this.bot.registerCommand(this.command);
-	}
-
-	/** @type {Command} */
-	get command() {
-		if(!this._command) this._command = new Command(this.bot, this.commandInfo);
-		return this._command;
 	}
 }
 
