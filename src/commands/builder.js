@@ -7,16 +7,31 @@ import Command from './command';
 export default class CommandBuilder {
 	/**
 	 * @param {Bot} bot - The bot the command is for
-	 * @param {CommandInfo} info - The command info
+	 * @param {CommandInfo} [info] - The command info
 	 * @param {Object} [funcs] - The functions to set
 	 */
-	constructor(bot, info, funcs = null) {
-		/** @type {Command} */
-		this.command = new Command(bot, info);
+	constructor(bot, info = null, funcs = null) {
+		if(!bot) throw new Error('A bot must be specified.');
+
+		/** @type {Bot} */
+		this.bot = bot;
+		/** @type {CommandInfo} */
+		this.commandInfo = info;
+
 		if(funcs) {
 			if(funcs.run) this.run(funcs.run);
 			if(funcs.hasPermission) this.hasPermission(funcs.hasPermission);
 		}
+	}
+
+	/**
+	 * Sets the command information. This must be used before any other method if info was not provided to the constructor.
+	 * @param {CommandInfo} info - The command info
+	 * @return {CommandBuilder} This builder
+	 */
+	info(info) {
+		this.commandInfo = info;
+		return this;
 	}
 
 	/**
@@ -48,7 +63,13 @@ export default class CommandBuilder {
 	 * @return {void}
 	 */
 	register() {
-		this.command.bot.registerCommand(this.command);
+		this.bot.registerCommand(this.command);
+	}
+
+	/** @type {Command} */
+	get command() {
+		if(!this._command) this._command = new Command(this.bot, this.commandInfo);
+		return this._command;
 	}
 }
 
