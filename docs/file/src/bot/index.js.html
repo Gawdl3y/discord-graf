@@ -178,7 +178,7 @@ export default class Bot {
 		this.util = new Util(client, this.storage.settings, this.config);
 		this.logger.info(&apos;Client created.&apos;, clientOptions);
 
-		// Set up logging, playing game text, and update checking
+		// Set up logging and the playing game text
 		client.on(&apos;error&apos;, err =&gt; { this.logger.error(err); });
 		client.on(&apos;warn&apos;, msg =&gt; { this.logger.warn(msg); });
 		client.on(&apos;debug&apos;, msg =&gt; { this.logger.debug(msg); });
@@ -187,10 +187,6 @@ export default class Bot {
 		client.on(&apos;ready&apos;, () =&gt; {
 			this.logger.info(`Bot is ready; logged in as ${client.user.username}#${client.user.discriminator} (ID: ${client.user.id})`);
 			if(config.playingGame) client.user.setStatus(null, config.playingGame);
-			if(config.updateURL) {
-				this._checkForUpdate();
-				if(config.updateCheck &gt; 0) setInterval(this._checkForUpdate.bind(this), config.updateCheck * 60 * 1000);
-			}
 		});
 
 		// Set up command handling
@@ -203,6 +199,14 @@ export default class Bot {
 			this._logMessage(newMessage, oldMessage);
 			this.dispatcher.handleMessage(newMessage, oldMessage).catch(messageErr);
 		});
+
+		// Set up update checking
+		if(config.updateURL) {
+			client.once(&apos;ready&apos;, () =&gt; {
+				this._checkForUpdate();
+				if(config.updateCheck &gt; 0) setInterval(this._checkForUpdate.bind(this), config.updateCheck * 60 * 1000);
+			});
+		}
 
 		// Log in
 		const loginErr = err =&gt; {
