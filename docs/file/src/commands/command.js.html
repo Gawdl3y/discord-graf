@@ -59,7 +59,8 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-SearchOptions">SearchOptions</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_client.html#parameters">ClientOptions</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://yargs.js.org/docs/">Yargs</a></span></span></li>
-<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">commands</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/command.js~Command.html">Command</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">commands</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/builder.js~CommandBuilder.html">CommandBuilder</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/command.js~Command.html">Command</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/dispatcher.js~CommandDispatcher.html">CommandDispatcher</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/module.js~Module.html">Module</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html">CommandRegistry</a></span></span></li>
@@ -89,7 +90,6 @@ export default class Command {
 	 * @param {CommandInfo} info - The command information
 	 */
 	constructor(bot, info) { // eslint-disable-line complexity
-		if(new.target === Command) throw new Error(&apos;The base command class may not be instantiated.&apos;);
 		if(!bot) throw new Error(&apos;A bot must be specified.&apos;);
 		if(!info) throw new Error(&apos;Command info must be specified.&apos;);
 		if(!info.name) throw new Error(&apos;Command must have a name specified.&apos;);

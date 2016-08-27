@@ -59,7 +59,8 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-SearchOptions">SearchOptions</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_client.html#parameters">ClientOptions</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://yargs.js.org/docs/">Yargs</a></span></span></li>
-<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">commands</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/command.js~Command.html">Command</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">commands</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/builder.js~CommandBuilder.html">CommandBuilder</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/command.js~Command.html">Command</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/dispatcher.js~CommandDispatcher.html">CommandDispatcher</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/module.js~Module.html">Module</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html">CommandRegistry</a></span></span></li>
@@ -82,6 +83,7 @@
 
 import EventEmitter from &apos;events&apos;;
 import Module from &apos;./module&apos;;
+import CommandBuilder from &apos;./builder&apos;;
 
 /** Handles registration and searching of commands and modules */
 export default class CommandRegistry extends EventEmitter {
@@ -116,17 +118,22 @@ export default class CommandRegistry extends EventEmitter {
 	registerCommands(commands) {
 		if(!Array.isArray(commands)) throw new TypeError(&apos;Commands must be an array.&apos;);
 		for(let command of commands) {
+			if(command instanceof CommandBuilder) command = command.command;
+
+			// Make sure there aren&apos;t any conflicts
 			if(this.commands.some(cmd =&gt; cmd.name === command.name)) throw new Error(`A command with the name &quot;${command.name}&quot;&quot; is already registered.`);
 			const module = this.modules.find(mod =&gt; mod.id === command.module);
 			if(!module) throw new Error(`Module &quot;${command.module}&quot; is not registered.`);
 			if(module.commands.some(cmd =&gt; cmd.memberName === command.memberName)) throw new Error(`A command with the member name &quot;${command.memberName}&quot; is already registered in ${module.id}`);
 
+			// Make sure there aren&apos;t any conflicts for the aliases, and add dehyphenated aliases
 			if(command.name.includes(&apos;-&apos;)) command.aliases.push(command.name.replace(/-/g, &apos;&apos;));
 			for(const alias of command.aliases) {
 				if(this.commands.some(cmd =&gt; cmd.aliases.some(ali =&gt; ali === alias))) throw new Error(`A command with the alias &quot;${alias}&quot; is already registered.`);
 				if(alias.includes(&apos;-&apos;)) command.aliases.push(alias.replace(/-/g, &apos;&apos;));
 			}
 
+			// Add the command
 			module.commands.push(command);
 			this.commands.push(command);
 			if(this.logger) this.logger.verbose(`Registered command ${command.module}:${command.memberName}.`);

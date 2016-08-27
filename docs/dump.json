@@ -592,7 +592,7 @@
     "access": null,
     "description": null,
     "lineNumber": 1,
-    "content": "'use babel';\r\n'use strict';\r\n\r\nimport Discord from 'discord.js';\r\nimport { LocalStorage } from 'node-localstorage';\r\nimport winston from 'winston';\r\nimport request from 'request-promise-native';\r\nimport semver from 'semver';\r\nimport Config from './config';\r\nimport Permissions from './permissions';\r\nimport Util from './util';\r\nimport Registry from '../commands/registry';\r\nimport Dispatcher from '../commands/dispatcher';\r\nimport Module from '../commands/module';\r\nimport Setting from '../storage/models/setting';\r\nimport SettingStorage from '../storage/settings';\r\nimport ModRoleStorage from '../storage/mod-roles';\r\nimport AllowedChannelStorage from '../storage/allowed-channels';\r\n\r\nimport HelpCommand from '../commands/info/help';\r\nimport AboutCommand from '../commands/info/about';\r\nimport ListModulesCommand from '../commands/modules/list';\r\nimport ToggleModuleCommand from '../commands/modules/toggle';\r\nimport EnableModuleCommand from '../commands/modules/enable';\r\nimport DisableModuleCommand from '../commands/modules/disable';\r\nimport ListModRolesCommand from '../commands/mod-roles/list';\r\nimport AddModRoleCommand from '../commands/mod-roles/add';\r\nimport DeleteModRoleCommand from '../commands/mod-roles/delete';\r\nimport ClearModRolesCommand from '../commands/mod-roles/clear';\r\nimport ListAllowedChannelsCommand from '../commands/channels/list-allowed';\r\nimport AllowChannelCommand from '../commands/channels/allow';\r\nimport DisallowChannelCommand from '../commands/channels/disallow';\r\nimport ClearAllowedChannelsCommand from '../commands/channels/clear-allowed';\r\nimport PrefixCommand from '../commands/util/prefix';\r\nimport EvalCommand from '../commands/util/eval';\r\n\r\n/** A Discord bot that has its own command registry, storage, utilities, etc. */\r\nexport default class Bot {\r\n\t/** @param {ConfigObject} config - The configuration to use */\r\n\tconstructor(config) {\r\n\t\t/** @type {Client} */\r\n\t\tthis.client = null;\r\n\t\t/** @type {CommandDispatcher} */\r\n\t\tthis.dispatcher = null;\r\n\t\t/** @type {BotConfig} */\r\n\t\tthis.config = new Config(config);\r\n\t\t/** @type {BotPermissions} */\r\n\t\tthis.permissions = null;\r\n\t\t/** @type {BotUtil} */\r\n\t\tthis.util = null;\r\n\t\t/** @type {LocalStorage} */\r\n\t\tthis.localStorage = null;\r\n\t\t/**\r\n\t\t * @type {Object}\r\n\t\t * @property {SettingStorage} settings\r\n\t\t * @property {ModRoleStorage} modRoles\r\n\t\t * @property {AllowedChannelStorage} allowedChannels\r\n\t\t */\r\n\t\tthis.storage = {\r\n\t\t\tsettings: null,\r\n\t\t\tmodRoles: null,\r\n\t\t\tallowedChannels: null\r\n\t\t};\r\n\t\t/** @type {Object} */\r\n\t\tthis.evalObjects = {};\r\n\t}\r\n\r\n\t/**\r\n\t * Instantiates all bot classes and storages, and creates the client\r\n\t * @return {Client} The bot client\r\n\t */\r\n\tcreateClient() {\r\n\t\tif(this.client) throw new Error('Client has already been created.');\r\n\t\tconst config = this.config.values;\r\n\r\n\t\t// Verify some stuff\r\n\t\tif(!config.token && (!config.email || !config.password)) throw new Error('Invalid credentials; either \"token\" or both \"email\" and \"password\" must be specified on the config.');\r\n\t\tif(!config.name) throw new Error('\"name\" must be specified on the config.');\r\n\t\tif(!config.version) throw new Error('\"version\" must be specified on the config.');\r\n\r\n\t\t// Output safe config\r\n\t\tconst debugConfig = Object.assign({}, config);\r\n\t\tif(debugConfig.email) debugConfig.email = '--snip--';\r\n\t\tif(debugConfig.password) debugConfig.password = '--snip--';\r\n\t\tif(debugConfig.token) debugConfig.token = '--snip--';\r\n\t\tfor(const key of Object.keys(debugConfig)) if(key.length === 1 || key.includes('-')) delete debugConfig[key];\r\n\t\tthis.logger.debug('Configuration:', debugConfig);\r\n\r\n\t\t// Create client and bot classes\r\n\t\tconst clientOptions = Object.assign({}, defaultClientOptions, config.clientOptions, { autoReconnect: config.autoReconnect });\r\n\t\tconst client = new Discord.Client(clientOptions);\r\n\t\tthis.client = client;\r\n\t\tthis.localStorage = new LocalStorage(config.storage);\r\n\t\tthis.storage.settings = new SettingStorage(this.localStorage, this.logger);\r\n\t\tthis.storage.modRoles = new ModRoleStorage(this.localStorage, this.logger);\r\n\t\tthis.storage.allowedChannels = new AllowedChannelStorage(this.localStorage, this.logger);\r\n\t\tthis.dispatcher = new Dispatcher(this);\r\n\t\tthis.permissions = new Permissions(client, this.storage.modRoles, this.storage.settings, this.config);\r\n\t\tthis.util = new Util(client, this.storage.settings, this.config);\r\n\t\tthis.logger.info('Client created.', clientOptions);\r\n\r\n\t\t// Set up logging and the playing game text\r\n\t\tclient.on('error', err => { this.logger.error(err); });\r\n\t\tclient.on('warn', msg => { this.logger.warn(msg); });\r\n\t\tclient.on('debug', msg => { this.logger.debug(msg); });\r\n\t\tclient.on('disconnected', () => { this.logger.warn('Disconnected.'); });\r\n\t\tclient.on('reconnecting', () => { this.logger.warn('Reconnecting...'); });\r\n\t\tclient.on('ready', () => {\r\n\t\t\tthis.logger.info(`Bot is ready; logged in as ${client.user.username}#${client.user.discriminator} (ID: ${client.user.id})`);\r\n\t\t\tif(config.playingGame) client.user.setStatus(null, config.playingGame);\r\n\t\t});\r\n\r\n\t\t// Set up command handling\r\n\t\tconst messageErr = err => { this.logger.error('Error while handling message. This may be an issue with GRAF.', err); };\r\n\t\tclient.on('message', message => {\r\n\t\t\tthis._logMessage(message);\r\n\t\t\tthis.dispatcher.handleMessage(message).catch(messageErr);\r\n\t\t});\r\n\t\tclient.on('messageUpdate', (oldMessage, newMessage) => {\r\n\t\t\tthis._logMessage(newMessage, oldMessage);\r\n\t\t\tthis.dispatcher.handleMessage(newMessage, oldMessage).catch(messageErr);\r\n\t\t});\r\n\r\n\t\t// Set up update checking\r\n\t\tif(config.updateURL) {\r\n\t\t\tclient.once('ready', () => {\r\n\t\t\t\tthis._checkForUpdate();\r\n\t\t\t\tif(config.updateCheck > 0) setInterval(this._checkForUpdate.bind(this), config.updateCheck * 60 * 1000);\r\n\t\t\t});\r\n\t\t}\r\n\r\n\t\t// Log in\r\n\t\tconst loginErr = err => {\r\n\t\t\tthis.logger.error('Failed to login.');\r\n\t\t\tthis.logger.error(err);\r\n\t\t};\r\n\t\tif(config.token) {\r\n\t\t\tthis.logger.info('Logging in with token...');\r\n\t\t\tclient.login(config.token).catch(loginErr);\r\n\t\t} else {\r\n\t\t\tthis.logger.info('Logging in with email and password...');\r\n\t\t\tclient.login(config.email, config.password).catch(loginErr);\r\n\t\t}\r\n\r\n\t\treturn client;\r\n\t}\r\n\r\n\t/**\r\n\t * Registers a single command to the bot's registry\r\n\t * @param {Command|function} command - Either a Command instance, or a constructor for one\r\n\t * @return {Bot} This bot\r\n\t * @see {@link Bot#registerCommands}\r\n\t */\r\n\tregisterCommand(command) {\r\n\t\treturn this.registerCommands([command]);\r\n\t}\r\n\r\n\t/**\r\n\t * Registers multiple commands to the bot's registry\r\n\t * @param {Command[]|function[]} commands - An array of Command instances or constructors\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterCommands(commands) {\r\n\t\tif(!Array.isArray(commands)) throw new TypeError('Commands must be an array.');\r\n\t\tfor(let i = 0; i < commands.length; i++) if(typeof commands[i] === 'function') commands[i] = new commands[i](this);\r\n\t\tthis.registry.registerCommands(commands);\r\n\t\treturn this;\r\n\t}\r\n\r\n\t/**\r\n\t * Registers a single module to the bot's registry\r\n\t * @param {Module|function|string[]} module - A Module instance, a constructor, or an array of [ID, Name]\r\n\t * @return {Bot} This bot\r\n\t * @see {@link Bot#registerModules}\r\n\t */\r\n\tregisterModule(module) {\r\n\t\treturn this.registerModules([module]);\r\n\t}\r\n\r\n\t/**\r\n\t * Registers multiple modules to the bot's registry\r\n\t * @param {Module[]|function[]|Array[]} modules - An array of Module instances, constructors, or arrays of [ID, Name]\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterModules(modules) {\r\n\t\tif(!Array.isArray(modules)) throw new TypeError('Modules must be an array.');\r\n\t\tfor(let i = 0; i < modules.length; i++) {\r\n\t\t\tif(typeof modules[i] === 'function') {\r\n\t\t\t\tmodules[i] = new modules[i](this);\r\n\t\t\t} else if(Array.isArray(modules[i])) {\r\n\t\t\t\tmodules[i] = new Module(this, ...modules[i]);\r\n\t\t\t} else if(!(modules[i] instanceof Module)) {\r\n\t\t\t\tmodules[i] = new Module(this, modules[i].id, modules[i].name, modules[i].commands);\r\n\t\t\t}\r\n\t\t}\r\n\t\tthis.registry.registerModules(modules);\r\n\t\treturn this;\r\n\t}\r\n\r\n\t/**\r\n\t * Registers both the default modules and commands to the bot's registry\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterDefaults() {\r\n\t\tthis.registerDefaultModules();\r\n\t\tthis.registerDefaultCommands();\r\n\t\treturn this;\r\n\t}\r\n\r\n\t/**\r\n\t * Registers the default modules to the bot's registry\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterDefaultModules() {\r\n\t\tthis.registerModules([\r\n\t\t\t['info', 'Information'],\r\n\t\t\t['modules', 'Modules'],\r\n\t\t\t['mod-roles', 'Moderator roles'],\r\n\t\t\t['channels', 'Channels'],\r\n\t\t\t['util', 'Utility']\r\n\t\t]);\r\n\t\treturn this;\r\n\t}\r\n\r\n\t/**\r\n\t * Registers the default commands to the bot's registry\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterDefaultCommands() {\r\n\t\tthis.registerCommands([\r\n\t\t\tHelpCommand,\r\n\t\t\tAboutCommand,\r\n\t\t\tListModulesCommand,\r\n\t\t\tToggleModuleCommand,\r\n\t\t\tEnableModuleCommand,\r\n\t\t\tDisableModuleCommand,\r\n\t\t\tListModRolesCommand,\r\n\t\t\tAddModRoleCommand,\r\n\t\t\tDeleteModRoleCommand,\r\n\t\t\tClearModRolesCommand,\r\n\t\t\tListAllowedChannelsCommand,\r\n\t\t\tAllowChannelCommand,\r\n\t\t\tDisallowChannelCommand,\r\n\t\t\tClearAllowedChannelsCommand,\r\n\t\t\tPrefixCommand,\r\n\t\t\tEvalCommand\r\n\t\t]);\r\n\t\treturn this;\r\n\t}\r\n\r\n\t/**\r\n\t * Registers a single object to be usable by the eval command\r\n\t * @param {string} key - The key for the object\r\n\t * @param {Object} obj - The object\r\n\t * @return {Bot} This bot\r\n\t * @see {@link Bot#registerEvalObjects}\r\n\t */\r\n\tregisterEvalObject(key, obj) {\r\n\t\tconst registerObj = {};\r\n\t\tregisterObj[key] = obj;\r\n\t\treturn this.registerEvalObjects(registerObj);\r\n\t}\r\n\r\n\t/**\r\n\t * Registers multiple objects to be usable by the eval command\r\n\t * @param {Object} obj - An object of keys: values\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterEvalObjects(obj) {\r\n\t\tObject.assign(this.evalObjects, obj);\r\n\t\treturn this;\r\n\t}\r\n\r\n\t/** @type {CommandRegistry} */\r\n\tget registry() {\r\n\t\tif(!this._registry) this._registry = new Registry(this.logger);\r\n\t\treturn this._registry;\r\n\t}\r\n\r\n\t/** @type {Logger} */\r\n\tget logger() {\r\n\t\tif(!this._logger) {\r\n\t\t\tthis._logger = new winston.Logger({\r\n\t\t\t\tlevels: {\r\n\t\t\t\t\terror: 0,\r\n\t\t\t\t\twarn: 1,\r\n\t\t\t\t\tinfo: 2,\r\n\t\t\t\t\tverbose: 3,\r\n\t\t\t\t\tmessage: 4,\r\n\t\t\t\t\tdebug: 5\r\n\t\t\t\t},\r\n\t\t\t\tcolors: {\r\n\t\t\t\t\terror: 'red',\r\n\t\t\t\t\twarn: 'yellow',\r\n\t\t\t\t\tinfo: 'green',\r\n\t\t\t\t\tverbose: 'blue',\r\n\t\t\t\t\tmessage: 'cyan',\r\n\t\t\t\t\tdebug: 'magenta'\r\n\t\t\t\t},\r\n\t\t\t\ttransports: [\r\n\t\t\t\t\tnew winston.transports.Console({\r\n\t\t\t\t\t\tlevel: this.config.values.consoleLevel,\r\n\t\t\t\t\t\tcolorize: true,\r\n\t\t\t\t\t\ttimestamp: true,\r\n\t\t\t\t\t\thandleExceptions: true,\r\n\t\t\t\t\t\thumanReadableUnhandledException: true\r\n\t\t\t\t\t})\r\n\t\t\t\t]\r\n\t\t\t});\r\n\t\t\tif(this.config.values.log) {\r\n\t\t\t\tthis._logger.add(winston.transports.File, {\r\n\t\t\t\t\tlevel: this.config.values.logLevel,\r\n\t\t\t\t\tfilename: this.config.values.log,\r\n\t\t\t\t\tmaxsize: this.config.values.logMaxSize,\r\n\t\t\t\t\tmaxFiles: this.config.values.logMaxFiles,\r\n\t\t\t\t\ttailable: true,\r\n\t\t\t\t\tjson: false,\r\n\t\t\t\t\thandleExceptions: true,\r\n\t\t\t\t\thumanReadableUnhandledException: true\r\n\t\t\t\t});\r\n\t\t\t}\r\n\t\t}\r\n\t\treturn this._logger;\r\n\t}\r\n\r\n\t/**\r\n\t * Checks for an update for the bot\r\n\t * @return {void}\r\n\t */\r\n\t_checkForUpdate() {\r\n\t\tconst config = this.config.values;\r\n\t\trequest(config.updateURL).then(body => {\r\n\t\t\tconst masterVersion = JSON.parse(body).version;\r\n\t\t\tif(!semver.gt(masterVersion, config.version)) return;\r\n\t\t\tconst message = `An update for ${config.name} is available! Current version is ${config.version}, latest available is ${masterVersion}.`;\r\n\t\t\tthis.logger.warn(message);\r\n\t\t\tconst savedVersion = this.storage.settings.getValue(null, 'notified-version');\r\n\t\t\tif(savedVersion !== masterVersion && this.client && config.owner) {\r\n\t\t\t\tthis.client.users.get(config.owner).sendMessage(message);\r\n\t\t\t\tthis.storage.settings.save(new Setting(null, 'notified-version', masterVersion));\r\n\t\t\t}\r\n\t\t}).catch(err => {\r\n\t\t\tthis.logger.error(err);\r\n\t\t});\r\n\t}\r\n\r\n\t/**\r\n\t * Logs a message\r\n\t * @param {Message} message - The message\r\n\t * @param {Message} [oldMessage] - The old message if edited\r\n\t * @return {void}\r\n\t */\r\n\t_logMessage(message, oldMessage = null) {\r\n\t\tif(!this.config.values.logMessages) return;\r\n\t\tif(oldMessage && message.content === oldMessage.content) return;\r\n\t\tconst prefix = `${message.guild ? `[${message.guild.name}][${message.channel.name}]` : '[DM]'} ${message.author.username}#${message.author.discriminator}`;\r\n\t\tthis.logger.message(`${prefix}: ${message.content}`);\r\n\t\tif(oldMessage) this.logger.message(`${prefix} EDITED FROM: ${oldMessage.content}`);\r\n\t}\r\n}\r\n\r\nconst defaultClientOptions = {\r\n\tforceFetchUsers: true,\r\n\tbot: true\r\n};\r\n"
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport Discord from 'discord.js';\r\nimport { LocalStorage } from 'node-localstorage';\r\nimport winston from 'winston';\r\nimport request from 'request-promise-native';\r\nimport semver from 'semver';\r\nimport Config from './config';\r\nimport Permissions from './permissions';\r\nimport Util from './util';\r\nimport Registry from '../commands/registry';\r\nimport Dispatcher from '../commands/dispatcher';\r\nimport Module from '../commands/module';\r\nimport CommandBuilder from '../commands/builder';\r\nimport Setting from '../storage/models/setting';\r\nimport SettingStorage from '../storage/settings';\r\nimport ModRoleStorage from '../storage/mod-roles';\r\nimport AllowedChannelStorage from '../storage/allowed-channels';\r\n\r\nimport HelpCommand from '../commands/info/help';\r\nimport AboutCommand from '../commands/info/about';\r\nimport ListModulesCommand from '../commands/modules/list';\r\nimport ToggleModuleCommand from '../commands/modules/toggle';\r\nimport EnableModuleCommand from '../commands/modules/enable';\r\nimport DisableModuleCommand from '../commands/modules/disable';\r\nimport ListModRolesCommand from '../commands/mod-roles/list';\r\nimport AddModRoleCommand from '../commands/mod-roles/add';\r\nimport DeleteModRoleCommand from '../commands/mod-roles/delete';\r\nimport ClearModRolesCommand from '../commands/mod-roles/clear';\r\nimport ListAllowedChannelsCommand from '../commands/channels/list-allowed';\r\nimport AllowChannelCommand from '../commands/channels/allow';\r\nimport DisallowChannelCommand from '../commands/channels/disallow';\r\nimport ClearAllowedChannelsCommand from '../commands/channels/clear-allowed';\r\nimport PrefixCommand from '../commands/util/prefix';\r\nimport EvalCommand from '../commands/util/eval';\r\n\r\n/** A Discord bot that has its own command registry, storage, utilities, etc. */\r\nexport default class Bot {\r\n\t/** @param {ConfigObject} config - The configuration to use */\r\n\tconstructor(config) {\r\n\t\t/** @type {Client} */\r\n\t\tthis.client = null;\r\n\t\t/** @type {CommandDispatcher} */\r\n\t\tthis.dispatcher = null;\r\n\t\t/** @type {BotConfig} */\r\n\t\tthis.config = new Config(config);\r\n\t\t/** @type {BotPermissions} */\r\n\t\tthis.permissions = null;\r\n\t\t/** @type {BotUtil} */\r\n\t\tthis.util = null;\r\n\t\t/** @type {LocalStorage} */\r\n\t\tthis.localStorage = null;\r\n\t\t/**\r\n\t\t * @type {Object}\r\n\t\t * @property {SettingStorage} settings\r\n\t\t * @property {ModRoleStorage} modRoles\r\n\t\t * @property {AllowedChannelStorage} allowedChannels\r\n\t\t */\r\n\t\tthis.storage = {\r\n\t\t\tsettings: null,\r\n\t\t\tmodRoles: null,\r\n\t\t\tallowedChannels: null\r\n\t\t};\r\n\t\t/** @type {Object} */\r\n\t\tthis.evalObjects = {};\r\n\t}\r\n\r\n\t/**\r\n\t * Instantiates all bot classes and storages, and creates the client\r\n\t * @return {Client} The bot client\r\n\t */\r\n\tcreateClient() {\r\n\t\tif(this.client) throw new Error('Client has already been created.');\r\n\t\tconst config = this.config.values;\r\n\r\n\t\t// Verify some stuff\r\n\t\tif(!config.token && (!config.email || !config.password)) throw new Error('Invalid credentials; either \"token\" or both \"email\" and \"password\" must be specified on the config.');\r\n\t\tif(!config.name) throw new Error('\"name\" must be specified on the config.');\r\n\t\tif(!config.version) throw new Error('\"version\" must be specified on the config.');\r\n\r\n\t\t// Output safe config\r\n\t\tconst debugConfig = Object.assign({}, config);\r\n\t\tif(debugConfig.email) debugConfig.email = '--snip--';\r\n\t\tif(debugConfig.password) debugConfig.password = '--snip--';\r\n\t\tif(debugConfig.token) debugConfig.token = '--snip--';\r\n\t\tfor(const key of Object.keys(debugConfig)) if(key.length === 1 || key.includes('-')) delete debugConfig[key];\r\n\t\tthis.logger.debug('Configuration:', debugConfig);\r\n\r\n\t\t// Create client and bot classes\r\n\t\tconst clientOptions = Object.assign({}, defaultClientOptions, config.clientOptions, { autoReconnect: config.autoReconnect });\r\n\t\tconst client = new Discord.Client(clientOptions);\r\n\t\tthis.client = client;\r\n\t\tthis.localStorage = new LocalStorage(config.storage);\r\n\t\tthis.storage.settings = new SettingStorage(this.localStorage, this.logger);\r\n\t\tthis.storage.modRoles = new ModRoleStorage(this.localStorage, this.logger);\r\n\t\tthis.storage.allowedChannels = new AllowedChannelStorage(this.localStorage, this.logger);\r\n\t\tthis.dispatcher = new Dispatcher(this);\r\n\t\tthis.permissions = new Permissions(client, this.storage.modRoles, this.storage.settings, this.config);\r\n\t\tthis.util = new Util(client, this.storage.settings, this.config);\r\n\t\tthis.logger.info('Client created.', clientOptions);\r\n\r\n\t\t// Set up logging and the playing game text\r\n\t\tclient.on('error', err => { this.logger.error(err); });\r\n\t\tclient.on('warn', msg => { this.logger.warn(msg); });\r\n\t\tclient.on('debug', msg => { this.logger.debug(msg); });\r\n\t\tclient.on('disconnected', () => { this.logger.warn('Disconnected.'); });\r\n\t\tclient.on('reconnecting', () => { this.logger.warn('Reconnecting...'); });\r\n\t\tclient.on('ready', () => {\r\n\t\t\tthis.logger.info(`Bot is ready; logged in as ${client.user.username}#${client.user.discriminator} (ID: ${client.user.id})`);\r\n\t\t\tif(config.playingGame) client.user.setStatus(null, config.playingGame);\r\n\t\t});\r\n\r\n\t\t// Set up command handling\r\n\t\tconst messageErr = err => { this.logger.error('Error while handling message. This may be an issue with GRAF.', err); };\r\n\t\tclient.on('message', message => {\r\n\t\t\tthis._logMessage(message);\r\n\t\t\tthis.dispatcher.handleMessage(message).catch(messageErr);\r\n\t\t});\r\n\t\tclient.on('messageUpdate', (oldMessage, newMessage) => {\r\n\t\t\tthis._logMessage(newMessage, oldMessage);\r\n\t\t\tthis.dispatcher.handleMessage(newMessage, oldMessage).catch(messageErr);\r\n\t\t});\r\n\r\n\t\t// Fetch the owner\r\n\t\tif(config.owner) {\r\n\t\t\tclient.once('ready', () => {\r\n\t\t\t\tclient.fetchUser(config.owner).catch((err) => { this.logger.error('Unable to fetch the owner user.', err); });\r\n\t\t\t});\r\n\t\t}\r\n\r\n\t\t// Set up update checking\r\n\t\tif(config.updateURL) {\r\n\t\t\tclient.once('ready', () => {\r\n\t\t\t\tthis._checkForUpdate();\r\n\t\t\t\tif(config.updateCheck > 0) setInterval(this._checkForUpdate.bind(this), config.updateCheck * 60 * 1000);\r\n\t\t\t});\r\n\t\t}\r\n\r\n\t\t// Log in\r\n\t\tconst loginErr = err => {\r\n\t\t\tthis.logger.error('Failed to login.');\r\n\t\t\tthis.logger.error(err);\r\n\t\t};\r\n\t\tif(config.token) {\r\n\t\t\tthis.logger.info('Logging in with token...');\r\n\t\t\tclient.login(config.token).catch(loginErr);\r\n\t\t} else {\r\n\t\t\tthis.logger.info('Logging in with email and password...');\r\n\t\t\tclient.login(config.email, config.password).catch(loginErr);\r\n\t\t}\r\n\r\n\t\treturn client;\r\n\t}\r\n\r\n\t/**\r\n\t * Create a command builder\r\n\t * @param {CommandInfo} info - The command information\r\n\t * @return {CommandBuilder} The builder\r\n\t */\r\n\tbuildCommand(info) {\r\n\t\treturn new CommandBuilder(this, info);\r\n\t}\r\n\r\n\t/**\r\n\t * Registers a single command to the bot's registry\r\n\t * @param {Command|function} command - Either a Command instance, or a constructor for one\r\n\t * @return {Bot} This bot\r\n\t * @see {@link Bot#registerCommands}\r\n\t */\r\n\tregisterCommand(command) {\r\n\t\treturn this.registerCommands([command]);\r\n\t}\r\n\r\n\t/**\r\n\t * Registers multiple commands to the bot's registry\r\n\t * @param {Command[]|function[]} commands - An array of Command instances or constructors\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterCommands(commands) {\r\n\t\tif(!Array.isArray(commands)) throw new TypeError('Commands must be an array.');\r\n\t\tfor(let i = 0; i < commands.length; i++) if(typeof commands[i] === 'function') commands[i] = new commands[i](this);\r\n\t\tthis.registry.registerCommands(commands);\r\n\t\treturn this;\r\n\t}\r\n\r\n\t/**\r\n\t * Registers a single module to the bot's registry\r\n\t * @param {Module|function|string[]} module - A Module instance, a constructor, or an array of [ID, Name]\r\n\t * @return {Bot} This bot\r\n\t * @see {@link Bot#registerModules}\r\n\t */\r\n\tregisterModule(module) {\r\n\t\treturn this.registerModules([module]);\r\n\t}\r\n\r\n\t/**\r\n\t * Registers multiple modules to the bot's registry\r\n\t * @param {Module[]|function[]|Array[]} modules - An array of Module instances, constructors, or arrays of [ID, Name]\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterModules(modules) {\r\n\t\tif(!Array.isArray(modules)) throw new TypeError('Modules must be an array.');\r\n\t\tfor(let i = 0; i < modules.length; i++) {\r\n\t\t\tif(typeof modules[i] === 'function') {\r\n\t\t\t\tmodules[i] = new modules[i](this);\r\n\t\t\t} else if(Array.isArray(modules[i])) {\r\n\t\t\t\tmodules[i] = new Module(this, ...modules[i]);\r\n\t\t\t} else if(!(modules[i] instanceof Module)) {\r\n\t\t\t\tmodules[i] = new Module(this, modules[i].id, modules[i].name, modules[i].commands);\r\n\t\t\t}\r\n\t\t}\r\n\t\tthis.registry.registerModules(modules);\r\n\t\treturn this;\r\n\t}\r\n\r\n\t/**\r\n\t * Registers both the default modules and commands to the bot's registry\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterDefaults() {\r\n\t\tthis.registerDefaultModules();\r\n\t\tthis.registerDefaultCommands();\r\n\t\treturn this;\r\n\t}\r\n\r\n\t/**\r\n\t * Registers the default modules to the bot's registry\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterDefaultModules() {\r\n\t\tthis.registerModules([\r\n\t\t\t['info', 'Information'],\r\n\t\t\t['modules', 'Modules'],\r\n\t\t\t['mod-roles', 'Moderator roles'],\r\n\t\t\t['channels', 'Channels'],\r\n\t\t\t['util', 'Utility']\r\n\t\t]);\r\n\t\treturn this;\r\n\t}\r\n\r\n\t/**\r\n\t * Registers the default commands to the bot's registry\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterDefaultCommands() {\r\n\t\tthis.registerCommands([\r\n\t\t\tHelpCommand,\r\n\t\t\tAboutCommand,\r\n\t\t\tListModulesCommand,\r\n\t\t\tToggleModuleCommand,\r\n\t\t\tEnableModuleCommand,\r\n\t\t\tDisableModuleCommand,\r\n\t\t\tListModRolesCommand,\r\n\t\t\tAddModRoleCommand,\r\n\t\t\tDeleteModRoleCommand,\r\n\t\t\tClearModRolesCommand,\r\n\t\t\tListAllowedChannelsCommand,\r\n\t\t\tAllowChannelCommand,\r\n\t\t\tDisallowChannelCommand,\r\n\t\t\tClearAllowedChannelsCommand,\r\n\t\t\tPrefixCommand,\r\n\t\t\tEvalCommand\r\n\t\t]);\r\n\t\treturn this;\r\n\t}\r\n\r\n\t/**\r\n\t * Registers a single object to be usable by the eval command\r\n\t * @param {string} key - The key for the object\r\n\t * @param {Object} obj - The object\r\n\t * @return {Bot} This bot\r\n\t * @see {@link Bot#registerEvalObjects}\r\n\t */\r\n\tregisterEvalObject(key, obj) {\r\n\t\tconst registerObj = {};\r\n\t\tregisterObj[key] = obj;\r\n\t\treturn this.registerEvalObjects(registerObj);\r\n\t}\r\n\r\n\t/**\r\n\t * Registers multiple objects to be usable by the eval command\r\n\t * @param {Object} obj - An object of keys: values\r\n\t * @return {Bot} This bot\r\n\t */\r\n\tregisterEvalObjects(obj) {\r\n\t\tObject.assign(this.evalObjects, obj);\r\n\t\treturn this;\r\n\t}\r\n\r\n\t/** @type {CommandRegistry} */\r\n\tget registry() {\r\n\t\tif(!this._registry) this._registry = new Registry(this.logger);\r\n\t\treturn this._registry;\r\n\t}\r\n\r\n\t/** @type {Logger} */\r\n\tget logger() {\r\n\t\tif(!this._logger) {\r\n\t\t\tthis._logger = new winston.Logger({\r\n\t\t\t\tlevels: {\r\n\t\t\t\t\terror: 0,\r\n\t\t\t\t\twarn: 1,\r\n\t\t\t\t\tinfo: 2,\r\n\t\t\t\t\tverbose: 3,\r\n\t\t\t\t\tmessage: 4,\r\n\t\t\t\t\tdebug: 5\r\n\t\t\t\t},\r\n\t\t\t\tcolors: {\r\n\t\t\t\t\terror: 'red',\r\n\t\t\t\t\twarn: 'yellow',\r\n\t\t\t\t\tinfo: 'green',\r\n\t\t\t\t\tverbose: 'blue',\r\n\t\t\t\t\tmessage: 'cyan',\r\n\t\t\t\t\tdebug: 'magenta'\r\n\t\t\t\t},\r\n\t\t\t\ttransports: [\r\n\t\t\t\t\tnew winston.transports.Console({\r\n\t\t\t\t\t\tlevel: this.config.values.consoleLevel,\r\n\t\t\t\t\t\tcolorize: true,\r\n\t\t\t\t\t\ttimestamp: true,\r\n\t\t\t\t\t\thandleExceptions: true,\r\n\t\t\t\t\t\thumanReadableUnhandledException: true\r\n\t\t\t\t\t})\r\n\t\t\t\t]\r\n\t\t\t});\r\n\t\t\tif(this.config.values.log) {\r\n\t\t\t\tthis._logger.add(winston.transports.File, {\r\n\t\t\t\t\tlevel: this.config.values.logLevel,\r\n\t\t\t\t\tfilename: this.config.values.log,\r\n\t\t\t\t\tmaxsize: this.config.values.logMaxSize,\r\n\t\t\t\t\tmaxFiles: this.config.values.logMaxFiles,\r\n\t\t\t\t\ttailable: true,\r\n\t\t\t\t\tjson: false,\r\n\t\t\t\t\thandleExceptions: true,\r\n\t\t\t\t\thumanReadableUnhandledException: true\r\n\t\t\t\t});\r\n\t\t\t}\r\n\t\t}\r\n\t\treturn this._logger;\r\n\t}\r\n\r\n\t/**\r\n\t * Checks for an update for the bot\r\n\t * @return {void}\r\n\t */\r\n\t_checkForUpdate() {\r\n\t\tconst config = this.config.values;\r\n\t\trequest(config.updateURL).then(body => {\r\n\t\t\tconst masterVersion = JSON.parse(body).version;\r\n\t\t\tif(!semver.gt(masterVersion, config.version)) return;\r\n\t\t\tconst message = `An update for ${config.name} is available! Current version is ${config.version}, latest available is ${masterVersion}.`;\r\n\t\t\tthis.logger.warn(message);\r\n\t\t\tconst savedVersion = this.storage.settings.getValue(null, 'notified-version');\r\n\t\t\tif(savedVersion !== masterVersion && this.client && config.owner) {\r\n\t\t\t\tthis.client.users.get(config.owner).sendMessage(message);\r\n\t\t\t\tthis.storage.settings.save(new Setting(null, 'notified-version', masterVersion));\r\n\t\t\t}\r\n\t\t}).catch(err => {\r\n\t\t\tthis.logger.error('Error while checking for an update', err);\r\n\t\t});\r\n\t}\r\n\r\n\t/**\r\n\t * Logs a message\r\n\t * @param {Message} message - The message\r\n\t * @param {Message} [oldMessage] - The old message if edited\r\n\t * @return {void}\r\n\t */\r\n\t_logMessage(message, oldMessage = null) {\r\n\t\tif(!this.config.values.logMessages) return;\r\n\t\tif(oldMessage && message.content === oldMessage.content) return;\r\n\t\tconst prefix = `${message.guild ? `[${message.guild.name}][${message.channel.name}]` : '[DM]'} ${message.author.username}#${message.author.discriminator}`;\r\n\t\tthis.logger.message(`${prefix}: ${message.content}`);\r\n\t\tif(oldMessage) this.logger.message(`${prefix} EDITED FROM: ${oldMessage.content}`);\r\n\t}\r\n}\r\n\r\nconst defaultClientOptions = { bot: true };\r\n"
   },
   {
     "__docId__": 16,
@@ -607,7 +607,7 @@
     "importPath": "discord-graf/src/bot/index.js",
     "importStyle": "Bot",
     "description": "A Discord bot that has its own command registry, storage, utilities, etc.",
-    "lineNumber": 38,
+    "lineNumber": 39,
     "interface": false
   },
   {
@@ -620,7 +620,7 @@
     "longname": "src/bot/index.js~Bot#constructor",
     "access": null,
     "description": null,
-    "lineNumber": 40,
+    "lineNumber": 41,
     "params": [
       {
         "nullable": null,
@@ -645,7 +645,7 @@
     "longname": "src/bot/index.js~Bot#client",
     "access": null,
     "description": null,
-    "lineNumber": 42,
+    "lineNumber": 43,
     "type": {
       "nullable": null,
       "types": [
@@ -665,7 +665,7 @@
     "longname": "src/bot/index.js~Bot#dispatcher",
     "access": null,
     "description": null,
-    "lineNumber": 44,
+    "lineNumber": 45,
     "type": {
       "nullable": null,
       "types": [
@@ -685,7 +685,7 @@
     "longname": "src/bot/index.js~Bot#config",
     "access": null,
     "description": null,
-    "lineNumber": 46,
+    "lineNumber": 47,
     "type": {
       "nullable": null,
       "types": [
@@ -705,7 +705,7 @@
     "longname": "src/bot/index.js~Bot#permissions",
     "access": null,
     "description": null,
-    "lineNumber": 48,
+    "lineNumber": 49,
     "type": {
       "nullable": null,
       "types": [
@@ -725,7 +725,7 @@
     "longname": "src/bot/index.js~Bot#util",
     "access": null,
     "description": null,
-    "lineNumber": 50,
+    "lineNumber": 51,
     "type": {
       "nullable": null,
       "types": [
@@ -745,7 +745,7 @@
     "longname": "src/bot/index.js~Bot#localStorage",
     "access": null,
     "description": null,
-    "lineNumber": 52,
+    "lineNumber": 53,
     "type": {
       "nullable": null,
       "types": [
@@ -765,7 +765,7 @@
     "longname": "src/bot/index.js~Bot#storage",
     "access": null,
     "description": "",
-    "lineNumber": 59,
+    "lineNumber": 60,
     "properties": [
       {
         "nullable": null,
@@ -817,7 +817,7 @@
     "longname": "src/bot/index.js~Bot#evalObjects",
     "access": null,
     "description": null,
-    "lineNumber": 65,
+    "lineNumber": 66,
     "type": {
       "nullable": null,
       "types": [
@@ -837,7 +837,7 @@
     "longname": "src/bot/index.js~Bot#createClient",
     "access": null,
     "description": "Instantiates all bot classes and storages, and creates the client",
-    "lineNumber": 72,
+    "lineNumber": 73,
     "params": [],
     "return": {
       "nullable": null,
@@ -859,7 +859,7 @@
     "longname": "src/bot/index.js~Bot#client",
     "access": null,
     "description": null,
-    "lineNumber": 92,
+    "lineNumber": 93,
     "undocument": true,
     "type": {
       "types": [
@@ -877,7 +877,7 @@
     "longname": "src/bot/index.js~Bot#localStorage",
     "access": null,
     "description": null,
-    "lineNumber": 93,
+    "lineNumber": 94,
     "undocument": true,
     "type": {
       "types": [
@@ -895,7 +895,7 @@
     "longname": "src/bot/index.js~Bot#dispatcher",
     "access": null,
     "description": null,
-    "lineNumber": 97,
+    "lineNumber": 98,
     "undocument": true,
     "type": {
       "types": [
@@ -913,7 +913,7 @@
     "longname": "src/bot/index.js~Bot#permissions",
     "access": null,
     "description": null,
-    "lineNumber": 98,
+    "lineNumber": 99,
     "undocument": true,
     "type": {
       "types": [
@@ -931,7 +931,7 @@
     "longname": "src/bot/index.js~Bot#util",
     "access": null,
     "description": null,
-    "lineNumber": 99,
+    "lineNumber": 100,
     "undocument": true,
     "type": {
       "types": [
@@ -944,6 +944,39 @@
     "kind": "method",
     "static": false,
     "variation": null,
+    "name": "buildCommand",
+    "memberof": "src/bot/index.js~Bot",
+    "longname": "src/bot/index.js~Bot#buildCommand",
+    "access": null,
+    "description": "Create a command builder",
+    "lineNumber": 161,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "CommandInfo"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "info",
+        "description": "The command information"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "CommandBuilder"
+      ],
+      "spread": false,
+      "description": "The builder"
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 33,
+    "kind": "method",
+    "static": false,
+    "variation": null,
     "name": "registerCommand",
     "memberof": "src/bot/index.js~Bot",
     "longname": "src/bot/index.js~Bot#registerCommand",
@@ -952,7 +985,7 @@
     "see": [
       "{@link Bot#registerCommands}"
     ],
-    "lineNumber": 154,
+    "lineNumber": 171,
     "params": [
       {
         "nullable": null,
@@ -977,7 +1010,7 @@
     "generator": false
   },
   {
-    "__docId__": 33,
+    "__docId__": 34,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -986,7 +1019,7 @@
     "longname": "src/bot/index.js~Bot#registerCommands",
     "access": null,
     "description": "Registers multiple commands to the bot's registry",
-    "lineNumber": 163,
+    "lineNumber": 180,
     "params": [
       {
         "nullable": null,
@@ -1011,7 +1044,7 @@
     "generator": false
   },
   {
-    "__docId__": 34,
+    "__docId__": 35,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -1023,7 +1056,7 @@
     "see": [
       "{@link Bot#registerModules}"
     ],
-    "lineNumber": 176,
+    "lineNumber": 193,
     "params": [
       {
         "nullable": null,
@@ -1049,7 +1082,7 @@
     "generator": false
   },
   {
-    "__docId__": 35,
+    "__docId__": 36,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -1058,7 +1091,7 @@
     "longname": "src/bot/index.js~Bot#registerModules",
     "access": null,
     "description": "Registers multiple modules to the bot's registry",
-    "lineNumber": 185,
+    "lineNumber": 202,
     "params": [
       {
         "nullable": null,
@@ -1084,7 +1117,7 @@
     "generator": false
   },
   {
-    "__docId__": 36,
+    "__docId__": 37,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -1093,29 +1126,7 @@
     "longname": "src/bot/index.js~Bot#registerDefaults",
     "access": null,
     "description": "Registers both the default modules and commands to the bot's registry",
-    "lineNumber": 204,
-    "params": [],
-    "return": {
-      "nullable": null,
-      "types": [
-        "Bot"
-      ],
-      "spread": false,
-      "description": "This bot"
-    },
-    "generator": false
-  },
-  {
-    "__docId__": 37,
-    "kind": "method",
-    "static": false,
-    "variation": null,
-    "name": "registerDefaultModules",
-    "memberof": "src/bot/index.js~Bot",
-    "longname": "src/bot/index.js~Bot#registerDefaultModules",
-    "access": null,
-    "description": "Registers the default modules to the bot's registry",
-    "lineNumber": 214,
+    "lineNumber": 221,
     "params": [],
     "return": {
       "nullable": null,
@@ -1132,12 +1143,12 @@
     "kind": "method",
     "static": false,
     "variation": null,
-    "name": "registerDefaultCommands",
+    "name": "registerDefaultModules",
     "memberof": "src/bot/index.js~Bot",
-    "longname": "src/bot/index.js~Bot#registerDefaultCommands",
+    "longname": "src/bot/index.js~Bot#registerDefaultModules",
     "access": null,
-    "description": "Registers the default commands to the bot's registry",
-    "lineNumber": 229,
+    "description": "Registers the default modules to the bot's registry",
+    "lineNumber": 231,
     "params": [],
     "return": {
       "nullable": null,
@@ -1154,6 +1165,28 @@
     "kind": "method",
     "static": false,
     "variation": null,
+    "name": "registerDefaultCommands",
+    "memberof": "src/bot/index.js~Bot",
+    "longname": "src/bot/index.js~Bot#registerDefaultCommands",
+    "access": null,
+    "description": "Registers the default commands to the bot's registry",
+    "lineNumber": 246,
+    "params": [],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Bot"
+      ],
+      "spread": false,
+      "description": "This bot"
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 40,
+    "kind": "method",
+    "static": false,
+    "variation": null,
     "name": "registerEvalObject",
     "memberof": "src/bot/index.js~Bot",
     "longname": "src/bot/index.js~Bot#registerEvalObject",
@@ -1162,7 +1195,7 @@
     "see": [
       "{@link Bot#registerEvalObjects}"
     ],
-    "lineNumber": 258,
+    "lineNumber": 275,
     "params": [
       {
         "nullable": null,
@@ -1196,7 +1229,7 @@
     "generator": false
   },
   {
-    "__docId__": 40,
+    "__docId__": 41,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -1205,7 +1238,7 @@
     "longname": "src/bot/index.js~Bot#registerEvalObjects",
     "access": null,
     "description": "Registers multiple objects to be usable by the eval command",
-    "lineNumber": 269,
+    "lineNumber": 286,
     "params": [
       {
         "nullable": null,
@@ -1229,7 +1262,7 @@
     "generator": false
   },
   {
-    "__docId__": 41,
+    "__docId__": 42,
     "kind": "get",
     "static": false,
     "variation": null,
@@ -1238,7 +1271,7 @@
     "longname": "src/bot/index.js~Bot#registry",
     "access": null,
     "description": null,
-    "lineNumber": 275,
+    "lineNumber": 292,
     "type": {
       "nullable": null,
       "types": [
@@ -1250,7 +1283,7 @@
     "generator": false
   },
   {
-    "__docId__": 42,
+    "__docId__": 43,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -1259,7 +1292,7 @@
     "longname": "src/bot/index.js~Bot#_registry",
     "access": null,
     "description": null,
-    "lineNumber": 276,
+    "lineNumber": 293,
     "undocument": true,
     "type": {
       "types": [
@@ -1268,7 +1301,7 @@
     }
   },
   {
-    "__docId__": 43,
+    "__docId__": 44,
     "kind": "get",
     "static": false,
     "variation": null,
@@ -1277,7 +1310,7 @@
     "longname": "src/bot/index.js~Bot#logger",
     "access": null,
     "description": null,
-    "lineNumber": 281,
+    "lineNumber": 298,
     "type": {
       "nullable": null,
       "types": [
@@ -1289,7 +1322,7 @@
     "generator": false
   },
   {
-    "__docId__": 44,
+    "__docId__": 45,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -1298,7 +1331,7 @@
     "longname": "src/bot/index.js~Bot#_logger",
     "access": null,
     "description": null,
-    "lineNumber": 283,
+    "lineNumber": 300,
     "undocument": true,
     "type": {
       "types": [
@@ -1307,7 +1340,7 @@
     }
   },
   {
-    "__docId__": 45,
+    "__docId__": 46,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -1316,7 +1349,7 @@
     "longname": "src/bot/index.js~Bot#_checkForUpdate",
     "access": null,
     "description": "Checks for an update for the bot",
-    "lineNumber": 330,
+    "lineNumber": 347,
     "params": [],
     "return": {
       "nullable": null,
@@ -1329,7 +1362,7 @@
     "generator": false
   },
   {
-    "__docId__": 46,
+    "__docId__": 47,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -1338,7 +1371,7 @@
     "longname": "src/bot/index.js~Bot#_logMessage",
     "access": null,
     "description": "Logs a message",
-    "lineNumber": 353,
+    "lineNumber": 370,
     "params": [
       {
         "nullable": null,
@@ -1372,7 +1405,7 @@
     "generator": false
   },
   {
-    "__docId__": 47,
+    "__docId__": 48,
     "kind": "variable",
     "static": true,
     "variation": null,
@@ -1384,7 +1417,7 @@
     "importPath": "discord-graf/src/bot/index.js",
     "importStyle": null,
     "description": null,
-    "lineNumber": 362,
+    "lineNumber": 379,
     "undocument": true,
     "type": {
       "types": [
@@ -1393,7 +1426,7 @@
     }
   },
   {
-    "__docId__": 48,
+    "__docId__": 49,
     "kind": "file",
     "static": true,
     "variation": null,
@@ -1406,7 +1439,7 @@
     "content": "'use babel';\r\n'use strict';\r\n\r\nimport Module from '../commands/module';\r\n\r\n/** Contains methods to test whether a user has permissions in a guild */\r\nexport default class BotPermissions {\r\n\t/**\r\n\t * @param {Client} client - The Client to use\r\n\t * @param {ModRoleStorage} modRoles - The mod role storage to use\r\n\t * @param {SettingStorage} settings - The setting storage to use\r\n\t * @param {BotConfig} config - The bot config to use\r\n\t */\r\n\tconstructor(client, modRoles, settings, config) {\r\n\t\tif(!client || !modRoles || !settings || !config) throw new Error('A client, modRoles, settings, and config must be specified.');\r\n\r\n\t\t/** @type {Client} */\r\n\t\tthis.client = client;\r\n\t\t/** @type {ModRoleStorage} */\r\n\t\tthis.modRoles = modRoles;\r\n\t\t/** @type {SettingStorage} */\r\n\t\tthis.settings = settings;\r\n\t\t/** @type {BotConfig} */\r\n\t\tthis.config = config;\r\n\t}\r\n\r\n\t/**\r\n\t * Tests to see if a user is a moderator in a guild.\r\n\t * If the guild has not set any moderator roles, then they will be a moderator if any of their assigned roles contain the \"Manage messages\" permission.\r\n\t * If the guild has set moderator roles, then they will instead be a moderator if they have any of the moderator roles assigned.\r\n\t * The bot owner and users with the \"Administrate\" permission are always moderators.\r\n\t * @param {Guild|string} guild - The Guild or the guild ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is considered a moderator\r\n\t * @see {@link BotPermissions.isMod}\r\n\t */\r\n\tisMod(guild, user) {\r\n\t\treturn this.constructor.isMod(this.client, this.modRoles, this.settings, this.config, guild, user);\r\n\t}\r\n\r\n\t/**\r\n\t * Tests to see if a user is a moderator in a guild using a specified client and config.\r\n\t * If the guild has not set any moderator roles, then they will be a moderator if any of their assigned roles contain the \"Manage messages\" permission.\r\n\t * If the guild has set moderator roles, then they will instead be a moderator if they have any of the moderator roles assigned.\r\n\t * The bot owner and users with the \"Administrate\" permission are always moderators.\r\n\t * @param {Client} client - The Client to use\r\n\t * @param {ModRoleStorage} modRoles - The mod role storage to use\r\n\t * @param {SettingStorage} settings - The setting storage to use\r\n\t * @param {BotConfig} config - The bot config to use\r\n\t * @param {Guild|string} guild - The Guild or the guild ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is considered a moderator\r\n\t * @see {@link BotPermissions#isMod}\r\n\t */\r\n\tstatic isMod(client, modRoles, settings, config, guild, user) {\r\n\t\t[guild, user] = this.resolve(client, guild, user);\r\n\t\tif(user.id === config.values.owner) return true;\r\n\t\tconst member = guild.member(user);\r\n\t\tif(!member) return false;\r\n\t\tif(member.roles.some(role => role.hasPermission('ADMINISTRATOR'))) return true;\r\n\t\tif(!Module.isEnabled(settings, guild, 'mod-roles') || modRoles.isEmpty(guild)) return member.roles.some(role => role.hasPermission('MANAGE_MESSAGES'));\r\n\t\treturn modRoles.find(guild).some(role => member.roles.some(role2 => role.id === role2.id));\r\n\t}\r\n\r\n\t/**\r\n\t * Tests to see if a user is an administrator in a guild.\r\n\t * If the user is the bot owner or has any roles assigned with the \"Administrate\" permission, they are considered an administrator.\r\n\t * @param {Guild|string} guild - The Guild or the guild ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is considered an administrator\r\n\t * @see {@link BotPermissions.isAdmin}\r\n\t */\r\n\tisAdmin(guild, user) {\r\n\t\treturn this.constructor.isAdmin(this.client, this.config, guild, user);\r\n\t}\r\n\r\n\t/**\r\n\t * Tests to see if a user is an administrator in a guild with a specified client.\r\n\t * If the user is the bot owner or has any roles assigned with the \"Administrate\" permission, they are considered an administrator.\r\n\t * @param {Client} client - The Client to use\r\n\t * @param {BotConfig} config - The bot config to use\r\n\t * @param {Guild|string} guild - The Guild or the guild ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is considered an administrator\r\n\t * @see {@link BotPermissions#isAdmin}\r\n\t */\r\n\tstatic isAdmin(client, config, guild, user) {\r\n\t\t[guild, user] = this.resolve(client, guild, user);\r\n\t\tif(user.id === config.values.owner) return true;\r\n\t\tconst member = guild.member(user);\r\n\t\tif(!member) return false;\r\n\t\treturn member.roles.some(role => role.hasPermission('ADMINISTRATOR'));\r\n\t}\r\n\r\n\t/**\r\n\t * Tests to see if a user is the owner of the bot\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is the bot owner\r\n\t * @see {@link BotPermissions.isOwner}\r\n\t */\r\n\tisOwner(user) {\r\n\t\treturn this.constructor.isOwner(this.config, user);\r\n\t}\r\n\r\n\t/**\r\n\t * Tests to see if a user is the owner of the bot\r\n\t * @param {BotConfig} config - The bot config to use\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is the bot owner\r\n\t * @see {@link BotPermissions#isOwner}\r\n\t */\r\n\tstatic isOwner(config, user) {\r\n\t\tif(!user) throw new Error('A user must be specified.');\r\n\t\treturn (user.id || user) === config.values.owner;\r\n\t}\r\n\r\n\t/**\r\n\t * Resolves a guild and user to Discord.js instances\r\n\t * @param {Guild|string} guild - The Guild or the guild ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {[guild, user]} The Guild and User instance pair\r\n\t * @see {@link BotPermissions.resolve}\r\n\t */\r\n\tresolve(guild, user) {\r\n\t\tif(!guild || !user) throw new Error('A guild and user must be specified.');\r\n\t\treturn this.constructor.resolve(this.client, guild, user);\r\n\t}\r\n\r\n\t/**\r\n\t * Resolves a guild and user to Discord.js instances with a specified client\r\n\t * @param {Client} client - The Client to use\r\n\t * @param {Guild|string} guild - The Guild or the guild ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {[guild, user]} The Guild and User instance pair\r\n\t * @see {@link BotPermissions#resolve}\r\n\t */\r\n\tstatic resolve(client, guild, user) {\r\n\t\tif(!client || !guild || !user) throw new Error('A client, guild, and user must be specified.');\r\n\t\tif(typeof guild === 'string') guild = client.guilds.get(guild);\r\n\t\tif(!guild || !guild.id) throw new Error('Unable to identify guild.');\r\n\t\tif(typeof user === 'string') user = guild.members.get(user);\r\n\t\tif(!user || !user.id) throw new Error('Unable to identify user.');\r\n\t\treturn [guild, user];\r\n\t}\r\n}\r\n"
   },
   {
-    "__docId__": 49,
+    "__docId__": 50,
     "kind": "class",
     "static": true,
     "variation": null,
@@ -1422,7 +1455,7 @@
     "interface": false
   },
   {
-    "__docId__": 50,
+    "__docId__": 51,
     "kind": "constructor",
     "static": false,
     "variation": null,
@@ -1477,7 +1510,7 @@
     "generator": false
   },
   {
-    "__docId__": 51,
+    "__docId__": 52,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -1497,7 +1530,7 @@
     }
   },
   {
-    "__docId__": 52,
+    "__docId__": 53,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -1517,7 +1550,7 @@
     }
   },
   {
-    "__docId__": 53,
+    "__docId__": 54,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -1537,7 +1570,7 @@
     }
   },
   {
-    "__docId__": 54,
+    "__docId__": 55,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -1557,7 +1590,7 @@
     }
   },
   {
-    "__docId__": 55,
+    "__docId__": 56,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -1605,7 +1638,7 @@
     "generator": false
   },
   {
-    "__docId__": 56,
+    "__docId__": 57,
     "kind": "method",
     "static": true,
     "variation": null,
@@ -1693,7 +1726,7 @@
     "generator": false
   },
   {
-    "__docId__": 57,
+    "__docId__": 58,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -1741,7 +1774,7 @@
     "generator": false
   },
   {
-    "__docId__": 58,
+    "__docId__": 59,
     "kind": "method",
     "static": true,
     "variation": null,
@@ -1809,7 +1842,7 @@
     "generator": false
   },
   {
-    "__docId__": 59,
+    "__docId__": 60,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -1846,7 +1879,7 @@
     "generator": false
   },
   {
-    "__docId__": 60,
+    "__docId__": 61,
     "kind": "method",
     "static": true,
     "variation": null,
@@ -1893,7 +1926,7 @@
     "generator": false
   },
   {
-    "__docId__": 61,
+    "__docId__": 62,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -1941,7 +1974,7 @@
     "generator": false
   },
   {
-    "__docId__": 62,
+    "__docId__": 63,
     "kind": "method",
     "static": true,
     "variation": null,
@@ -1999,7 +2032,7 @@
     "generator": false
   },
   {
-    "__docId__": 63,
+    "__docId__": 64,
     "kind": "file",
     "static": true,
     "variation": null,
@@ -2009,10 +2042,10 @@
     "access": null,
     "description": null,
     "lineNumber": 1,
-    "content": "'use babel';\r\n'use strict';\r\n\r\n/** Contains general utility methods */\r\nexport default class BotUtil {\r\n\t/**\r\n\t * @param {Client} client - The client to use\r\n\t * @param {SettingStorage} settings - The setting storage to use\r\n\t * @param {BotConfig} config - The bot config to use\r\n\t */\r\n\tconstructor(client, settings, config) {\r\n\t\tif(!client || !settings || !config) throw new Error('A client, settings, and config must be specified.');\r\n\r\n\t\t/** @type {Client} */\r\n\t\tthis.client = client;\r\n\t\t/** @type {SettingStorage} */\r\n\t\tthis.settings = settings;\r\n\t\t/** @type {BotConfig} */\r\n\t\tthis.config = config;\r\n\t\t/**\r\n\t\t * @type {PatternConstants}\r\n\t\t * @see {@link BotUtil.patterns}\r\n\t\t */\r\n\t\tthis.patterns = patterns;\r\n\t}\r\n\r\n\t/**\r\n\t * Build a command usage string\r\n\t * @param {string} command - The short command string (ex. \"roll d20\")\r\n\t * @param {Guild|string} [guild] - The guild or guild ID to use the prefix of\r\n\t * @param {boolean} [onlyMention=false] - Whether or not the usage string should only show the mention form\r\n\t * @return {string} The command usage string\r\n\t * @see {@link BotUtil.usage}\r\n\t */\r\n\tusage(command, guild = null, onlyMention = false) {\r\n\t\treturn this.constructor.usage(this.client, this.settings, this.config, command, guild, onlyMention);\r\n\t}\r\n\r\n\t/**\r\n\t * Build a command usage string\r\n\t * @param {Client} client - The client to use\r\n\t * @param {SettingStorage} settings - The setting storage to use\r\n\t * @param {BotConfig} config - The bot config to use\r\n\t * @param {string} command - The short command string (ex. \"roll d20\")\r\n\t * @param {Guild|string} [guild] - The guild or guild ID to use the prefix of\r\n\t * @param {boolean} [onlyMention=false] - Whether or not the usage string should only show the mention form\r\n\t * @return {string} The command usage string\r\n\t * @see {@link BotUtil#usage}\r\n\t */\r\n\tstatic usage(client, settings, config, command, guild = null, onlyMention = false) {\r\n\t\tconst nbcmd = this.nbsp(command);\r\n\t\tif(!guild && !onlyMention) return `\\`${nbcmd}\\``;\r\n\t\tlet prefixAddon;\r\n\t\tif(!onlyMention) {\r\n\t\t\tlet prefix = this.nbsp(settings.getValue(guild, 'command-prefix', config.values.commandPrefix));\r\n\t\t\tif(prefix.length > 1) prefix += '\\xa0';\r\n\t\t\tprefixAddon = prefix ? `\\`${prefix}${nbcmd}\\` or ` : '';\r\n\t\t}\r\n\t\treturn `${prefixAddon || ''}\\`@${this.nbsp(client.user.username)}#${client.user.discriminator}\\xa0${nbcmd}\\``;\r\n\t}\r\n\r\n\t/**\r\n\t * Build a disambiguation list - useful for telling a user to be more specific when finding partial matches from a command\r\n\t * @param {Object[]} items - An array of items to make the disambiguation list for\r\n\t * @param {string} label - The text to refer to the items as (ex. \"characters\")\r\n\t * @param {string} [property=name] - The property on items to display in the list\r\n\t * @return {string} The disambiguation list\r\n\t * @see {@link BotUtil.disambiguation}\r\n\t */\r\n\tdisambiguation(items, label, property = 'name') {\r\n\t\treturn this.constructor.disambiguation(items, label, property);\r\n\t}\r\n\r\n\t/**\r\n\t * Build a disambiguation list - useful for telling a user to be more specific when finding partial matches from a command\r\n\t * @param {Object[]} items - An array of items to make the disambiguation list for\r\n\t * @param {string} label - The text to refer to the items as (ex. \"characters\")\r\n\t * @param {string} [property=name] - The property on items to display in the list\r\n\t * @return {string} The disambiguation list\r\n\t * @see {@link BotUtil#disambiguation}\r\n\t */\r\n\tstatic disambiguation(items, label, property = 'name') {\r\n\t\tconst itemList = items.map(item => `\"${this.nbsp(property ? item[property] : item)}\"`).join(',   ');\r\n\t\treturn `Multiple ${label} found, please be more specific: ${itemList}`;\r\n\t}\r\n\r\n\t/**\r\n\t * Paginate an array of items\r\n\t * @param {Object[]} items - An array of items to paginate\r\n\t * @param {number} [page=1] - The page to select\r\n\t * @param {number} [pageLength=10] - The number of items per page\r\n\t * @return {Object} The resulting paginated object\r\n\t * @property {Object[]} items - The chunk of items for the current page\r\n\t * @property {number} page - The current page\r\n\t * @property {number} maxPage - The maximum page\r\n\t * @property {number} pageLength - The numer of items per page\r\n\t * @property {string} pageText - The current page string (\"page x of y\")\r\n\t * @see {@link BotUtil.paginate}\r\n\t */\r\n\tpaginate(items, page = 1, pageLength = 10) {\r\n\t\treturn this.constructor.paginate(items, page, pageLength);\r\n\t}\r\n\r\n\t/**\r\n\t * Paginate an array of items\r\n\t * @param {Object[]} items - An array of items to paginate\r\n\t * @param {number} [page=1] - The page to select\r\n\t * @param {number} [pageLength=10] - The number of items per page\r\n\t * @return {Object} The resulting paginated object\r\n\t * @property {Object[]} items - The chunk of items for the current page\r\n\t * @property {number} page - The current page\r\n\t * @property {number} maxPage - The maximum page\r\n\t * @property {number} pageLength - The numer of items per page\r\n\t * @property {string} pageText - The current page string (\"page x of y\")\r\n\t * @see {@link BotUtil#paginate}\r\n\t */\r\n\tstatic paginate(items, page = 1, pageLength = 10) {\r\n\t\tconst maxPage = Math.ceil(items.length / pageLength);\r\n\t\tif(page < 1) page = 1;\r\n\t\tif(page > maxPage) page = maxPage;\r\n\t\tlet startIndex = (page - 1) * pageLength;\r\n\t\treturn {\r\n\t\t\titems: items.length > pageLength ? items.slice(startIndex, startIndex + pageLength) : items,\r\n\t\t\tpage: page,\r\n\t\t\tmaxPage: maxPage,\r\n\t\t\tpageLength: pageLength,\r\n\t\t\tpageText: `page ${page} of ${maxPage}`\r\n\t\t};\r\n\t}\r\n\r\n\t/**\r\n\t * Search for matches in a list of items\r\n\t * @param {Object[]} items - An array of items to search in\r\n\t * @param {string} searchString - The string to search for\r\n\t * @param {SearchOptions} options - An options object\r\n\t * @return {Object[]} The matched items\r\n\t * @see {@link BotUtil.search}\r\n\t */\r\n\tsearch(items, searchString, { property = 'name', searchInexact = true, searchExact = true, useStartsWith = false } = {}) {\r\n\t\treturn this.constructor.search(items, searchString, { property: property, searchInexact: searchInexact, searchExact: searchExact, useStartsWith: useStartsWith });\r\n\t}\r\n\r\n\t/**\r\n\t * Search for matches in a list of items\r\n\t * @param {Object[]} items - An array of items to search in\r\n\t * @param {string} searchString - The string to search for\r\n\t * @param {SearchOptions} options - An options object\r\n\t * @return {Object[]} The matched items\r\n\t * @see {@link BotUtil#search}\r\n\t */\r\n\tstatic search(items, searchString, { property = 'name', searchInexact = true, searchExact = true, useStartsWith = false } = {}) {\r\n\t\tif(!items || items.length === 0) return [];\r\n\t\tif(!searchString) return items;\r\n\r\n\t\tconst lowercaseSearch = searchString.toLowerCase();\r\n\t\tlet matchedItems;\r\n\r\n\t\t// Find all items that start with or include the search string\r\n\t\tif(searchInexact) {\r\n\t\t\tif(useStartsWith && searchString.length === 1) {\r\n\t\t\t\tmatchedItems = items.filter(element => String(property ? element[property] : element)\r\n\t\t\t\t\t.normalize('NFKD')\r\n\t\t\t\t\t.toLowerCase()\r\n\t\t\t\t\t.startsWith(lowercaseSearch)\r\n\t\t\t\t);\r\n\t\t\t} else {\r\n\t\t\t\tmatchedItems = items.filter(element => String(property ? element[property] : element)\r\n\t\t\t\t\t.normalize('NFKD')\r\n\t\t\t\t\t.toLowerCase()\r\n\t\t\t\t\t.includes(lowercaseSearch)\r\n\t\t\t\t);\r\n\t\t\t}\r\n\t\t} else {\r\n\t\t\tmatchedItems = items;\r\n\t\t}\r\n\r\n\t\t// See if any are an exact match\r\n\t\tif(searchExact && matchedItems.length > 1) {\r\n\t\t\tconst exactItems = matchedItems.filter(element => String(property ? element[property] : element).normalize('NFKD').toLowerCase() === lowercaseSearch);\r\n\t\t\tif(exactItems.length > 0) return exactItems;\r\n\t\t}\r\n\r\n\t\treturn matchedItems;\r\n\t}\r\n\r\n\t/**\r\n\t * Splits a string using specified characters into multiple strings of a maximum length\r\n\t * @param {string} text - The string to split\r\n\t * @param {number} [maxLength=1925] - The maximum length of each split string\r\n\t * @param {string} [splitOn=\\n] - The characters to split the string with\r\n\t * @param {string} [prepend] - String to prepend to every split message\r\n\t * @param {string} [append] - String to append to every split message\r\n\t * @return {string[]} The split strings\n\t * @see {@link BotUtil.split}\r\n\t */\r\n\tsplit(text, maxLength = 1925, splitOn = '\\n', prepend = '', append = '') {\r\n\t\treturn this.constructor.split(text, maxLength, splitOn, prepend, append);\r\n\t}\r\n\n\t/**\r\n\t * Splits a string using specified characters into multiple strings of a maximum length\r\n\t * @param {string} text - The string to split\r\n\t * @param {number} [maxLength=1925] - The maximum length of each split string\r\n\t * @param {string} [splitOn=\\n] - The characters to split the string with\r\n\t * @param {string} [prepend] - String to prepend to every split message\r\n\t * @param {string} [append] - String to append to every split message\r\n\t * @return {string[]} The split strings\r\n\t * @see {@link BotUtil#split}\r\n\t */\r\n\tstatic split(text, maxLength = 1900, splitOn = '\\n', prepend = '', append = '') {\r\n\t\tconst splitText = text.split(splitOn);\r\n\t\tif(splitText.length === 1 && text.length > maxLength) throw new Error('Message exceeds the max length and contains no split characters.');\r\n\t\tconst messages = [''];\r\n\t\tlet msg = 0;\r\n\t\tfor(let i = 0; i < splitText.length; i++) {\r\n\t\t\tif(messages[msg].length + splitText[i].length + 1 > maxLength) {\r\n\t\t\t\tmessages[msg] += append;\r\n\t\t\t\tmessages.push(prepend);\r\n\t\t\t\tmsg++;\r\n\t\t\t}\r\n\t\t\tmessages[msg] += (messages[msg].length > 0 && messages[msg] !== prepend ? splitOn : '') + splitText[i];\r\n\t\t}\r\n\t\treturn messages;\r\n\t}\r\n\r\n\t/**\r\n\t * Convert spaces to non-breaking spaces\r\n\t * @param {string} text - The text to convert\r\n\t * @return {string} The converted text\r\n\t * @see {@link BotUtil#nbsp}\r\n\t */\r\n\tnbsp(text) {\r\n\t\treturn this.constructor.nbsp(text);\r\n\t}\r\n\r\n\t/**\r\n\t * Convert spaces to non-breaking spaces\r\n\t * @param {string} text - The text to convert\r\n\t * @return {string} The converted text\r\n\t * @see {@link BotUtil#nbsp}\r\n\t */\r\n\tstatic nbsp(text) {\r\n\t\treturn String(text).replace(spacePattern, nbsp);\r\n\t}\r\n\r\n\t/**\r\n\t * @type {PatternConstants}\r\n\t * @see {@link BotUtil#patterns}\r\n\t */\r\n\tstatic get patterns() {\r\n\t\treturn patterns;\r\n\t}\r\n}\r\n\r\nconst nbsp = '\\xa0';\r\nconst spacePattern = / /g;\r\n\r\n/**\r\n * @typedef {Object} PatternConstants\r\n * @property {RegExp} userID - A pattern to match a user ID from a raw ID string or mention\r\n * @property {RegExp} roleID - A pattern to match a role ID from a raw ID string or mention\r\n * @property {RegExp} channelID - A pattern to match a channel ID from a raw ID string or mention\r\n * @property {RegExp} allUserMentions - A pattern to to match any mentions that would notify users\r\n */\r\nconst patterns = {\r\n\tuserID: /^(?:<@!?)?([0-9]+)>?$/,\r\n\troleID: /^(?:<@&)?([0-9]+)>?$/,\r\n\tchannelID: /^(?:<#)?([0-9]+)>?$/,\r\n\tanyUserMentions: /@everyone|@here|<@(?:!|&)?[0-9]+>/i\r\n};\r\n\r\n/**\r\n * @typedef {Object} SearchOptions\r\n * @property {string} [property=name] - The property on items to search against. If empty, the raw object's toString will be used instead.\r\n * @property {boolean} [searchInexact=true] - Whether or not to search for inexact matches\r\n * @property {boolean} [searchExact=true] - Whether or not to search for exact matches (will narrow down inexact matches if applicable)\r\n * @property {boolean} [useStartsWith=false] - Whether or not to search inexact by checking to see if the item starts with the search string rather than contains,\r\n * if the search string is only one character\r\n */\r\n"
+    "content": "'use babel';\r\n'use strict';\r\n\r\n/** Contains general utility methods */\r\nexport default class BotUtil {\r\n\t/**\r\n\t * @param {Client} client - The client to use\r\n\t * @param {SettingStorage} settings - The setting storage to use\r\n\t * @param {BotConfig} config - The bot config to use\r\n\t */\r\n\tconstructor(client, settings, config) {\r\n\t\tif(!client || !settings || !config) throw new Error('A client, settings, and config must be specified.');\r\n\r\n\t\t/** @type {Client} */\r\n\t\tthis.client = client;\r\n\t\t/** @type {SettingStorage} */\r\n\t\tthis.settings = settings;\r\n\t\t/** @type {BotConfig} */\r\n\t\tthis.config = config;\r\n\t\t/**\r\n\t\t * @type {PatternConstants}\r\n\t\t * @see {@link BotUtil.patterns}\r\n\t\t */\r\n\t\tthis.patterns = patterns;\r\n\t}\r\n\r\n\t/**\r\n\t * Build a command usage string\r\n\t * @param {string} command - The short command string (ex. \"roll d20\")\r\n\t * @param {Guild|string} [guild] - The guild or guild ID to use the prefix of\r\n\t * @param {boolean} [onlyMention=false] - Whether or not the usage string should only show the mention form\r\n\t * @return {string} The command usage string\r\n\t * @see {@link BotUtil.usage}\r\n\t */\r\n\tusage(command, guild = null, onlyMention = false) {\r\n\t\treturn this.constructor.usage(this.client, this.settings, this.config, command, guild, onlyMention);\r\n\t}\r\n\r\n\t/**\r\n\t * Build a command usage string\r\n\t * @param {Client} client - The client to use\r\n\t * @param {SettingStorage} settings - The setting storage to use\r\n\t * @param {BotConfig} config - The bot config to use\r\n\t * @param {string} command - The short command string (ex. \"roll d20\")\r\n\t * @param {Guild|string} [guild] - The guild or guild ID to use the prefix of\r\n\t * @param {boolean} [onlyMention=false] - Whether or not the usage string should only show the mention form\r\n\t * @return {string} The command usage string\r\n\t * @see {@link BotUtil#usage}\r\n\t */\r\n\tstatic usage(client, settings, config, command, guild = null, onlyMention = false) {\r\n\t\tconst nbcmd = this.nbsp(command);\r\n\t\tif(!guild && !onlyMention) return `\\`${nbcmd}\\``;\r\n\t\tlet prefixAddon;\r\n\t\tif(!onlyMention) {\r\n\t\t\tlet prefix = this.nbsp(settings.getValue(guild, 'command-prefix', config.values.commandPrefix));\r\n\t\t\tif(prefix.length > 1) prefix += '\\xa0';\r\n\t\t\tprefixAddon = prefix ? `\\`${prefix}${nbcmd}\\` or ` : '';\r\n\t\t}\r\n\t\treturn `${prefixAddon || ''}\\`@${this.nbsp(client.user.username)}#${client.user.discriminator}\\xa0${nbcmd}\\``;\r\n\t}\r\n\r\n\t/**\r\n\t * Build a disambiguation list - useful for telling a user to be more specific when finding partial matches from a command\r\n\t * @param {Object[]} items - An array of items to make the disambiguation list for\r\n\t * @param {string} label - The text to refer to the items as (ex. \"characters\")\r\n\t * @param {string} [property=name] - The property on items to display in the list\r\n\t * @return {string} The disambiguation list\r\n\t * @see {@link BotUtil.disambiguation}\r\n\t */\r\n\tdisambiguation(items, label, property = 'name') {\r\n\t\treturn this.constructor.disambiguation(items, label, property);\r\n\t}\r\n\r\n\t/**\r\n\t * Build a disambiguation list - useful for telling a user to be more specific when finding partial matches from a command\r\n\t * @param {Object[]} items - An array of items to make the disambiguation list for\r\n\t * @param {string} label - The text to refer to the items as (ex. \"characters\")\r\n\t * @param {string} [property=name] - The property on items to display in the list\r\n\t * @return {string} The disambiguation list\r\n\t * @see {@link BotUtil#disambiguation}\r\n\t */\r\n\tstatic disambiguation(items, label, property = 'name') {\r\n\t\tconst itemList = items.map(item => `\"${this.nbsp(property ? item[property] : item)}\"`).join(',   ');\r\n\t\treturn `Multiple ${label} found, please be more specific: ${itemList}`;\r\n\t}\r\n\r\n\t/**\r\n\t * Paginate an array of items\r\n\t * @param {Object[]} items - An array of items to paginate\r\n\t * @param {number} [page=1] - The page to select\r\n\t * @param {number} [pageLength=10] - The number of items per page\r\n\t * @return {Object} The resulting paginated object\r\n\t * @property {Object[]} items - The chunk of items for the current page\r\n\t * @property {number} page - The current page\r\n\t * @property {number} maxPage - The maximum page\r\n\t * @property {number} pageLength - The numer of items per page\r\n\t * @property {string} pageText - The current page string (\"page x of y\")\r\n\t * @see {@link BotUtil.paginate}\r\n\t */\r\n\tpaginate(items, page = 1, pageLength = 10) {\r\n\t\treturn this.constructor.paginate(items, page, pageLength);\r\n\t}\r\n\r\n\t/**\r\n\t * Paginate an array of items\r\n\t * @param {Object[]} items - An array of items to paginate\r\n\t * @param {number} [page=1] - The page to select\r\n\t * @param {number} [pageLength=10] - The number of items per page\r\n\t * @return {Object} The resulting paginated object\r\n\t * @property {Object[]} items - The chunk of items for the current page\r\n\t * @property {number} page - The current page\r\n\t * @property {number} maxPage - The maximum page\r\n\t * @property {number} pageLength - The numer of items per page\r\n\t * @property {string} pageText - The current page string (\"page x of y\")\r\n\t * @see {@link BotUtil#paginate}\r\n\t */\r\n\tstatic paginate(items, page = 1, pageLength = 10) {\r\n\t\tconst maxPage = Math.ceil(items.length / pageLength);\r\n\t\tif(page < 1) page = 1;\r\n\t\tif(page > maxPage) page = maxPage;\r\n\t\tlet startIndex = (page - 1) * pageLength;\r\n\t\treturn {\r\n\t\t\titems: items.length > pageLength ? items.slice(startIndex, startIndex + pageLength) : items,\r\n\t\t\tpage: page,\r\n\t\t\tmaxPage: maxPage,\r\n\t\t\tpageLength: pageLength,\r\n\t\t\tpageText: `page ${page} of ${maxPage}`\r\n\t\t};\r\n\t}\r\n\r\n\t/**\r\n\t * Search for matches in a list of items\r\n\t * @param {Object[]} items - An array of items to search in\r\n\t * @param {string} searchString - The string to search for\r\n\t * @param {SearchOptions} options - An options object\r\n\t * @return {Object[]} The matched items\r\n\t * @see {@link BotUtil.search}\r\n\t */\r\n\tsearch(items, searchString, { property = 'name', searchInexact = true, searchExact = true, useStartsWith = false } = {}) {\r\n\t\treturn this.constructor.search(items, searchString, { property: property, searchInexact: searchInexact, searchExact: searchExact, useStartsWith: useStartsWith });\r\n\t}\r\n\r\n\t/**\r\n\t * Search for matches in a list of items\r\n\t * @param {Object[]} items - An array of items to search in\r\n\t * @param {string} searchString - The string to search for\r\n\t * @param {SearchOptions} options - An options object\r\n\t * @return {Object[]} The matched items\r\n\t * @see {@link BotUtil#search}\r\n\t */\r\n\tstatic search(items, searchString, { property = 'name', searchInexact = true, searchExact = true, useStartsWith = false } = {}) {\r\n\t\tif(!items || items.length === 0) return [];\r\n\t\tif(!searchString) return items;\r\n\r\n\t\tconst lowercaseSearch = searchString.toLowerCase();\r\n\t\tlet matchedItems;\r\n\r\n\t\t// Find all items that start with or include the search string\r\n\t\tif(searchInexact) {\r\n\t\t\tif(useStartsWith && searchString.length === 1) {\r\n\t\t\t\tmatchedItems = items.filter(element => String(property ? element[property] : element)\r\n\t\t\t\t\t.normalize('NFKD')\r\n\t\t\t\t\t.toLowerCase()\r\n\t\t\t\t\t.startsWith(lowercaseSearch)\r\n\t\t\t\t);\r\n\t\t\t} else {\r\n\t\t\t\tmatchedItems = items.filter(element => String(property ? element[property] : element)\r\n\t\t\t\t\t.normalize('NFKD')\r\n\t\t\t\t\t.toLowerCase()\r\n\t\t\t\t\t.includes(lowercaseSearch)\r\n\t\t\t\t);\r\n\t\t\t}\r\n\t\t} else {\r\n\t\t\tmatchedItems = items;\r\n\t\t}\r\n\r\n\t\t// See if any are an exact match\r\n\t\tif(searchExact && matchedItems.length > 1) {\r\n\t\t\tconst exactItems = matchedItems.filter(element => String(property ? element[property] : element).normalize('NFKD').toLowerCase() === lowercaseSearch);\r\n\t\t\tif(exactItems.length > 0) return exactItems;\r\n\t\t}\r\n\r\n\t\treturn matchedItems;\r\n\t}\r\n\r\n\t/**\r\n\t * Splits a string using specified characters into multiple strings of a maximum length\r\n\t * @param {string} text - The string to split\r\n\t * @param {number} [maxLength=1925] - The maximum length of each split string\r\n\t * @param {string} [splitOn=\\n] - The characters to split the string with\r\n\t * @param {string} [prepend] - String to prepend to every split message\r\n\t * @param {string} [append] - String to append to every split message\r\n\t * @return {string[]} The split strings\r\n\t * @see {@link BotUtil.split}\r\n\t */\r\n\tsplit(text, maxLength = 1925, splitOn = '\\n', prepend = '', append = '') {\r\n\t\treturn this.constructor.split(text, maxLength, splitOn, prepend, append);\r\n\t}\r\n\r\n\t/**\r\n\t * Splits a string using specified characters into multiple strings of a maximum length\r\n\t * @param {string} text - The string to split\r\n\t * @param {number} [maxLength=1925] - The maximum length of each split string\r\n\t * @param {string} [splitOn=\\n] - The characters to split the string with\r\n\t * @param {string} [prepend] - String to prepend to every split message\r\n\t * @param {string} [append] - String to append to every split message\r\n\t * @return {string[]} The split strings\r\n\t * @see {@link BotUtil#split}\r\n\t */\r\n\tstatic split(text, maxLength = 1900, splitOn = '\\n', prepend = '', append = '') {\r\n\t\tconst splitText = text.split(splitOn);\r\n\t\tif(splitText.length === 1 && text.length > maxLength) throw new Error('Message exceeds the max length and contains no split characters.');\r\n\t\tconst messages = [''];\r\n\t\tlet msg = 0;\r\n\t\tfor(let i = 0; i < splitText.length; i++) {\r\n\t\t\tif(messages[msg].length + splitText[i].length + 1 > maxLength) {\r\n\t\t\t\tmessages[msg] += append;\r\n\t\t\t\tmessages.push(prepend);\r\n\t\t\t\tmsg++;\r\n\t\t\t}\r\n\t\t\tmessages[msg] += (messages[msg].length > 0 && messages[msg] !== prepend ? splitOn : '') + splitText[i];\r\n\t\t}\r\n\t\treturn messages;\r\n\t}\r\n\r\n\t/**\r\n\t * Convert spaces to non-breaking spaces\r\n\t * @param {string} text - The text to convert\r\n\t * @return {string} The converted text\r\n\t * @see {@link BotUtil#nbsp}\r\n\t */\r\n\tnbsp(text) {\r\n\t\treturn this.constructor.nbsp(text);\r\n\t}\r\n\r\n\t/**\r\n\t * Convert spaces to non-breaking spaces\r\n\t * @param {string} text - The text to convert\r\n\t * @return {string} The converted text\r\n\t * @see {@link BotUtil#nbsp}\r\n\t */\r\n\tstatic nbsp(text) {\r\n\t\treturn String(text).replace(spacePattern, nbsp);\r\n\t}\r\n\r\n\t/**\r\n\t * @type {PatternConstants}\r\n\t * @see {@link BotUtil#patterns}\r\n\t */\r\n\tstatic get patterns() {\r\n\t\treturn patterns;\r\n\t}\r\n}\r\n\r\nconst nbsp = '\\xa0';\r\nconst spacePattern = / /g;\r\n\r\n/**\r\n * @typedef {Object} PatternConstants\r\n * @property {RegExp} userID - A pattern to match a user ID from a raw ID string or mention\r\n * @property {RegExp} roleID - A pattern to match a role ID from a raw ID string or mention\r\n * @property {RegExp} channelID - A pattern to match a channel ID from a raw ID string or mention\r\n * @property {RegExp} allUserMentions - A pattern to to match any mentions that would notify users\r\n */\r\nconst patterns = {\r\n\tuserID: /^(?:<@!?)?([0-9]+)>?$/,\r\n\troleID: /^(?:<@&)?([0-9]+)>?$/,\r\n\tchannelID: /^(?:<#)?([0-9]+)>?$/,\r\n\tanyUserMentions: /@everyone|@here|<@(?:!|&)?[0-9]+>/i\r\n};\r\n\r\n/**\r\n * @typedef {Object} SearchOptions\r\n * @property {string} [property=name] - The property on items to search against. If empty, the raw object's toString will be used instead.\r\n * @property {boolean} [searchInexact=true] - Whether or not to search for inexact matches\r\n * @property {boolean} [searchExact=true] - Whether or not to search for exact matches (will narrow down inexact matches if applicable)\r\n * @property {boolean} [useStartsWith=false] - Whether or not to search inexact by checking to see if the item starts with the search string rather than contains,\r\n * if the search string is only one character\r\n */\r\n"
   },
   {
-    "__docId__": 64,
+    "__docId__": 65,
     "kind": "class",
     "static": true,
     "variation": null,
@@ -2028,7 +2061,7 @@
     "interface": false
   },
   {
-    "__docId__": 65,
+    "__docId__": 66,
     "kind": "constructor",
     "static": false,
     "variation": null,
@@ -2073,7 +2106,7 @@
     "generator": false
   },
   {
-    "__docId__": 66,
+    "__docId__": 67,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -2093,7 +2126,7 @@
     }
   },
   {
-    "__docId__": 67,
+    "__docId__": 68,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -2113,7 +2146,7 @@
     }
   },
   {
-    "__docId__": 68,
+    "__docId__": 69,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -2133,7 +2166,7 @@
     }
   },
   {
-    "__docId__": 69,
+    "__docId__": 70,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -2156,7 +2189,7 @@
     }
   },
   {
-    "__docId__": 70,
+    "__docId__": 71,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -2215,7 +2248,7 @@
     "generator": false
   },
   {
-    "__docId__": 71,
+    "__docId__": 72,
     "kind": "method",
     "static": true,
     "variation": null,
@@ -2304,7 +2337,7 @@
     "generator": false
   },
   {
-    "__docId__": 72,
+    "__docId__": 73,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -2362,7 +2395,7 @@
     "generator": false
   },
   {
-    "__docId__": 73,
+    "__docId__": 74,
     "kind": "method",
     "static": true,
     "variation": null,
@@ -2420,7 +2453,7 @@
     "generator": false
   },
   {
-    "__docId__": 74,
+    "__docId__": 75,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -2532,7 +2565,7 @@
     "generator": false
   },
   {
-    "__docId__": 75,
+    "__docId__": 76,
     "kind": "method",
     "static": true,
     "variation": null,
@@ -2644,7 +2677,7 @@
     "generator": false
   },
   {
-    "__docId__": 76,
+    "__docId__": 77,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -2700,7 +2733,7 @@
     "generator": false
   },
   {
-    "__docId__": 77,
+    "__docId__": 78,
     "kind": "method",
     "static": true,
     "variation": null,
@@ -2756,7 +2789,7 @@
     "generator": false
   },
   {
-    "__docId__": 78,
+    "__docId__": 79,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -2836,7 +2869,7 @@
     "generator": false
   },
   {
-    "__docId__": 79,
+    "__docId__": 80,
     "kind": "method",
     "static": true,
     "variation": null,
@@ -2916,7 +2949,7 @@
     "generator": false
   },
   {
-    "__docId__": 80,
+    "__docId__": 81,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -2952,7 +2985,7 @@
     "generator": false
   },
   {
-    "__docId__": 81,
+    "__docId__": 82,
     "kind": "method",
     "static": true,
     "variation": null,
@@ -2988,7 +3021,7 @@
     "generator": false
   },
   {
-    "__docId__": 82,
+    "__docId__": 83,
     "kind": "get",
     "static": true,
     "variation": null,
@@ -3012,7 +3045,7 @@
     "generator": false
   },
   {
-    "__docId__": 83,
+    "__docId__": 84,
     "kind": "variable",
     "static": true,
     "variation": null,
@@ -3033,7 +3066,7 @@
     }
   },
   {
-    "__docId__": 84,
+    "__docId__": 85,
     "kind": "variable",
     "static": true,
     "variation": null,
@@ -3054,7 +3087,7 @@
     }
   },
   {
-    "__docId__": 85,
+    "__docId__": 86,
     "kind": "typedef",
     "static": true,
     "variation": null,
@@ -3115,7 +3148,7 @@
     }
   },
   {
-    "__docId__": 86,
+    "__docId__": 87,
     "kind": "typedef",
     "static": true,
     "variation": null,
@@ -3183,7 +3216,366 @@
     }
   },
   {
-    "__docId__": 87,
+    "__docId__": 88,
+    "kind": "file",
+    "static": true,
+    "variation": null,
+    "name": "src/commands/builder.js",
+    "memberof": null,
+    "longname": "src/commands/builder.js",
+    "access": null,
+    "description": null,
+    "lineNumber": 1,
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport Command from './command';\r\n\r\n/** Builds commands with a fluent API */\r\nexport default class CommandBuilder {\r\n\t/**\r\n\t * @param {Bot} bot - The bot the command is for\r\n\t * @param {CommandInfo} [info] - The command info\r\n\t * @param {Object} [funcs] - The functions to set\r\n\t */\r\n\tconstructor(bot, info = null, funcs = null) {\r\n\t\tif(!bot) throw new Error('A bot must be specified.');\r\n\r\n\t\t/** @type {Bot} */\r\n\t\tthis.bot = bot;\r\n\t\t/** @type {CommandInfo} */\r\n\t\tthis.commandInfo = info;\r\n\r\n\t\tif(funcs) {\r\n\t\t\tif(funcs.run) this.run(funcs.run);\r\n\t\t\tif(funcs.hasPermission) this.hasPermission(funcs.hasPermission);\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Sets the command information. This must be used before any other method if info was not provided to the constructor.\r\n\t * @param {CommandInfo} info - The command info\r\n\t * @return {CommandBuilder} This builder\r\n\t */\r\n\tinfo(info) {\r\n\t\tthis.commandInfo = info;\r\n\t\treturn this;\r\n\t}\r\n\r\n\t/**\r\n\t * Sets the command's run method\r\n\t * @param {function} fn - The function to use\r\n\t * @param {*[]} [extras=[]] - Extra values to pass to the function\r\n\t * @return {CommandBuilder} This builder\r\n\t */\r\n\trun(fn, extras = []) {\r\n\t\tif(typeof fn !== 'function') throw new TypeError('run must be provided a function.');\r\n\t\tthis.command.run = _bindAppend(fn, this.command, ...extras);\r\n\t\treturn this;\r\n\t}\r\n\r\n\t/**\r\n\t * Sets the command's hasPermission method\r\n\t * @param {function} fn - The function to use\r\n\t * @param {*[]} [extras=[]] - Extra values to pass to the function\r\n\t * @return {CommandBuilder} This builder\r\n\t */\r\n\thasPermission(fn, extras = []) {\r\n\t\tif(typeof fn !== 'function') throw new TypeError('hasPermission must be provided a function.');\r\n\t\tthis.command.hasPermission = _bindAppend(fn, this.command, ...extras);\r\n\t\treturn this;\r\n\t}\r\n\r\n\t/**\r\n\t * Registers the command to the bot\r\n\t * @return {void}\r\n\t */\r\n\tregister() {\r\n\t\tthis.bot.registerCommand(this.command);\r\n\t}\r\n\r\n\t/** @type {Command} */\r\n\tget command() {\r\n\t\tif(!this._command) this._command = new Command(this.bot, this.commandInfo);\r\n\t\treturn this._command;\r\n\t}\r\n}\r\n\r\nfunction _bindAppend(fn, self, ...args) {\r\n\treturn function boundFunction(...args2) {\r\n\t\treturn fn.apply(self, args2.concat(args));\r\n\t};\r\n}\r\n"
+  },
+  {
+    "__docId__": 89,
+    "kind": "class",
+    "static": true,
+    "variation": null,
+    "name": "CommandBuilder",
+    "memberof": "src/commands/builder.js",
+    "longname": "src/commands/builder.js~CommandBuilder",
+    "access": null,
+    "export": true,
+    "importPath": "discord-graf/src/commands/builder.js",
+    "importStyle": "CommandBuilder",
+    "description": "Builds commands with a fluent API",
+    "lineNumber": 7,
+    "interface": false
+  },
+  {
+    "__docId__": 90,
+    "kind": "constructor",
+    "static": false,
+    "variation": null,
+    "name": "constructor",
+    "memberof": "src/commands/builder.js~CommandBuilder",
+    "longname": "src/commands/builder.js~CommandBuilder#constructor",
+    "access": null,
+    "description": "",
+    "lineNumber": 13,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Bot"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "bot",
+        "description": "The bot the command is for"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "CommandInfo"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "info",
+        "description": "The command info"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Object"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "funcs",
+        "description": "The functions to set"
+      }
+    ],
+    "generator": false
+  },
+  {
+    "__docId__": 91,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "bot",
+    "memberof": "src/commands/builder.js~CommandBuilder",
+    "longname": "src/commands/builder.js~CommandBuilder#bot",
+    "access": null,
+    "description": null,
+    "lineNumber": 17,
+    "type": {
+      "nullable": null,
+      "types": [
+        "Bot"
+      ],
+      "spread": false,
+      "description": null
+    }
+  },
+  {
+    "__docId__": 92,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "commandInfo",
+    "memberof": "src/commands/builder.js~CommandBuilder",
+    "longname": "src/commands/builder.js~CommandBuilder#commandInfo",
+    "access": null,
+    "description": null,
+    "lineNumber": 19,
+    "type": {
+      "nullable": null,
+      "types": [
+        "CommandInfo"
+      ],
+      "spread": false,
+      "description": null
+    }
+  },
+  {
+    "__docId__": 93,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "info",
+    "memberof": "src/commands/builder.js~CommandBuilder",
+    "longname": "src/commands/builder.js~CommandBuilder#info",
+    "access": null,
+    "description": "Sets the command information. This must be used before any other method if info was not provided to the constructor.",
+    "lineNumber": 32,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "CommandInfo"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "info",
+        "description": "The command info"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "CommandBuilder"
+      ],
+      "spread": false,
+      "description": "This builder"
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 94,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "commandInfo",
+    "memberof": "src/commands/builder.js~CommandBuilder",
+    "longname": "src/commands/builder.js~CommandBuilder#commandInfo",
+    "access": null,
+    "description": null,
+    "lineNumber": 33,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 95,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "run",
+    "memberof": "src/commands/builder.js~CommandBuilder",
+    "longname": "src/commands/builder.js~CommandBuilder#run",
+    "access": null,
+    "description": "Sets the command's run method",
+    "lineNumber": 43,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "function"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "fn",
+        "description": "The function to use"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "*[]"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "[]",
+        "defaultRaw": [],
+        "name": "extras",
+        "description": "Extra values to pass to the function"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "CommandBuilder"
+      ],
+      "spread": false,
+      "description": "This builder"
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 96,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "hasPermission",
+    "memberof": "src/commands/builder.js~CommandBuilder",
+    "longname": "src/commands/builder.js~CommandBuilder#hasPermission",
+    "access": null,
+    "description": "Sets the command's hasPermission method",
+    "lineNumber": 55,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "function"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "fn",
+        "description": "The function to use"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "*[]"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "[]",
+        "defaultRaw": [],
+        "name": "extras",
+        "description": "Extra values to pass to the function"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "CommandBuilder"
+      ],
+      "spread": false,
+      "description": "This builder"
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 97,
+    "kind": "method",
+    "static": false,
+    "variation": null,
+    "name": "register",
+    "memberof": "src/commands/builder.js~CommandBuilder",
+    "longname": "src/commands/builder.js~CommandBuilder#register",
+    "access": null,
+    "description": "Registers the command to the bot",
+    "lineNumber": 65,
+    "params": [],
+    "return": {
+      "nullable": null,
+      "types": [
+        "void"
+      ],
+      "spread": false,
+      "description": ""
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 98,
+    "kind": "get",
+    "static": false,
+    "variation": null,
+    "name": "command",
+    "memberof": "src/commands/builder.js~CommandBuilder",
+    "longname": "src/commands/builder.js~CommandBuilder#command",
+    "access": null,
+    "description": null,
+    "lineNumber": 70,
+    "type": {
+      "nullable": null,
+      "types": [
+        "Command"
+      ],
+      "spread": false,
+      "description": null
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 99,
+    "kind": "member",
+    "static": false,
+    "variation": null,
+    "name": "_command",
+    "memberof": "src/commands/builder.js~CommandBuilder",
+    "longname": "src/commands/builder.js~CommandBuilder#_command",
+    "access": null,
+    "description": null,
+    "lineNumber": 71,
+    "undocument": true,
+    "type": {
+      "types": [
+        "*"
+      ]
+    }
+  },
+  {
+    "__docId__": 100,
+    "kind": "function",
+    "static": true,
+    "variation": null,
+    "name": "_bindAppend",
+    "memberof": "src/commands/builder.js",
+    "longname": "src/commands/builder.js~_bindAppend",
+    "access": null,
+    "export": false,
+    "importPath": "discord-graf/src/commands/builder.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 76,
+    "undocument": true,
+    "params": [
+      {
+        "name": "fn",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "self",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "args",
+        "types": [
+          "...*"
+        ],
+        "spread": true
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "generator": false
+  },
+  {
+    "__docId__": 101,
     "kind": "file",
     "static": true,
     "variation": null,
@@ -3193,10 +3585,10 @@
     "access": null,
     "description": null,
     "lineNumber": 1,
-    "content": "'use babel';\r\n'use strict';\r\n\r\nimport Setting from '../storage/models/setting';\r\n\r\n/** A command that can be run in a bot */\r\nexport default class Command {\r\n\t/**\r\n\t * @param {Bot} bot - The bot the command is for\r\n\t * @param {CommandInfo} info - The command information\r\n\t */\r\n\tconstructor(bot, info) { // eslint-disable-line complexity\r\n\t\tif(new.target === Command) throw new Error('The base command class may not be instantiated.');\r\n\t\tif(!bot) throw new Error('A bot must be specified.');\r\n\t\tif(!info) throw new Error('Command info must be specified.');\r\n\t\tif(!info.name) throw new Error('Command must have a name specified.');\r\n\t\tif(info.name !== info.name.toLowerCase()) throw new Error('Command name must be lowercase.');\r\n\t\tif(info.aliases && !Array.isArray(info.aliases)) throw new TypeError('Command aliases must be an array.');\r\n\t\tif(info.aliases && info.aliases.some(ali => ali !== ali.toLowerCase())) throw new Error('Command aliases must be lowercase.');\r\n\t\tif(!info.module) throw new Error('Command must have a module specified.');\r\n\t\tif(info.module !== info.module.toLowerCase()) throw new Error('Command module must be lowercase.');\r\n\t\tif(!info.memberName) throw new Error('Command must have a memberName specified.');\r\n\t\tif(info.memberName !== info.memberName.toLowerCase()) throw new Error('Command memberName must be lowercase.');\r\n\t\tif(!info.description) throw new Error('Command must have a description specified.');\r\n\t\tif(info.examples && !Array.isArray(info.examples)) throw new TypeError('Command examples must be an array.');\r\n\t\tif(info.argsType && !['single', 'multiple'].includes(info.argsType)) throw new RangeError('Command argsType must be one of \"single\" or \"multiple\".');\r\n\t\tif(info.argsType === 'multiple' && info.argsCount && info.argsCount < 2) throw new RangeError('Command argsCount must be at least 2.');\r\n\t\tif(info.patterns && !Array.isArray(info.patterns)) throw new TypeError('Command patterns must be an array.');\r\n\r\n\t\t/** @type {Bot} */\r\n\t\tthis.bot = bot;\r\n\r\n\t\t/**\r\n\t\t * @type {string}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.name = info.name;\r\n\r\n\t\t/**\r\n\t\t * @type {string[]}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.aliases = info.aliases || [];\r\n\r\n\t\t/**\r\n\t\t * @type {string}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.module = info.module;\r\n\r\n\t\t/**\r\n\t\t * @type {string}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.memberName = info.memberName;\r\n\r\n\t\t/**\r\n\t\t * @type {string}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.description = info.description;\r\n\r\n\t\t/**\r\n\t\t * @type {string}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.usage = info.usage || info.name;\r\n\r\n\t\t/**\r\n\t\t * @type {string}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.details = info.details || null;\r\n\r\n\t\t/**\r\n\t\t * @type {string[]}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.examples = info.examples || null;\r\n\r\n\t\t/**\r\n\t\t * @type {boolean}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.guildOnly = !!info.guildOnly;\r\n\r\n\t\t/**\r\n\t\t * @type {boolean}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.defaultHandling = 'defaultHandling' in info ? info.defaultHandling : true;\r\n\r\n\t\t/**\r\n\t\t * @type {string}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.argsType = info.argsType || 'single';\r\n\r\n\t\t/**\r\n\t\t * @type {number}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.argsCount = info.argsCount || 0;\r\n\r\n\t\t/**\r\n\t\t * @type {boolean}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.argsSingleQuotes = 'argsSingleQuotes' in info ? info.argsSingleQuotes : true;\r\n\r\n\t\t/**\r\n\t\t * @type {RegExp[]}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.patterns = info.patterns || null;\r\n\t}\r\n\r\n\t/**\r\n\t * Checks a user's permission on a guild\r\n\t * @param {Guild} guild - The guild to test the user's permission in\r\n\t * @param {User} user - The user to test the permission of\r\n\t * @return {boolean} Whether or not the user has permission to use the command in a guild\r\n\t */\r\n\thasPermission(guild, user) { // eslint-disable-line no-unused-vars\r\n\t\treturn true;\r\n\t}\r\n\r\n\t/**\r\n\t * Runs the command\r\n\t * @param {Message} message - The message the command is being run for\r\n\t * @param {string[]} args - The arguments for the command, or the matches from a pattern\r\n\t * @param {boolean} fromPattern - Whether or not the command is being run from a pattern match or not\r\n\t * @return {Promise<CommandResult|string[]|string>} The result of running the command\r\n\t */\r\n\tasync run(message, args, fromPattern) { // eslint-disable-line no-unused-vars\r\n\t\tthrow new Error(`${this.constructor.name} doesn't have a run() method, or called the super.run() method.`);\r\n\t}\r\n\r\n\r\n\t/**\r\n\t * Enables or disables the command on a guild\r\n\t * @param {Guild|string} guild - The guild or guild ID\r\n\t * @param {boolean} enabled - Whether the command should be enabled or disabled\r\n\t * @return {void}\r\n\t * @see {@link Command.setEnabled}\r\n\t */\r\n\tsetEnabled(guild, enabled) {\r\n\t\tthis.constructor.setEnabled(this.bot.storage.settings, guild, this, enabled);\r\n\t}\r\n\r\n\t/**\r\n\t * Enables or disables a command on a guild\r\n\t * @param {SettingStorage} settings - The setting storage to use\r\n\t * @param {Guild|string} guild - The guild or guild ID\r\n\t * @param {Command|string} command - The command or command name\r\n\t * @param {boolean} enabled - Whether the command should be enabled or disabled\r\n\t * @return {void}\r\n\t * @see {@link Command#setEnabled}\r\n\t */\r\n\tstatic setEnabled(settings, guild, command, enabled) {\r\n\t\tsettings.save(new Setting(guild, `cmd-${command.name || command}`, enabled));\r\n\t}\r\n\r\n\t/**\r\n\t * Checks if the command is enabled on a guild\r\n\t * @param {Guild} guild - The guild\r\n\t * @return {boolean} Whether or not the command is enabled\r\n\t * @see {@link Command.isEnabled}\r\n\t */\r\n\tisEnabled(guild) {\r\n\t\treturn this.constructor.isEnabled(this.bot.storage.settings, guild, this);\r\n\t}\r\n\r\n\t/**\r\n\t * Checks if a command is enabled on a guild\r\n\t * @param {SettingStorage} settings - The setting storage to use\r\n\t * @param {Guild} guild - The guild\r\n\t * @param {Command|string} command - The command or command name\r\n\t * @return {boolean} Whether or not the command is enabled\r\n\t * @see {@link Command#isEnabled}\r\n\t */\r\n\tstatic isEnabled(settings, guild, command) {\r\n\t\treturn (!command.module || settings.getValue(guild, `mod-${command.module}`, true)) && settings.getValue(guild, `cmd-${command.name || command}`, true);\r\n\t}\r\n\r\n\t/**\r\n\t * Checks if the command is usable for a message\r\n\t * @param {?Message} message - The message\r\n\t * @return {boolean} Whether or not the command is usable\r\n\t */\r\n\tisUsable(message = null) {\r\n\t\tif(this.guildOnly && message && !message.guild) return false;\r\n\t\treturn !message || (this.isEnabled(message.guild) && this.hasPermission(message.guild, message.author));\r\n\t}\r\n}\r\n\r\n/**\r\n * @typedef {Object} CommandInfo\r\n * @property {string} name - The name of the command (must be lowercase)\r\n * @property {string[]} aliases - Alternative names for the command (all must be lowercase)\r\n * @property {string} module - The ID of the module the command belongs to\r\n * @property {string} memberName - The member name of the command in the module\r\n * @property {string} description - A short description of the command\r\n * @property {string} [usage=name] - The command usage format string\r\n * @property {string} [details] - A detailed description of the command and its functionality\r\n * @property {string[]} [examples] - Usage examples of the command\r\n * @property {boolean} [guildOnly=false] - Whether or not the command should only function in a guild channel\r\n * @property {boolean} [defaultHandling=true] - Whether or not the default command handling should be used. If false, then only patterns will trigger the command.\r\n * @property {string} [argsType=single] - One of 'single' or 'multiple'. When 'single', the entire argument string will be passed to run as one argument.\r\n * When 'multiple', it will be passed as multiple arguments.\r\n * @property {number} [argsCount=0] - The number of arguments to parse from the command string. Only applicable when argsType is 'multiple'. If nonzero, it should be at least 2.\r\n * When this is 0, the command argument string will be split into as many arguments as it can be. When nonzero, it will be split into a maximum of this number of arguments.\r\n * @property {boolean} [argsSingleQuotes=true] - Whether or not single quotes should be allowed to box-in arguments in the command string.\r\n * @property {RegExp[]} [patterns] - Patterns to use for triggering the command\r\n */\r\n"
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport Setting from '../storage/models/setting';\r\n\r\n/** A command that can be run in a bot */\r\nexport default class Command {\r\n\t/**\r\n\t * @param {Bot} bot - The bot the command is for\r\n\t * @param {CommandInfo} info - The command information\r\n\t */\r\n\tconstructor(bot, info) { // eslint-disable-line complexity\r\n\t\tif(!bot) throw new Error('A bot must be specified.');\r\n\t\tif(!info) throw new Error('Command info must be specified.');\r\n\t\tif(!info.name) throw new Error('Command must have a name specified.');\r\n\t\tif(info.name !== info.name.toLowerCase()) throw new Error('Command name must be lowercase.');\r\n\t\tif(info.aliases && !Array.isArray(info.aliases)) throw new TypeError('Command aliases must be an array.');\r\n\t\tif(info.aliases && info.aliases.some(ali => ali !== ali.toLowerCase())) throw new Error('Command aliases must be lowercase.');\r\n\t\tif(!info.module) throw new Error('Command must have a module specified.');\r\n\t\tif(info.module !== info.module.toLowerCase()) throw new Error('Command module must be lowercase.');\r\n\t\tif(!info.memberName) throw new Error('Command must have a memberName specified.');\r\n\t\tif(info.memberName !== info.memberName.toLowerCase()) throw new Error('Command memberName must be lowercase.');\r\n\t\tif(!info.description) throw new Error('Command must have a description specified.');\r\n\t\tif(info.examples && !Array.isArray(info.examples)) throw new TypeError('Command examples must be an array.');\r\n\t\tif(info.argsType && !['single', 'multiple'].includes(info.argsType)) throw new RangeError('Command argsType must be one of \"single\" or \"multiple\".');\r\n\t\tif(info.argsType === 'multiple' && info.argsCount && info.argsCount < 2) throw new RangeError('Command argsCount must be at least 2.');\r\n\t\tif(info.patterns && !Array.isArray(info.patterns)) throw new TypeError('Command patterns must be an array.');\r\n\r\n\t\t/** @type {Bot} */\r\n\t\tthis.bot = bot;\r\n\r\n\t\t/**\r\n\t\t * @type {string}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.name = info.name;\r\n\r\n\t\t/**\r\n\t\t * @type {string[]}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.aliases = info.aliases || [];\r\n\r\n\t\t/**\r\n\t\t * @type {string}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.module = info.module;\r\n\r\n\t\t/**\r\n\t\t * @type {string}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.memberName = info.memberName;\r\n\r\n\t\t/**\r\n\t\t * @type {string}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.description = info.description;\r\n\r\n\t\t/**\r\n\t\t * @type {string}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.usage = info.usage || info.name;\r\n\r\n\t\t/**\r\n\t\t * @type {string}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.details = info.details || null;\r\n\r\n\t\t/**\r\n\t\t * @type {string[]}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.examples = info.examples || null;\r\n\r\n\t\t/**\r\n\t\t * @type {boolean}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.guildOnly = !!info.guildOnly;\r\n\r\n\t\t/**\r\n\t\t * @type {boolean}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.defaultHandling = 'defaultHandling' in info ? info.defaultHandling : true;\r\n\r\n\t\t/**\r\n\t\t * @type {string}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.argsType = info.argsType || 'single';\r\n\r\n\t\t/**\r\n\t\t * @type {number}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.argsCount = info.argsCount || 0;\r\n\r\n\t\t/**\r\n\t\t * @type {boolean}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.argsSingleQuotes = 'argsSingleQuotes' in info ? info.argsSingleQuotes : true;\r\n\r\n\t\t/**\r\n\t\t * @type {RegExp[]}\r\n\t\t * @see {@link CommandInfo}\r\n\t\t */\r\n\t\tthis.patterns = info.patterns || null;\r\n\t}\r\n\r\n\t/**\r\n\t * Checks a user's permission on a guild\r\n\t * @param {Guild} guild - The guild to test the user's permission in\r\n\t * @param {User} user - The user to test the permission of\r\n\t * @return {boolean} Whether or not the user has permission to use the command in a guild\r\n\t */\r\n\thasPermission(guild, user) { // eslint-disable-line no-unused-vars\r\n\t\treturn true;\r\n\t}\r\n\r\n\t/**\r\n\t * Runs the command\r\n\t * @param {Message} message - The message the command is being run for\r\n\t * @param {string[]} args - The arguments for the command, or the matches from a pattern\r\n\t * @param {boolean} fromPattern - Whether or not the command is being run from a pattern match or not\r\n\t * @return {Promise<CommandResult|string[]|string>} The result of running the command\r\n\t */\r\n\tasync run(message, args, fromPattern) { // eslint-disable-line no-unused-vars\r\n\t\tthrow new Error(`${this.constructor.name} doesn't have a run() method, or called the super.run() method.`);\r\n\t}\r\n\r\n\r\n\t/**\r\n\t * Enables or disables the command on a guild\r\n\t * @param {Guild|string} guild - The guild or guild ID\r\n\t * @param {boolean} enabled - Whether the command should be enabled or disabled\r\n\t * @return {void}\r\n\t * @see {@link Command.setEnabled}\r\n\t */\r\n\tsetEnabled(guild, enabled) {\r\n\t\tthis.constructor.setEnabled(this.bot.storage.settings, guild, this, enabled);\r\n\t}\r\n\r\n\t/**\r\n\t * Enables or disables a command on a guild\r\n\t * @param {SettingStorage} settings - The setting storage to use\r\n\t * @param {Guild|string} guild - The guild or guild ID\r\n\t * @param {Command|string} command - The command or command name\r\n\t * @param {boolean} enabled - Whether the command should be enabled or disabled\r\n\t * @return {void}\r\n\t * @see {@link Command#setEnabled}\r\n\t */\r\n\tstatic setEnabled(settings, guild, command, enabled) {\r\n\t\tsettings.save(new Setting(guild, `cmd-${command.name || command}`, enabled));\r\n\t}\r\n\r\n\t/**\r\n\t * Checks if the command is enabled on a guild\r\n\t * @param {Guild} guild - The guild\r\n\t * @return {boolean} Whether or not the command is enabled\r\n\t * @see {@link Command.isEnabled}\r\n\t */\r\n\tisEnabled(guild) {\r\n\t\treturn this.constructor.isEnabled(this.bot.storage.settings, guild, this);\r\n\t}\r\n\r\n\t/**\r\n\t * Checks if a command is enabled on a guild\r\n\t * @param {SettingStorage} settings - The setting storage to use\r\n\t * @param {Guild} guild - The guild\r\n\t * @param {Command|string} command - The command or command name\r\n\t * @return {boolean} Whether or not the command is enabled\r\n\t * @see {@link Command#isEnabled}\r\n\t */\r\n\tstatic isEnabled(settings, guild, command) {\r\n\t\treturn (!command.module || settings.getValue(guild, `mod-${command.module}`, true)) && settings.getValue(guild, `cmd-${command.name || command}`, true);\r\n\t}\r\n\r\n\t/**\r\n\t * Checks if the command is usable for a message\r\n\t * @param {?Message} message - The message\r\n\t * @return {boolean} Whether or not the command is usable\r\n\t */\r\n\tisUsable(message = null) {\r\n\t\tif(this.guildOnly && message && !message.guild) return false;\r\n\t\treturn !message || (this.isEnabled(message.guild) && this.hasPermission(message.guild, message.author));\r\n\t}\r\n}\r\n\r\n/**\r\n * @typedef {Object} CommandInfo\r\n * @property {string} name - The name of the command (must be lowercase)\r\n * @property {string[]} aliases - Alternative names for the command (all must be lowercase)\r\n * @property {string} module - The ID of the module the command belongs to\r\n * @property {string} memberName - The member name of the command in the module\r\n * @property {string} description - A short description of the command\r\n * @property {string} [usage=name] - The command usage format string\r\n * @property {string} [details] - A detailed description of the command and its functionality\r\n * @property {string[]} [examples] - Usage examples of the command\r\n * @property {boolean} [guildOnly=false] - Whether or not the command should only function in a guild channel\r\n * @property {boolean} [defaultHandling=true] - Whether or not the default command handling should be used. If false, then only patterns will trigger the command.\r\n * @property {string} [argsType=single] - One of 'single' or 'multiple'. When 'single', the entire argument string will be passed to run as one argument.\r\n * When 'multiple', it will be passed as multiple arguments.\r\n * @property {number} [argsCount=0] - The number of arguments to parse from the command string. Only applicable when argsType is 'multiple'. If nonzero, it should be at least 2.\r\n * When this is 0, the command argument string will be split into as many arguments as it can be. When nonzero, it will be split into a maximum of this number of arguments.\r\n * @property {boolean} [argsSingleQuotes=true] - Whether or not single quotes should be allowed to box-in arguments in the command string.\r\n * @property {RegExp[]} [patterns] - Patterns to use for triggering the command\r\n */\r\n"
   },
   {
-    "__docId__": 88,
+    "__docId__": 102,
     "kind": "class",
     "static": true,
     "variation": null,
@@ -3212,7 +3604,7 @@
     "interface": false
   },
   {
-    "__docId__": 89,
+    "__docId__": 103,
     "kind": "typedef",
     "static": true,
     "variation": null,
@@ -3384,7 +3776,7 @@
     }
   },
   {
-    "__docId__": 90,
+    "__docId__": 104,
     "kind": "constructor",
     "static": false,
     "variation": null,
@@ -3419,7 +3811,7 @@
     "generator": false
   },
   {
-    "__docId__": 91,
+    "__docId__": 105,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -3428,7 +3820,7 @@
     "longname": "src/commands/command.js~Command#bot",
     "access": null,
     "description": null,
-    "lineNumber": 31,
+    "lineNumber": 30,
     "type": {
       "nullable": null,
       "types": [
@@ -3439,7 +3831,7 @@
     }
   },
   {
-    "__docId__": 92,
+    "__docId__": 106,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -3451,7 +3843,7 @@
     "see": [
       "{@link CommandInfo}"
     ],
-    "lineNumber": 37,
+    "lineNumber": 36,
     "type": {
       "nullable": null,
       "types": [
@@ -3462,7 +3854,7 @@
     }
   },
   {
-    "__docId__": 93,
+    "__docId__": 107,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -3474,7 +3866,7 @@
     "see": [
       "{@link CommandInfo}"
     ],
-    "lineNumber": 43,
+    "lineNumber": 42,
     "type": {
       "nullable": null,
       "types": [
@@ -3485,7 +3877,7 @@
     }
   },
   {
-    "__docId__": 94,
+    "__docId__": 108,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -3497,7 +3889,7 @@
     "see": [
       "{@link CommandInfo}"
     ],
-    "lineNumber": 49,
+    "lineNumber": 48,
     "type": {
       "nullable": null,
       "types": [
@@ -3508,7 +3900,7 @@
     }
   },
   {
-    "__docId__": 95,
+    "__docId__": 109,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -3520,7 +3912,7 @@
     "see": [
       "{@link CommandInfo}"
     ],
-    "lineNumber": 55,
+    "lineNumber": 54,
     "type": {
       "nullable": null,
       "types": [
@@ -3531,7 +3923,7 @@
     }
   },
   {
-    "__docId__": 96,
+    "__docId__": 110,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -3543,7 +3935,7 @@
     "see": [
       "{@link CommandInfo}"
     ],
-    "lineNumber": 61,
+    "lineNumber": 60,
     "type": {
       "nullable": null,
       "types": [
@@ -3554,7 +3946,7 @@
     }
   },
   {
-    "__docId__": 97,
+    "__docId__": 111,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -3566,7 +3958,7 @@
     "see": [
       "{@link CommandInfo}"
     ],
-    "lineNumber": 67,
+    "lineNumber": 66,
     "type": {
       "nullable": null,
       "types": [
@@ -3577,7 +3969,7 @@
     }
   },
   {
-    "__docId__": 98,
+    "__docId__": 112,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -3589,7 +3981,7 @@
     "see": [
       "{@link CommandInfo}"
     ],
-    "lineNumber": 73,
+    "lineNumber": 72,
     "type": {
       "nullable": null,
       "types": [
@@ -3600,7 +3992,7 @@
     }
   },
   {
-    "__docId__": 99,
+    "__docId__": 113,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -3612,7 +4004,7 @@
     "see": [
       "{@link CommandInfo}"
     ],
-    "lineNumber": 79,
+    "lineNumber": 78,
     "type": {
       "nullable": null,
       "types": [
@@ -3623,7 +4015,7 @@
     }
   },
   {
-    "__docId__": 100,
+    "__docId__": 114,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -3635,7 +4027,7 @@
     "see": [
       "{@link CommandInfo}"
     ],
-    "lineNumber": 85,
+    "lineNumber": 84,
     "type": {
       "nullable": null,
       "types": [
@@ -3646,7 +4038,7 @@
     }
   },
   {
-    "__docId__": 101,
+    "__docId__": 115,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -3658,7 +4050,7 @@
     "see": [
       "{@link CommandInfo}"
     ],
-    "lineNumber": 91,
+    "lineNumber": 90,
     "type": {
       "nullable": null,
       "types": [
@@ -3669,7 +4061,7 @@
     }
   },
   {
-    "__docId__": 102,
+    "__docId__": 116,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -3681,7 +4073,7 @@
     "see": [
       "{@link CommandInfo}"
     ],
-    "lineNumber": 97,
+    "lineNumber": 96,
     "type": {
       "nullable": null,
       "types": [
@@ -3692,7 +4084,7 @@
     }
   },
   {
-    "__docId__": 103,
+    "__docId__": 117,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -3704,7 +4096,7 @@
     "see": [
       "{@link CommandInfo}"
     ],
-    "lineNumber": 103,
+    "lineNumber": 102,
     "type": {
       "nullable": null,
       "types": [
@@ -3715,7 +4107,7 @@
     }
   },
   {
-    "__docId__": 104,
+    "__docId__": 118,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -3727,7 +4119,7 @@
     "see": [
       "{@link CommandInfo}"
     ],
-    "lineNumber": 109,
+    "lineNumber": 108,
     "type": {
       "nullable": null,
       "types": [
@@ -3738,7 +4130,7 @@
     }
   },
   {
-    "__docId__": 105,
+    "__docId__": 119,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -3750,7 +4142,7 @@
     "see": [
       "{@link CommandInfo}"
     ],
-    "lineNumber": 115,
+    "lineNumber": 114,
     "type": {
       "nullable": null,
       "types": [
@@ -3761,7 +4153,7 @@
     }
   },
   {
-    "__docId__": 106,
+    "__docId__": 120,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -3770,7 +4162,7 @@
     "longname": "src/commands/command.js~Command#hasPermission",
     "access": null,
     "description": "Checks a user's permission on a guild",
-    "lineNumber": 124,
+    "lineNumber": 123,
     "params": [
       {
         "nullable": null,
@@ -3804,7 +4196,7 @@
     "generator": false
   },
   {
-    "__docId__": 107,
+    "__docId__": 121,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -3813,7 +4205,7 @@
     "longname": "src/commands/command.js~Command#run",
     "access": null,
     "description": "Runs the command",
-    "lineNumber": 135,
+    "lineNumber": 134,
     "params": [
       {
         "nullable": null,
@@ -3859,7 +4251,7 @@
     "generator": false
   },
   {
-    "__docId__": 108,
+    "__docId__": 122,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -3871,7 +4263,7 @@
     "see": [
       "{@link Command.setEnabled}"
     ],
-    "lineNumber": 147,
+    "lineNumber": 146,
     "params": [
       {
         "nullable": null,
@@ -3906,7 +4298,7 @@
     "generator": false
   },
   {
-    "__docId__": 109,
+    "__docId__": 123,
     "kind": "method",
     "static": true,
     "variation": null,
@@ -3918,7 +4310,7 @@
     "see": [
       "{@link Command#setEnabled}"
     ],
-    "lineNumber": 160,
+    "lineNumber": 159,
     "params": [
       {
         "nullable": null,
@@ -3974,7 +4366,7 @@
     "generator": false
   },
   {
-    "__docId__": 110,
+    "__docId__": 124,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -3986,7 +4378,7 @@
     "see": [
       "{@link Command.isEnabled}"
     ],
-    "lineNumber": 170,
+    "lineNumber": 169,
     "params": [
       {
         "nullable": null,
@@ -4010,7 +4402,7 @@
     "generator": false
   },
   {
-    "__docId__": 111,
+    "__docId__": 125,
     "kind": "method",
     "static": true,
     "variation": null,
@@ -4022,7 +4414,7 @@
     "see": [
       "{@link Command#isEnabled}"
     ],
-    "lineNumber": 182,
+    "lineNumber": 181,
     "params": [
       {
         "nullable": null,
@@ -4067,7 +4459,7 @@
     "generator": false
   },
   {
-    "__docId__": 112,
+    "__docId__": 126,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -4076,7 +4468,7 @@
     "longname": "src/commands/command.js~Command#isUsable",
     "access": null,
     "description": "Checks if the command is usable for a message",
-    "lineNumber": 191,
+    "lineNumber": 190,
     "params": [
       {
         "nullable": true,
@@ -4100,7 +4492,7 @@
     "generator": false
   },
   {
-    "__docId__": 113,
+    "__docId__": 127,
     "kind": "file",
     "static": true,
     "variation": null,
@@ -4113,7 +4505,7 @@
     "content": "'use babel';\r\n'use strict';\r\n\r\nimport EventEmitter from 'events';\r\nimport { stripIndents } from 'common-tags';\r\nimport escapeRegex from 'escape-string-regexp';\r\nimport Module from './module';\r\nimport FriendlyError from '../errors/friendly';\r\n\r\n/** Handles parsing messages and running commands from them */\r\nexport default class CommandDispatcher extends EventEmitter {\r\n\t/** @param {Bot} bot - The bot the dispatcher is for */\r\n\tconstructor(bot) {\r\n\t\tif(!bot) throw new Error('A bot must be specified.');\r\n\t\tsuper();\r\n\r\n\t\t/** @type {Bot} */\r\n\t\tthis.bot = bot;\r\n\r\n\t\tthis._guildCommandPatterns = {};\r\n\t\tthis._results = {};\r\n\t}\r\n\r\n\t/**\r\n\t * Handle a new message or a message update\r\n\t * @param {Message} message - The message to handle\r\n\t * @param {Message} [oldMessage] - The old message before the update\r\n\t * @return {Promise<void>} Nothing\r\n\t */\r\n\tasync handleMessage(message, oldMessage = null) {\r\n\t\tif(message.author.id === this.bot.client.user.id || message.author.bot) return;\r\n\r\n\t\t// Make sure the bot is allowed to run in the channel, or the user is an admin\r\n\t\tif(message.guild\r\n\t\t\t&& Module.isEnabled(this.bot.storage.settings, message.guild, 'channels')\r\n\t\t\t&& !this.bot.storage.allowedChannels.isEmpty(message.guild)\r\n\t\t\t&& !this.bot.storage.allowedChannels.exists(message.guild, message.channel)\r\n\t\t\t&& !this.bot.permissions.isAdmin(message.guild, message.author)) return;\r\n\r\n\t\t// Parse the message, and get the old result if it exists\r\n\t\tconst [command, args, fromPattern, isCommandMessage] = this._parseMessage(message);\r\n\t\tconst oldResult = oldMessage ? this._results[oldMessage.id] : null;\r\n\r\n\t\t// Run the command, or make an error message result\r\n\t\tlet result;\r\n\t\tif(command) {\r\n\t\t\tif(!command.isEnabled(message.guild)) result = { reply: [`The \\`${command.name}\\` command is disabled.`], editable: true };\r\n\t\t\telse if(!oldMessage || oldResult) result = await this.run(command, args, fromPattern, message);\r\n\t\t} else if(isCommandMessage) {\r\n\t\t\tresult = { reply: [`Unknown command. Use ${this.bot.util.usage('help', message.guild)} to view the list of all commands.`], editable: true };\r\n\t\t} else if(this.bot.config.values.nonCommandEdit) {\r\n\t\t\tresult = { editable: true };\r\n\t\t}\r\n\r\n\t\tthis.handleMessageResult(message, result, oldResult);\r\n\t}\r\n\r\n\t/**\r\n\t * Handle a message result\r\n\t * @param {Message} message - The message the result is from\r\n\t * @param {?CommandResult} result - The result\r\n\t * @param {CommandResult} [oldResult] - The old result\r\n\t * @return {Promise<void>} Nothing\r\n\t */\r\n\tasync handleMessageResult(message, result, oldResult = null) {\r\n\t\tif(result) {\r\n\t\t\t// Change a plain or reply response into direct if there isn't a guild\r\n\t\t\tif(!message.guild) {\r\n\t\t\t\tif(!result.direct) result.direct = result.plain || result.reply;\r\n\t\t\t\tdelete result.plain;\r\n\t\t\t\tdelete result.reply;\r\n\t\t\t}\r\n\r\n\t\t\t// Update old messages or send new ones\r\n\t\t\tif(oldResult && (oldResult.plain || oldResult.reply || oldResult.direct)) {\r\n\t\t\t\tawait this.updateMessagesForResult(message, result, oldResult);\r\n\t\t\t} else {\r\n\t\t\t\tawait this.sendMessagesForResult(message, result);\r\n\t\t\t}\r\n\r\n\t\t\t// Cache the result\r\n\t\t\tif(this.bot.config.values.commandEditable > 0) {\r\n\t\t\t\tif(result.editable) {\r\n\t\t\t\t\tresult.timeout = oldResult && oldResult.timeout\r\n\t\t\t\t\t\t? oldResult.timeout\r\n\t\t\t\t\t\t: setTimeout(() => { delete this._results[message.id]; }, this.bot.config.values.commandEditable * 1000);\r\n\t\t\t\t\tthis._results[message.id] = result;\r\n\t\t\t\t} else {\r\n\t\t\t\t\tdelete this._results[message.id];\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Run a command\r\n\t * @param {Command} command - The command to run\r\n\t * @param {string[]} args - The arguments for the command\r\n\t * @param {boolean} fromPattern - Whether or not the arguments are from a pattern match\r\n\t * @param {Message} message - The message that triggered the run\r\n\t * @return {Promise<CommandResult>} The result of running the command\r\n\t * @emits commandRun When a command is run, with the command, result, message, args, and fromPattern passed\r\n\t * @emits commandError When an error occurs while running a command, with the command, message, args, and fromPattern passed\r\n\t */\r\n\tasync run(command, args, fromPattern, message) {\r\n\t\tconst logInfo = {\r\n\t\t\targs: String(args),\r\n\t\t\tuser: `${message.author.username}#${message.author.discriminator}`,\r\n\t\t\tuserID: message.author.id,\r\n\t\t\tguild: message.guild ? message.guild.name : null,\r\n\t\t\tguildID: message.guild ? message.guild.id : null,\r\n\t\t\tmessageID: message.id\r\n\t\t};\r\n\r\n\t\t// Make sure the command is usable\r\n\t\tif(command.guildOnly && !message.guild) {\r\n\t\t\tthis.bot.logger.info(`Not running ${command.module}:${command.memberName}; guild only.`, logInfo);\r\n\t\t\treturn { reply: [`The \\`${command.name}\\` command must be used in a server channel.`], editable: true };\r\n\t\t}\r\n\t\tif(!command.hasPermission(message.guild, message.author)) {\r\n\t\t\tthis.bot.logger.info(`Not running ${command.module}:${command.memberName}; don't have permission.`, logInfo);\r\n\t\t\treturn { reply: [`You do not have permission to use the \\`${command.name}\\` command.`], editable: true };\r\n\t\t}\r\n\r\n\t\t// Run the command\r\n\t\tthis.bot.logger.info(`Running ${command.module}:${command.memberName}.`, logInfo);\r\n\t\ttry {\r\n\t\t\tconst result = this.constructor.makeResultObject(await command.run(message, args, fromPattern));\r\n\t\t\tthis.emit('commandRun', command, result, message, args, fromPattern);\r\n\t\t\treturn result;\r\n\t\t} catch(err) {\r\n\t\t\tthis.emit('commandError', command, message, args, fromPattern);\r\n\t\t\tif(err instanceof FriendlyError) {\r\n\t\t\t\treturn { reply: [err.message], editable: true };\r\n\t\t\t} else {\r\n\t\t\t\tthis.bot.logger.error(err);\r\n\t\t\t\tconst owner = this.bot.config.values.owner ? message.client.users.get(this.bot.config.values.owner) : null;\r\n\t\t\t\treturn {\r\n\t\t\t\t\treply: [stripIndents`\r\n\t\t\t\t\t\tAn error occurred while running the command: \\`${err.name}: ${err.message}\\`\r\n\t\t\t\t\t\tYou shouldn't ever receive an error like this.\r\n\t\t\t\t\t\t${owner ? `Please contact ${owner.username}#${owner.discriminator}${this.bot.config.values.invite ? ` in this server: ${this.bot.config.values.invite}` : '.'}` : ''}\r\n\t\t\t\t\t`],\r\n\t\t\t\t\teditable: true\r\n\t\t\t\t};\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Sends messages for a command result\r\n\t * @param {Message} message - The message the result is for\r\n\t * @param {CommandResult} result - The command result\r\n\t * @return {Promise<void>} Nothing\r\n\t */\r\n\tasync sendMessagesForResult(message, result) {\r\n\t\tconst messages = await Promise.all([\r\n\t\t\tresult.plain ? this.sendMessages(message, result.plain, 'plain') : null,\r\n\t\t\tresult.reply ? this.sendMessages(message, result.reply, 'reply') : null,\r\n\t\t\tresult.direct ? this.sendMessages(message, result.direct, 'direct') : null\r\n\t\t]);\r\n\t\tif(result.plain) result.normalMessages = messages[0];\r\n\t\telse if(result.reply) result.normalMessages = messages[1];\r\n\t\tif(result.direct) result.directMessages = messages[2];\r\n\t}\r\n\r\n\t/**\r\n\t * Sends messages\r\n\t * @param {Message} message - The message the messages are being sent in response to\r\n\t * @param {string[]} contents - Contents of the messages to send\r\n\t * @param {string} type - One of 'plain', 'reply', or 'direct'\r\n\t * @return {Promise<Message[]>} The sent messages\r\n\t */\r\n\tasync sendMessages(message, contents, type) {\r\n\t\tconst sentMessages = [];\r\n\t\tfor(const content of contents) {\r\n\t\t\tif(type === 'plain') sentMessages.push(await message.channel.sendMessage(content));\r\n\t\t\telse if(type === 'reply') sentMessages.push(await message.reply(content));\r\n\t\t\telse if(type === 'direct') sentMessages.push(await message.author.sendMessage(content));\r\n\t\t}\r\n\t\treturn sentMessages;\r\n\t}\r\n\r\n\t/**\r\n\t * Updates messages for a command result\r\n\t * @param {Message} message - The message the result is for\r\n\t * @param {CommandResult} result - The command result\r\n\t * @param {CommandResult} oldResult - The old command result\r\n\t * @return {Promise<void>} Nothing\r\n\t */\r\n\tasync updateMessagesForResult(message, result, oldResult) {\r\n\t\t// Update the messages\r\n\t\tconst messages = await Promise.all([\r\n\t\t\tresult.plain || result.reply ? this.updateMessages(message, oldResult.normalMessages, result.plain || result.reply, result.plain ? 'plain' : 'reply') : null,\r\n\t\t\tresult.direct ? oldResult.direct ? this.updateMessages(message, oldResult.directMessages, result.direct, 'direct') : this.sendMessages(message, result.direct, 'direct') : null\r\n\t\t]);\r\n\t\tif(result.plain || result.reply) result.normalMessages = messages[0];\r\n\t\tif(result.direct) result.directMessages = messages[1];\r\n\r\n\t\t// Delete old messages if we're not using them\r\n\t\tif(!result.plain && !result.reply && (oldResult.plain || oldResult.reply)) for(const msg of oldResult.normalMessages) msg.delete();\r\n\t\tif(!result.direct && oldResult.direct) for(const msg of oldResult.directMessages) msg.delete();\r\n\t}\r\n\r\n\t/**\r\n\t * Updates messages\r\n\t * @param {Message} message - The message the old messages are being updated in response to\r\n\t * @param {Message[]} oldMessages - The old messages to update\r\n\t * @param {string[]} contents - Contents of the messages to send\r\n\t * @param {string} type - One of 'plain', 'reply', or 'direct'\r\n\t * @return {Promise<Message[]>} The updated messages\r\n\t */\r\n\tasync updateMessages(message, oldMessages, contents, type) {\r\n\t\tconst updatedMessages = [];\r\n\r\n\t\t// Update/send messages\r\n\t\tfor(let i = 0; i < contents.length; i++) {\r\n\t\t\tif(i < oldMessages.length) updatedMessages.push(await oldMessages[i].edit(type === 'reply' ? `${message.author}, ${contents[i]}` : contents[i]));\r\n\t\t\telse updatedMessages.push((await this.sendMessages(message, [contents[i]], type))[0]);\r\n\t\t}\r\n\r\n\t\t// Delete extra old messages\r\n\t\tif(oldMessages.length > contents.length) {\r\n\t\t\tfor(let i = oldMessages.length - 1; i >= contents.length; i--) oldMessages[i].delete();\r\n\t\t}\r\n\r\n\t\treturn updatedMessages;\r\n\t}\r\n\r\n\t/**\r\n\t * Parses a message to find details about command usage in it\r\n\t * @param {Message} message - The message\r\n\t * @return {Array} Command, arguments, whether or not it's from a pattern match, and whether or not it's a command message\r\n\t */\r\n\t_parseMessage(message) {\r\n\t\t// Find the command to run by patterns\r\n\t\tfor(const command of this.bot.registry.commands) {\r\n\t\t\tif(!command.patterns) continue;\r\n\t\t\tfor(const pattern of command.patterns) {\r\n\t\t\t\tconst matches = pattern.exec(message.content);\r\n\t\t\t\tif(matches) return [command, matches, true, true];\r\n\t\t\t}\r\n\t\t}\r\n\r\n\t\t// Find the command to run with default command handling\r\n\t\tconst patternIndex = message.guild ? message.guild.id : '-';\r\n\t\tif(!this._guildCommandPatterns[patternIndex]) this._guildCommandPatterns[patternIndex] = this._buildCommandPattern(message.guild, message.client.user);\r\n\t\tlet [command, args, isCommandMessage] = this._matchDefault(message, this._guildCommandPatterns[patternIndex], 2);\r\n\t\tif(!command && !message.guild) [command, args, isCommandMessage] = this._matchDefault(message, /^([^\\s]+)/i);\r\n\t\tif(command) return [command, args, false, true];\r\n\r\n\t\treturn [null, null, false, isCommandMessage];\r\n\t}\r\n\r\n\t/**\r\n\t * Matches a message against a guild command pattern\r\n\t * @param {Message} message - The message\r\n\t * @param {RegExp} pattern - The pattern to match against\r\n\t * @param {number} commandNameIndex - The index of the command name in the pattern matches\r\n\t * @return {Array} The command, arguments, and whether or not it's a command message\r\n\t */\r\n\t_matchDefault(message, pattern, commandNameIndex = 1) {\r\n\t\tconst matches = pattern.exec(message.content);\r\n\t\tif(!matches) return [null, null, false];\r\n\r\n\t\tconst commands = this.bot.registry.findCommands(matches[commandNameIndex]);\r\n\t\tif(commands.length !== 1) return [null, null, true];\r\n\t\tif(!commands[0] || !commands[0].defaultHandling) return [null, null, true];\r\n\r\n\t\tconst argString = message.content.substring(matches[1].length + (matches[2] ? matches[2].length : 0));\r\n\t\tlet args;\r\n\t\tif(commands[0].argsType === 'single') {\r\n\t\t\targs = [argString.trim()];\r\n\t\t} else if(commands[0].argsType === 'multiple') {\r\n\t\t\targs = this.constructor.parseArgs(argString, commands[0].argsCount, commands[0].argsSingleQuotes);\r\n\t\t}\r\n\r\n\t\treturn [commands[0], args, true];\r\n\t}\r\n\r\n\t/**\r\n\t * Makes a command result object from a command's run result\r\n\t * @param {CommandResult|string[]|string} result - The command's run result\r\n\t * @return {CommandResult} The result object\r\n\t */\r\n\tstatic makeResultObject(result) {\r\n\t\tif(typeof result !== 'object' || Array.isArray(result)) result = { reply: result };\r\n\t\tif(result.plain && result.reply) throw new Error('The command result may contain either \"plain\" or \"reply\", not both.');\r\n\t\tif(result.plain && !Array.isArray(result.plain)) result.plain = [result.plain];\r\n\t\tif(result.reply && !Array.isArray(result.reply)) result.reply = [result.reply];\r\n\t\tif(result.direct && !Array.isArray(result.direct)) result.direct = [result.direct];\r\n\t\tif(!('editable' in result)) result.editable = true;\r\n\t\treturn result;\r\n\t}\r\n\r\n\t/**\r\n\t * Parses an argument string into an array of arguments\r\n\t * @param {string} argString - The argument string to parse\r\n\t * @param {number} [argCount] - The number of arguments to extract from the string\r\n\t * @param {boolean} [allowSingleQuote=true] - Whether or not single quotes should be allowed to wrap arguments, in addition to double quotes\r\n\t * @return {string[]} The array of arguments\r\n\t */\r\n\tstatic parseArgs(argString, argCount, allowSingleQuote = true) {\r\n\t\tconst re = allowSingleQuote ? /\\s*(?:(\"|')([^]*?)\\1|(\\S+))\\s*/g : /\\s*(?:(\")([^]*?)\"|(\\S+))\\s*/g;\r\n\t\tconst result = [];\r\n\t\tlet match = [];\r\n\t\t// default: large enough to get all items\r\n\t\targCount = argCount || argString.length;\r\n\t\t// get match and push the capture group that is not null to the result\r\n\t\twhile(--argCount && (match = re.exec(argString))) result.push(match[2] || match[3]);\r\n\t\t// if text remains, push it to the array as it is, except for wrapping quotes, which are removed from it\r\n\t\tif(match && re.lastIndex < argString.length) {\r\n\t\t\tconst re2 = allowSingleQuote ? /^(\"|')([^]*)\\1$/g : /^(\")([^]*)\"$/g;\r\n\t\t\tresult.push(argString.substr(re.lastIndex).replace(re2, '$2'));\r\n\t\t}\r\n\t\treturn result;\r\n\t}\r\n\r\n\t/**\r\n\t * Creates a regular expression to match the command prefix and name in a message\r\n\t * @param {?Guild} guild - The Guild that the message is from\r\n\t * @param {User} user - The User that the bot is running for\r\n\t * @return {RegExp} Regular expression that matches a command prefix and name\r\n\t */\r\n\t_buildCommandPattern(guild, user) {\r\n\t\tlet prefix = guild ? this.bot.storage.settings.getValue(guild, 'command-prefix', this.bot.config.values.commandPrefix) : this.bot.config.values.commandPrefix;\r\n\t\tif(prefix === 'none') prefix = '';\r\n\t\tconst escapedPrefix = escapeRegex(prefix);\r\n\t\tconst prefixPatternPiece = prefix ? `${escapedPrefix}\\\\s*|` : '';\r\n\t\tconst pattern = new RegExp(`^(${prefixPatternPiece}<@!?${user.id}>\\\\s+(?:${escapedPrefix})?)([^\\\\s]+)`, 'i');\r\n\t\tthis.bot.logger.verbose(`Guild command pattern built.`, {\r\n\t\t\tguild: guild ? guild.name : null,\r\n\t\t\tguildID: guild ? guild.id : null,\r\n\t\t\tprefix: prefix, pattern: pattern.source\r\n\t\t});\r\n\t\treturn pattern;\r\n\t}\r\n}\r\n\r\n/**\r\n * @typedef {Object} CommandResult\r\n * @property {string[]} [plain] - Strings to send plain messages for\r\n * @property {string[]} [reply] - Strings to send reply messages for\r\n * @property {string[]} [direct] - Strings to send direct messages for\r\n * @property {boolean} [editable=true] - Whether or not the command message is editable\r\n */\r\n"
   },
   {
-    "__docId__": 114,
+    "__docId__": 128,
     "kind": "class",
     "static": true,
     "variation": null,
@@ -4132,7 +4524,7 @@
     ]
   },
   {
-    "__docId__": 115,
+    "__docId__": 129,
     "kind": "typedef",
     "static": true,
     "variation": null,
@@ -4194,7 +4586,7 @@
     }
   },
   {
-    "__docId__": 116,
+    "__docId__": 130,
     "kind": "constructor",
     "static": false,
     "variation": null,
@@ -4219,7 +4611,7 @@
     "generator": false
   },
   {
-    "__docId__": 117,
+    "__docId__": 131,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -4239,7 +4631,7 @@
     }
   },
   {
-    "__docId__": 118,
+    "__docId__": 132,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -4257,7 +4649,7 @@
     }
   },
   {
-    "__docId__": 119,
+    "__docId__": 133,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -4275,7 +4667,7 @@
     }
   },
   {
-    "__docId__": 120,
+    "__docId__": 134,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -4318,7 +4710,7 @@
     "generator": false
   },
   {
-    "__docId__": 121,
+    "__docId__": 135,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -4371,7 +4763,7 @@
     "generator": false
   },
   {
-    "__docId__": 122,
+    "__docId__": 136,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -4448,7 +4840,7 @@
     "generator": false
   },
   {
-    "__docId__": 123,
+    "__docId__": 137,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -4491,7 +4883,7 @@
     "generator": false
   },
   {
-    "__docId__": 124,
+    "__docId__": 138,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -4544,7 +4936,7 @@
     "generator": false
   },
   {
-    "__docId__": 125,
+    "__docId__": 139,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -4597,7 +4989,7 @@
     "generator": false
   },
   {
-    "__docId__": 126,
+    "__docId__": 140,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -4660,7 +5052,7 @@
     "generator": false
   },
   {
-    "__docId__": 127,
+    "__docId__": 141,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -4693,7 +5085,7 @@
     "generator": false
   },
   {
-    "__docId__": 128,
+    "__docId__": 142,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -4746,7 +5138,7 @@
     "generator": false
   },
   {
-    "__docId__": 129,
+    "__docId__": 143,
     "kind": "method",
     "static": true,
     "variation": null,
@@ -4781,7 +5173,7 @@
     "generator": false
   },
   {
-    "__docId__": 130,
+    "__docId__": 144,
     "kind": "method",
     "static": true,
     "variation": null,
@@ -4836,7 +5228,7 @@
     "generator": false
   },
   {
-    "__docId__": 131,
+    "__docId__": 145,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -4879,7 +5271,7 @@
     "generator": false
   },
   {
-    "__docId__": 132,
+    "__docId__": 146,
     "kind": "file",
     "static": true,
     "variation": null,
@@ -4892,7 +5284,7 @@
     "content": "'use babel';\r\n'use strict';\r\n\r\nimport Setting from '../storage/models/setting';\r\n\r\n/** A module for commands */\r\nexport default class Module {\r\n\t/**\r\n\t * @param {Bot} bot - The bot the module is for\r\n\t * @param {string} id - The ID for the module\r\n\t * @param {string} [name=id] - The name of the module\r\n\t * @param {Command[]} [commands] - The commands that the module contains\r\n\t */\r\n\tconstructor(bot, id, name, commands) {\r\n\t\tif(!bot || !id) throw new Error('A bot and ID must be specified.');\r\n\t\tif(commands && !Array.isArray(commands)) throw new TypeError('Commands must be an array.');\r\n\t\tif(id !== id.toLowerCase()) throw new Error('Module ID must be lowercase.');\r\n\r\n\t\t/** @type {Bot} */\r\n\t\tthis.bot = bot;\r\n\t\t/** @type {string} */\r\n\t\tthis.id = id;\r\n\t\t/** @type {string} */\r\n\t\tthis.name = name || id;\r\n\t\t/** @type {Command[]} */\r\n\t\tthis.commands = commands || [];\r\n\t}\r\n\r\n\t/**\r\n\t * Enables or disables the module on a guild\r\n\t * @param {Guild|string} guild - The guild or guild ID\r\n\t * @param {boolean} enabled - Whether the module should be enabled or disabled\r\n\t * @return {void}\r\n\t * @see {@link Module.setEnabled}\r\n\t */\r\n\tsetEnabled(guild, enabled) {\r\n\t\tthis.constructor.setEnabled(this.bot.storage.settings, guild, this, enabled);\r\n\t}\r\n\r\n\t/**\r\n\t * Enables or disables a module on a guild\r\n\t * @param {SettingStorage} settings - The setting storage to use\r\n\t * @param {Guild|string} guild - The guild or guild ID\r\n\t * @param {Module|string} module - The module or module ID\r\n\t * @param {boolean} enabled - Whether the module should be enabled or disabled\r\n\t * @return {void}\r\n\t * @see {@link Module#setEnabled}\r\n\t */\r\n\tstatic setEnabled(settings, guild, module, enabled) {\r\n\t\tsettings.save(new Setting(guild, `mod-${module.id || module}`, enabled));\r\n\t}\r\n\r\n\t/**\r\n\t * Checks if the module is enabled on a guild\r\n\t * @param {Guild} guild - The guild\r\n\t * @return {boolean} Whether or not the module is enabled\r\n\t * @see {@link Module.isEnabled}\r\n\t */\r\n\tisEnabled(guild) {\r\n\t\treturn this.constructor.isEnabled(this.bot.storage.settings, guild, this);\r\n\t}\r\n\r\n\t/**\r\n\t * Checks if a module is enabled on a guild\r\n\t * @param {SettingStorage} settings - The setting storage to use\r\n\t * @param {Guild} guild - The guild\r\n\t * @param {Module|string} module - The module or module ID\r\n\t * @return {boolean} Whether or not the module is enabled\r\n\t * @see {@link Module#isEnabled}\r\n\t */\r\n\tstatic isEnabled(settings, guild, module) {\r\n\t\treturn settings.getValue(guild, `mod-${module.id || module}`, true);\r\n\t}\r\n}\r\n"
   },
   {
-    "__docId__": 133,
+    "__docId__": 147,
     "kind": "class",
     "static": true,
     "variation": null,
@@ -4908,7 +5300,7 @@
     "interface": false
   },
   {
-    "__docId__": 134,
+    "__docId__": 148,
     "kind": "constructor",
     "static": false,
     "variation": null,
@@ -4965,7 +5357,7 @@
     "generator": false
   },
   {
-    "__docId__": 135,
+    "__docId__": 149,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -4985,7 +5377,7 @@
     }
   },
   {
-    "__docId__": 136,
+    "__docId__": 150,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -5005,7 +5397,7 @@
     }
   },
   {
-    "__docId__": 137,
+    "__docId__": 151,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -5025,7 +5417,7 @@
     }
   },
   {
-    "__docId__": 138,
+    "__docId__": 152,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -5045,7 +5437,7 @@
     }
   },
   {
-    "__docId__": 139,
+    "__docId__": 153,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -5092,7 +5484,7 @@
     "generator": false
   },
   {
-    "__docId__": 140,
+    "__docId__": 154,
     "kind": "method",
     "static": true,
     "variation": null,
@@ -5160,7 +5552,7 @@
     "generator": false
   },
   {
-    "__docId__": 141,
+    "__docId__": 155,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -5196,7 +5588,7 @@
     "generator": false
   },
   {
-    "__docId__": 142,
+    "__docId__": 156,
     "kind": "method",
     "static": true,
     "variation": null,
@@ -5253,7 +5645,7 @@
     "generator": false
   },
   {
-    "__docId__": 143,
+    "__docId__": 157,
     "kind": "file",
     "static": true,
     "variation": null,
@@ -5263,10 +5655,10 @@
     "access": null,
     "description": null,
     "lineNumber": 1,
-    "content": "'use babel';\r\n'use strict';\r\n\r\nimport EventEmitter from 'events';\r\nimport Module from './module';\r\n\r\n/** Handles registration and searching of commands and modules */\r\nexport default class CommandRegistry extends EventEmitter {\r\n\t/** @param {?Logger} [logger] - The logger to use  */\r\n\tconstructor(logger) {\r\n\t\tsuper();\r\n\r\n\t\t/** @type {?Logger} */\r\n\t\tthis.logger = logger || null;\r\n\t\t/** @type {Command[]} */\r\n\t\tthis.commands = [];\r\n\t\t/** @type {Module[]} */\r\n\t\tthis.modules = [];\r\n\t}\r\n\r\n\t/**\r\n\t * Registers a single command\r\n\t * @param {Command} command - The command to register\r\n\t * @return {void}\r\n\t * @see {@link CommandRegistry#registerCommands}\r\n\t */\r\n\tregisterCommand(command) {\r\n\t\tthis.registerCommands([command]);\r\n\t}\r\n\r\n\t/**\r\n\t * Registers multiple commands\r\n\t * @param {Command[]} commands - The commands to register\r\n\t * @return {void}\r\n\t * @emits commandRegister When a command is registered, with the command and registry passed\r\n\t */\r\n\tregisterCommands(commands) {\r\n\t\tif(!Array.isArray(commands)) throw new TypeError('Commands must be an array.');\r\n\t\tfor(let command of commands) {\r\n\t\t\tif(this.commands.some(cmd => cmd.name === command.name)) throw new Error(`A command with the name \"${command.name}\"\" is already registered.`);\r\n\t\t\tconst module = this.modules.find(mod => mod.id === command.module);\r\n\t\t\tif(!module) throw new Error(`Module \"${command.module}\" is not registered.`);\r\n\t\t\tif(module.commands.some(cmd => cmd.memberName === command.memberName)) throw new Error(`A command with the member name \"${command.memberName}\" is already registered in ${module.id}`);\r\n\r\n\t\t\tif(command.name.includes('-')) command.aliases.push(command.name.replace(/-/g, ''));\r\n\t\t\tfor(const alias of command.aliases) {\r\n\t\t\t\tif(this.commands.some(cmd => cmd.aliases.some(ali => ali === alias))) throw new Error(`A command with the alias \"${alias}\" is already registered.`);\r\n\t\t\t\tif(alias.includes('-')) command.aliases.push(alias.replace(/-/g, ''));\r\n\t\t\t}\r\n\r\n\t\t\tmodule.commands.push(command);\r\n\t\t\tthis.commands.push(command);\r\n\t\t\tif(this.logger) this.logger.verbose(`Registered command ${command.module}:${command.memberName}.`);\r\n\t\t\tthis.emit('commandRegister', command, this);\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Registers a single module\r\n\t * @param {Module} module - The module to register\r\n\t * @return {void}\r\n\t * @see {@link CommandRegistry#registerModules}\r\n\t */\r\n\tregisterModule(module) {\r\n\t\tthis.registerModules([module]);\r\n\t}\r\n\r\n\t/**\r\n\t * Registers multiple modules\r\n\t * @param {Module[]} modules - The modules to register\r\n\t * @return {void}\r\n\t * @emits moduleRegister When a module is registered, with the module and registry passed\r\n\t */\r\n\tregisterModules(modules) {\r\n\t\tif(!Array.isArray(modules)) throw new TypeError('Modules must be an array.');\r\n\t\tfor(let module of modules) {\r\n\t\t\tif(!(module instanceof Module)) throw new TypeError('Module must be an instance of Module.');\r\n\t\t\tif(this.modules.some(mod => mod.name === module.name)) throw new Error(`Module \"${module.name}\"\" is already registered.`);\r\n\t\t\tthis.modules.push(module);\r\n\t\t\tif(this.logger) this.logger.verbose(`Registered module ${module.id}.`);\r\n\t\t\tthis.emit('moduleRegister', module, this);\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Finds all commands that match the search string\r\n\t * @param {string} [searchString] - The string to search for\r\n\t * @param {Message} [message] - The message to check usability against\r\n\t * @return {Command[]} All commands that are found\r\n\t */\r\n\tfindCommands(searchString = null, message = null) {\r\n\t\tif(!searchString) return message ? this.commands.filter(cmd => cmd.isUsable(message)) : this.commands;\r\n\r\n\t\t// Find all matches\r\n\t\tconst lowercaseSearch = searchString.toLowerCase();\r\n\t\tconst matchedCommands = this.commands.filter(cmd =>\r\n\t\t\tcmd.name.includes(lowercaseSearch)\r\n\t\t\t|| (cmd.aliases && cmd.aliases.some(ali => ali.includes(lowercaseSearch)))\r\n\t\t\t|| `${cmd.module}:${cmd.memberName}` === lowercaseSearch\r\n\t\t);\r\n\r\n\t\t// See if there's an exact match\r\n\t\tfor(const command of matchedCommands) {\r\n\t\t\tif(command.name === lowercaseSearch || (command.aliases && command.aliases.some(ali => ali === lowercaseSearch))) return [command];\r\n\t\t}\r\n\r\n\t\treturn matchedCommands;\r\n\t}\r\n\r\n\t/**\r\n\t * Finds all modules that match the search string\r\n\t * @param {string} [searchString] - The string to search for\r\n\t * @return {Module[]} All modules that are found\r\n\t */\r\n\tfindModules(searchString = null) {\r\n\t\tif(!searchString) return this.modules;\r\n\r\n\t\t// Find all matches\r\n\t\tconst lowercaseSearch = searchString.toLowerCase();\r\n\t\tconst matchedModules = this.modules.filter(mod => mod.name.includes(lowercaseSearch) || mod.id.includes(lowercaseSearch));\r\n\r\n\t\t// See if there's an exact match\r\n\t\tfor(const module of matchedModules) {\r\n\t\t\tif(module.name.toLowerCase() === lowercaseSearch || module.id === lowercaseSearch) return [module];\r\n\t\t}\r\n\r\n\t\treturn matchedModules;\r\n\t}\r\n}\r\n"
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport EventEmitter from 'events';\r\nimport Module from './module';\r\nimport CommandBuilder from './builder';\r\n\r\n/** Handles registration and searching of commands and modules */\r\nexport default class CommandRegistry extends EventEmitter {\r\n\t/** @param {?Logger} [logger] - The logger to use  */\r\n\tconstructor(logger) {\r\n\t\tsuper();\r\n\r\n\t\t/** @type {?Logger} */\r\n\t\tthis.logger = logger || null;\r\n\t\t/** @type {Command[]} */\r\n\t\tthis.commands = [];\r\n\t\t/** @type {Module[]} */\r\n\t\tthis.modules = [];\r\n\t}\r\n\r\n\t/**\r\n\t * Registers a single command\r\n\t * @param {Command} command - The command to register\r\n\t * @return {void}\r\n\t * @see {@link CommandRegistry#registerCommands}\r\n\t */\r\n\tregisterCommand(command) {\r\n\t\tthis.registerCommands([command]);\r\n\t}\r\n\r\n\t/**\r\n\t * Registers multiple commands\r\n\t * @param {Command[]} commands - The commands to register\r\n\t * @return {void}\r\n\t * @emits commandRegister When a command is registered, with the command and registry passed\r\n\t */\r\n\tregisterCommands(commands) {\r\n\t\tif(!Array.isArray(commands)) throw new TypeError('Commands must be an array.');\r\n\t\tfor(let command of commands) {\r\n\t\t\tif(command instanceof CommandBuilder) command = command.command;\r\n\r\n\t\t\t// Make sure there aren't any conflicts\r\n\t\t\tif(this.commands.some(cmd => cmd.name === command.name)) throw new Error(`A command with the name \"${command.name}\"\" is already registered.`);\r\n\t\t\tconst module = this.modules.find(mod => mod.id === command.module);\r\n\t\t\tif(!module) throw new Error(`Module \"${command.module}\" is not registered.`);\r\n\t\t\tif(module.commands.some(cmd => cmd.memberName === command.memberName)) throw new Error(`A command with the member name \"${command.memberName}\" is already registered in ${module.id}`);\r\n\r\n\t\t\t// Make sure there aren't any conflicts for the aliases, and add dehyphenated aliases\r\n\t\t\tif(command.name.includes('-')) command.aliases.push(command.name.replace(/-/g, ''));\r\n\t\t\tfor(const alias of command.aliases) {\r\n\t\t\t\tif(this.commands.some(cmd => cmd.aliases.some(ali => ali === alias))) throw new Error(`A command with the alias \"${alias}\" is already registered.`);\r\n\t\t\t\tif(alias.includes('-')) command.aliases.push(alias.replace(/-/g, ''));\r\n\t\t\t}\r\n\r\n\t\t\t// Add the command\r\n\t\t\tmodule.commands.push(command);\r\n\t\t\tthis.commands.push(command);\r\n\t\t\tif(this.logger) this.logger.verbose(`Registered command ${command.module}:${command.memberName}.`);\r\n\t\t\tthis.emit('commandRegister', command, this);\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Registers a single module\r\n\t * @param {Module} module - The module to register\r\n\t * @return {void}\r\n\t * @see {@link CommandRegistry#registerModules}\r\n\t */\r\n\tregisterModule(module) {\r\n\t\tthis.registerModules([module]);\r\n\t}\r\n\r\n\t/**\r\n\t * Registers multiple modules\r\n\t * @param {Module[]} modules - The modules to register\r\n\t * @return {void}\r\n\t * @emits moduleRegister When a module is registered, with the module and registry passed\r\n\t */\r\n\tregisterModules(modules) {\r\n\t\tif(!Array.isArray(modules)) throw new TypeError('Modules must be an array.');\r\n\t\tfor(let module of modules) {\r\n\t\t\tif(!(module instanceof Module)) throw new TypeError('Module must be an instance of Module.');\r\n\t\t\tif(this.modules.some(mod => mod.name === module.name)) throw new Error(`Module \"${module.name}\"\" is already registered.`);\r\n\t\t\tthis.modules.push(module);\r\n\t\t\tif(this.logger) this.logger.verbose(`Registered module ${module.id}.`);\r\n\t\t\tthis.emit('moduleRegister', module, this);\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Finds all commands that match the search string\r\n\t * @param {string} [searchString] - The string to search for\r\n\t * @param {Message} [message] - The message to check usability against\r\n\t * @return {Command[]} All commands that are found\r\n\t */\r\n\tfindCommands(searchString = null, message = null) {\r\n\t\tif(!searchString) return message ? this.commands.filter(cmd => cmd.isUsable(message)) : this.commands;\r\n\r\n\t\t// Find all matches\r\n\t\tconst lowercaseSearch = searchString.toLowerCase();\r\n\t\tconst matchedCommands = this.commands.filter(cmd =>\r\n\t\t\tcmd.name.includes(lowercaseSearch)\r\n\t\t\t|| (cmd.aliases && cmd.aliases.some(ali => ali.includes(lowercaseSearch)))\r\n\t\t\t|| `${cmd.module}:${cmd.memberName}` === lowercaseSearch\r\n\t\t);\r\n\r\n\t\t// See if there's an exact match\r\n\t\tfor(const command of matchedCommands) {\r\n\t\t\tif(command.name === lowercaseSearch || (command.aliases && command.aliases.some(ali => ali === lowercaseSearch))) return [command];\r\n\t\t}\r\n\r\n\t\treturn matchedCommands;\r\n\t}\r\n\r\n\t/**\r\n\t * Finds all modules that match the search string\r\n\t * @param {string} [searchString] - The string to search for\r\n\t * @return {Module[]} All modules that are found\r\n\t */\r\n\tfindModules(searchString = null) {\r\n\t\tif(!searchString) return this.modules;\r\n\r\n\t\t// Find all matches\r\n\t\tconst lowercaseSearch = searchString.toLowerCase();\r\n\t\tconst matchedModules = this.modules.filter(mod => mod.name.includes(lowercaseSearch) || mod.id.includes(lowercaseSearch));\r\n\r\n\t\t// See if there's an exact match\r\n\t\tfor(const module of matchedModules) {\r\n\t\t\tif(module.name.toLowerCase() === lowercaseSearch || module.id === lowercaseSearch) return [module];\r\n\t\t}\r\n\r\n\t\treturn matchedModules;\r\n\t}\r\n}\r\n"
   },
   {
-    "__docId__": 144,
+    "__docId__": 158,
     "kind": "class",
     "static": true,
     "variation": null,
@@ -5278,14 +5670,14 @@
     "importPath": "discord-graf/src/commands/registry.js",
     "importStyle": "CommandRegistry",
     "description": "Handles registration and searching of commands and modules",
-    "lineNumber": 8,
+    "lineNumber": 9,
     "interface": false,
     "extends": [
       "events~EventEmitter"
     ]
   },
   {
-    "__docId__": 145,
+    "__docId__": 159,
     "kind": "constructor",
     "static": false,
     "variation": null,
@@ -5294,7 +5686,7 @@
     "longname": "src/commands/registry.js~CommandRegistry#constructor",
     "access": null,
     "description": null,
-    "lineNumber": 10,
+    "lineNumber": 11,
     "params": [
       {
         "nullable": true,
@@ -5310,7 +5702,7 @@
     "generator": false
   },
   {
-    "__docId__": 146,
+    "__docId__": 160,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -5319,7 +5711,7 @@
     "longname": "src/commands/registry.js~CommandRegistry#logger",
     "access": null,
     "description": null,
-    "lineNumber": 14,
+    "lineNumber": 15,
     "type": {
       "nullable": true,
       "types": [
@@ -5330,7 +5722,7 @@
     }
   },
   {
-    "__docId__": 147,
+    "__docId__": 161,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -5339,7 +5731,7 @@
     "longname": "src/commands/registry.js~CommandRegistry#commands",
     "access": null,
     "description": null,
-    "lineNumber": 16,
+    "lineNumber": 17,
     "type": {
       "nullable": null,
       "types": [
@@ -5350,7 +5742,7 @@
     }
   },
   {
-    "__docId__": 148,
+    "__docId__": 162,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -5359,7 +5751,7 @@
     "longname": "src/commands/registry.js~CommandRegistry#modules",
     "access": null,
     "description": null,
-    "lineNumber": 18,
+    "lineNumber": 19,
     "type": {
       "nullable": null,
       "types": [
@@ -5370,7 +5762,7 @@
     }
   },
   {
-    "__docId__": 149,
+    "__docId__": 163,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -5382,7 +5774,7 @@
     "see": [
       "{@link CommandRegistry#registerCommands}"
     ],
-    "lineNumber": 27,
+    "lineNumber": 28,
     "params": [
       {
         "nullable": null,
@@ -5406,7 +5798,7 @@
     "generator": false
   },
   {
-    "__docId__": 150,
+    "__docId__": 164,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -5415,7 +5807,7 @@
     "longname": "src/commands/registry.js~CommandRegistry#registerCommands",
     "access": null,
     "description": "Registers multiple commands",
-    "lineNumber": 37,
+    "lineNumber": 38,
     "params": [
       {
         "nullable": null,
@@ -5447,7 +5839,7 @@
     "generator": false
   },
   {
-    "__docId__": 151,
+    "__docId__": 165,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -5459,7 +5851,7 @@
     "see": [
       "{@link CommandRegistry#registerModules}"
     ],
-    "lineNumber": 64,
+    "lineNumber": 70,
     "params": [
       {
         "nullable": null,
@@ -5483,7 +5875,7 @@
     "generator": false
   },
   {
-    "__docId__": 152,
+    "__docId__": 166,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -5492,7 +5884,7 @@
     "longname": "src/commands/registry.js~CommandRegistry#registerModules",
     "access": null,
     "description": "Registers multiple modules",
-    "lineNumber": 74,
+    "lineNumber": 80,
     "params": [
       {
         "nullable": null,
@@ -5524,7 +5916,7 @@
     "generator": false
   },
   {
-    "__docId__": 153,
+    "__docId__": 167,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -5533,7 +5925,7 @@
     "longname": "src/commands/registry.js~CommandRegistry#findCommands",
     "access": null,
     "description": "Finds all commands that match the search string",
-    "lineNumber": 91,
+    "lineNumber": 97,
     "params": [
       {
         "nullable": null,
@@ -5567,7 +5959,7 @@
     "generator": false
   },
   {
-    "__docId__": 154,
+    "__docId__": 168,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -5576,7 +5968,7 @@
     "longname": "src/commands/registry.js~CommandRegistry#findModules",
     "access": null,
     "description": "Finds all modules that match the search string",
-    "lineNumber": 115,
+    "lineNumber": 121,
     "params": [
       {
         "nullable": null,
@@ -5600,7 +5992,7 @@
     "generator": false
   },
   {
-    "__docId__": 155,
+    "__docId__": 169,
     "kind": "file",
     "static": true,
     "variation": null,
@@ -5613,7 +6005,7 @@
     "content": "'use babel';\r\n'use strict';\r\n\r\nimport FriendlyError from './friendly';\r\n\r\n/** Has a descriptive message for a command not having proper format */\r\nexport default class CommandFormatError extends FriendlyError {\r\n\t/**\r\n\t * @param {Command} command - The command the error is for\r\n\t * @param {?Guild} guild - The Guild the error is in\r\n\t */\r\n\tconstructor(command, guild = null) {\r\n\t\tsuper(`Invalid command format. Use ${command.bot.util.usage(`help ${command.name}`, guild)} for information.`);\r\n\t\t/** @ignore */\r\n\t\tthis.name = 'CommandFormatError';\r\n\t}\r\n}\r\n"
   },
   {
-    "__docId__": 156,
+    "__docId__": 170,
     "kind": "class",
     "static": true,
     "variation": null,
@@ -5632,7 +6024,7 @@
     ]
   },
   {
-    "__docId__": 157,
+    "__docId__": 171,
     "kind": "constructor",
     "static": false,
     "variation": null,
@@ -5667,7 +6059,7 @@
     "generator": false
   },
   {
-    "__docId__": 158,
+    "__docId__": 172,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -5685,7 +6077,7 @@
     }
   },
   {
-    "__docId__": 159,
+    "__docId__": 173,
     "kind": "file",
     "static": true,
     "variation": null,
@@ -5698,7 +6090,7 @@
     "content": "'use babel';\r\n'use strict';\r\n\r\n/** Has a message that can be considered user-friendly */\r\nexport default class FriendlyError extends Error {\r\n\t/** @param {string} message - The error message */\r\n\tconstructor(message) {\r\n\t\tsuper(message);\r\n\t\t/** @ignore */\r\n\t\tthis.name = 'FriendlyError';\r\n\t}\r\n}\r\n"
   },
   {
-    "__docId__": 160,
+    "__docId__": 174,
     "kind": "class",
     "static": true,
     "variation": null,
@@ -5717,7 +6109,7 @@
     ]
   },
   {
-    "__docId__": 161,
+    "__docId__": 175,
     "kind": "constructor",
     "static": false,
     "variation": null,
@@ -5742,7 +6134,7 @@
     "generator": false
   },
   {
-    "__docId__": 162,
+    "__docId__": 176,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -5760,7 +6152,7 @@
     }
   },
   {
-    "__docId__": 163,
+    "__docId__": 177,
     "kind": "file",
     "static": true,
     "variation": null,
@@ -5773,7 +6165,7 @@
     "content": "'use babel';\r\n'use strict';\r\n\r\nimport { readFileSync } from 'fs';\r\nimport { join as pathJoin } from 'path';\r\nimport _Bot from './bot';\r\nimport _Permissions from './bot/permissions';\r\nimport _Util from './bot/util';\r\nimport _Command from './commands/command';\r\nimport _Module from './commands/module';\r\nimport _GuildStorage from './storage';\r\nimport _Setting from './storage/models/setting';\r\nimport _FriendlyError from './errors/friendly';\r\nimport _CommandFormatError from './errors/command-format';\r\n\r\n/**\r\n * The version of GRAF\r\n * @type {string}\r\n */\r\nexport const version = JSON.parse(readFileSync(pathJoin(__dirname, '../package.json'))).version;\r\n\r\n/**\r\n * The {@link Bot} class\r\n * @type {function}\r\n */\r\nexport const Bot = _Bot;\r\nexport default Bot;\r\n\r\n/**\r\n * The {@link Command} class\r\n * @type {function}\r\n */\r\nexport const Command = _Command;\r\n\r\n/**\r\n * The {@link Module} class\r\n * @type {function}\r\n */\r\nexport const Module = _Module;\r\n\r\n/**\r\n * The {@link BotPermissions} class\r\n * @type {function}\r\n */\r\nexport const Permissions = _Permissions;\r\n\r\n/**\r\n * The {@link BotUtil} class\r\n * @type {function}\r\n */\r\nexport const Util = _Util;\r\n\r\n/**\r\n * The {@link GuildStorage} class\r\n * @type {function}\r\n */\r\nexport const GuildStorage = _GuildStorage;\r\n\r\n/**\r\n * The {@link Setting} class\r\n * @type {function}\r\n */\r\nexport const Setting = _Setting;\r\n\r\n/**\r\n * The {@link FriendlyError} class\r\n * @type {function}\r\n */\r\nexport const FriendlyError = _FriendlyError;\r\n\r\n/**\r\n * The {@link CommandFormatError} class\r\n * @type {function}\r\n */\r\nexport const CommandFormatError = _CommandFormatError;\r\n\r\n/** @external {Client} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Client */\r\n/** @external {User} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/User */\r\n/** @external {Guild} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild */\r\n/** @external {Channel} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Channel */\r\n/** @external {Message} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Message */\r\n/** @external {Role} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Role */\r\n/** @external {Logger} https://github.com/winstonjs/winston/blob/master/README.md */\r\n/** @external {LocalStorage} https://developer.mozilla.org/en-US/docs/Web/API/Storage */\r\n"
   },
   {
-    "__docId__": 164,
+    "__docId__": 178,
     "kind": "variable",
     "static": true,
     "variation": null,
@@ -5796,7 +6188,7 @@
     }
   },
   {
-    "__docId__": 165,
+    "__docId__": 179,
     "kind": "variable",
     "static": true,
     "variation": null,
@@ -5819,7 +6211,7 @@
     }
   },
   {
-    "__docId__": 166,
+    "__docId__": 180,
     "kind": "variable",
     "static": true,
     "variation": null,
@@ -5842,7 +6234,7 @@
     }
   },
   {
-    "__docId__": 167,
+    "__docId__": 181,
     "kind": "variable",
     "static": true,
     "variation": null,
@@ -5865,7 +6257,7 @@
     }
   },
   {
-    "__docId__": 168,
+    "__docId__": 182,
     "kind": "variable",
     "static": true,
     "variation": null,
@@ -5888,7 +6280,7 @@
     }
   },
   {
-    "__docId__": 169,
+    "__docId__": 183,
     "kind": "variable",
     "static": true,
     "variation": null,
@@ -5911,7 +6303,7 @@
     }
   },
   {
-    "__docId__": 170,
+    "__docId__": 184,
     "kind": "variable",
     "static": true,
     "variation": null,
@@ -5934,7 +6326,7 @@
     }
   },
   {
-    "__docId__": 171,
+    "__docId__": 185,
     "kind": "variable",
     "static": true,
     "variation": null,
@@ -5957,7 +6349,7 @@
     }
   },
   {
-    "__docId__": 172,
+    "__docId__": 186,
     "kind": "variable",
     "static": true,
     "variation": null,
@@ -5980,7 +6372,7 @@
     }
   },
   {
-    "__docId__": 173,
+    "__docId__": 187,
     "kind": "variable",
     "static": true,
     "variation": null,
@@ -6003,7 +6395,7 @@
     }
   },
   {
-    "__docId__": 174,
+    "__docId__": 188,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6015,7 +6407,7 @@
     "description": null
   },
   {
-    "__docId__": 175,
+    "__docId__": 189,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6027,7 +6419,7 @@
     "description": null
   },
   {
-    "__docId__": 176,
+    "__docId__": 190,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6039,7 +6431,7 @@
     "description": null
   },
   {
-    "__docId__": 177,
+    "__docId__": 191,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6051,7 +6443,7 @@
     "description": null
   },
   {
-    "__docId__": 178,
+    "__docId__": 192,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6063,7 +6455,7 @@
     "description": null
   },
   {
-    "__docId__": 179,
+    "__docId__": 193,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6075,7 +6467,7 @@
     "description": null
   },
   {
-    "__docId__": 180,
+    "__docId__": 194,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6087,7 +6479,7 @@
     "description": null
   },
   {
-    "__docId__": 181,
+    "__docId__": 195,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -6099,7 +6491,7 @@
     "description": null
   },
   {
-    "__docId__": 182,
+    "__docId__": 196,
     "kind": "file",
     "static": true,
     "variation": null,
@@ -6112,7 +6504,7 @@
     "content": "'use babel';\r\n'use strict';\r\n\r\nimport GuildStorage from '.';\r\nimport Util from '../bot/util';\r\n\r\n/** Stores channels that the bot is allowed to operate in within a guild */\r\nexport default class AllowedChannelStorage extends GuildStorage {\r\n\t/**\r\n\t * @param {LocalStorage} localStorage - The LocalStorage instance to use\r\n\t * @param {Logger} [logger] - The logger to use\r\n\t */\r\n\tconstructor(localStorage, logger) {\r\n\t\tsuper('allowed-channels', localStorage, logger);\r\n\t}\n\n\t/**\n\t * Saves a channel to the storage\n\t * @param {Channel} channel - The channel to save\n\t * @return {boolean} Whether or not the channel was saved\n\t * @see {@link GuildStorage#save}\n\t */\n\tsave(channel) {\r\n\t\treturn super.save(channel.guild, channel.id);\r\n\t}\r\n\r\n\t/**\r\n\t * Deletes a channel from the storage\r\n\t * @param {Channel} channel - The channel to delete\r\n\t * @return {boolean} Whether or not the channel was deleted\r\n\t * @see {@link GuildStorage#delete}\r\n\t */\r\n\tdelete(channel) {\r\n\t\treturn super.delete(channel.guild, channel.id);\r\n\t}\r\n\r\n\t/**\r\n\t * Finds all channels associated with a guild that optionally match a search string\r\n\t * @param {Guild|string} guild - The guild or guild ID to find the channels of\r\n\t * @param {string} [searchString] - The string to match channels against\r\n\t * @return {Channel[]} - All found channels\r\n\t * @see {@link GuildStorage#find}\r\n\t */\r\n\tfind(guild, searchString = null) {\r\n\t\tif(!guild) throw new Error('A guild must be specified.');\r\n\t\tif(!this.guildsMap) this.loadStorage();\r\n\t\tif(!this.guildsMap[guild.id]) return [];\r\n\r\n\t\t// Find all of the guild's channels that match, and filter them to ones that are usable channels\r\n\t\tconst channels = Util.search(guild.channels.findAll('type', 'text'), searchString, { searchExact: false }).filter(channel => this.guildsMap[guild.id].includes(channel.id));\r\n\t\treturn Util.search(channels, searchString, { searchInexact: false });\r\n\t}\r\n}\r\n"
   },
   {
-    "__docId__": 183,
+    "__docId__": 197,
     "kind": "class",
     "static": true,
     "variation": null,
@@ -6131,7 +6523,7 @@
     ]
   },
   {
-    "__docId__": 184,
+    "__docId__": 198,
     "kind": "constructor",
     "static": false,
     "variation": null,
@@ -6166,7 +6558,7 @@
     "generator": false
   },
   {
-    "__docId__": 185,
+    "__docId__": 199,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -6202,7 +6594,7 @@
     "generator": false
   },
   {
-    "__docId__": 186,
+    "__docId__": 200,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -6238,7 +6630,7 @@
     "generator": false
   },
   {
-    "__docId__": 187,
+    "__docId__": 201,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -6285,7 +6677,7 @@
     "generator": false
   },
   {
-    "__docId__": 188,
+    "__docId__": 202,
     "kind": "file",
     "static": true,
     "variation": null,
@@ -6298,7 +6690,7 @@
     "content": "'use babel';\r\n'use strict';\r\n\r\nimport Util from '../bot/util';\r\n\r\n/** Stores data entries associated with guilds */\r\nexport default class GuildStorage {\r\n\t/**\r\n\t * @param {string} key - The key of the storage in the LocalStorage\r\n\t * @param {LocalStorage} localStorage - The LocalStorage instance to use\r\n\t * @param {Logger} [logger] - The logger to use\r\n\t * @param {boolean} [objectBased=false] - If true, the storage will be object based. If false, it will be array-based.\r\n\t */\r\n\tconstructor(key, localStorage, logger, objectBased = false) {\r\n\t\tif(!key || !localStorage) throw new Error('A key and localStorage must be specified.');\r\n\t\t/** @type {string} */\r\n\t\tthis.key = key;\r\n\t\t/** @type {LocalStorage} */\r\n\t\tthis.localStorage = localStorage;\r\n\t\t/** @type {?Logger} */\r\n\t\tthis.logger = logger;\r\n\t\t/** @type {boolean} */\r\n\t\tthis.objectBased = objectBased || false;\r\n\t\t/** @type {Object} */\r\n\t\tthis.guildsMap = null;\r\n\t}\r\n\r\n\t/**\r\n\t * Loads the data from LocalStorage\r\n\t * @return {void}\r\n\t */\r\n\tloadStorage() {\r\n\t\tthis.guildsMap = JSON.parse(this.localStorage.getItem(this.key));\r\n\t\tif(!this.guildsMap) this.guildsMap = {};\r\n\t}\r\n\r\n\t/**\r\n\t * Saves the data to LocalStorage\r\n\t * @return {void}\r\n\t */\r\n\tsaveStorage() {\r\n\t\tif(!this.guildsMap) throw new Error('Trying to save before load');\r\n\t\tthis.localStorage.setItem(this.key, JSON.stringify(this.guildsMap));\r\n\t\tif(this.logger) this.logger.debug(`Saved ${this.key} storage.`, this.guildsMap);\r\n\t}\r\n\r\n\t/**\r\n\t * Saves an entry associated with a guild\r\n\t * @param {Guild|string} guild - The guild or guild ID the entry should be associated with\r\n\t * @param {*|Object} entry - If the storage is array-based, this can be any value to store.\r\n\t * If it is object-based, this must be an object with \"key\" and \"value\" properties to store.\r\n\t * @param {function} [searchFunction] - The function to find existing entries (See {@link GuildStorage#exists})\r\n\t * @return {boolean} Whether or not the entry was saved (will be false only if the storage is array-based and the entry already exists)\r\n\t */\r\n\tsave(guild, entry, searchFunction = null) {\r\n\t\tif(!guild || !entry) throw new Error('A guild and entry must be specified.');\r\n\t\tif(!this.guildsMap) this.loadStorage();\r\n\t\tif(guild.id) guild = guild.id;\r\n\t\tif(!this.guildsMap[guild]) this.guildsMap[guild] = this.objectBased ? {} : [];\r\n\r\n\t\tconst exists = this.exists(guild, entry, searchFunction);\r\n\t\tif(!exists || this.objectBased) {\r\n\t\t\tif(this.objectBased) this.guildsMap[guild][entry.key] = entry.value; else this.guildsMap[guild].push(entry);\r\n\t\t\tthis.saveStorage();\r\n\t\t\tif(this.logger) this.logger.verbose(`${exists ? `Updated` : `Added`} entry in ${this.key} storage.`, { guild: guild, entry: entry });\r\n\t\t\treturn true;\r\n\t\t} else {\r\n\t\t\tif(this.logger) this.logger.verbose(`Not adding entry to ${this.key} storage, because it already exists.`, { guild: guild, entry: entry });\r\n\t\t\treturn false;\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Deletes an entry associated with a guild\r\n\t * @param {Guild|string} guild - The guild or guild ID the entry is associated with\r\n\t * @param {*|Object|string} entry - If the storage is array-based, this can be any value to find and delete.\r\n\t * If it is object-based, this must be an object with a \"key\" property, or a string that is the key.\r\n\t * @param {function} [searchFunction] - The function to find existing entries (See {@link GuildStorage#exists})\r\n\t * @return {boolean} Whether or not the entry was deleted\r\n\t */\r\n\tdelete(guild, entry, searchFunction = null) {\r\n\t\tif(!guild || !entry) throw new Error('A guild and entry must be specified.');\r\n\t\tif(!this.guildsMap) this.loadStorage();\r\n\t\tif(guild.id) guild = guild.id;\r\n\t\tif(!this.guildsMap[guild]) this.guildsMap[guild] = this.objectBased ? {} : [];\r\n\r\n\t\tlet index = this.objectBased ? null : -1;\r\n\t\tif(this.objectBased) {\r\n\t\t\tif(searchFunction) {\r\n\t\t\t\tfor(const entryKey of Object.keys(this.guildsMap)) {\r\n\t\t\t\t\tif(searchFunction(entryKey, this.guildsMap[guild][entryKey])) {\r\n\t\t\t\t\t\tindex = entryKey;\r\n\t\t\t\t\t\tbreak;\r\n\t\t\t\t\t}\r\n\t\t\t\t}\r\n\t\t\t} else {\r\n\t\t\t\tindex = entry.key || entry;\r\n\t\t\t}\r\n\t\t} else {\r\n\t\t\tindex = searchFunction ? this.guildsMap[guild].findIndex(searchFunction) : this.guildsMap[guild].findIndex(item => item === entry);\r\n\t\t}\r\n\r\n\t\tif((this.objectBased && index) || (!this.objectBased && index >= 0)) {\r\n\t\t\tif(this.objectBased) delete this.guildsMap[guild][index]; else this.guildsMap[guild].splice(index, 1);\r\n\t\t\tthis.saveStorage();\r\n\t\t\tif(this.logger) this.logger.verbose(`Deleted entry from ${this.key} storage.`, { guild: guild, entry: entry });\r\n\t\t\treturn true;\r\n\t\t} else {\r\n\t\t\tif(this.logger) this.logger.verbose(`Not deleting entry from ${this.key} storage, because it doesn\\'t exist.`, { guild: guild, entry: entry });\r\n\t\t\treturn false;\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Clears all entries associated with a guild\r\n\t * @param {Guild|string} guild - The guild or guild ID to clear the entries of\r\n\t * @return {void}\r\n\t */\r\n\tclear(guild) {\r\n\t\tif(!guild) throw new Error('A guild must be specified.');\r\n\t\tif(!this.guildsMap) this.loadStorage();\r\n\t\tdelete this.guildsMap[guild.id || guild];\r\n\t\tif(this.logger) this.logger.verbose(`Cleared a guild in ${this.key} storage.`, { guild: guild.id || guild });\r\n\t\tthis.saveStorage();\r\n\t}\r\n\r\n\t/**\r\n\t * Clears all entries\r\n\t * @return {void}\r\n\t */\r\n\tclearAll() {\r\n\t\tif(!this.guildsMap) this.loadStorage();\r\n\t\tfor(const key of Object.keys(this.guildsMap)) delete this.guildsMap[key];\r\n\t\tif(this.logger) this.logger.verbose(`Cleared all of ${this.key} storage.`);\r\n\t\tthis.saveStorage();\r\n\t}\r\n\r\n\t/**\r\n\t * Finds all entries in a storage that optionally match a search string\r\n\t * @param {Guild|string} guild - The guild or guild ID to find the entries of\r\n\t * @param {string} [searchString] - The string to match entries against\r\n\t * @param {SearchOptions} [searchOptions] - Options for the search\r\n\t * @return {*[]} - All found entries\r\n\t */\r\n\tfind(guild, searchString = null, searchOptions = {}) {\r\n\t\tif(!guild) throw new Error('A guild must be specified.');\r\n\t\tif(!this.guildsMap) this.loadStorage();\r\n\t\tif(guild.id) guild = guild.id;\r\n\t\tif(!this.guildsMap[guild]) return [];\r\n\t\tif(!searchString) return this.guildsMap[guild];\r\n\t\tif(this.objectBased) {\r\n\t\t\tif(this.guildsMap[guild][searchString]) return [this.guildsMap[guild][searchString]];\r\n\t\t\telse return [];\r\n\t\t} else {\r\n\t\t\treturn Util.search(this.guildsMap[guild], searchString, searchOptions);\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Checks if an entry associated with a guild exists\r\n\t * @param {Guild|string} guild - The guild or guild ID the entry is associated with\r\n\t * @param {*|Object|string} entry - If the storage is array-based, this can be any value to check existence of.\r\n\t * If it is object-based, this must be an object with a \"key\" property, or a string that is the key.\r\n\t * @param {function} [searchFunction] - The function to find existing entries. If the storage is array-based, it will be passed the value of each entry.\r\n\t * If it is object-based, it will be passed the key and value of each entry.\r\n\t * @return {boolean} Whether or not the entry exists\r\n\t */\r\n\texists(guild, entry, searchFunction = null) {\r\n\t\tif(!guild || !entry) throw new Error('A guild and entry must be specified.');\r\n\t\tif(!this.guildsMap) this.loadStorage();\r\n\t\tif(guild.id) guild = guild.id;\r\n\t\tif(!this.guildsMap[guild]) return false;\r\n\t\tif(this.objectBased) {\r\n\t\t\tif(searchFunction) {\r\n\t\t\t\tfor(const entryKey of Object.keys(this.guildsMap[guild])) {\r\n\t\t\t\t\tif(searchFunction(entryKey, this.guildsMap[guild][entryKey])) return true;\r\n\t\t\t\t}\r\n\t\t\t\treturn false;\r\n\t\t\t} else {\r\n\t\t\t\treturn typeof this.guildsMap[guild][entry.key || entry] !== 'undefined';\r\n\t\t\t}\r\n\t\t} else {\r\n\t\t\treturn searchFunction ? this.guildsMap[guild].some(searchFunction) : this.guildsMap[guild].includes(entry);\r\n\t\t}\r\n\t}\r\n\r\n\t/**\r\n\t * Checks if there are no entries associated with a guild\r\n\t * @param {Guild|string} guild - The guild or guild ID to check emptiness of\r\n\t * @return {boolean} Whether or not there are no entries associated with the guild\r\n\t */\r\n\tisEmpty(guild) {\r\n\t\tif(!guild) throw new Error('A guild must be specified.');\r\n\t\tif(!this.guildsMap) this.loadStorage();\r\n\t\tif(guild.id) guild = guild.id;\r\n\t\treturn !this.guildsMap[guild] || this.guildsMap[guild].length === 0;\r\n\t}\r\n}\r\n"
   },
   {
-    "__docId__": 189,
+    "__docId__": 203,
     "kind": "class",
     "static": true,
     "variation": null,
@@ -6314,7 +6706,7 @@
     "interface": false
   },
   {
-    "__docId__": 190,
+    "__docId__": 204,
     "kind": "constructor",
     "static": false,
     "variation": null,
@@ -6371,7 +6763,7 @@
     "generator": false
   },
   {
-    "__docId__": 191,
+    "__docId__": 205,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -6391,7 +6783,7 @@
     }
   },
   {
-    "__docId__": 192,
+    "__docId__": 206,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -6411,7 +6803,7 @@
     }
   },
   {
-    "__docId__": 193,
+    "__docId__": 207,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -6431,7 +6823,7 @@
     }
   },
   {
-    "__docId__": 194,
+    "__docId__": 208,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -6451,7 +6843,7 @@
     }
   },
   {
-    "__docId__": 195,
+    "__docId__": 209,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -6471,7 +6863,7 @@
     }
   },
   {
-    "__docId__": 196,
+    "__docId__": 210,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -6493,7 +6885,7 @@
     "generator": false
   },
   {
-    "__docId__": 197,
+    "__docId__": 211,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -6511,7 +6903,7 @@
     }
   },
   {
-    "__docId__": 198,
+    "__docId__": 212,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -6529,7 +6921,7 @@
     }
   },
   {
-    "__docId__": 199,
+    "__docId__": 213,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -6551,7 +6943,7 @@
     "generator": false
   },
   {
-    "__docId__": 200,
+    "__docId__": 214,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -6606,7 +6998,7 @@
     "generator": false
   },
   {
-    "__docId__": 201,
+    "__docId__": 215,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -6662,7 +7054,7 @@
     "generator": false
   },
   {
-    "__docId__": 202,
+    "__docId__": 216,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -6696,7 +7088,7 @@
     "generator": false
   },
   {
-    "__docId__": 203,
+    "__docId__": 217,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -6718,7 +7110,7 @@
     "generator": false
   },
   {
-    "__docId__": 204,
+    "__docId__": 218,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -6772,7 +7164,7 @@
     "generator": false
   },
   {
-    "__docId__": 205,
+    "__docId__": 219,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -6828,7 +7220,7 @@
     "generator": false
   },
   {
-    "__docId__": 206,
+    "__docId__": 220,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -6862,7 +7254,7 @@
     "generator": false
   },
   {
-    "__docId__": 207,
+    "__docId__": 221,
     "kind": "file",
     "static": true,
     "variation": null,
@@ -6875,7 +7267,7 @@
     "content": "'use babel';\r\n'use strict';\r\n\r\nimport GuildStorage from '.';\r\nimport Util from '../bot/util';\r\n\r\n/** Stores roles that are moderators within a guild */\r\nexport default class ModRoleStorage extends GuildStorage {\r\n\t/**\r\n\t * @param {LocalStorage} localStorage - The LocalStorage instance to use\r\n\t * @param {Logger} [logger] - The logger to use\r\n\t */\r\n\tconstructor(localStorage, logger) {\r\n\t\tsuper('mod-roles', localStorage, logger);\r\n\t}\r\n\r\n\t/**\r\n\t * Saves a role to the storage\r\n\t * @param {Role} role - The role to save\r\n\t * @return {boolean} Whether or not the role was saved\r\n\t * @see {@link GuildStorage#save}\r\n\t */\r\n\tsave(role) {\r\n\t\treturn super.save(role.guild, role.id);\r\n\t}\r\n\r\n\t/**\r\n\t * Deletes a role from the storage\r\n\t * @param {Role} role - The role to delete\r\n\t * @return {boolean} Whether or not the role was deleted\r\n\t * @see {@link GuildStorage#delete}\r\n\t */\r\n\tdelete(role) {\r\n\t\treturn super.delete(role.guild, role.id);\r\n\t}\r\n\r\n\t/**\r\n\t * Finds all roles associated with a guild that optionally match a search string\r\n\t * @param {Guild|string} guild - The guild or guild ID to find the roles of\r\n\t * @param {string} [searchString] - The string to match roles against\r\n\t * @return {Role[]} - All found roles\r\n\t * @see {@link GuildStorage#find}\r\n\t */\r\n\tfind(guild, searchString = null) {\r\n\t\tif(!guild) throw new Error('A guild must be specified.');\r\n\t\tif(!this.guildsMap) this.loadStorage();\r\n\t\tif(!this.guildsMap[guild.id]) return [];\r\n\r\n\t\t// Find all of the guild's roles that match, and filter them to ones that are mod roles\r\n\t\tconst roles = Util.search(guild.roles.array(), searchString, { searchExact: false }).filter(role => this.guildsMap[guild.id].includes(role.id));\r\n\t\treturn Util.search(roles, searchString, { searchInexact: false });\r\n\t}\r\n}\r\n"
   },
   {
-    "__docId__": 208,
+    "__docId__": 222,
     "kind": "class",
     "static": true,
     "variation": null,
@@ -6894,7 +7286,7 @@
     ]
   },
   {
-    "__docId__": 209,
+    "__docId__": 223,
     "kind": "constructor",
     "static": false,
     "variation": null,
@@ -6929,7 +7321,7 @@
     "generator": false
   },
   {
-    "__docId__": 210,
+    "__docId__": 224,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -6965,7 +7357,7 @@
     "generator": false
   },
   {
-    "__docId__": 211,
+    "__docId__": 225,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -7001,7 +7393,7 @@
     "generator": false
   },
   {
-    "__docId__": 212,
+    "__docId__": 226,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -7048,7 +7440,7 @@
     "generator": false
   },
   {
-    "__docId__": 213,
+    "__docId__": 227,
     "kind": "file",
     "static": true,
     "variation": null,
@@ -7061,7 +7453,7 @@
     "content": "'use babel';\r\n'use strict';\r\n\r\n/** A guild-specific setting */\r\nexport default class Setting {\r\n\t/**\r\n\t * @param {?Guild|string} guild - The guild or guild ID ('global' if empty)\r\n\t * @param {string} key - The key of the setting\r\n\t * @param {*} [value] - The value of the setting\r\n\t */\r\n\tconstructor(guild, key, value) {\r\n\t\tif(!key) throw new Error('Setting key must be specified.');\r\n\r\n\t\t/** @type {string} */\r\n\t\tthis.guild = guild ? guild.id || guild : 'global';\r\n\t\t/** @type {string} */\r\n\t\tthis.key = key;\r\n\t\t/** @type {*} */\r\n\t\tthis.value = value;\r\n\t}\r\n}\r\n"
   },
   {
-    "__docId__": 214,
+    "__docId__": 228,
     "kind": "class",
     "static": true,
     "variation": null,
@@ -7077,7 +7469,7 @@
     "interface": false
   },
   {
-    "__docId__": 215,
+    "__docId__": 229,
     "kind": "constructor",
     "static": false,
     "variation": null,
@@ -7123,7 +7515,7 @@
     "generator": false
   },
   {
-    "__docId__": 216,
+    "__docId__": 230,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -7143,7 +7535,7 @@
     }
   },
   {
-    "__docId__": 217,
+    "__docId__": 231,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -7163,7 +7555,7 @@
     }
   },
   {
-    "__docId__": 218,
+    "__docId__": 232,
     "kind": "member",
     "static": false,
     "variation": null,
@@ -7183,7 +7575,7 @@
     }
   },
   {
-    "__docId__": 219,
+    "__docId__": 233,
     "kind": "file",
     "static": true,
     "variation": null,
@@ -7196,7 +7588,7 @@
     "content": "'use babel';\r\n'use strict';\r\n\r\nimport GuildStorage from '.';\r\nimport Setting from './models/setting';\r\n\r\n/** Stores settings within a guild */\r\nexport default class SettingStorage extends GuildStorage {\r\n\t/**\r\n\t * @param {LocalStorage} localStorage - The LocalStorage instance to use\r\n\t * @param {Logger} [logger] - The logger to use\r\n\t */\r\n\tconstructor(localStorage, logger) {\r\n\t\tsuper('settings', localStorage, logger, true);\r\n\t}\r\n\r\n\t/**\r\n\t * Saves a setting to the storage\r\n\t * @param {Setting} setting - The setting to save\r\n\t * @return {boolean} Whether or not the setting was saved\r\n\t * @see {@link GuildStorage#save}\r\n\t */\r\n\tsave(setting) {\r\n\t\treturn super.save(setting.guild, setting);\r\n\t}\r\n\r\n\t/**\r\n\t * Deletes a setting from the storage\r\n\t * @param {Guild|string} [guild] - The guild or guild ID the setting is associated with\r\n\t * @param {Setting|string} setting - The setting or setting key (must be a setting instance if the guild isn't specified)\r\n\t * @return {boolean} Whether or not the setting was deleted\r\n\t * @see {@link GuildStorage#delete}\r\n\t */\r\n\tdelete(guild, setting) {\r\n\t\t[guild, setting] = this._getSettingGuildAndKey(setting, guild);\r\n\t\treturn super.delete(guild, setting);\r\n\t}\r\n\r\n\t/**\r\n\t * Finds all settings associated with a guild or a single one with a key\r\n\t * @param {Guild|string} [guild] - The guild or guild ID to find the settings of\r\n\t * @param {Setting|string} setting - The setting or setting key (must be a setting instance if the guild isn't specified)\r\n\t * @return {*[]} - All found setting values\r\n\t * @see {@link GuildStorage#find}\r\n\t */\r\n\tfind(guild, setting) {\r\n\t\t[guild, setting] = this._getSettingGuildAndKey(setting, guild, false);\r\n\t\treturn super.find(guild, setting);\r\n\t}\r\n\r\n\t/**\r\n\t * Checks if a setting associated with a guild exists\r\n\t * @param {Guild|string} [guild] - The guild or guild ID the setting is associated with\r\n\t * @param {Setting|string} setting - The setting or setting key\r\n\t * @return {boolean} Whether or not the setting exists\r\n\t * @see {@link GuildStorage#exists}\r\n\t */\r\n\texists(guild, setting) {\r\n\t\t[guild, setting] = this._getSettingGuildAndKey(setting, guild);\r\n\t\treturn super.exists(guild, setting);\r\n\t}\r\n\r\n\t/**\r\n\t * Gets the value of a setting associated with a guild\r\n\t * @param {Guild|string} [guild] - The guild or guild ID the setting is associated with\r\n\t * @param {Setting|string} setting - The setting or setting key (must be a setting instance if the guild isn't specified)\r\n\t * @param {*} [defaultValue=null] - The value to default to if the setting doesn't exist\r\n\t * @return {*} The value of the setting\r\n\t */\r\n\tgetValue(guild, setting, defaultValue = null) {\r\n\t\t[guild, setting] = this._getSettingGuildAndKey(setting, guild);\r\n\t\tif(!this.guildsMap) this.loadStorage();\r\n\t\tif(!this.guildsMap[guild]) return defaultValue;\r\n\t\tif(!(setting in this.guildsMap[guild])) return defaultValue;\r\n\t\treturn this.guildsMap[guild][setting];\r\n\t}\r\n\r\n\t_getSettingGuildAndKey(setting, guild, requireSetting = true) {\r\n\t\tif(setting instanceof Setting) {\r\n\t\t\treturn [!guild ? setting.guild : guild.id || guild, setting.key];\r\n\t\t} else {\r\n\t\t\tif(!setting && requireSetting) throw new Error('A setting or a key must be specified.');\r\n\t\t\treturn [guild ? guild.id || guild : 'global', setting];\r\n\t\t}\r\n\t}\r\n}\r\n"
   },
   {
-    "__docId__": 220,
+    "__docId__": 234,
     "kind": "class",
     "static": true,
     "variation": null,
@@ -7215,7 +7607,7 @@
     ]
   },
   {
-    "__docId__": 221,
+    "__docId__": 235,
     "kind": "constructor",
     "static": false,
     "variation": null,
@@ -7250,7 +7642,7 @@
     "generator": false
   },
   {
-    "__docId__": 222,
+    "__docId__": 236,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -7286,7 +7678,7 @@
     "generator": false
   },
   {
-    "__docId__": 223,
+    "__docId__": 237,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -7334,7 +7726,7 @@
     "generator": false
   },
   {
-    "__docId__": 224,
+    "__docId__": 238,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -7382,7 +7774,7 @@
     "generator": false
   },
   {
-    "__docId__": 225,
+    "__docId__": 239,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -7430,7 +7822,7 @@
     "generator": false
   },
   {
-    "__docId__": 226,
+    "__docId__": 240,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -7487,7 +7879,7 @@
     "generator": false
   },
   {
-    "__docId__": 227,
+    "__docId__": 241,
     "kind": "method",
     "static": false,
     "variation": null,
@@ -7529,7 +7921,7 @@
     "generator": false
   },
   {
-    "__docId__": 229,
+    "__docId__": 243,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7542,7 +7934,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 230,
+    "__docId__": 244,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7555,7 +7947,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 231,
+    "__docId__": 245,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7568,7 +7960,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 232,
+    "__docId__": 246,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7581,7 +7973,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 233,
+    "__docId__": 247,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7594,7 +7986,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 234,
+    "__docId__": 248,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7607,7 +7999,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 235,
+    "__docId__": 249,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7620,7 +8012,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 236,
+    "__docId__": 250,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7633,7 +8025,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 237,
+    "__docId__": 251,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7646,7 +8038,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 238,
+    "__docId__": 252,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7659,7 +8051,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 239,
+    "__docId__": 253,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7672,7 +8064,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 240,
+    "__docId__": 254,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7685,7 +8077,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 241,
+    "__docId__": 255,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7698,7 +8090,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 242,
+    "__docId__": 256,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7711,7 +8103,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 243,
+    "__docId__": 257,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7724,7 +8116,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 244,
+    "__docId__": 258,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7737,7 +8129,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 245,
+    "__docId__": 259,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7750,7 +8142,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 246,
+    "__docId__": 260,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7763,7 +8155,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 247,
+    "__docId__": 261,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7776,7 +8168,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 248,
+    "__docId__": 262,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7789,7 +8181,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 249,
+    "__docId__": 263,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7802,7 +8194,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 250,
+    "__docId__": 264,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7815,7 +8207,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 251,
+    "__docId__": 265,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7828,7 +8220,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 252,
+    "__docId__": 266,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7841,7 +8233,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 253,
+    "__docId__": 267,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7854,7 +8246,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 254,
+    "__docId__": 268,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7867,7 +8259,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 255,
+    "__docId__": 269,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7880,7 +8272,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 256,
+    "__docId__": 270,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7893,7 +8285,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 257,
+    "__docId__": 271,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7906,7 +8298,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 258,
+    "__docId__": 272,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7919,7 +8311,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 259,
+    "__docId__": 273,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7932,7 +8324,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 260,
+    "__docId__": 274,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7945,7 +8337,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 261,
+    "__docId__": 275,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7958,7 +8350,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 262,
+    "__docId__": 276,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7971,7 +8363,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 263,
+    "__docId__": 277,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7984,7 +8376,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 264,
+    "__docId__": 278,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -7997,7 +8389,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 265,
+    "__docId__": 279,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -8010,7 +8402,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 266,
+    "__docId__": 280,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -8023,7 +8415,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 267,
+    "__docId__": 281,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -8036,7 +8428,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 268,
+    "__docId__": 282,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -8049,7 +8441,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 269,
+    "__docId__": 283,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -8062,7 +8454,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 270,
+    "__docId__": 284,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -8075,7 +8467,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 271,
+    "__docId__": 285,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -8088,7 +8480,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 272,
+    "__docId__": 286,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -8101,7 +8493,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 273,
+    "__docId__": 287,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -8114,7 +8506,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 274,
+    "__docId__": 288,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -8127,7 +8519,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 275,
+    "__docId__": 289,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -8140,7 +8532,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 277,
+    "__docId__": 291,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -8153,7 +8545,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 278,
+    "__docId__": 292,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -8166,7 +8558,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 279,
+    "__docId__": 293,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -8179,7 +8571,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 280,
+    "__docId__": 294,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -8192,7 +8584,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 281,
+    "__docId__": 295,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -8205,7 +8597,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 282,
+    "__docId__": 296,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -8218,7 +8610,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 283,
+    "__docId__": 297,
     "kind": "external",
     "static": true,
     "variation": null,
@@ -8231,7 +8623,7 @@
     "builtinExternal": true
   },
   {
-    "__docId__": 284,
+    "__docId__": 298,
     "kind": "external",
     "static": true,
     "variation": null,

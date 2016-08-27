@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl" href="../../">
-  <title data-ice="title">src/index.js | GRAF API Document</title>
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">src/commands/builder.js | GRAF API Document</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -77,91 +77,87 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">src/index.js</h1>
+<div class="content" data-ice="content"><h1 data-ice="title">src/commands/builder.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">&apos;use babel&apos;;
 &apos;use strict&apos;;
 
-import { readFileSync } from &apos;fs&apos;;
-import { join as pathJoin } from &apos;path&apos;;
-import _Bot from &apos;./bot&apos;;
-import _Permissions from &apos;./bot/permissions&apos;;
-import _Util from &apos;./bot/util&apos;;
-import _Command from &apos;./commands/command&apos;;
-import _Module from &apos;./commands/module&apos;;
-import _GuildStorage from &apos;./storage&apos;;
-import _Setting from &apos;./storage/models/setting&apos;;
-import _FriendlyError from &apos;./errors/friendly&apos;;
-import _CommandFormatError from &apos;./errors/command-format&apos;;
+import Command from &apos;./command&apos;;
 
-/**
- * The version of GRAF
- * @type {string}
- */
-export const version = JSON.parse(readFileSync(pathJoin(__dirname, &apos;../package.json&apos;))).version;
+/** Builds commands with a fluent API */
+export default class CommandBuilder {
+	/**
+	 * @param {Bot} bot - The bot the command is for
+	 * @param {CommandInfo} [info] - The command info
+	 * @param {Object} [funcs] - The functions to set
+	 */
+	constructor(bot, info = null, funcs = null) {
+		if(!bot) throw new Error(&apos;A bot must be specified.&apos;);
 
-/**
- * The {@link Bot} class
- * @type {function}
- */
-export const Bot = _Bot;
-export default Bot;
+		/** @type {Bot} */
+		this.bot = bot;
+		/** @type {CommandInfo} */
+		this.commandInfo = info;
 
-/**
- * The {@link Command} class
- * @type {function}
- */
-export const Command = _Command;
+		if(funcs) {
+			if(funcs.run) this.run(funcs.run);
+			if(funcs.hasPermission) this.hasPermission(funcs.hasPermission);
+		}
+	}
 
-/**
- * The {@link Module} class
- * @type {function}
- */
-export const Module = _Module;
+	/**
+	 * Sets the command information. This must be used before any other method if info was not provided to the constructor.
+	 * @param {CommandInfo} info - The command info
+	 * @return {CommandBuilder} This builder
+	 */
+	info(info) {
+		this.commandInfo = info;
+		return this;
+	}
 
-/**
- * The {@link BotPermissions} class
- * @type {function}
- */
-export const Permissions = _Permissions;
+	/**
+	 * Sets the command&apos;s run method
+	 * @param {function} fn - The function to use
+	 * @param {*[]} [extras=[]] - Extra values to pass to the function
+	 * @return {CommandBuilder} This builder
+	 */
+	run(fn, extras = []) {
+		if(typeof fn !== &apos;function&apos;) throw new TypeError(&apos;run must be provided a function.&apos;);
+		this.command.run = _bindAppend(fn, this.command, ...extras);
+		return this;
+	}
 
-/**
- * The {@link BotUtil} class
- * @type {function}
- */
-export const Util = _Util;
+	/**
+	 * Sets the command&apos;s hasPermission method
+	 * @param {function} fn - The function to use
+	 * @param {*[]} [extras=[]] - Extra values to pass to the function
+	 * @return {CommandBuilder} This builder
+	 */
+	hasPermission(fn, extras = []) {
+		if(typeof fn !== &apos;function&apos;) throw new TypeError(&apos;hasPermission must be provided a function.&apos;);
+		this.command.hasPermission = _bindAppend(fn, this.command, ...extras);
+		return this;
+	}
 
-/**
- * The {@link GuildStorage} class
- * @type {function}
- */
-export const GuildStorage = _GuildStorage;
+	/**
+	 * Registers the command to the bot
+	 * @return {void}
+	 */
+	register() {
+		this.bot.registerCommand(this.command);
+	}
 
-/**
- * The {@link Setting} class
- * @type {function}
- */
-export const Setting = _Setting;
+	/** @type {Command} */
+	get command() {
+		if(!this._command) this._command = new Command(this.bot, this.commandInfo);
+		return this._command;
+	}
+}
 
-/**
- * The {@link FriendlyError} class
- * @type {function}
- */
-export const FriendlyError = _FriendlyError;
-
-/**
- * The {@link CommandFormatError} class
- * @type {function}
- */
-export const CommandFormatError = _CommandFormatError;
-
-/** @external {Client} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Client */
-/** @external {User} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/User */
-/** @external {Guild} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild */
-/** @external {Channel} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Channel */
-/** @external {Message} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Message */
-/** @external {Role} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Role */
-/** @external {Logger} https://github.com/winstonjs/winston/blob/master/README.md */
-/** @external {LocalStorage} https://developer.mozilla.org/en-US/docs/Web/API/Storage */
+function _bindAppend(fn, self, ...args) {
+	return function boundFunction(...args2) {
+		return fn.apply(self, args2.concat(args));
+	};
+}
 </code></pre>
 
 </div>

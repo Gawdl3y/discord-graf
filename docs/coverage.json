@@ -1,21 +1,21 @@
 {
   "coverage": "100%",
-  "expectCount": 171,
-  "actualCount": 171,
+  "expectCount": 181,
+  "actualCount": 181,
   "files": {
     "src/storage/allowed-channels.js": {
       "expectCount": 5,
       "actualCount": 5,
       "undocumentLines": []
     },
+    "src/bot/index.js": {
+      "expectCount": 23,
+      "actualCount": 23,
+      "undocumentLines": []
+    },
     "src/index.js": {
       "expectCount": 10,
       "actualCount": 10,
-      "undocumentLines": []
-    },
-    "src/bot/index.js": {
-      "expectCount": 22,
-      "actualCount": 22,
       "undocumentLines": []
     },
     "src/bot/config.js": {
@@ -36,6 +36,11 @@
     "src/commands/command.js": {
       "expectCount": 24,
       "actualCount": 24,
+      "undocumentLines": []
+    },
+    "src/commands/builder.js": {
+      "expectCount": 9,
+      "actualCount": 9,
       "undocumentLines": []
     },
     "src/commands/dispatcher.js": {

@@ -60,6 +60,8 @@
     <li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/usage.html#information" data-ice="link">Information</a></li>
 <li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/usage.html#first-steps" data-ice="link">First steps</a></li>
 <li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/usage.html#commands" data-ice="link">Commands</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/usage.html#classes" data-ice="link">Classes</a></li>
+<li data-ice="manualNav" class="indent-h2"><span class="manual-dot"></span><a href="manual/usage.html#builder" data-ice="link">Builder</a></li>
 <li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/usage.html#permissions" data-ice="link">Permissions</a></li>
 <li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/usage.html#guild-storage" data-ice="link">Guild storage</a></li>
 <li data-ice="manualNav" class="indent-h1"><span class="manual-dot"></span><a href="manual/usage.html#utilities" data-ice="link">Utilities</a></li>
@@ -94,29 +96,26 @@
     <span data-ice="title">Usage</span>
   </div>
   <div data-ice="content"><h2 id="information">Information</h2>
-<p>Even though the framework is written with them, you don&apos;t need to write your code with ES6 modules and ES2017 async/await.
-Imports and exports are replaceable by the CommonJS <code>require</code> function and <code>exports</code> object.
-Any <code>async</code> functions return <code>Promise</code>s.</p>
 <p>The framework is built on top of the <a href="http://hydrabolt.github.io/discord.js/index.html#!/docs">discord.js rewrite</a>.
 A Discord server is always referred to as a <code>Guild</code> internally, as that&apos;s what the API calls them.</p>
 <h2 id="first-steps">First steps</h2>
 <p>The first thing you&apos;ll want to do is instantiate the <a href="./manual/../class/src/bot/index.js~Bot.html"><code>Bot</code></a> class, specifying at minimum the properties <code>name</code> and <code>version</code>.
 To add information to the built-in about command, also add the <code>about</code> property.
 For update checking, specify <code>updateURL</code>.<br>Example:</p>
-<pre><code class="lang-javascript"><code class="source-code prettyprint">import { Bot, Command } from &apos;discord-graf&apos;;
+<pre><code class="lang-javascript"><code class="source-code prettyprint">const graf = require(&apos;discord-graf&apos;);
 
 const version = &apos;1.0.0&apos;;
-const bot = new Bot({
+const bot = new graf.Bot({
     name: &apos;SomeBot&apos;,
     version: version,
     about: `**SomeBot** v${version} created by Some Guy.`,
     updateURL: &apos;https://raw.githubusercontent.com/SomeGuy/some-bot/master/package.json&apos;
 });</code>
 </code></pre>
-<p>Then, you&apos;ll need to register your modules and commands to the bot, and create the client.<br>Example:</p>
-<pre><code class="lang-javascript"><code class="source-code prettyprint">import SomeCommand from &apos;./commands/general/some-command&apos;;
-import SomeOtherCommand from &apos;./commands/general/some-other-command&apos;;
-import YetAnotherCommand from &apos;./commands/some-mod/another-command&apos;;
+<p>Then, you&apos;ll need to register your modules and commands to the bot, and create the client.<br>Example (with command classes):</p>
+<pre><code class="lang-javascript"><code class="source-code prettyprint">const SomeCommand = require(&apos;./commands/general/some-command&apos;);
+const SomeOtherCommand = require(&apos;./commands/general/some-other-command&apos;);
+const YetAnotherCommand = require(&apos;./commands/some-mod/another-command&apos;);
 
 const client = bot
     .registerDefaults()
@@ -134,38 +133,73 @@ const client = bot
 <p>That&apos;s it!
 You now have a fully-functioning bot.</p>
 <h2 id="commands">Commands</h2>
+<p>There are two ways to make a command; using the command builder, or making your own class.
+Using classes is generally preferred and cleaner.
+Regardless of the method used to make your command, you will need an object of command information.
+At minimum, the command info must contain the <code>name</code>, <code>module</code>, and <code>memberName</code> properties.
+See the <a href="./manual/../typedef/index.html#static-typedef-CommandInfo">list of all command options</a>.
+If a command name or alias has hyphens (<code>-</code>) in it, the framework will automatically add aliases for de-hyphenated ones.</p>
+<h3 id="classes">Classes</h3>
 <p>All commands extend the base <a href="./manual/../class/src/commands/command.js~Command.html"><code>Command</code></a> class.
 They must all override the <a href="./manual/../class/src/commands/command.js~Command.html#instance-constructor-constructor">constructor</a>
 and <a href="./manual/../class/src/commands/command.js~Command.html#instance-method-run"><code>run</code></a> method.
-They may also optionally override the <a href="./manual/../class/src/commands/command.js~Command.html#instance-method-hasPermission"><code>hasPermission</code></a> method.
-If a command name or alias has hyphens (<code>-</code>) in it, the framework will automatically add aliases for de-hyphenated ones.</p>
-<ul>
-<li><a href="./manual/../typedef/index.html#static-typedef-CommandInfo">List of command settings</a></li>
-</ul>
+They may also optionally override the <a href="./manual/../class/src/commands/command.js~Command.html#instance-method-hasPermission"><code>hasPermission</code></a> method.</p>
 <p>Example command:</p>
-<pre><code class="lang-javascript"><code class="source-code prettyprint">import { Command, CommandFormatError } from &apos;discord-graf&apos;;
+<pre><code class="lang-javascript"><code class="source-code prettyprint">const graf = require(&apos;discord-graf&apos;);
 
-export default class AddNumbersCommand extends Command {
+export default class AddNumbersCommand extends graf.Command {
     constructor(bot) {
         super(bot, {
-            name: &apos;addnumbers&apos;,
-            aliases: [&apos;add&apos;, &apos;addnums&apos;],
+            name: &apos;add-numbers&apos;,
+            aliases: [&apos;add&apos;, &apos;add-nums&apos;],
             module: &apos;math&apos;,
             memberName: &apos;add&apos;,
             description: &apos;Adds numbers together.&apos;,
-            usage: &apos;addnumber &lt;number&gt; [number2] [number3...]&apos;,
+            usage: &apos;add-numbers &lt;number&gt; [number2] [number3...]&apos;,
             details: &apos;This is an incredibly useful command that finds the sum of numbers. This command is the envy of all other commands.&apos;,
-            examples: [&apos;addnumber 42 1337&apos;],
+            examples: [&apos;add-numbers 42 1337&apos;],
             argsType: &apos;multiple&apos;
         });
     }
 
-    async run(message, args) {
-        if(!args[0]) throw new CommandFormatError(this, message.guild);
+    run(message, args) {
+        if(!args[0]) throw new graf.CommandFormatError(this, message.guild);
         const total = args.reduce((prev, arg) =&gt; prev + parseFloat(arg), 0);
-        return `Sum: ${total}`;
+        return Promise.resolve(`Sum: ${total}`);
     }
 }</code>
+</code></pre>
+<h3 id="builder">Builder</h3>
+<p>The command builder allows you to make and register commands with the bot with a fluent interface.</p>
+<p>To use the builder, just call <a href="./manual/../class/src/bot/index.js~Bot.html#instance-method-buildCommand"><code>bot.buildCommand()</code></a> to get a builder.
+Call <a href="./manual/../class/src/commands/builder.js~CommandBuilder.html#instance-method-info"><code>.info()</code></a> on the builder to set the command information before anything else.
+Call <a href="./manual/../class/src/commands/builder.js~CommandBuilder.html#instance-method-run"><code>.run()</code></a> to set the command&apos;s
+<a href="./manual/../class/src/commands/command.js~Command.html#instance-method-run"><code>run</code></a> method.
+Optionally call <a href="./manual/../class/src/commands/builder.js~CommandBuilder.html#instance-method-hasPermission"><code>.hasPermission()</code></a> to set the command&apos;s
+<a href="./manual/../class/src/commands/command.js~Command.html#instance-method-hasPermission"><code>hasPermission</code></a> method.
+Note that using arrow functions will not allow you to access the command via <code>this</code>, so use regular functions instead.
+Finally, call <a href="./manual/../class/src/commands/builder.js~CommandBuilder.html#instance-method-register"><code>.register()</code></a> to register the command to the bot.</p>
+<p>Example command:</p>
+<pre><code class="lang-javascript"><code class="source-code prettyprint">const graf = require(&apos;discord-graf&apos;);
+
+bot.buildCommand()
+    .info({
+        name: &apos;add-numbers&apos;,
+        aliases: [&apos;add&apos;, &apos;add-nums&apos;],
+        module: &apos;math&apos;,
+        memberName: &apos;add&apos;,
+        description: &apos;Adds numbers together.&apos;,
+        usage: &apos;add-numbers &lt;number&gt; [number2] [number3...]&apos;,
+        details: &apos;This is an incredibly useful command that finds the sum of numbers. This command is the envy of all other commands.&apos;,
+        examples: [&apos;add-numbers 42 1337&apos;],
+        argsType: &apos;multiple&apos;
+    })
+    .run(function run(message, args) {
+        if(!args[0]) throw new graf.CommandFormatError(this, message.guild);
+        const total = args.reduce((prev, arg) =&gt; prev + parseFloat(arg), 0);
+        return Promise.resolve(`Sum: ${total}`);
+    })
+.register();</code>
 </code></pre>
 <h2 id="permissions">Permissions</h2>
 <p>Every bot has an instance of <a href="./manual/../class/src/bot/permissions.js~BotPermissions.html"><code>BotPermissions</code></a> as <code>bot.permissions</code> that contains handy methods for checking the permissions of a user on a server.

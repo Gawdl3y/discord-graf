@@ -59,7 +59,8 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-SearchOptions">SearchOptions</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://discordjs.readthedocs.io/en/latest/docs_client.html#parameters">ClientOptions</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-external">E</span><span data-ice="name"><span><a href="http://yargs.js.org/docs/">Yargs</a></span></span></li>
-<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">commands</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/command.js~Command.html">Command</a></span></span></li>
+<li data-ice="doc"><div data-ice="dirPath" class="nav-dir-path">commands</div><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/builder.js~CommandBuilder.html">CommandBuilder</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/command.js~Command.html">Command</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/dispatcher.js~CommandDispatcher.html">CommandDispatcher</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/module.js~Module.html">Module</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html">CommandRegistry</a></span></span></li>
@@ -91,6 +92,7 @@ import Util from &apos;./util&apos;;
 import Registry from &apos;../commands/registry&apos;;
 import Dispatcher from &apos;../commands/dispatcher&apos;;
 import Module from &apos;../commands/module&apos;;
+import CommandBuilder from &apos;../commands/builder&apos;;
 import Setting from &apos;../storage/models/setting&apos;;
 import SettingStorage from &apos;../storage/settings&apos;;
 import ModRoleStorage from &apos;../storage/mod-roles&apos;;
@@ -200,6 +202,13 @@ export default class Bot {
 			this.dispatcher.handleMessage(newMessage, oldMessage).catch(messageErr);
 		});
 
+		// Fetch the owner
+		if(config.owner) {
+			client.once(&apos;ready&apos;, () =&gt; {
+				client.fetchUser(config.owner).catch((err) =&gt; { this.logger.error(&apos;Unable to fetch the owner user.&apos;, err); });
+			});
+		}
+
 		// Set up update checking
 		if(config.updateURL) {
 			client.once(&apos;ready&apos;, () =&gt; {
@@ -222,6 +231,15 @@ export default class Bot {
 		}
 
 		return client;
+	}
+
+	/**
+	 * Create a command builder
+	 * @param {CommandInfo} info - The command information
+	 * @return {CommandBuilder} The builder
+	 */
+	buildCommand(info) {
+		return new CommandBuilder(this, info);
 	}
 
 	/**
@@ -419,7 +437,7 @@ export default class Bot {
 				this.storage.settings.save(new Setting(null, &apos;notified-version&apos;, masterVersion));
 			}
 		}).catch(err =&gt; {
-			this.logger.error(err);
+			this.logger.error(&apos;Error while checking for an update&apos;, err);
 		});
 	}
 
@@ -438,10 +456,7 @@ export default class Bot {
 	}
 }
 
-const defaultClientOptions = {
-	forceFetchUsers: true,
-	bot: true
-};
+const defaultClientOptions = { bot: true };
 </code></pre>
 
 </div>

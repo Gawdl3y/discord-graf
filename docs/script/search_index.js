@@ -48,6 +48,12 @@ window.esdocSearchIndex = [
     "variable"
   ],
   [
+    "discord-graf/src/commands/builder.js~commandbuilder",
+    "class/src/commands/builder.js~CommandBuilder.html",
+    "<span>CommandBuilder</span> <span class=\"search-result-import-path\">discord-graf/src/commands/builder.js</span>",
+    "class"
+  ],
+  [
     "discord-graf/src/commands/dispatcher.js~commanddispatcher",
     "class/src/commands/dispatcher.js~CommandDispatcher.html",
     "<span>CommandDispatcher</span> <span class=\"search-result-import-path\">discord-graf/src/commands/dispatcher.js</span>",
@@ -546,6 +552,12 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "src/bot/index.js~bot#buildcommand",
+    "class/src/bot/index.js~Bot.html#instance-method-buildCommand",
+    "src/bot/index.js~Bot#buildCommand",
+    "method"
+  ],
+  [
     "src/bot/index.js~bot#client",
     "class/src/bot/index.js~Bot.html#instance-member-client",
     "src/bot/index.js~Bot#client",
@@ -880,6 +892,60 @@ window.esdocSearchIndex = [
     "typedef/index.html#static-typedef-SearchOptions",
     "src/bot/util.js~SearchOptions",
     "typedef"
+  ],
+  [
+    "src/commands/builder.js",
+    "file/src/commands/builder.js.html",
+    "src/commands/builder.js",
+    "file"
+  ],
+  [
+    "src/commands/builder.js~commandbuilder#bot",
+    "class/src/commands/builder.js~CommandBuilder.html#instance-member-bot",
+    "src/commands/builder.js~CommandBuilder#bot",
+    "member"
+  ],
+  [
+    "src/commands/builder.js~commandbuilder#command",
+    "class/src/commands/builder.js~CommandBuilder.html#instance-get-command",
+    "src/commands/builder.js~CommandBuilder#command",
+    "member"
+  ],
+  [
+    "src/commands/builder.js~commandbuilder#commandinfo",
+    "class/src/commands/builder.js~CommandBuilder.html#instance-member-commandInfo",
+    "src/commands/builder.js~CommandBuilder#commandInfo",
+    "member"
+  ],
+  [
+    "src/commands/builder.js~commandbuilder#constructor",
+    "class/src/commands/builder.js~CommandBuilder.html#instance-constructor-constructor",
+    "src/commands/builder.js~CommandBuilder#constructor",
+    "method"
+  ],
+  [
+    "src/commands/builder.js~commandbuilder#haspermission",
+    "class/src/commands/builder.js~CommandBuilder.html#instance-method-hasPermission",
+    "src/commands/builder.js~CommandBuilder#hasPermission",
+    "method"
+  ],
+  [
+    "src/commands/builder.js~commandbuilder#info",
+    "class/src/commands/builder.js~CommandBuilder.html#instance-method-info",
+    "src/commands/builder.js~CommandBuilder#info",
+    "method"
+  ],
+  [
+    "src/commands/builder.js~commandbuilder#register",
+    "class/src/commands/builder.js~CommandBuilder.html#instance-method-register",
+    "src/commands/builder.js~CommandBuilder#register",
+    "method"
+  ],
+  [
+    "src/commands/builder.js~commandbuilder#run",
+    "class/src/commands/builder.js~CommandBuilder.html#instance-method-run",
+    "src/commands/builder.js~CommandBuilder#run",
+    "method"
   ],
   [
     "src/commands/command.js",

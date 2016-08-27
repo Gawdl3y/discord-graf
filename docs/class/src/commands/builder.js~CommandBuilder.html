@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../">
-  <title data-ice="title">CommandRegistry | GRAF API Document</title>
+  <title data-ice="title">CommandBuilder | GRAF API Document</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -78,23 +78,23 @@
 </nav>
 
 <div class="content" data-ice="content"><div class="header-notice">
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import CommandRegistry from &apos;<span><a href="file/src/commands/registry.js.html#lineNumber9">discord-graf/src/commands/registry.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import CommandBuilder from &apos;<span><a href="file/src/commands/builder.js.html#lineNumber7">discord-graf/src/commands/builder.js</a></span>&apos;</code></pre></div>
   <span data-ice="access">public</span>
   <span data-ice="kind">class</span>
   
   
   
-  <span data-ice="source">| <span><a href="file/src/commands/registry.js.html#lineNumber9">source</a></span></span>
+  <span data-ice="source">| <span><a href="file/src/commands/builder.js.html#lineNumber7">source</a></span></span>
 </div>
 
 <div class="self-detail detail">
-  <h1 data-ice="name">CommandRegistry</h1>
+  <h1 data-ice="name">CommandBuilder</h1>
 
   
 
   
   
-  <div class="flat-list" data-ice="extendsChain"><h4>Extends:</h4><div><span>events~EventEmitter</span> &#x2192; CommandRegistry</div></div>
+  
   
   
   
@@ -104,7 +104,7 @@
 
   
   
-  <div class="description" data-ice="description"><p>Handles registration and searching of commands and modules</p>
+  <div class="description" data-ice="description"><p>Builds commands with a fluent API</p>
 </div>
 
   
@@ -133,7 +133,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html#instance-constructor-constructor">constructor</a></span></span><span data-ice="signature">(logger: <span><a href="https://github.com/winstonjs/winston/blob/master/README.md">Logger</a></span>)</span>
+           <span data-ice="name"><span><a href="class/src/commands/builder.js~CommandBuilder.html#instance-constructor-constructor">constructor</a></span></span><span data-ice="signature">(bot: <span><a href="class/src/bot/index.js~Bot.html">Bot</a></span>, info: <span><a href="typedef/index.html#static-typedef-CommandInfo">CommandInfo</a></span>, funcs: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>)</span>
         </p>
       </div>
       <div>
@@ -165,7 +165,32 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html#instance-member-commands">commands</a></span></span><span data-ice="signature">: <span><span><a href="class/src/commands/command.js~Command.html">Command</a></span><span>[]</span></span></span>
+           <span data-ice="name"><span><a href="class/src/commands/builder.js~CommandBuilder.html#instance-member-bot">bot</a></span></span><span data-ice="signature">: <span><a href="class/src/bot/index.js~Bot.html">Bot</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      <span class="kind" data-ice="kind">get</span>
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+           <span data-ice="name"><span><a href="class/src/commands/builder.js~CommandBuilder.html#instance-get-command">command</a></span></span><span data-ice="signature">: <span><a href="class/src/commands/command.js~Command.html">Command</a></span></span>
         </p>
       </div>
       <div>
@@ -190,32 +215,7 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html#instance-member-logger">logger</a></span></span><span data-ice="signature">: <span><a href="https://github.com/winstonjs/winston/blob/master/README.md">Logger</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-           <span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html#instance-member-modules">modules</a></span></span><span data-ice="signature">: <span><span><a href="class/src/commands/module.js~Module.html">Module</a></span><span>[]</span></span></span>
+           <span data-ice="name"><span><a href="class/src/commands/builder.js~CommandBuilder.html#instance-member-commandInfo">commandInfo</a></span></span><span data-ice="signature">: <span><a href="typedef/index.html#static-typedef-CommandInfo">CommandInfo</a></span></span>
         </p>
       </div>
       <div>
@@ -247,13 +247,13 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html#instance-method-findCommands">findCommands</a></span></span><span data-ice="signature">(searchString: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, message: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Message">Message</a></span>): <span><span><a href="class/src/commands/command.js~Command.html">Command</a></span><span>[]</span></span></span>
+           <span data-ice="name"><span><a href="class/src/commands/builder.js~CommandBuilder.html#instance-method-hasPermission">hasPermission</a></span></span><span data-ice="signature">(fn: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">function</a></span>, extras: <span><span>*</span><span>[]</span></span>): <span><a href="class/src/commands/builder.js~CommandBuilder.html">CommandBuilder</a></span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Finds all commands that match the search string</p>
+        <div data-ice="description"><p>Sets the command&apos;s hasPermission method</p>
 </div>
       </div>
     </td>
@@ -273,13 +273,13 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html#instance-method-findModules">findModules</a></span></span><span data-ice="signature">(searchString: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><span><a href="class/src/commands/module.js~Module.html">Module</a></span><span>[]</span></span></span>
+           <span data-ice="name"><span><a href="class/src/commands/builder.js~CommandBuilder.html#instance-method-info">info</a></span></span><span data-ice="signature">(info: <span><a href="typedef/index.html#static-typedef-CommandInfo">CommandInfo</a></span>): <span><a href="class/src/commands/builder.js~CommandBuilder.html">CommandBuilder</a></span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Finds all modules that match the search string</p>
+        <div data-ice="description"><p>Sets the command information.</p>
 </div>
       </div>
     </td>
@@ -299,13 +299,13 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html#instance-method-registerCommand">registerCommand</a></span></span><span data-ice="signature">(command: <span><a href="class/src/commands/command.js~Command.html">Command</a></span>): <span>void</span></span>
+           <span data-ice="name"><span><a href="class/src/commands/builder.js~CommandBuilder.html#instance-method-register">register</a></span></span><span data-ice="signature">(): <span>void</span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Registers a single command</p>
+        <div data-ice="description"><p>Registers the command to the bot</p>
 </div>
       </div>
     </td>
@@ -325,65 +325,13 @@
     <td>
       <div>
         <p>
-           <span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html#instance-method-registerCommands">registerCommands</a></span></span><span data-ice="signature">(commands: <span><span><a href="class/src/commands/command.js~Command.html">Command</a></span><span>[]</span></span>): <span>void</span></span>
+           <span data-ice="name"><span><a href="class/src/commands/builder.js~CommandBuilder.html#instance-method-run">run</a></span></span><span data-ice="signature">(fn: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">function</a></span>, extras: <span><span>*</span><span>[]</span></span>): <span><a href="class/src/commands/builder.js~CommandBuilder.html">CommandBuilder</a></span></span>
         </p>
       </div>
       <div>
         
         
-        <div data-ice="description"><p>Registers multiple commands</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-           <span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html#instance-method-registerModule">registerModule</a></span></span><span data-ice="signature">(module: <span><a href="class/src/commands/module.js~Module.html">Module</a></span>): <span>void</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>Registers a single module</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-           <span data-ice="name"><span><a href="class/src/commands/registry.js~CommandRegistry.html#instance-method-registerModules">registerModules</a></span></span><span data-ice="signature">(modules: <span><span><a href="class/src/commands/module.js~Module.html">Module</a></span><span>[]</span></span>): <span>void</span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>Registers multiple modules</p>
+        <div data-ice="description"><p>Sets the command&apos;s run method</p>
 </div>
       </div>
     </td>
@@ -409,11 +357,11 @@
     
     
     
-    <span data-ice="name">constructor</span><span data-ice="signature">(logger: <span><a href="https://github.com/winstonjs/winston/blob/master/README.md">Logger</a></span>)</span>
+    <span data-ice="name">constructor</span><span data-ice="signature">(bot: <span><a href="class/src/bot/index.js~Bot.html">Bot</a></span>, info: <span><a href="typedef/index.html#static-typedef-CommandInfo">CommandInfo</a></span>, funcs: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>)</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/commands/registry.js.html#lineNumber11">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/commands/builder.js.html#lineNumber13">source</a></span></span>
     </span>
   </h3>
 
@@ -433,11 +381,24 @@
     <tbody>
     
     <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">logger</td>
-      <td data-ice="type"><span><a href="https://github.com/winstonjs/winston/blob/master/README.md">Logger</a></span></td>
-      <td data-ice="appendix"><ul><li>optional</li>
-<li>nullable: true</li></ul></td>
-      <td data-ice="description"><p>The logger to use</p>
+      <td data-ice="name" data-depth="0">bot</td>
+      <td data-ice="type"><span><a href="class/src/bot/index.js~Bot.html">Bot</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The bot the command is for</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">info</td>
+      <td data-ice="type"><span><a href="typedef/index.html#static-typedef-CommandInfo">CommandInfo</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>The command info</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">funcs</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="description"><p>The functions to set</p>
 </td>
     </tr>
 </tbody>
@@ -464,17 +425,17 @@
 <div data-ice="memberDetails"><h2 data-ice="title">Public Members</h2>
 
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-member-commands">
+  <h3 data-ice="anchor" id="instance-member-bot">
     <span class="access" data-ice="access">public</span>
     
     
     
     
-    <span data-ice="name">commands</span><span data-ice="signature">: <span><span><a href="class/src/commands/command.js~Command.html">Command</a></span><span>[]</span></span></span>
+    <span data-ice="name">bot</span><span data-ice="signature">: <span><a href="class/src/bot/index.js~Bot.html">Bot</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/commands/registry.js.html#lineNumber17">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/commands/builder.js.html#lineNumber17">source</a></span></span>
     </span>
   </h3>
 
@@ -504,17 +465,17 @@
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-member-logger">
+  <h3 data-ice="anchor" id="instance-get-command">
     <span class="access" data-ice="access">public</span>
     
+    <span class="kind" data-ice="kind">get</span>
     
     
-    
-    <span data-ice="name">logger</span><span data-ice="signature">: <span><a href="https://github.com/winstonjs/winston/blob/master/README.md">Logger</a></span></span>
+    <span data-ice="name">command</span><span data-ice="signature">: <span><a href="class/src/commands/command.js~Command.html">Command</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/commands/registry.js.html#lineNumber15">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/commands/builder.js.html#lineNumber70">source</a></span></span>
     </span>
   </h3>
 
@@ -544,17 +505,17 @@
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-member-modules">
+  <h3 data-ice="anchor" id="instance-member-commandInfo">
     <span class="access" data-ice="access">public</span>
     
     
     
     
-    <span data-ice="name">modules</span><span data-ice="signature">: <span><span><a href="class/src/commands/module.js~Module.html">Module</a></span><span>[]</span></span></span>
+    <span data-ice="name">commandInfo</span><span data-ice="signature">: <span><a href="typedef/index.html#static-typedef-CommandInfo">CommandInfo</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/commands/registry.js.html#lineNumber19">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/commands/builder.js.html#lineNumber19">source</a></span></span>
     </span>
   </h3>
 
@@ -587,24 +548,24 @@
 <div data-ice="methodDetails"><h2 data-ice="title">Public Methods</h2>
 
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-findCommands">
+  <h3 data-ice="anchor" id="instance-method-hasPermission">
     <span class="access" data-ice="access">public</span>
     
     
     
     
-    <span data-ice="name">findCommands</span><span data-ice="signature">(searchString: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, message: <span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Message">Message</a></span>): <span><span><a href="class/src/commands/command.js~Command.html">Command</a></span><span>[]</span></span></span>
+    <span data-ice="name">hasPermission</span><span data-ice="signature">(fn: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">function</a></span>, extras: <span><span>*</span><span>[]</span></span>): <span><a href="class/src/commands/builder.js~CommandBuilder.html">CommandBuilder</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/commands/registry.js.html#lineNumber97">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/commands/builder.js.html#lineNumber55">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  <div data-ice="description"><p>Finds all commands that match the search string</p>
+  <div data-ice="description"><p>Sets the command&apos;s hasPermission method</p>
 </div>
 
   
@@ -618,17 +579,18 @@
     <tbody>
     
     <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">searchString</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
-      <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>The string to search for</p>
+      <td data-ice="name" data-depth="0">fn</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">function</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>The function to use</p>
 </td>
     </tr>
 <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">message</td>
-      <td data-ice="type"><span><a href="http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Message">Message</a></span></td>
-      <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>The message to check usability against</p>
+      <td data-ice="name" data-depth="0">extras</td>
+      <td data-ice="type"><span><span>*</span><span>[]</span></span></td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: []</li></ul></td>
+      <td data-ice="description"><p>Extra values to pass to the function</p>
 </td>
     </tr>
 </tbody>
@@ -640,8 +602,8 @@
     <h4>Return:</h4>
     <table>
       <tr>
-        <td class="return-type" data-ice="returnType"><span><span><a href="class/src/commands/command.js~Command.html">Command</a></span><span>[]</span></span></td>
-        <td class="return-desc" data-ice="returnDescription"><p>All commands that are found</p>
+        <td class="return-type" data-ice="returnType"><span><a href="class/src/commands/builder.js~CommandBuilder.html">CommandBuilder</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>This builder</p>
 </td>
       </tr>
     </table>
@@ -663,24 +625,24 @@
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-findModules">
+  <h3 data-ice="anchor" id="instance-method-info">
     <span class="access" data-ice="access">public</span>
     
     
     
     
-    <span data-ice="name">findModules</span><span data-ice="signature">(searchString: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><span><a href="class/src/commands/module.js~Module.html">Module</a></span><span>[]</span></span></span>
+    <span data-ice="name">info</span><span data-ice="signature">(info: <span><a href="typedef/index.html#static-typedef-CommandInfo">CommandInfo</a></span>): <span><a href="class/src/commands/builder.js~CommandBuilder.html">CommandBuilder</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/commands/registry.js.html#lineNumber121">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/commands/builder.js.html#lineNumber32">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  <div data-ice="description"><p>Finds all modules that match the search string</p>
+  <div data-ice="description"><p>Sets the command information. This must be used before any other method if info was not provided to the constructor.</p>
 </div>
 
   
@@ -694,84 +656,67 @@
     <tbody>
     
     <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">searchString</td>
-      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
-      <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>The string to search for</p>
-</td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tr>
-        <td class="return-type" data-ice="returnType"><span><span><a href="class/src/commands/module.js~Module.html">Module</a></span><span>[]</span></span></td>
-        <td class="return-desc" data-ice="returnDescription"><p>All modules that are found</p>
-</td>
-      </tr>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-registerCommand">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    <span data-ice="name">registerCommand</span><span data-ice="signature">(command: <span><a href="class/src/commands/command.js~Command.html">Command</a></span>): <span>void</span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/commands/registry.js.html#lineNumber28">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>Registers a single command</p>
-</div>
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">command</td>
-      <td data-ice="type"><span><a href="class/src/commands/command.js~Command.html">Command</a></span></td>
+      <td data-ice="name" data-depth="0">info</td>
+      <td data-ice="type"><span><a href="typedef/index.html#static-typedef-CommandInfo">CommandInfo</a></span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"><p>The command to register</p>
+      <td data-ice="description"><p>The command info</p>
 </td>
     </tr>
 </tbody>
   </table>
 </div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tr>
+        <td class="return-type" data-ice="returnType"><span><a href="class/src/commands/builder.js~CommandBuilder.html">CommandBuilder</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>This builder</p>
+</td>
+      </tr>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-register">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    <span data-ice="name">register</span><span data-ice="signature">(): <span>void</span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/src/commands/builder.js.html#lineNumber65">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  <div data-ice="description"><p>Registers the command to the bot</p>
+</div>
+
+  
+
+  <div data-ice="properties">
 </div>
 
   <div class="return-params" data-ice="returnParams">
@@ -796,28 +741,28 @@
 
   
 
-  <div data-ice="see"><h4>See:</h4><ul><li><span><span><a href="class/src/commands/registry.js~CommandRegistry.html#instance-method-registerCommands">CommandRegistry#registerCommands</a></span></span></li></ul></div>
+  
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-registerCommands">
+  <h3 data-ice="anchor" id="instance-method-run">
     <span class="access" data-ice="access">public</span>
     
     
     
     
-    <span data-ice="name">registerCommands</span><span data-ice="signature">(commands: <span><span><a href="class/src/commands/command.js~Command.html">Command</a></span><span>[]</span></span>): <span>void</span></span>
+    <span data-ice="name">run</span><span data-ice="signature">(fn: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">function</a></span>, extras: <span><span>*</span><span>[]</span></span>): <span><a href="class/src/commands/builder.js~CommandBuilder.html">CommandBuilder</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/commands/registry.js.html#lineNumber38">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/commands/builder.js.html#lineNumber43">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  <div data-ice="description"><p>Registers multiple commands</p>
+  <div data-ice="description"><p>Sets the command&apos;s run method</p>
 </div>
 
   
@@ -831,10 +776,18 @@
     <tbody>
     
     <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">commands</td>
-      <td data-ice="type"><span><span><a href="class/src/commands/command.js~Command.html">Command</a></span><span>[]</span></span></td>
+      <td data-ice="name" data-depth="0">fn</td>
+      <td data-ice="type"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">function</a></span></td>
       <td data-ice="appendix"></td>
-      <td data-ice="description"><p>The commands to register</p>
+      <td data-ice="description"><p>The function to use</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" data-depth="0">extras</td>
+      <td data-ice="type"><span><span>*</span><span>[]</span></span></td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: []</li></ul></td>
+      <td data-ice="description"><p>Extra values to pass to the function</p>
 </td>
     </tr>
 </tbody>
@@ -846,88 +799,9 @@
     <h4>Return:</h4>
     <table>
       <tr>
-        <td class="return-type" data-ice="returnType"><span>void</span></td>
-        
-      </tr>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  <div data-ice="emitWrap">
-    <h4>Emit:</h4>
-    <table>
-      <tbody>
-      
-      <tr class="emit" data-ice="emit">
-        <td><p data-ice="emitName"><span>*</span></p></td>
-        <td data-ice="emitDesc"><p>commandRegister When a command is registered, with the command and registry passed</p>
+        <td class="return-type" data-ice="returnType"><span><a href="class/src/commands/builder.js~CommandBuilder.html">CommandBuilder</a></span></td>
+        <td class="return-desc" data-ice="returnDescription"><p>This builder</p>
 </td>
-      </tr>
-</tbody>
-    </table>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-registerModule">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    <span data-ice="name">registerModule</span><span data-ice="signature">(module: <span><a href="class/src/commands/module.js~Module.html">Module</a></span>): <span>void</span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/commands/registry.js.html#lineNumber70">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>Registers a single module</p>
-</div>
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">module</td>
-      <td data-ice="type"><span><a href="class/src/commands/module.js~Module.html">Module</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"><p>The module to register</p>
-</td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tr>
-        <td class="return-type" data-ice="returnType"><span>void</span></td>
-        
       </tr>
     </table>
     <div data-ice="returnProperties">
@@ -935,86 +809,6 @@
   </div>
 
   
-
-  
-
-  
-
-  
-
-  
-
-  <div data-ice="see"><h4>See:</h4><ul><li><span><span><a href="class/src/commands/registry.js~CommandRegistry.html#instance-method-registerModules">CommandRegistry#registerModules</a></span></span></li></ul></div>
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-registerModules">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    <span data-ice="name">registerModules</span><span data-ice="signature">(modules: <span><span><a href="class/src/commands/module.js~Module.html">Module</a></span><span>[]</span></span>): <span>void</span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/src/commands/registry.js.html#lineNumber80">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>Registers multiple modules</p>
-</div>
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" data-depth="0">modules</td>
-      <td data-ice="type"><span><span><a href="class/src/commands/module.js~Module.html">Module</a></span><span>[]</span></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"><p>The modules to register</p>
-</td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tr>
-        <td class="return-type" data-ice="returnType"><span>void</span></td>
-        
-      </tr>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  <div data-ice="emitWrap">
-    <h4>Emit:</h4>
-    <table>
-      <tbody>
-      
-      <tr class="emit" data-ice="emit">
-        <td><p data-ice="emitName"><span>*</span></p></td>
-        <td data-ice="emitDesc"><p>moduleRegister When a module is registered, with the module and registry passed</p>
-</td>
-      </tr>
-</tbody>
-    </table>
-  </div>
 
   
 
