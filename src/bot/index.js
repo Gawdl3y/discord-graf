@@ -108,6 +108,8 @@ export default class Bot {
 		client.on('ready', () => {
 			this.logger.info(`Bot is ready; logged in as ${client.user.username}#${client.user.discriminator} (ID: ${client.user.id})`);
 			if(config.playingGame) client.user.setStatus(null, config.playingGame);
+		});
+		client.once('ready', () => {
 			if(config.updateURL) {
 				this._checkForUpdate();
 				if(config.updateCheck > 0) setInterval(this._checkForUpdate.bind(this), config.updateCheck * 60 * 1000);
