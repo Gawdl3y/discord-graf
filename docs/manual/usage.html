@@ -147,7 +147,7 @@ They may also optionally override the <a href="./manual/../class/src/commands/co
 <p>Example command:</p>
 <pre><code class="lang-javascript"><code class="source-code prettyprint">const graf = require(&apos;discord-graf&apos;);
 
-export default class AddNumbersCommand extends graf.Command {
+module.exports = class AddNumbersCommand extends graf.Command {
     constructor(bot) {
         super(bot, {
             name: &apos;add-numbers&apos;,

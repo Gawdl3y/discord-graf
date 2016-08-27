@@ -17,7 +17,7 @@ Example command:
 ```javascript
 const graf = require('discord-graf');
 
-export default class AddNumbersCommand extends graf.Command {
+module.exports = class AddNumbersCommand extends graf.Command {
 	constructor(bot) {
 		super(bot, {
 			name: 'add-numbers',
