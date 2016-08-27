@@ -321,27 +321,39 @@ export default class Bot {
 
 	/**
 	 * Registers the default commands to the bot&apos;s registry
+	 * @param {Object} [options] - Object specifying what commands to register
+	 * @param {boolean} [options.about=true] - Whether or not to register the built-in about command
+	 * @param {boolean} [options.modRoles=true] - Whether or not to register the built-in mod roles commands
+	 * @param {boolean} [options.channels=true] - Whether or not to register the built-in channels commands
 	 * @return {Bot} This bot
 	 */
-	registerDefaultCommands() {
+	registerDefaultCommands({ about = true, modRoles = true, channels = true } = {}) {
 		this.registerCommands([
 			HelpCommand,
-			AboutCommand,
+			PrefixCommand,
+			EvalCommand,
 			ListModulesCommand,
 			ToggleModuleCommand,
 			EnableModuleCommand,
-			DisableModuleCommand,
-			ListModRolesCommand,
-			AddModRoleCommand,
-			DeleteModRoleCommand,
-			ClearModRolesCommand,
-			ListAllowedChannelsCommand,
-			AllowChannelCommand,
-			DisallowChannelCommand,
-			ClearAllowedChannelsCommand,
-			PrefixCommand,
-			EvalCommand
+			DisableModuleCommand
 		]);
+		if(about) this.registerCommand(AboutCommand);
+		if(modRoles) {
+			this.registerCommands([
+				ListModRolesCommand,
+				AddModRoleCommand,
+				DeleteModRoleCommand,
+				ClearModRolesCommand
+			]);
+		}
+		if(channels) {
+			this.registerCommands([
+				ListAllowedChannelsCommand,
+				AllowChannelCommand,
+				DisallowChannelCommand,
+				ClearAllowedChannelsCommand
+			]);
+		}
 		return this;
 	}
 
