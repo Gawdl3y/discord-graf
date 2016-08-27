@@ -66,14 +66,14 @@ import { Command, CommandFormatError } from 'discord-graf';
 export default class AddNumbersCommand extends Command {
 	constructor(bot) {
 		super(bot, {
-			name: 'addnumbers',
-			aliases: ['add', 'addnums'],
+			name: 'add-numbers',
+			aliases: ['add', 'add-nums'],
 			module: 'math',
 			memberName: 'add',
 			description: 'Adds numbers together.',
-			usage: 'addnumber <number> [number2] [number3...]',
+			usage: 'add-numbers <number> [number2] [number3...]',
 			details: 'This is an incredibly useful command that finds the sum of numbers. This command is the envy of all other commands.',
-			examples: ['addnumber 42 1337'],
+			examples: ['add-numbers 42 1337'],
 			argsType: 'multiple'
 		});
 	}
