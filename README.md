@@ -15,7 +15,7 @@ GRAF contains loads of functionality that any bots built on it can use.
 Here's a quick list:
 - Command framework (probably the most robust command system of any bot)
 	* Plain names and aliases
-	* Argument parsing
+	* Robust argument parsing (with "quoted strings" support)
 	* Regular expression triggers
 	* Multiple responses
 	* Command editing
