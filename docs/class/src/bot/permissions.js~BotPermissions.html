@@ -137,7 +137,7 @@
       <div>
         
         
-        <div data-ice="description"><p>Tests to see if a user is an administrator on a guild with a specified client.</p>
+        <div data-ice="description"><p>Tests to see if a user is an administrator in a guild with a specified client.</p>
 </div>
       </div>
     </td>
@@ -163,7 +163,7 @@
       <div>
         
         
-        <div data-ice="description"><p>Tests to see if a user is a moderator on a guild using a specified client and config.</p>
+        <div data-ice="description"><p>Tests to see if a user is a moderator in a guild using a specified client and config.</p>
 </div>
       </div>
     </td>
@@ -387,7 +387,8 @@
       <div>
         
         
-        
+        <div data-ice="description"><p>Tests to see if a user is an administrator in a guild.</p>
+</div>
       </div>
     </td>
     <td>
@@ -412,7 +413,8 @@
       <div>
         
         
-        
+        <div data-ice="description"><p>Tests to see if a user is a moderator in a guild.</p>
+</div>
       </div>
     </td>
     <td>
@@ -437,7 +439,8 @@
       <div>
         
         
-        
+        <div data-ice="description"><p>Tests to see if a user is the owner of the bot</p>
+</div>
       </div>
     </td>
     <td>
@@ -462,7 +465,8 @@
       <div>
         
         
-        
+        <div data-ice="description"><p>Resolves a guild and user to Discord.js instances</p>
+</div>
       </div>
     </td>
     <td>
@@ -490,14 +494,14 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/bot/permissions.js.html#lineNumber81">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/bot/permissions.js.html#lineNumber87">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  <div data-ice="description"><p>Tests to see if a user is an administrator on a guild with a specified client.
+  <div data-ice="description"><p>Tests to see if a user is an administrator in a guild with a specified client.
 If the user is the bot owner or has any roles assigned with the &quot;Administrate&quot; permission, they are considered an administrator.</p>
 </div>
 
@@ -567,7 +571,7 @@ If the user is the bot owner or has any roles assigned with the &quot;Administra
 
   
 
-  <div data-ice="see"><h4>See:</h4><ul><li><span><span>Permissions#isAdmin</span></span></li></ul></div>
+  <div data-ice="see"><h4>See:</h4><ul><li><span><span><a href="class/src/bot/permissions.js~BotPermissions.html#instance-method-isAdmin">BotPermissions#isAdmin</a></span></span></li></ul></div>
   
 </div>
 <div class="detail" data-ice="detail">
@@ -581,16 +585,16 @@ If the user is the bot owner or has any roles assigned with the &quot;Administra
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/bot/permissions.js.html#lineNumber51">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/bot/permissions.js.html#lineNumber55">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  <div data-ice="description"><p>Tests to see if a user is a moderator on a guild using a specified client and config.
+  <div data-ice="description"><p>Tests to see if a user is a moderator in a guild using a specified client and config.
 If the guild has not set any moderator roles, then they will be a moderator if any of their assigned roles contain the &quot;Manage messages&quot; permission.
-If the guild has set moderator roles, then they will be a moderator if they have any of the moderator roles assigned.
+If the guild has set moderator roles, then they will instead be a moderator if they have any of the moderator roles assigned.
 The bot owner and users with the &quot;Administrate&quot; permission are always moderators.</p>
 </div>
 
@@ -674,7 +678,7 @@ The bot owner and users with the &quot;Administrate&quot; permission are always 
 
   
 
-  <div data-ice="see"><h4>See:</h4><ul><li><span><span>Permissions#isMod</span></span></li></ul></div>
+  <div data-ice="see"><h4>See:</h4><ul><li><span><span><a href="class/src/bot/permissions.js~BotPermissions.html#instance-method-isMod">BotPermissions#isMod</a></span></span></li></ul></div>
   
 </div>
 <div class="detail" data-ice="detail">
@@ -688,7 +692,7 @@ The bot owner and users with the &quot;Administrate&quot; permission are always 
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/bot/permissions.js.html#lineNumber105">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/bot/permissions.js.html#lineNumber112">source</a></span></span>
     </span>
   </h3>
 
@@ -750,7 +754,7 @@ The bot owner and users with the &quot;Administrate&quot; permission are always 
 
   
 
-  <div data-ice="see"><h4>See:</h4><ul><li><span><span>Permissions#isOwner</span></span></li></ul></div>
+  <div data-ice="see"><h4>See:</h4><ul><li><span><span><a href="class/src/bot/permissions.js~BotPermissions.html#instance-method-isOwner">BotPermissions#isOwner</a></span></span></li></ul></div>
   
 </div>
 <div class="detail" data-ice="detail">
@@ -764,7 +768,7 @@ The bot owner and users with the &quot;Administrate&quot; permission are always 
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/bot/permissions.js.html#lineNumber129">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/bot/permissions.js.html#lineNumber137">source</a></span></span>
     </span>
   </h3>
 
@@ -833,7 +837,7 @@ The bot owner and users with the &quot;Administrate&quot; permission are always 
 
   
 
-  <div data-ice="see"><h4>See:</h4><ul><li><span><span>Permissions#resolve</span></span></li></ul></div>
+  <div data-ice="see"><h4>See:</h4><ul><li><span><span><a href="class/src/bot/permissions.js~BotPermissions.html#instance-method-resolve">BotPermissions#resolve</a></span></span></li></ul></div>
   
 </div>
 </div>
@@ -1094,14 +1098,16 @@ The bot owner and users with the &quot;Administrate&quot; permission are always 
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/bot/permissions.js.html#lineNumber67">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/bot/permissions.js.html#lineNumber73">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  
+  <div data-ice="description"><p>Tests to see if a user is an administrator in a guild.
+If the user is the bot owner or has any roles assigned with the &quot;Administrate&quot; permission, they are considered an administrator.</p>
+</div>
 
   
 
@@ -1155,7 +1161,7 @@ The bot owner and users with the &quot;Administrate&quot; permission are always 
 
   
 
-  <div data-ice="see"><h4>See:</h4><ul><li><span><span>Permissions.isAdmin</span></span></li></ul></div>
+  <div data-ice="see"><h4>See:</h4><ul><li><span><span><a href="class/src/bot/permissions.js~BotPermissions.html#instance-method-isAdmin">BotPermissions.isAdmin</a></span></span></li></ul></div>
   
 </div>
 <div class="detail" data-ice="detail">
@@ -1169,14 +1175,18 @@ The bot owner and users with the &quot;Administrate&quot; permission are always 
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/bot/permissions.js.html#lineNumber33">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/bot/permissions.js.html#lineNumber37">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  
+  <div data-ice="description"><p>Tests to see if a user is a moderator in a guild.
+If the guild has not set any moderator roles, then they will be a moderator if any of their assigned roles contain the &quot;Manage messages&quot; permission.
+If the guild has set moderator roles, then they will instead be a moderator if they have any of the moderator roles assigned.
+The bot owner and users with the &quot;Administrate&quot; permission are always moderators.</p>
+</div>
 
   
 
@@ -1230,7 +1240,7 @@ The bot owner and users with the &quot;Administrate&quot; permission are always 
 
   
 
-  <div data-ice="see"><h4>See:</h4><ul><li><span><span>Permissions.isMod</span></span></li></ul></div>
+  <div data-ice="see"><h4>See:</h4><ul><li><span><span><a href="class/src/bot/permissions.js~BotPermissions.html#instance-method-isMod">BotPermissions.isMod</a></span></span></li></ul></div>
   
 </div>
 <div class="detail" data-ice="detail">
@@ -1244,14 +1254,15 @@ The bot owner and users with the &quot;Administrate&quot; permission are always 
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/bot/permissions.js.html#lineNumber94">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/bot/permissions.js.html#lineNumber101">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  
+  <div data-ice="description"><p>Tests to see if a user is the owner of the bot</p>
+</div>
 
   
 
@@ -1298,7 +1309,7 @@ The bot owner and users with the &quot;Administrate&quot; permission are always 
 
   
 
-  <div data-ice="see"><h4>See:</h4><ul><li><span><span>Permissions.isOwner</span></span></li></ul></div>
+  <div data-ice="see"><h4>See:</h4><ul><li><span><span><a href="class/src/bot/permissions.js~BotPermissions.html#instance-method-isOwner">BotPermissions.isOwner</a></span></span></li></ul></div>
   
 </div>
 <div class="detail" data-ice="detail">
@@ -1312,14 +1323,15 @@ The bot owner and users with the &quot;Administrate&quot; permission are always 
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/src/bot/permissions.js.html#lineNumber116">source</a></span></span>
+      <span data-ice="source"><span><a href="file/src/bot/permissions.js.html#lineNumber124">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  
+  <div data-ice="description"><p>Resolves a guild and user to Discord.js instances</p>
+</div>
 
   
 
@@ -1373,7 +1385,7 @@ The bot owner and users with the &quot;Administrate&quot; permission are always 
 
   
 
-  <div data-ice="see"><h4>See:</h4><ul><li><span><span>Permissions.resolve</span></span></li></ul></div>
+  <div data-ice="see"><h4>See:</h4><ul><li><span><span><a href="class/src/bot/permissions.js~BotPermissions.html#instance-method-resolve">BotPermissions.resolve</a></span></span></li></ul></div>
   
 </div>
 </div>

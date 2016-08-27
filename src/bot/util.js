@@ -19,17 +19,18 @@ export default class BotUtil {
 		this.config = config;
 		/**
 		 * @type {PatternConstants}
-		 * @see {@link Util.patterns}
+		 * @see {@link BotUtil.patterns}
 		 */
 		this.patterns = patterns;
 	}
 
 	/**
+	 * Build a command usage string
 	 * @param {string} command - The short command string (ex. "roll d20")
 	 * @param {Guild|string} [guild] - The guild or guild ID to use the prefix of
 	 * @param {boolean} [onlyMention=false] - Whether or not the usage string should only show the mention form
 	 * @return {string} The command usage string
-	 * @see {@link Util.usage}
+	 * @see {@link BotUtil.usage}
 	 */
 	usage(command, guild = null, onlyMention = false) {
 		return this.constructor.usage(this.client, this.settings, this.config, command, guild, onlyMention);
@@ -44,7 +45,7 @@ export default class BotUtil {
 	 * @param {Guild|string} [guild] - The guild or guild ID to use the prefix of
 	 * @param {boolean} [onlyMention=false] - Whether or not the usage string should only show the mention form
 	 * @return {string} The command usage string
-	 * @see {@link Util#usage}
+	 * @see {@link BotUtil#usage}
 	 */
 	static usage(client, settings, config, command, guild = null, onlyMention = false) {
 		const nbcmd = this.nbsp(command);
@@ -59,11 +60,12 @@ export default class BotUtil {
 	}
 
 	/**
+	 * Build a disambiguation list - useful for telling a user to be more specific when finding partial matches from a command
 	 * @param {Object[]} items - An array of items to make the disambiguation list for
 	 * @param {string} label - The text to refer to the items as (ex. "characters")
 	 * @param {string} [property=name] - The property on items to display in the list
 	 * @return {string} The disambiguation list
-	 * @see {@link Util.disambiguation}
+	 * @see {@link BotUtil.disambiguation}
 	 */
 	disambiguation(items, label, property = 'name') {
 		return this.constructor.disambiguation(items, label, property);
@@ -75,7 +77,7 @@ export default class BotUtil {
 	 * @param {string} label - The text to refer to the items as (ex. "characters")
 	 * @param {string} [property=name] - The property on items to display in the list
 	 * @return {string} The disambiguation list
-	 * @see {@link Util#disambiguation}
+	 * @see {@link BotUtil#disambiguation}
 	 */
 	static disambiguation(items, label, property = 'name') {
 		const itemList = items.map(item => `"${this.nbsp(property ? item[property] : item)}"`).join(',   ');
@@ -83,6 +85,7 @@ export default class BotUtil {
 	}
 
 	/**
+	 * Paginate an array of items
 	 * @param {Object[]} items - An array of items to paginate
 	 * @param {number} [page=1] - The page to select
 	 * @param {number} [pageLength=10] - The number of items per page
@@ -92,7 +95,7 @@ export default class BotUtil {
 	 * @property {number} maxPage - The maximum page
 	 * @property {number} pageLength - The numer of items per page
 	 * @property {string} pageText - The current page string ("page x of y")
-	 * @see {@link Util.paginate}
+	 * @see {@link BotUtil.paginate}
 	 */
 	paginate(items, page = 1, pageLength = 10) {
 		return this.constructor.paginate(items, page, pageLength);
@@ -109,7 +112,7 @@ export default class BotUtil {
 	 * @property {number} maxPage - The maximum page
 	 * @property {number} pageLength - The numer of items per page
 	 * @property {string} pageText - The current page string ("page x of y")
-	 * @see {@link Util#paginate}
+	 * @see {@link BotUtil#paginate}
 	 */
 	static paginate(items, page = 1, pageLength = 10) {
 		const maxPage = Math.ceil(items.length / pageLength);
@@ -126,11 +129,12 @@ export default class BotUtil {
 	}
 
 	/**
+	 * Search for matches in a list of items
 	 * @param {Object[]} items - An array of items to search in
 	 * @param {string} searchString - The string to search for
 	 * @param {SearchOptions} options - An options object
 	 * @return {Object[]} The matched items
-	 * @see {@link Util.search}
+	 * @see {@link BotUtil.search}
 	 */
 	search(items, searchString, { property = 'name', searchInexact = true, searchExact = true, useStartsWith = false } = {}) {
 		return this.constructor.search(items, searchString, { property: property, searchInexact: searchInexact, searchExact: searchExact, useStartsWith: useStartsWith });
@@ -142,7 +146,7 @@ export default class BotUtil {
 	 * @param {string} searchString - The string to search for
 	 * @param {SearchOptions} options - An options object
 	 * @return {Object[]} The matched items
-	 * @see {@link Util#search}
+	 * @see {@link BotUtil#search}
 	 */
 	static search(items, searchString, { property = 'name', searchInexact = true, searchExact = true, useStartsWith = false } = {}) {
 		if(!items || items.length === 0) return [];
@@ -180,13 +184,14 @@ export default class BotUtil {
 	}
 
 	/**
+	 * Splits a string using specified characters into multiple strings of a maximum length
 	 * @param {string} text - The string to split
 	 * @param {number} [maxLength=1925] - The maximum length of each split string
 	 * @param {string} [splitOn=\n] - The characters to split the string with
 	 * @param {string} [prepend] - String to prepend to every split message
 	 * @param {string} [append] - String to append to every split message
 	 * @return {string[]} The split strings
-	 * @see {@link Util.split}
+	 * @see {@link BotUtil.split}
 	 */
 	split(text, maxLength = 1925, splitOn = '\n', prepend = '', append = '') {
 		return this.constructor.split(text, maxLength, splitOn, prepend, append);
@@ -200,7 +205,7 @@ export default class BotUtil {
 	 * @param {string} [prepend] - String to prepend to every split message
 	 * @param {string} [append] - String to append to every split message
 	 * @return {string[]} The split strings
-	 * @see {@link Util#split}
+	 * @see {@link BotUtil#split}
 	 */
 	static split(text, maxLength = 1900, splitOn = '\n', prepend = '', append = '') {
 		const splitText = text.split(splitOn);
@@ -219,9 +224,10 @@ export default class BotUtil {
 	}
 
 	/**
+	 * Convert spaces to non-breaking spaces
 	 * @param {string} text - The text to convert
 	 * @return {string} The converted text
-	 * @see {@link Util#nbsp}
+	 * @see {@link BotUtil#nbsp}
 	 */
 	nbsp(text) {
 		return this.constructor.nbsp(text);
@@ -231,7 +237,7 @@ export default class BotUtil {
 	 * Convert spaces to non-breaking spaces
 	 * @param {string} text - The text to convert
 	 * @return {string} The converted text
-	 * @see {@link Util#nbsp}
+	 * @see {@link BotUtil#nbsp}
 	 */
 	static nbsp(text) {
 		return String(text).replace(spacePattern, nbsp);
@@ -239,7 +245,7 @@ export default class BotUtil {
 
 	/**
 	 * @type {PatternConstants}
-	 * @see {@link Util#patterns}
+	 * @see {@link BotUtil#patterns}
 	 */
 	static get patterns() {
 		return patterns;

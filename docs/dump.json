@@ -1403,7 +1403,7 @@
     "access": null,
     "description": null,
     "lineNumber": 1,
-    "content": "'use babel';\r\n'use strict';\r\n\r\nimport Module from '../commands/module';\r\n\r\n/** Contains methods to test whether a user has permissions in a guild */\r\nexport default class BotPermissions {\r\n\t/**\r\n\t * @param {Client} client - The Client to use\r\n\t * @param {ModRoleStorage} modRoles - The mod role storage to use\r\n\t * @param {SettingStorage} settings - The setting storage to use\r\n\t * @param {BotConfig} config - The bot config to use\r\n\t */\r\n\tconstructor(client, modRoles, settings, config) {\r\n\t\tif(!client || !modRoles || !settings || !config) throw new Error('A client, modRoles, settings, and config must be specified.');\r\n\r\n\t\t/** @type {Client} */\r\n\t\tthis.client = client;\r\n\t\t/** @type {ModRoleStorage} */\r\n\t\tthis.modRoles = modRoles;\r\n\t\t/** @type {SettingStorage} */\r\n\t\tthis.settings = settings;\r\n\t\t/** @type {BotConfig} */\r\n\t\tthis.config = config;\r\n\t}\r\n\r\n\t/**\r\n\t * @param {Guild|string} guild - The Guild or the guild ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is considered a moderator\r\n\t * @see {@link Permissions.isMod}\r\n\t */\r\n\tisMod(guild, user) {\r\n\t\treturn this.constructor.isMod(this.client, this.modRoles, this.settings, this.config, guild, user);\r\n\t}\r\n\r\n\t/**\r\n\t * Tests to see if a user is a moderator on a guild using a specified client and config.\r\n\t * If the guild has not set any moderator roles, then they will be a moderator if any of their assigned roles contain the \"Manage messages\" permission.\r\n\t * If the guild has set moderator roles, then they will be a moderator if they have any of the moderator roles assigned.\r\n\t * The bot owner and users with the \"Administrate\" permission are always moderators.\r\n\t * @param {Client} client - The Client to use\r\n\t * @param {ModRoleStorage} modRoles - The mod role storage to use\r\n\t * @param {SettingStorage} settings - The setting storage to use\r\n\t * @param {BotConfig} config - The bot config to use\r\n\t * @param {Guild|string} guild - The Guild or the guild ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is considered a moderator\r\n\t * @see {@link Permissions#isMod}\r\n\t */\r\n\tstatic isMod(client, modRoles, settings, config, guild, user) {\r\n\t\t[guild, user] = this.resolve(client, guild, user);\r\n\t\tif(user.id === config.values.owner) return true;\r\n\t\tconst member = guild.member(user);\r\n\t\tif(!member) return false;\r\n\t\tif(member.roles.some(role => role.hasPermission('ADMINISTRATOR'))) return true;\r\n\t\tif(!Module.isEnabled(settings, guild, 'mod-roles') || modRoles.isEmpty(guild)) return member.roles.some(role => role.hasPermission('MANAGE_MESSAGES'));\r\n\t\treturn modRoles.find(guild).some(role => member.roles.some(role2 => role.id === role2.id));\r\n\t}\r\n\r\n\t/**\r\n\t * @param {Guild|string} guild - The Guild or the guild ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is considered an administrator\r\n\t * @see {@link Permissions.isAdmin}\r\n\t */\r\n\tisAdmin(guild, user) {\r\n\t\treturn this.constructor.isAdmin(this.client, this.config, guild, user);\r\n\t}\r\n\r\n\t/**\r\n\t * Tests to see if a user is an administrator on a guild with a specified client.\r\n\t * If the user is the bot owner or has any roles assigned with the \"Administrate\" permission, they are considered an administrator.\r\n\t * @param {Client} client - The Client to use\r\n\t * @param {BotConfig} config - The bot config to use\r\n\t * @param {Guild|string} guild - The Guild or the guild ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is considered an administrator\r\n\t * @see {@link Permissions#isAdmin}\r\n\t */\r\n\tstatic isAdmin(client, config, guild, user) {\r\n\t\t[guild, user] = this.resolve(client, guild, user);\r\n\t\tif(user.id === config.values.owner) return true;\r\n\t\tconst member = guild.member(user);\r\n\t\tif(!member) return false;\r\n\t\treturn member.roles.some(role => role.hasPermission('ADMINISTRATOR'));\r\n\t}\r\n\r\n\t/**\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is the bot owner\r\n\t * @see {@link Permissions.isOwner}\r\n\t */\r\n\tisOwner(user) {\r\n\t\treturn this.constructor.isOwner(this.config, user);\r\n\t}\r\n\r\n\t/**\r\n\t * Tests to see if a user is the owner of the bot\r\n\t * @param {BotConfig} config - The bot config to use\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is the bot owner\r\n\t * @see {@link Permissions#isOwner}\r\n\t */\r\n\tstatic isOwner(config, user) {\r\n\t\tif(!user) throw new Error('A user must be specified.');\r\n\t\treturn (user.id || user) === config.values.owner;\r\n\t}\r\n\r\n\t/**\r\n\t * @param {Guild|string} guild - The Guild or the guild ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {[guild, user]} The Guild and User instance pair\r\n\t * @see {@link Permissions.resolve}\r\n\t */\r\n\tresolve(guild, user) {\r\n\t\tif(!guild || !user) throw new Error('A guild and user must be specified.');\r\n\t\treturn this.constructor.resolve(this.client, guild, user);\r\n\t}\r\n\r\n\t/**\r\n\t * Resolves a guild and user to Discord.js instances with a specified client\r\n\t * @param {Client} client - The Client to use\r\n\t * @param {Guild|string} guild - The Guild or the guild ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {[guild, user]} The Guild and User instance pair\r\n\t * @see {@link Permissions#resolve}\r\n\t */\r\n\tstatic resolve(client, guild, user) {\r\n\t\tif(!client || !guild || !user) throw new Error('A client, guild, and user must be specified.');\r\n\t\tif(typeof guild === 'string') guild = client.guilds.get(guild);\r\n\t\tif(!guild || !guild.id) throw new Error('Unable to identify guild.');\r\n\t\tif(typeof user === 'string') user = guild.members.get(user);\r\n\t\tif(!user || !user.id) throw new Error('Unable to identify user.');\r\n\t\treturn [guild, user];\r\n\t}\r\n}\r\n"
+    "content": "'use babel';\r\n'use strict';\r\n\r\nimport Module from '../commands/module';\r\n\r\n/** Contains methods to test whether a user has permissions in a guild */\r\nexport default class BotPermissions {\r\n\t/**\r\n\t * @param {Client} client - The Client to use\r\n\t * @param {ModRoleStorage} modRoles - The mod role storage to use\r\n\t * @param {SettingStorage} settings - The setting storage to use\r\n\t * @param {BotConfig} config - The bot config to use\r\n\t */\r\n\tconstructor(client, modRoles, settings, config) {\r\n\t\tif(!client || !modRoles || !settings || !config) throw new Error('A client, modRoles, settings, and config must be specified.');\r\n\r\n\t\t/** @type {Client} */\r\n\t\tthis.client = client;\r\n\t\t/** @type {ModRoleStorage} */\r\n\t\tthis.modRoles = modRoles;\r\n\t\t/** @type {SettingStorage} */\r\n\t\tthis.settings = settings;\r\n\t\t/** @type {BotConfig} */\r\n\t\tthis.config = config;\r\n\t}\r\n\r\n\t/**\r\n\t * Tests to see if a user is a moderator in a guild.\r\n\t * If the guild has not set any moderator roles, then they will be a moderator if any of their assigned roles contain the \"Manage messages\" permission.\r\n\t * If the guild has set moderator roles, then they will instead be a moderator if they have any of the moderator roles assigned.\r\n\t * The bot owner and users with the \"Administrate\" permission are always moderators.\r\n\t * @param {Guild|string} guild - The Guild or the guild ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is considered a moderator\r\n\t * @see {@link BotPermissions.isMod}\r\n\t */\r\n\tisMod(guild, user) {\r\n\t\treturn this.constructor.isMod(this.client, this.modRoles, this.settings, this.config, guild, user);\r\n\t}\r\n\r\n\t/**\r\n\t * Tests to see if a user is a moderator in a guild using a specified client and config.\r\n\t * If the guild has not set any moderator roles, then they will be a moderator if any of their assigned roles contain the \"Manage messages\" permission.\r\n\t * If the guild has set moderator roles, then they will instead be a moderator if they have any of the moderator roles assigned.\r\n\t * The bot owner and users with the \"Administrate\" permission are always moderators.\r\n\t * @param {Client} client - The Client to use\r\n\t * @param {ModRoleStorage} modRoles - The mod role storage to use\r\n\t * @param {SettingStorage} settings - The setting storage to use\r\n\t * @param {BotConfig} config - The bot config to use\r\n\t * @param {Guild|string} guild - The Guild or the guild ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is considered a moderator\r\n\t * @see {@link BotPermissions#isMod}\r\n\t */\r\n\tstatic isMod(client, modRoles, settings, config, guild, user) {\r\n\t\t[guild, user] = this.resolve(client, guild, user);\r\n\t\tif(user.id === config.values.owner) return true;\r\n\t\tconst member = guild.member(user);\r\n\t\tif(!member) return false;\r\n\t\tif(member.roles.some(role => role.hasPermission('ADMINISTRATOR'))) return true;\r\n\t\tif(!Module.isEnabled(settings, guild, 'mod-roles') || modRoles.isEmpty(guild)) return member.roles.some(role => role.hasPermission('MANAGE_MESSAGES'));\r\n\t\treturn modRoles.find(guild).some(role => member.roles.some(role2 => role.id === role2.id));\r\n\t}\r\n\r\n\t/**\r\n\t * Tests to see if a user is an administrator in a guild.\r\n\t * If the user is the bot owner or has any roles assigned with the \"Administrate\" permission, they are considered an administrator.\r\n\t * @param {Guild|string} guild - The Guild or the guild ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is considered an administrator\r\n\t * @see {@link BotPermissions.isAdmin}\r\n\t */\r\n\tisAdmin(guild, user) {\r\n\t\treturn this.constructor.isAdmin(this.client, this.config, guild, user);\r\n\t}\r\n\r\n\t/**\r\n\t * Tests to see if a user is an administrator in a guild with a specified client.\r\n\t * If the user is the bot owner or has any roles assigned with the \"Administrate\" permission, they are considered an administrator.\r\n\t * @param {Client} client - The Client to use\r\n\t * @param {BotConfig} config - The bot config to use\r\n\t * @param {Guild|string} guild - The Guild or the guild ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is considered an administrator\r\n\t * @see {@link BotPermissions#isAdmin}\r\n\t */\r\n\tstatic isAdmin(client, config, guild, user) {\r\n\t\t[guild, user] = this.resolve(client, guild, user);\r\n\t\tif(user.id === config.values.owner) return true;\r\n\t\tconst member = guild.member(user);\r\n\t\tif(!member) return false;\r\n\t\treturn member.roles.some(role => role.hasPermission('ADMINISTRATOR'));\r\n\t}\r\n\r\n\t/**\r\n\t * Tests to see if a user is the owner of the bot\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is the bot owner\r\n\t * @see {@link BotPermissions.isOwner}\r\n\t */\r\n\tisOwner(user) {\r\n\t\treturn this.constructor.isOwner(this.config, user);\r\n\t}\r\n\r\n\t/**\r\n\t * Tests to see if a user is the owner of the bot\r\n\t * @param {BotConfig} config - The bot config to use\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {boolean} Whether or not the user is the bot owner\r\n\t * @see {@link BotPermissions#isOwner}\r\n\t */\r\n\tstatic isOwner(config, user) {\r\n\t\tif(!user) throw new Error('A user must be specified.');\r\n\t\treturn (user.id || user) === config.values.owner;\r\n\t}\r\n\r\n\t/**\r\n\t * Resolves a guild and user to Discord.js instances\r\n\t * @param {Guild|string} guild - The Guild or the guild ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {[guild, user]} The Guild and User instance pair\r\n\t * @see {@link BotPermissions.resolve}\r\n\t */\r\n\tresolve(guild, user) {\r\n\t\tif(!guild || !user) throw new Error('A guild and user must be specified.');\r\n\t\treturn this.constructor.resolve(this.client, guild, user);\r\n\t}\r\n\r\n\t/**\r\n\t * Resolves a guild and user to Discord.js instances with a specified client\r\n\t * @param {Client} client - The Client to use\r\n\t * @param {Guild|string} guild - The Guild or the guild ID\r\n\t * @param {User|string} user - The User or the user ID\r\n\t * @return {[guild, user]} The Guild and User instance pair\r\n\t * @see {@link BotPermissions#resolve}\r\n\t */\r\n\tstatic resolve(client, guild, user) {\r\n\t\tif(!client || !guild || !user) throw new Error('A client, guild, and user must be specified.');\r\n\t\tif(typeof guild === 'string') guild = client.guilds.get(guild);\r\n\t\tif(!guild || !guild.id) throw new Error('Unable to identify guild.');\r\n\t\tif(typeof user === 'string') user = guild.members.get(user);\r\n\t\tif(!user || !user.id) throw new Error('Unable to identify user.');\r\n\t\treturn [guild, user];\r\n\t}\r\n}\r\n"
   },
   {
     "__docId__": 49,
@@ -1565,11 +1565,11 @@
     "memberof": "src/bot/permissions.js~BotPermissions",
     "longname": "src/bot/permissions.js~BotPermissions#isMod",
     "access": null,
-    "description": "",
+    "description": "Tests to see if a user is a moderator in a guild.\nIf the guild has not set any moderator roles, then they will be a moderator if any of their assigned roles contain the \"Manage messages\" permission.\nIf the guild has set moderator roles, then they will instead be a moderator if they have any of the moderator roles assigned.\nThe bot owner and users with the \"Administrate\" permission are always moderators.",
     "see": [
-      "{@link Permissions.isMod}"
+      "{@link BotPermissions.isMod}"
     ],
-    "lineNumber": 33,
+    "lineNumber": 37,
     "params": [
       {
         "nullable": null,
@@ -1613,11 +1613,11 @@
     "memberof": "src/bot/permissions.js~BotPermissions",
     "longname": "src/bot/permissions.js~BotPermissions.isMod",
     "access": null,
-    "description": "Tests to see if a user is a moderator on a guild using a specified client and config.\nIf the guild has not set any moderator roles, then they will be a moderator if any of their assigned roles contain the \"Manage messages\" permission.\nIf the guild has set moderator roles, then they will be a moderator if they have any of the moderator roles assigned.\nThe bot owner and users with the \"Administrate\" permission are always moderators.",
+    "description": "Tests to see if a user is a moderator in a guild using a specified client and config.\nIf the guild has not set any moderator roles, then they will be a moderator if any of their assigned roles contain the \"Manage messages\" permission.\nIf the guild has set moderator roles, then they will instead be a moderator if they have any of the moderator roles assigned.\nThe bot owner and users with the \"Administrate\" permission are always moderators.",
     "see": [
-      "{@link Permissions#isMod}"
+      "{@link BotPermissions#isMod}"
     ],
-    "lineNumber": 51,
+    "lineNumber": 55,
     "params": [
       {
         "nullable": null,
@@ -1701,11 +1701,11 @@
     "memberof": "src/bot/permissions.js~BotPermissions",
     "longname": "src/bot/permissions.js~BotPermissions#isAdmin",
     "access": null,
-    "description": "",
+    "description": "Tests to see if a user is an administrator in a guild.\nIf the user is the bot owner or has any roles assigned with the \"Administrate\" permission, they are considered an administrator.",
     "see": [
-      "{@link Permissions.isAdmin}"
+      "{@link BotPermissions.isAdmin}"
     ],
-    "lineNumber": 67,
+    "lineNumber": 73,
     "params": [
       {
         "nullable": null,
@@ -1749,11 +1749,11 @@
     "memberof": "src/bot/permissions.js~BotPermissions",
     "longname": "src/bot/permissions.js~BotPermissions.isAdmin",
     "access": null,
-    "description": "Tests to see if a user is an administrator on a guild with a specified client.\nIf the user is the bot owner or has any roles assigned with the \"Administrate\" permission, they are considered an administrator.",
+    "description": "Tests to see if a user is an administrator in a guild with a specified client.\nIf the user is the bot owner or has any roles assigned with the \"Administrate\" permission, they are considered an administrator.",
     "see": [
-      "{@link Permissions#isAdmin}"
+      "{@link BotPermissions#isAdmin}"
     ],
-    "lineNumber": 81,
+    "lineNumber": 87,
     "params": [
       {
         "nullable": null,
@@ -1817,11 +1817,11 @@
     "memberof": "src/bot/permissions.js~BotPermissions",
     "longname": "src/bot/permissions.js~BotPermissions#isOwner",
     "access": null,
-    "description": "",
+    "description": "Tests to see if a user is the owner of the bot",
     "see": [
-      "{@link Permissions.isOwner}"
+      "{@link BotPermissions.isOwner}"
     ],
-    "lineNumber": 94,
+    "lineNumber": 101,
     "params": [
       {
         "nullable": null,
@@ -1856,9 +1856,9 @@
     "access": null,
     "description": "Tests to see if a user is the owner of the bot",
     "see": [
-      "{@link Permissions#isOwner}"
+      "{@link BotPermissions#isOwner}"
     ],
-    "lineNumber": 105,
+    "lineNumber": 112,
     "params": [
       {
         "nullable": null,
@@ -1901,11 +1901,11 @@
     "memberof": "src/bot/permissions.js~BotPermissions",
     "longname": "src/bot/permissions.js~BotPermissions#resolve",
     "access": null,
-    "description": "",
+    "description": "Resolves a guild and user to Discord.js instances",
     "see": [
-      "{@link Permissions.resolve}"
+      "{@link BotPermissions.resolve}"
     ],
-    "lineNumber": 116,
+    "lineNumber": 124,
     "params": [
       {
         "nullable": null,
@@ -1951,9 +1951,9 @@
     "access": null,
     "description": "Resolves a guild and user to Discord.js instances with a specified client",
     "see": [
-      "{@link Permissions#resolve}"
+      "{@link BotPermissions#resolve}"
     ],
-    "lineNumber": 129,
+    "lineNumber": 137,
     "params": [
       {
         "nullable": null,
@@ -2009,7 +2009,7 @@
     "access": null,
     "description": null,
     "lineNumber": 1,
-    "content": "'use babel';\r\n'use strict';\r\n\r\n/** Contains general utility methods */\r\nexport default class BotUtil {\r\n\t/**\r\n\t * @param {Client} client - The client to use\r\n\t * @param {SettingStorage} settings - The setting storage to use\r\n\t * @param {BotConfig} config - The bot config to use\r\n\t */\r\n\tconstructor(client, settings, config) {\r\n\t\tif(!client || !settings || !config) throw new Error('A client, settings, and config must be specified.');\r\n\r\n\t\t/** @type {Client} */\r\n\t\tthis.client = client;\r\n\t\t/** @type {SettingStorage} */\r\n\t\tthis.settings = settings;\r\n\t\t/** @type {BotConfig} */\r\n\t\tthis.config = config;\r\n\t\t/**\r\n\t\t * @type {PatternConstants}\r\n\t\t * @see {@link Util.patterns}\r\n\t\t */\r\n\t\tthis.patterns = patterns;\r\n\t}\r\n\r\n\t/**\r\n\t * @param {string} command - The short command string (ex. \"roll d20\")\r\n\t * @param {Guild|string} [guild] - The guild or guild ID to use the prefix of\r\n\t * @param {boolean} [onlyMention=false] - Whether or not the usage string should only show the mention form\r\n\t * @return {string} The command usage string\r\n\t * @see {@link Util.usage}\r\n\t */\r\n\tusage(command, guild = null, onlyMention = false) {\r\n\t\treturn this.constructor.usage(this.client, this.settings, this.config, command, guild, onlyMention);\r\n\t}\r\n\r\n\t/**\r\n\t * Build a command usage string\r\n\t * @param {Client} client - The client to use\r\n\t * @param {SettingStorage} settings - The setting storage to use\r\n\t * @param {BotConfig} config - The bot config to use\r\n\t * @param {string} command - The short command string (ex. \"roll d20\")\r\n\t * @param {Guild|string} [guild] - The guild or guild ID to use the prefix of\r\n\t * @param {boolean} [onlyMention=false] - Whether or not the usage string should only show the mention form\r\n\t * @return {string} The command usage string\r\n\t * @see {@link Util#usage}\r\n\t */\r\n\tstatic usage(client, settings, config, command, guild = null, onlyMention = false) {\r\n\t\tconst nbcmd = this.nbsp(command);\r\n\t\tif(!guild && !onlyMention) return `\\`${nbcmd}\\``;\r\n\t\tlet prefixAddon;\r\n\t\tif(!onlyMention) {\r\n\t\t\tlet prefix = this.nbsp(settings.getValue(guild, 'command-prefix', config.values.commandPrefix));\r\n\t\t\tif(prefix.length > 1) prefix += '\\xa0';\r\n\t\t\tprefixAddon = prefix ? `\\`${prefix}${nbcmd}\\` or ` : '';\r\n\t\t}\r\n\t\treturn `${prefixAddon || ''}\\`@${this.nbsp(client.user.username)}#${client.user.discriminator}\\xa0${nbcmd}\\``;\r\n\t}\r\n\r\n\t/**\r\n\t * @param {Object[]} items - An array of items to make the disambiguation list for\r\n\t * @param {string} label - The text to refer to the items as (ex. \"characters\")\r\n\t * @param {string} [property=name] - The property on items to display in the list\r\n\t * @return {string} The disambiguation list\r\n\t * @see {@link Util.disambiguation}\r\n\t */\r\n\tdisambiguation(items, label, property = 'name') {\r\n\t\treturn this.constructor.disambiguation(items, label, property);\r\n\t}\r\n\r\n\t/**\r\n\t * Build a disambiguation list - useful for telling a user to be more specific when finding partial matches from a command\r\n\t * @param {Object[]} items - An array of items to make the disambiguation list for\r\n\t * @param {string} label - The text to refer to the items as (ex. \"characters\")\r\n\t * @param {string} [property=name] - The property on items to display in the list\r\n\t * @return {string} The disambiguation list\r\n\t * @see {@link Util#disambiguation}\r\n\t */\r\n\tstatic disambiguation(items, label, property = 'name') {\r\n\t\tconst itemList = items.map(item => `\"${this.nbsp(property ? item[property] : item)}\"`).join(',   ');\r\n\t\treturn `Multiple ${label} found, please be more specific: ${itemList}`;\r\n\t}\r\n\r\n\t/**\r\n\t * @param {Object[]} items - An array of items to paginate\r\n\t * @param {number} [page=1] - The page to select\r\n\t * @param {number} [pageLength=10] - The number of items per page\r\n\t * @return {Object} The resulting paginated object\r\n\t * @property {Object[]} items - The chunk of items for the current page\r\n\t * @property {number} page - The current page\r\n\t * @property {number} maxPage - The maximum page\r\n\t * @property {number} pageLength - The numer of items per page\r\n\t * @property {string} pageText - The current page string (\"page x of y\")\r\n\t * @see {@link Util.paginate}\r\n\t */\r\n\tpaginate(items, page = 1, pageLength = 10) {\r\n\t\treturn this.constructor.paginate(items, page, pageLength);\r\n\t}\r\n\r\n\t/**\r\n\t * Paginate an array of items\r\n\t * @param {Object[]} items - An array of items to paginate\r\n\t * @param {number} [page=1] - The page to select\r\n\t * @param {number} [pageLength=10] - The number of items per page\r\n\t * @return {Object} The resulting paginated object\r\n\t * @property {Object[]} items - The chunk of items for the current page\r\n\t * @property {number} page - The current page\r\n\t * @property {number} maxPage - The maximum page\r\n\t * @property {number} pageLength - The numer of items per page\r\n\t * @property {string} pageText - The current page string (\"page x of y\")\r\n\t * @see {@link Util#paginate}\r\n\t */\r\n\tstatic paginate(items, page = 1, pageLength = 10) {\r\n\t\tconst maxPage = Math.ceil(items.length / pageLength);\r\n\t\tif(page < 1) page = 1;\r\n\t\tif(page > maxPage) page = maxPage;\r\n\t\tlet startIndex = (page - 1) * pageLength;\r\n\t\treturn {\r\n\t\t\titems: items.length > pageLength ? items.slice(startIndex, startIndex + pageLength) : items,\r\n\t\t\tpage: page,\r\n\t\t\tmaxPage: maxPage,\r\n\t\t\tpageLength: pageLength,\r\n\t\t\tpageText: `page ${page} of ${maxPage}`\r\n\t\t};\r\n\t}\r\n\r\n\t/**\r\n\t * @param {Object[]} items - An array of items to search in\r\n\t * @param {string} searchString - The string to search for\r\n\t * @param {SearchOptions} options - An options object\r\n\t * @return {Object[]} The matched items\r\n\t * @see {@link Util.search}\r\n\t */\r\n\tsearch(items, searchString, { property = 'name', searchInexact = true, searchExact = true, useStartsWith = false } = {}) {\r\n\t\treturn this.constructor.search(items, searchString, { property: property, searchInexact: searchInexact, searchExact: searchExact, useStartsWith: useStartsWith });\r\n\t}\r\n\r\n\t/**\r\n\t * Search for matches in a list of items\r\n\t * @param {Object[]} items - An array of items to search in\r\n\t * @param {string} searchString - The string to search for\r\n\t * @param {SearchOptions} options - An options object\r\n\t * @return {Object[]} The matched items\r\n\t * @see {@link Util#search}\r\n\t */\r\n\tstatic search(items, searchString, { property = 'name', searchInexact = true, searchExact = true, useStartsWith = false } = {}) {\r\n\t\tif(!items || items.length === 0) return [];\r\n\t\tif(!searchString) return items;\r\n\r\n\t\tconst lowercaseSearch = searchString.toLowerCase();\r\n\t\tlet matchedItems;\r\n\r\n\t\t// Find all items that start with or include the search string\r\n\t\tif(searchInexact) {\r\n\t\t\tif(useStartsWith && searchString.length === 1) {\r\n\t\t\t\tmatchedItems = items.filter(element => String(property ? element[property] : element)\r\n\t\t\t\t\t.normalize('NFKD')\r\n\t\t\t\t\t.toLowerCase()\r\n\t\t\t\t\t.startsWith(lowercaseSearch)\r\n\t\t\t\t);\r\n\t\t\t} else {\r\n\t\t\t\tmatchedItems = items.filter(element => String(property ? element[property] : element)\r\n\t\t\t\t\t.normalize('NFKD')\r\n\t\t\t\t\t.toLowerCase()\r\n\t\t\t\t\t.includes(lowercaseSearch)\r\n\t\t\t\t);\r\n\t\t\t}\r\n\t\t} else {\r\n\t\t\tmatchedItems = items;\r\n\t\t}\r\n\r\n\t\t// See if any are an exact match\r\n\t\tif(searchExact && matchedItems.length > 1) {\r\n\t\t\tconst exactItems = matchedItems.filter(element => String(property ? element[property] : element).normalize('NFKD').toLowerCase() === lowercaseSearch);\r\n\t\t\tif(exactItems.length > 0) return exactItems;\r\n\t\t}\r\n\r\n\t\treturn matchedItems;\r\n\t}\r\n\r\n\t/**\r\n\t * @param {string} text - The string to split\r\n\t * @param {number} [maxLength=1925] - The maximum length of each split string\r\n\t * @param {string} [splitOn=\\n] - The characters to split the string with\r\n\t * @param {string} [prepend] - String to prepend to every split message\r\n\t * @param {string} [append] - String to append to every split message\r\n\t * @return {string[]} The split strings\n\t * @see {@link Util.split}\r\n\t */\r\n\tsplit(text, maxLength = 1925, splitOn = '\\n', prepend = '', append = '') {\r\n\t\treturn this.constructor.split(text, maxLength, splitOn, prepend, append);\r\n\t}\r\n\n\t/**\r\n\t * Splits a string using specified characters into multiple strings of a maximum length\r\n\t * @param {string} text - The string to split\r\n\t * @param {number} [maxLength=1925] - The maximum length of each split string\r\n\t * @param {string} [splitOn=\\n] - The characters to split the string with\r\n\t * @param {string} [prepend] - String to prepend to every split message\r\n\t * @param {string} [append] - String to append to every split message\r\n\t * @return {string[]} The split strings\r\n\t * @see {@link Util#split}\r\n\t */\r\n\tstatic split(text, maxLength = 1900, splitOn = '\\n', prepend = '', append = '') {\r\n\t\tconst splitText = text.split(splitOn);\r\n\t\tif(splitText.length === 1 && text.length > maxLength) throw new Error('Message exceeds the max length and contains no split characters.');\r\n\t\tconst messages = [''];\r\n\t\tlet msg = 0;\r\n\t\tfor(let i = 0; i < splitText.length; i++) {\r\n\t\t\tif(messages[msg].length + splitText[i].length + 1 > maxLength) {\r\n\t\t\t\tmessages[msg] += append;\r\n\t\t\t\tmessages.push(prepend);\r\n\t\t\t\tmsg++;\r\n\t\t\t}\r\n\t\t\tmessages[msg] += (messages[msg].length > 0 && messages[msg] !== prepend ? splitOn : '') + splitText[i];\r\n\t\t}\r\n\t\treturn messages;\r\n\t}\r\n\r\n\t/**\r\n\t * @param {string} text - The text to convert\r\n\t * @return {string} The converted text\r\n\t * @see {@link Util#nbsp}\r\n\t */\r\n\tnbsp(text) {\r\n\t\treturn this.constructor.nbsp(text);\r\n\t}\r\n\r\n\t/**\r\n\t * Convert spaces to non-breaking spaces\r\n\t * @param {string} text - The text to convert\r\n\t * @return {string} The converted text\r\n\t * @see {@link Util#nbsp}\r\n\t */\r\n\tstatic nbsp(text) {\r\n\t\treturn String(text).replace(spacePattern, nbsp);\r\n\t}\r\n\r\n\t/**\r\n\t * @type {PatternConstants}\r\n\t * @see {@link Util#patterns}\r\n\t */\r\n\tstatic get patterns() {\r\n\t\treturn patterns;\r\n\t}\r\n}\r\n\r\nconst nbsp = '\\xa0';\r\nconst spacePattern = / /g;\r\n\r\n/**\r\n * @typedef {Object} PatternConstants\r\n * @property {RegExp} userID - A pattern to match a user ID from a raw ID string or mention\r\n * @property {RegExp} roleID - A pattern to match a role ID from a raw ID string or mention\r\n * @property {RegExp} channelID - A pattern to match a channel ID from a raw ID string or mention\r\n * @property {RegExp} allUserMentions - A pattern to to match any mentions that would notify users\r\n */\r\nconst patterns = {\r\n\tuserID: /^(?:<@!?)?([0-9]+)>?$/,\r\n\troleID: /^(?:<@&)?([0-9]+)>?$/,\r\n\tchannelID: /^(?:<#)?([0-9]+)>?$/,\r\n\tanyUserMentions: /@everyone|@here|<@(?:!|&)?[0-9]+>/i\r\n};\r\n\r\n/**\r\n * @typedef {Object} SearchOptions\r\n * @property {string} [property=name] - The property on items to search against. If empty, the raw object's toString will be used instead.\r\n * @property {boolean} [searchInexact=true] - Whether or not to search for inexact matches\r\n * @property {boolean} [searchExact=true] - Whether or not to search for exact matches (will narrow down inexact matches if applicable)\r\n * @property {boolean} [useStartsWith=false] - Whether or not to search inexact by checking to see if the item starts with the search string rather than contains,\r\n * if the search string is only one character\r\n */\r\n"
+    "content": "'use babel';\r\n'use strict';\r\n\r\n/** Contains general utility methods */\r\nexport default class BotUtil {\r\n\t/**\r\n\t * @param {Client} client - The client to use\r\n\t * @param {SettingStorage} settings - The setting storage to use\r\n\t * @param {BotConfig} config - The bot config to use\r\n\t */\r\n\tconstructor(client, settings, config) {\r\n\t\tif(!client || !settings || !config) throw new Error('A client, settings, and config must be specified.');\r\n\r\n\t\t/** @type {Client} */\r\n\t\tthis.client = client;\r\n\t\t/** @type {SettingStorage} */\r\n\t\tthis.settings = settings;\r\n\t\t/** @type {BotConfig} */\r\n\t\tthis.config = config;\r\n\t\t/**\r\n\t\t * @type {PatternConstants}\r\n\t\t * @see {@link BotUtil.patterns}\r\n\t\t */\r\n\t\tthis.patterns = patterns;\r\n\t}\r\n\r\n\t/**\r\n\t * Build a command usage string\r\n\t * @param {string} command - The short command string (ex. \"roll d20\")\r\n\t * @param {Guild|string} [guild] - The guild or guild ID to use the prefix of\r\n\t * @param {boolean} [onlyMention=false] - Whether or not the usage string should only show the mention form\r\n\t * @return {string} The command usage string\r\n\t * @see {@link BotUtil.usage}\r\n\t */\r\n\tusage(command, guild = null, onlyMention = false) {\r\n\t\treturn this.constructor.usage(this.client, this.settings, this.config, command, guild, onlyMention);\r\n\t}\r\n\r\n\t/**\r\n\t * Build a command usage string\r\n\t * @param {Client} client - The client to use\r\n\t * @param {SettingStorage} settings - The setting storage to use\r\n\t * @param {BotConfig} config - The bot config to use\r\n\t * @param {string} command - The short command string (ex. \"roll d20\")\r\n\t * @param {Guild|string} [guild] - The guild or guild ID to use the prefix of\r\n\t * @param {boolean} [onlyMention=false] - Whether or not the usage string should only show the mention form\r\n\t * @return {string} The command usage string\r\n\t * @see {@link BotUtil#usage}\r\n\t */\r\n\tstatic usage(client, settings, config, command, guild = null, onlyMention = false) {\r\n\t\tconst nbcmd = this.nbsp(command);\r\n\t\tif(!guild && !onlyMention) return `\\`${nbcmd}\\``;\r\n\t\tlet prefixAddon;\r\n\t\tif(!onlyMention) {\r\n\t\t\tlet prefix = this.nbsp(settings.getValue(guild, 'command-prefix', config.values.commandPrefix));\r\n\t\t\tif(prefix.length > 1) prefix += '\\xa0';\r\n\t\t\tprefixAddon = prefix ? `\\`${prefix}${nbcmd}\\` or ` : '';\r\n\t\t}\r\n\t\treturn `${prefixAddon || ''}\\`@${this.nbsp(client.user.username)}#${client.user.discriminator}\\xa0${nbcmd}\\``;\r\n\t}\r\n\r\n\t/**\r\n\t * Build a disambiguation list - useful for telling a user to be more specific when finding partial matches from a command\r\n\t * @param {Object[]} items - An array of items to make the disambiguation list for\r\n\t * @param {string} label - The text to refer to the items as (ex. \"characters\")\r\n\t * @param {string} [property=name] - The property on items to display in the list\r\n\t * @return {string} The disambiguation list\r\n\t * @see {@link BotUtil.disambiguation}\r\n\t */\r\n\tdisambiguation(items, label, property = 'name') {\r\n\t\treturn this.constructor.disambiguation(items, label, property);\r\n\t}\r\n\r\n\t/**\r\n\t * Build a disambiguation list - useful for telling a user to be more specific when finding partial matches from a command\r\n\t * @param {Object[]} items - An array of items to make the disambiguation list for\r\n\t * @param {string} label - The text to refer to the items as (ex. \"characters\")\r\n\t * @param {string} [property=name] - The property on items to display in the list\r\n\t * @return {string} The disambiguation list\r\n\t * @see {@link BotUtil#disambiguation}\r\n\t */\r\n\tstatic disambiguation(items, label, property = 'name') {\r\n\t\tconst itemList = items.map(item => `\"${this.nbsp(property ? item[property] : item)}\"`).join(',   ');\r\n\t\treturn `Multiple ${label} found, please be more specific: ${itemList}`;\r\n\t}\r\n\r\n\t/**\r\n\t * Paginate an array of items\r\n\t * @param {Object[]} items - An array of items to paginate\r\n\t * @param {number} [page=1] - The page to select\r\n\t * @param {number} [pageLength=10] - The number of items per page\r\n\t * @return {Object} The resulting paginated object\r\n\t * @property {Object[]} items - The chunk of items for the current page\r\n\t * @property {number} page - The current page\r\n\t * @property {number} maxPage - The maximum page\r\n\t * @property {number} pageLength - The numer of items per page\r\n\t * @property {string} pageText - The current page string (\"page x of y\")\r\n\t * @see {@link BotUtil.paginate}\r\n\t */\r\n\tpaginate(items, page = 1, pageLength = 10) {\r\n\t\treturn this.constructor.paginate(items, page, pageLength);\r\n\t}\r\n\r\n\t/**\r\n\t * Paginate an array of items\r\n\t * @param {Object[]} items - An array of items to paginate\r\n\t * @param {number} [page=1] - The page to select\r\n\t * @param {number} [pageLength=10] - The number of items per page\r\n\t * @return {Object} The resulting paginated object\r\n\t * @property {Object[]} items - The chunk of items for the current page\r\n\t * @property {number} page - The current page\r\n\t * @property {number} maxPage - The maximum page\r\n\t * @property {number} pageLength - The numer of items per page\r\n\t * @property {string} pageText - The current page string (\"page x of y\")\r\n\t * @see {@link BotUtil#paginate}\r\n\t */\r\n\tstatic paginate(items, page = 1, pageLength = 10) {\r\n\t\tconst maxPage = Math.ceil(items.length / pageLength);\r\n\t\tif(page < 1) page = 1;\r\n\t\tif(page > maxPage) page = maxPage;\r\n\t\tlet startIndex = (page - 1) * pageLength;\r\n\t\treturn {\r\n\t\t\titems: items.length > pageLength ? items.slice(startIndex, startIndex + pageLength) : items,\r\n\t\t\tpage: page,\r\n\t\t\tmaxPage: maxPage,\r\n\t\t\tpageLength: pageLength,\r\n\t\t\tpageText: `page ${page} of ${maxPage}`\r\n\t\t};\r\n\t}\r\n\r\n\t/**\r\n\t * Search for matches in a list of items\r\n\t * @param {Object[]} items - An array of items to search in\r\n\t * @param {string} searchString - The string to search for\r\n\t * @param {SearchOptions} options - An options object\r\n\t * @return {Object[]} The matched items\r\n\t * @see {@link BotUtil.search}\r\n\t */\r\n\tsearch(items, searchString, { property = 'name', searchInexact = true, searchExact = true, useStartsWith = false } = {}) {\r\n\t\treturn this.constructor.search(items, searchString, { property: property, searchInexact: searchInexact, searchExact: searchExact, useStartsWith: useStartsWith });\r\n\t}\r\n\r\n\t/**\r\n\t * Search for matches in a list of items\r\n\t * @param {Object[]} items - An array of items to search in\r\n\t * @param {string} searchString - The string to search for\r\n\t * @param {SearchOptions} options - An options object\r\n\t * @return {Object[]} The matched items\r\n\t * @see {@link BotUtil#search}\r\n\t */\r\n\tstatic search(items, searchString, { property = 'name', searchInexact = true, searchExact = true, useStartsWith = false } = {}) {\r\n\t\tif(!items || items.length === 0) return [];\r\n\t\tif(!searchString) return items;\r\n\r\n\t\tconst lowercaseSearch = searchString.toLowerCase();\r\n\t\tlet matchedItems;\r\n\r\n\t\t// Find all items that start with or include the search string\r\n\t\tif(searchInexact) {\r\n\t\t\tif(useStartsWith && searchString.length === 1) {\r\n\t\t\t\tmatchedItems = items.filter(element => String(property ? element[property] : element)\r\n\t\t\t\t\t.normalize('NFKD')\r\n\t\t\t\t\t.toLowerCase()\r\n\t\t\t\t\t.startsWith(lowercaseSearch)\r\n\t\t\t\t);\r\n\t\t\t} else {\r\n\t\t\t\tmatchedItems = items.filter(element => String(property ? element[property] : element)\r\n\t\t\t\t\t.normalize('NFKD')\r\n\t\t\t\t\t.toLowerCase()\r\n\t\t\t\t\t.includes(lowercaseSearch)\r\n\t\t\t\t);\r\n\t\t\t}\r\n\t\t} else {\r\n\t\t\tmatchedItems = items;\r\n\t\t}\r\n\r\n\t\t// See if any are an exact match\r\n\t\tif(searchExact && matchedItems.length > 1) {\r\n\t\t\tconst exactItems = matchedItems.filter(element => String(property ? element[property] : element).normalize('NFKD').toLowerCase() === lowercaseSearch);\r\n\t\t\tif(exactItems.length > 0) return exactItems;\r\n\t\t}\r\n\r\n\t\treturn matchedItems;\r\n\t}\r\n\r\n\t/**\r\n\t * Splits a string using specified characters into multiple strings of a maximum length\r\n\t * @param {string} text - The string to split\r\n\t * @param {number} [maxLength=1925] - The maximum length of each split string\r\n\t * @param {string} [splitOn=\\n] - The characters to split the string with\r\n\t * @param {string} [prepend] - String to prepend to every split message\r\n\t * @param {string} [append] - String to append to every split message\r\n\t * @return {string[]} The split strings\n\t * @see {@link BotUtil.split}\r\n\t */\r\n\tsplit(text, maxLength = 1925, splitOn = '\\n', prepend = '', append = '') {\r\n\t\treturn this.constructor.split(text, maxLength, splitOn, prepend, append);\r\n\t}\r\n\n\t/**\r\n\t * Splits a string using specified characters into multiple strings of a maximum length\r\n\t * @param {string} text - The string to split\r\n\t * @param {number} [maxLength=1925] - The maximum length of each split string\r\n\t * @param {string} [splitOn=\\n] - The characters to split the string with\r\n\t * @param {string} [prepend] - String to prepend to every split message\r\n\t * @param {string} [append] - String to append to every split message\r\n\t * @return {string[]} The split strings\r\n\t * @see {@link BotUtil#split}\r\n\t */\r\n\tstatic split(text, maxLength = 1900, splitOn = '\\n', prepend = '', append = '') {\r\n\t\tconst splitText = text.split(splitOn);\r\n\t\tif(splitText.length === 1 && text.length > maxLength) throw new Error('Message exceeds the max length and contains no split characters.');\r\n\t\tconst messages = [''];\r\n\t\tlet msg = 0;\r\n\t\tfor(let i = 0; i < splitText.length; i++) {\r\n\t\t\tif(messages[msg].length + splitText[i].length + 1 > maxLength) {\r\n\t\t\t\tmessages[msg] += append;\r\n\t\t\t\tmessages.push(prepend);\r\n\t\t\t\tmsg++;\r\n\t\t\t}\r\n\t\t\tmessages[msg] += (messages[msg].length > 0 && messages[msg] !== prepend ? splitOn : '') + splitText[i];\r\n\t\t}\r\n\t\treturn messages;\r\n\t}\r\n\r\n\t/**\r\n\t * Convert spaces to non-breaking spaces\r\n\t * @param {string} text - The text to convert\r\n\t * @return {string} The converted text\r\n\t * @see {@link BotUtil#nbsp}\r\n\t */\r\n\tnbsp(text) {\r\n\t\treturn this.constructor.nbsp(text);\r\n\t}\r\n\r\n\t/**\r\n\t * Convert spaces to non-breaking spaces\r\n\t * @param {string} text - The text to convert\r\n\t * @return {string} The converted text\r\n\t * @see {@link BotUtil#nbsp}\r\n\t */\r\n\tstatic nbsp(text) {\r\n\t\treturn String(text).replace(spacePattern, nbsp);\r\n\t}\r\n\r\n\t/**\r\n\t * @type {PatternConstants}\r\n\t * @see {@link BotUtil#patterns}\r\n\t */\r\n\tstatic get patterns() {\r\n\t\treturn patterns;\r\n\t}\r\n}\r\n\r\nconst nbsp = '\\xa0';\r\nconst spacePattern = / /g;\r\n\r\n/**\r\n * @typedef {Object} PatternConstants\r\n * @property {RegExp} userID - A pattern to match a user ID from a raw ID string or mention\r\n * @property {RegExp} roleID - A pattern to match a role ID from a raw ID string or mention\r\n * @property {RegExp} channelID - A pattern to match a channel ID from a raw ID string or mention\r\n * @property {RegExp} allUserMentions - A pattern to to match any mentions that would notify users\r\n */\r\nconst patterns = {\r\n\tuserID: /^(?:<@!?)?([0-9]+)>?$/,\r\n\troleID: /^(?:<@&)?([0-9]+)>?$/,\r\n\tchannelID: /^(?:<#)?([0-9]+)>?$/,\r\n\tanyUserMentions: /@everyone|@here|<@(?:!|&)?[0-9]+>/i\r\n};\r\n\r\n/**\r\n * @typedef {Object} SearchOptions\r\n * @property {string} [property=name] - The property on items to search against. If empty, the raw object's toString will be used instead.\r\n * @property {boolean} [searchInexact=true] - Whether or not to search for inexact matches\r\n * @property {boolean} [searchExact=true] - Whether or not to search for exact matches (will narrow down inexact matches if applicable)\r\n * @property {boolean} [useStartsWith=false] - Whether or not to search inexact by checking to see if the item starts with the search string rather than contains,\r\n * if the search string is only one character\r\n */\r\n"
   },
   {
     "__docId__": 64,
@@ -2143,7 +2143,7 @@
     "access": null,
     "description": "",
     "see": [
-      "{@link Util.patterns}"
+      "{@link BotUtil.patterns}"
     ],
     "lineNumber": 24,
     "type": {
@@ -2164,11 +2164,11 @@
     "memberof": "src/bot/util.js~BotUtil",
     "longname": "src/bot/util.js~BotUtil#usage",
     "access": null,
-    "description": "",
+    "description": "Build a command usage string",
     "see": [
-      "{@link Util.usage}"
+      "{@link BotUtil.usage}"
     ],
-    "lineNumber": 34,
+    "lineNumber": 35,
     "params": [
       {
         "nullable": null,
@@ -2225,9 +2225,9 @@
     "access": null,
     "description": "Build a command usage string",
     "see": [
-      "{@link Util#usage}"
+      "{@link BotUtil#usage}"
     ],
-    "lineNumber": 49,
+    "lineNumber": 50,
     "params": [
       {
         "nullable": null,
@@ -2312,11 +2312,11 @@
     "memberof": "src/bot/util.js~BotUtil",
     "longname": "src/bot/util.js~BotUtil#disambiguation",
     "access": null,
-    "description": "",
+    "description": "Build a disambiguation list - useful for telling a user to be more specific when finding partial matches from a command",
     "see": [
-      "{@link Util.disambiguation}"
+      "{@link BotUtil.disambiguation}"
     ],
-    "lineNumber": 68,
+    "lineNumber": 70,
     "params": [
       {
         "nullable": null,
@@ -2372,9 +2372,9 @@
     "access": null,
     "description": "Build a disambiguation list - useful for telling a user to be more specific when finding partial matches from a command",
     "see": [
-      "{@link Util#disambiguation}"
+      "{@link BotUtil#disambiguation}"
     ],
-    "lineNumber": 80,
+    "lineNumber": 82,
     "params": [
       {
         "nullable": null,
@@ -2428,11 +2428,11 @@
     "memberof": "src/bot/util.js~BotUtil",
     "longname": "src/bot/util.js~BotUtil#paginate",
     "access": null,
-    "description": "",
+    "description": "Paginate an array of items",
     "see": [
-      "{@link Util.paginate}"
+      "{@link BotUtil.paginate}"
     ],
-    "lineNumber": 97,
+    "lineNumber": 100,
     "params": [
       {
         "nullable": null,
@@ -2542,9 +2542,9 @@
     "access": null,
     "description": "Paginate an array of items",
     "see": [
-      "{@link Util#paginate}"
+      "{@link BotUtil#paginate}"
     ],
-    "lineNumber": 114,
+    "lineNumber": 117,
     "params": [
       {
         "nullable": null,
@@ -2652,11 +2652,11 @@
     "memberof": "src/bot/util.js~BotUtil",
     "longname": "src/bot/util.js~BotUtil#search",
     "access": null,
-    "description": "",
+    "description": "Search for matches in a list of items",
     "see": [
-      "{@link Util.search}"
+      "{@link BotUtil.search}"
     ],
-    "lineNumber": 135,
+    "lineNumber": 139,
     "params": [
       {
         "nullable": null,
@@ -2710,9 +2710,9 @@
     "access": null,
     "description": "Search for matches in a list of items",
     "see": [
-      "{@link Util#search}"
+      "{@link BotUtil#search}"
     ],
-    "lineNumber": 147,
+    "lineNumber": 151,
     "params": [
       {
         "nullable": null,
@@ -2764,11 +2764,11 @@
     "memberof": "src/bot/util.js~BotUtil",
     "longname": "src/bot/util.js~BotUtil#split",
     "access": null,
-    "description": "",
+    "description": "Splits a string using specified characters into multiple strings of a maximum length",
     "see": [
-      "{@link Util.split}"
+      "{@link BotUtil.split}"
     ],
-    "lineNumber": 191,
+    "lineNumber": 196,
     "params": [
       {
         "nullable": null,
@@ -2846,9 +2846,9 @@
     "access": null,
     "description": "Splits a string using specified characters into multiple strings of a maximum length",
     "see": [
-      "{@link Util#split}"
+      "{@link BotUtil#split}"
     ],
-    "lineNumber": 205,
+    "lineNumber": 210,
     "params": [
       {
         "nullable": null,
@@ -2924,11 +2924,11 @@
     "memberof": "src/bot/util.js~BotUtil",
     "longname": "src/bot/util.js~BotUtil#nbsp",
     "access": null,
-    "description": "",
+    "description": "Convert spaces to non-breaking spaces",
     "see": [
-      "{@link Util#nbsp}"
+      "{@link BotUtil#nbsp}"
     ],
-    "lineNumber": 226,
+    "lineNumber": 232,
     "params": [
       {
         "nullable": null,
@@ -2962,9 +2962,9 @@
     "access": null,
     "description": "Convert spaces to non-breaking spaces",
     "see": [
-      "{@link Util#nbsp}"
+      "{@link BotUtil#nbsp}"
     ],
-    "lineNumber": 236,
+    "lineNumber": 242,
     "params": [
       {
         "nullable": null,
@@ -2998,9 +2998,9 @@
     "access": null,
     "description": "",
     "see": [
-      "{@link Util#patterns}"
+      "{@link BotUtil#patterns}"
     ],
-    "lineNumber": 244,
+    "lineNumber": 250,
     "type": {
       "nullable": null,
       "types": [
@@ -3024,7 +3024,7 @@
     "importPath": "discord-graf/src/bot/util.js",
     "importStyle": null,
     "description": null,
-    "lineNumber": 249,
+    "lineNumber": 255,
     "undocument": true,
     "type": {
       "types": [
@@ -3045,7 +3045,7 @@
     "importPath": "discord-graf/src/bot/util.js",
     "importStyle": null,
     "description": null,
-    "lineNumber": 250,
+    "lineNumber": 256,
     "undocument": true,
     "type": {
       "types": [
@@ -3063,7 +3063,7 @@
     "longname": "src/bot/util.js~PatternConstants",
     "access": null,
     "description": "",
-    "lineNumber": 259,
+    "lineNumber": 265,
     "properties": [
       {
         "nullable": null,
