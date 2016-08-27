@@ -12,6 +12,7 @@ import Util from './util';
 import Registry from '../commands/registry';
 import Dispatcher from '../commands/dispatcher';
 import Module from '../commands/module';
+import CommandBuilder from '../commands/builder';
 import Setting from '../storage/models/setting';
 import SettingStorage from '../storage/settings';
 import ModRoleStorage from '../storage/mod-roles';
@@ -143,6 +144,15 @@ export default class Bot {
 		}
 
 		return client;
+	}
+
+	/**
+	 * Create a command builder
+	 * @param {CommandInfo} info - The command information
+	 * @return {CommandBuilder} The builder
+	 */
+	buildCommand(info) {
+		return new CommandBuilder(this, info);
 	}
 
 	/**

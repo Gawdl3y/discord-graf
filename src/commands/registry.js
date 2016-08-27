@@ -3,6 +3,7 @@
 
 import EventEmitter from 'events';
 import Module from './module';
+import CommandBuilder from './builder';
 
 /** Handles registration and searching of commands and modules */
 export default class CommandRegistry extends EventEmitter {
@@ -37,17 +38,22 @@ export default class CommandRegistry extends EventEmitter {
 	registerCommands(commands) {
 		if(!Array.isArray(commands)) throw new TypeError('Commands must be an array.');
 		for(let command of commands) {
+			if(command instanceof CommandBuilder) command = command.command;
+
+			// Make sure there aren't any conflicts
 			if(this.commands.some(cmd => cmd.name === command.name)) throw new Error(`A command with the name "${command.name}"" is already registered.`);
 			const module = this.modules.find(mod => mod.id === command.module);
 			if(!module) throw new Error(`Module "${command.module}" is not registered.`);
 			if(module.commands.some(cmd => cmd.memberName === command.memberName)) throw new Error(`A command with the member name "${command.memberName}" is already registered in ${module.id}`);
 
+			// Make sure there aren't any conflicts for the aliases, and add dehyphenated aliases
 			if(command.name.includes('-')) command.aliases.push(command.name.replace(/-/g, ''));
 			for(const alias of command.aliases) {
 				if(this.commands.some(cmd => cmd.aliases.some(ali => ali === alias))) throw new Error(`A command with the alias "${alias}" is already registered.`);
 				if(alias.includes('-')) command.aliases.push(alias.replace(/-/g, ''));
 			}
 
+			// Add the command
 			module.commands.push(command);
 			this.commands.push(command);
 			if(this.logger) this.logger.verbose(`Registered command ${command.module}:${command.memberName}.`);

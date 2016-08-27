@@ -10,7 +10,6 @@ export default class Command {
 	 * @param {CommandInfo} info - The command information
 	 */
 	constructor(bot, info) { // eslint-disable-line complexity
-		if(new.target === Command) throw new Error('The base command class may not be instantiated.');
 		if(!bot) throw new Error('A bot must be specified.');
 		if(!info) throw new Error('Command info must be specified.');
 		if(!info.name) throw new Error('Command must have a name specified.');
