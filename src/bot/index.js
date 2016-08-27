@@ -352,6 +352,7 @@ export default class Bot {
 	 */
 	_logMessage(message, oldMessage = null) {
 		if(!this.config.values.logMessages) return;
+		if(oldMessage && message.content === oldMessage.content) return;
 		const prefix = `${message.guild ? `[${message.guild.name}][${message.channel.name}]` : '[DM]'} ${message.author.username}#${message.author.discriminator}`;
 		this.logger.message(`${prefix}: ${message.content}`);
 		if(oldMessage) this.logger.message(`${prefix} EDITED FROM: ${oldMessage.content}`);
