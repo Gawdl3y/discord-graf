@@ -155,11 +155,12 @@ export default class Bot {
 
 	/**
 	 * Create a command builder
-	 * @param {CommandInfo} info - The command information
+	 * @param {CommandInfo} [info] - The command information
+	 * @param {CommandBuilderFunctions} [funcs] - The command functions to set
 	 * @return {CommandBuilder} The builder
 	 */
-	buildCommand(info) {
-		return new CommandBuilder(this, info);
+	buildCommand(info = null, funcs = null) {
+		return new CommandBuilder(this, info, funcs);
 	}
 
 	/**

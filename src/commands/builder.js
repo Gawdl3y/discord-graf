@@ -8,7 +8,7 @@ export default class CommandBuilder {
 	/**
 	 * @param {Bot} bot - The bot the command is for
 	 * @param {CommandInfo} [info] - The command info
-	 * @param {Object} [funcs] - The functions to set
+	 * @param {CommandBuilderFunctions} [funcs] - The command functions to set
 	 */
 	constructor(bot, info = null, funcs = null) {
 		if(!bot) throw new Error('A bot must be specified.');
@@ -78,3 +78,9 @@ function _bindAppend(fn, self, ...args) {
 		return fn.apply(self, args2.concat(args));
 	};
 }
+
+/**
+ * @typedef {Object} CommandBuilderFunctions
+ * @property {function} [run] - The run function to set
+ * @property {function} [hasPermission] - The hasPermission function to set
+ */

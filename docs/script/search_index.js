@@ -948,6 +948,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "src/commands/builder.js~commandbuilderfunctions",
+    "typedef/index.html#static-typedef-CommandBuilderFunctions",
+    "src/commands/builder.js~CommandBuilderFunctions",
+    "typedef"
+  ],
+  [
     "src/commands/command.js",
     "file/src/commands/command.js.html",
     "src/commands/command.js",
