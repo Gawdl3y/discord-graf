@@ -2,7 +2,7 @@
 There are two ways to make a command; using the command builder, or making your own class.
 Using classes is generally preferred and cleaner.
 Regardless of the method used to make your command, you will need an object of command information.
-At minimum, the command info must contain the `name`, `module`, and `memberName` properties.
+At minimum, the command info must contain the `name`, `module`, `memberName`, and `description` properties.
 See the [list of all command options](../typedef/index.html#static-typedef-CommandInfo).
 If a command name or alias has hyphens (`-`) in it, the framework will automatically add aliases for de-hyphenated ones.
 
