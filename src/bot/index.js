@@ -122,6 +122,13 @@ export default class Bot {
 			this.dispatcher.handleMessage(newMessage, oldMessage).catch(messageErr);
 		});
 
+		// Fetch the owner
+		if(config.owner) {
+			client.once('ready', () => {
+				client.fetchUser(config.owner).catch((err) => { this.logger.error('Unable to fetch the owner user.', err); });
+			});
+		}
+
 		// Set up update checking
 		if(config.updateURL) {
 			client.once('ready', () => {
@@ -350,7 +357,7 @@ export default class Bot {
 				this.storage.settings.save(new Setting(null, 'notified-version', masterVersion));
 			}
 		}).catch(err => {
-			this.logger.error(err);
+			this.logger.error('Error while checking for an update', err);
 		});
 	}
 
@@ -369,7 +376,4 @@ export default class Bot {
 	}
 }
 
-const defaultClientOptions = {
-	forceFetchUsers: true,
-	bot: true
-};
+const defaultClientOptions = { bot: true };
