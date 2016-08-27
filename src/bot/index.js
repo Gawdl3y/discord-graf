@@ -99,7 +99,7 @@ export default class Bot {
 		this.util = new Util(client, this.storage.settings, this.config);
 		this.logger.info('Client created.', clientOptions);
 
-		// Set up logging, playing game text, and update checking
+		// Set up logging and the playing game text
 		client.on('error', err => { this.logger.error(err); });
 		client.on('warn', msg => { this.logger.warn(msg); });
 		client.on('debug', msg => { this.logger.debug(msg); });
@@ -108,12 +108,6 @@ export default class Bot {
 		client.on('ready', () => {
 			this.logger.info(`Bot is ready; logged in as ${client.user.username}#${client.user.discriminator} (ID: ${client.user.id})`);
 			if(config.playingGame) client.user.setStatus(null, config.playingGame);
-		});
-		client.once('ready', () => {
-			if(config.updateURL) {
-				this._checkForUpdate();
-				if(config.updateCheck > 0) setInterval(this._checkForUpdate.bind(this), config.updateCheck * 60 * 1000);
-			}
 		});
 
 		// Set up command handling
@@ -126,6 +120,14 @@ export default class Bot {
 			this._logMessage(newMessage, oldMessage);
 			this.dispatcher.handleMessage(newMessage, oldMessage).catch(messageErr);
 		});
+
+		// Set up update checking
+		if(config.updateURL) {
+			client.once('ready', () => {
+				this._checkForUpdate();
+				if(config.updateCheck > 0) setInterval(this._checkForUpdate.bind(this), config.updateCheck * 60 * 1000);
+			});
+		}
 
 		// Log in
 		const loginErr = err => {
