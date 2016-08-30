@@ -91,7 +91,6 @@ export default class EvalCommand extends Command {
 			\`\`\`
 		`, 1900, '\n', prepend, append);
 
-
 		if(this.bot.config.values.selfbot) {
 			await message.edit(response[0]);
 			if(response.length > 0) return response.slice(1, response.length - 1);
