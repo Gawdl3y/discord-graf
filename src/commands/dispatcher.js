@@ -248,7 +248,7 @@ export default class CommandDispatcher extends EventEmitter {
 		const patternIndex = message.guild ? message.guild.id : '-';
 		if(!this._guildCommandPatterns[patternIndex]) this._guildCommandPatterns[patternIndex] = this._buildCommandPattern(message.guild, message.client.user);
 		let [command, args, isCommandMessage] = this._matchDefault(message, this._guildCommandPatterns[patternIndex], 2);
-		if(!command && !message.guild) [command, args, isCommandMessage] = this._matchDefault(message, /^([^\s]+)/i);
+		if(!command && !message.guild && !this.bot.config.values.selfbot) [command, args, isCommandMessage] = this._matchDefault(message, /^([^\s]+)/i);
 		if(command) return [command, args, false, true];
 
 		return [null, null, false, isCommandMessage];
