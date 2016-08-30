@@ -100,6 +100,13 @@ export default class BotConfig {
 					describe: 'Number of items per page in paginated commands',
 					group: 'General:'
 				})
+				.option('selfbot', {
+					type: 'boolean',
+					default: this.defaults.selfbot,
+					alias: 'B',
+					describe: 'Whether or not the bot should run as a selfbot',
+					group: 'General:'
+				})
 				.option('auto-reconnect', {
 					type: 'boolean',
 					default: this.defaults.autoReconnect,
@@ -223,6 +230,7 @@ const defaultDefaults = {
 	commandPrefix: '!',
 	commandEditable: 30,
 	nonCommandEdit: true,
+	selfbot: false,
 	autoReconnect: true,
 	storage: 'bot-storage',
 	log: 'bot.log',
@@ -242,6 +250,7 @@ const defaultDefaults = {
  * @property {string} [email] - The bot account email to log in with
  * @property {string} [password] - The bot account password to log in with
  * @property {ClientOptions} [clientOptions] - The options to pass to the Client constructor
+ * @property {boolean} [selfbot] - Whether or not the bot should be running as a selfbot
  * @property {boolean} [autoReconnect=true] - Whether or not the bot should automatically reconnect upon disconnection
  * @property {boolean} [logMessages=true] - Whether or not all chat messages should be printed to the console
  * @property {string} [storage=bot-storage] - Path to the local storage directory

@@ -73,6 +73,7 @@ export default class Bot {
 	createClient() {
 		if(this.client) throw new Error('Client has already been created.');
 		const config = this.config.values;
+		if(config.selfbot) config.clientOptions.bot = false;
 
 		// Verify some stuff
 		if(!config.token && (!config.email || !config.password)) throw new Error('Invalid credentials; either "token" or both "email" and "password" must be specified on the config.');
