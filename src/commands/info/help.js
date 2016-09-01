@@ -63,7 +63,7 @@ export default class HelpCommand extends Command {
 						}
 					`).join('\n\n')}
 				`),
-				reply: message.guild ? 'Sent a DM to you with information.' : null
+				reply: 'Sent a DM to you with information.'
 			};
 		}
 	}
