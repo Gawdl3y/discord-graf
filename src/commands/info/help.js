@@ -30,7 +30,7 @@ export default class HelpCommand extends Command {
 
 					**Usage:** ${util.usage(commands[0].usage, message.guild)}
 				`;
-				if(commands[0].aliases) help += `\n**Aliases:** ${commands[0].aliases.join(', ')}`;
+				if(commands[0].aliases.length > 0) help += `\n**Aliases:** ${commands[0].aliases.join(', ')}`;
 				help += `\n**Module:** ${this.bot.registry.findModules(commands[0].module)[0].name} (\`${commands[0].module}:${commands[0].memberName}\`)`;
 				if(commands[0].details) help += `\n**Details:** ${commands[0].details}`;
 				if(commands[0].examples) help += `\n**Examples:**\n${commands[0].examples.join('\n')}`;
