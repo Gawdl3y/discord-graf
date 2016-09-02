@@ -66,7 +66,7 @@ export default class CommandBuilder {
 
 	/**
 	 * Registers the command to the bot
-	 * @return {void}
+	 * @return {Command} The command that was registered
 	 */
 	register() {
 		this.bot.registerCommand(this.command);
