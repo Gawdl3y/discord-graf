@@ -437,7 +437,6 @@ export default class Bot {
 
 	/**
 	 * Checks for an update for the bot
-	 * @return {void}
 	 */
 	_checkForUpdate() {
 		const config = this.config.values;
@@ -460,7 +459,6 @@ export default class Bot {
 	 * Logs a message
 	 * @param {Message} message - The message
 	 * @param {Message} [oldMessage] - The old message if edited
-	 * @return {void}
 	 */
 	_logMessage(message, oldMessage = null) {
 		if(!this.config.values.logMessages) return;
