@@ -70,6 +70,7 @@ export default class CommandBuilder {
 	 */
 	register() {
 		this.bot.registerCommand(this.command);
+		return this.command;
 	}
 }
 
