@@ -9,7 +9,9 @@
 		"no-extra-parens": ["warn", "all", {
 			"nestedBinaryExpressions": false
 		}],
-		"valid-jsdoc": "error",
+		"valid-jsdoc": ["error", {
+			"requireReturn": false
+		}],
 
 		"accessor-pairs": "warn",
 		"array-callback-return": "error",

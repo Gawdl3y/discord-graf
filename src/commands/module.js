@@ -30,7 +30,6 @@ export default class Module {
 	 * Enables or disables the module on a guild
 	 * @param {Guild|string} guild - The guild or guild ID
 	 * @param {boolean} enabled - Whether the module should be enabled or disabled
-	 * @return {void}
 	 * @see {@link Module.setEnabled}
 	 */
 	setEnabled(guild, enabled) {
@@ -43,7 +42,6 @@ export default class Module {
 	 * @param {Guild|string} guild - The guild or guild ID
 	 * @param {Module|string} module - The module or module ID
 	 * @param {boolean} enabled - Whether the module should be enabled or disabled
-	 * @return {void}
 	 * @see {@link Module#setEnabled}
 	 */
 	static setEnabled(settings, guild, module, enabled) {

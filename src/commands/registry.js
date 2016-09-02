@@ -22,7 +22,6 @@ export default class CommandRegistry extends EventEmitter {
 	/**
 	 * Registers a single command
 	 * @param {Command} command - The command to register
-	 * @return {void}
 	 * @see {@link CommandRegistry#registerCommands}
 	 */
 	registerCommand(command) {
@@ -32,7 +31,6 @@ export default class CommandRegistry extends EventEmitter {
 	/**
 	 * Registers multiple commands
 	 * @param {Command[]} commands - The commands to register
-	 * @return {void}
 	 * @emits commandRegister When a command is registered, with the command and registry passed
 	 */
 	registerCommands(commands) {
@@ -64,7 +62,6 @@ export default class CommandRegistry extends EventEmitter {
 	/**
 	 * Registers a single module
 	 * @param {Module} module - The module to register
-	 * @return {void}
 	 * @see {@link CommandRegistry#registerModules}
 	 */
 	registerModule(module) {
@@ -74,7 +71,6 @@ export default class CommandRegistry extends EventEmitter {
 	/**
 	 * Registers multiple modules
 	 * @param {Module[]} modules - The modules to register
-	 * @return {void}
 	 * @emits moduleRegister When a module is registered, with the module and registry passed
 	 */
 	registerModules(modules) {

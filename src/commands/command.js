@@ -124,6 +124,7 @@ export default class Command {
 		return true;
 	}
 
+	/* eslint-disable valid-jsdoc */
 	/**
 	 * Runs the command
 	 * @param {Message} message - The message the command is being run for
@@ -134,13 +135,12 @@ export default class Command {
 	async run(message, args, fromPattern) { // eslint-disable-line no-unused-vars
 		throw new Error(`${this.constructor.name} doesn't have a run() method, or called the super.run() method.`);
 	}
-
+	/* eslint-enable valid-jsdoc */
 
 	/**
 	 * Enables or disables the command on a guild
 	 * @param {Guild|string} guild - The guild or guild ID
 	 * @param {boolean} enabled - Whether the command should be enabled or disabled
-	 * @return {void}
 	 * @see {@link Command.setEnabled}
 	 */
 	setEnabled(guild, enabled) {
@@ -153,7 +153,6 @@ export default class Command {
 	 * @param {Guild|string} guild - The guild or guild ID
 	 * @param {Command|string} command - The command or command name
 	 * @param {boolean} enabled - Whether the command should be enabled or disabled
-	 * @return {void}
 	 * @see {@link Command#setEnabled}
 	 */
 	static setEnabled(settings, guild, command, enabled) {

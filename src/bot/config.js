@@ -31,7 +31,6 @@ export default class BotConfig {
 	/**
 	 * Adds the defaults to the current values
 	 * @param {boolean} [overwrite=false] - Whether or not the defaults should overwrite existing values
-	 * @return {void}
 	 */
 	loadDefaults(overwrite = false) {
 		if(overwrite) {

@@ -27,7 +27,6 @@ export default class GuildStorage {
 
 	/**
 	 * Loads the data from LocalStorage
-	 * @return {void}
 	 */
 	loadStorage() {
 		this.guildsMap = JSON.parse(this.localStorage.getItem(this.key));
@@ -36,7 +35,6 @@ export default class GuildStorage {
 
 	/**
 	 * Saves the data to LocalStorage
-	 * @return {void}
 	 */
 	saveStorage() {
 		if(!this.guildsMap) throw new Error('Trying to save before load');
@@ -114,7 +112,6 @@ export default class GuildStorage {
 	/**
 	 * Clears all entries associated with a guild
 	 * @param {Guild|string} guild - The guild or guild ID to clear the entries of
-	 * @return {void}
 	 */
 	clear(guild) {
 		if(!guild) throw new Error('A guild must be specified.');
@@ -126,7 +123,6 @@ export default class GuildStorage {
 
 	/**
 	 * Clears all entries
-	 * @return {void}
 	 */
 	clearAll() {
 		if(!this.guildsMap) this.loadStorage();
