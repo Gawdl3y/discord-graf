@@ -25,19 +25,19 @@ export default class CommandDispatcher extends EventEmitter {
 	 * Handle a new message or a message update
 	 * @param {Message} message - The message to handle
 	 * @param {Message} [oldMessage] - The old message before the update
-	 * @return {Promise<void>} Nothing
+	 * @return {Promise<null>} No value
 	 */
 	async handleMessage(message, oldMessage = null) {
-		if(message.author.bot) return;
-		else if(this.bot.config.values.selfbot && message.author.id !== this.bot.client.user.id) return;
-		else if(!this.bot.config.values.selfbot && message.author.id === this.bot.client.user.id) return;
+		if(message.author.bot) return null;
+		else if(this.bot.config.values.selfbot && message.author.id !== this.bot.client.user.id) return null;
+		else if(!this.bot.config.values.selfbot && message.author.id === this.bot.client.user.id) return null;
 
 		// Make sure the bot is allowed to run in the channel, or the user is an admin
 		if(!this.bot.config.values.selfbot && message.guild
 			&& Module.isEnabled(this.bot.storage.settings, message.guild, 'channels')
 			&& !this.bot.storage.allowedChannels.isEmpty(message.guild)
 			&& !this.bot.storage.allowedChannels.exists(message.guild, message.channel)
-			&& !this.bot.permissions.isAdmin(message.guild, message.author)) return;
+			&& !this.bot.permissions.isAdmin(message.guild, message.author)) return null;
 
 		// Parse the message, and get the old result if it exists
 		const [command, args, fromPattern, isCommandMessage] = this._parseMessage(message);
@@ -54,7 +54,7 @@ export default class CommandDispatcher extends EventEmitter {
 			result = { editable: true };
 		}
 
-		this.handleMessageResult(message, result, oldResult);
+		return this.handleMessageResult(message, result, oldResult);
 	}
 
 	/**
@@ -62,7 +62,7 @@ export default class CommandDispatcher extends EventEmitter {
 	 * @param {Message} message - The message the result is from
 	 * @param {?CommandResult} result - The result
 	 * @param {CommandResult} [oldResult] - The old result
-	 * @return {Promise<void>} Nothing
+	 * @return {Promise<null>} No value
 	 */
 	async handleMessageResult(message, result, oldResult = null) {
 		if(result) {
@@ -92,6 +92,8 @@ export default class CommandDispatcher extends EventEmitter {
 				}
 			}
 		}
+
+		return null;
 	}
 
 	/**
@@ -153,7 +155,7 @@ export default class CommandDispatcher extends EventEmitter {
 	 * Sends messages for a command result
 	 * @param {Message} message - The message the result is for
 	 * @param {CommandResult} result - The command result
-	 * @return {Promise<void>} Nothing
+	 * @return {Promise<null>} No value
 	 */
 	async sendMessagesForResult(message, result) {
 		const messages = await Promise.all([
@@ -164,6 +166,7 @@ export default class CommandDispatcher extends EventEmitter {
 		if(result.plain) result.normalMessages = messages[0];
 		else if(result.reply) result.normalMessages = messages[1];
 		if(result.direct) result.directMessages = messages[2];
+		return null;
 	}
 
 	/**
@@ -188,7 +191,7 @@ export default class CommandDispatcher extends EventEmitter {
 	 * @param {Message} message - The message the result is for
 	 * @param {CommandResult} result - The command result
 	 * @param {CommandResult} oldResult - The old command result
-	 * @return {Promise<void>} Nothing
+	 * @return {Promise<null>} No value
 	 */
 	async updateMessagesForResult(message, result, oldResult) {
 		// Update the messages
@@ -202,6 +205,8 @@ export default class CommandDispatcher extends EventEmitter {
 		// Delete old messages if we're not using them
 		if(!result.plain && !result.reply && (oldResult.plain || oldResult.reply)) for(const msg of oldResult.normalMessages) msg.delete();
 		if(!result.direct && oldResult.direct) for(const msg of oldResult.directMessages) msg.delete();
+
+		return null;
 	}
 
 	/**
