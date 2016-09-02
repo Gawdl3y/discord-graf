@@ -54,7 +54,7 @@ export default class CommandDispatcher extends EventEmitter {
 			result = { editable: true };
 		}
 
-		return this.handleMessageResult(message, result, oldResult);
+		return await this.handleMessageResult(message, result, oldResult);
 	}
 
 	/**
