@@ -128,12 +128,14 @@ export default class CommandDispatcher extends EventEmitter {
 
 		// Run the command
 		this.bot.logger.info(`Running ${command.module}:${command.memberName}.`, logInfo);
+		const typingCount = message.channel.typingCount;
 		try {
 			const result = this.constructor.makeResultObject(await command.run(message, args, fromPattern));
 			this.emit('commandRun', command, result, message, args, fromPattern);
 			return result;
 		} catch(err) {
 			this.emit('commandError', command, err, message, args, fromPattern);
+			if(message.channel.typingCount > typingCount) message.channel.stopTyping();
 			if(err instanceof FriendlyError) {
 				return { reply: [err.message], editable: true };
 			} else {
