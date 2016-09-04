@@ -19,8 +19,8 @@ export default class AboutCommand extends Command {
 		const client = message.client;
 		const config = this.bot.config.values;
 		const owner = client.users.get(this.bot.config.values.owner);
-		const guilds = client.guilds.length.toLocaleString(), users = client.users.length.toLocaleString();
-		const guildsLabel = client.guilds.length !== 1 ? 'servers' : 'server', usersLabel = client.users.length !== 1 ? 'users' : 'user';
+		const guilds = client.guilds.size.toLocaleString(), users = client.users.size.toLocaleString();
+		const guildsLabel = client.guilds.size !== 1 ? 'servers' : 'server', usersLabel = client.users.size !== 1 ? 'users' : 'user';
 		const uptime = process.uptime();
 		const days = Math.floor(uptime / 60 / 60 / 24), hours = Math.floor(uptime / 60 / 60 % 24), minutes = Math.floor(uptime / 60 % 60);
 		const daysLabel = days !== 1 ? 'days' : 'day', hoursLabel = hours !== 1 ? 'hours' : 'hour', minutesLabel = minutes !== 1 ? 'minutes' : 'minute';
