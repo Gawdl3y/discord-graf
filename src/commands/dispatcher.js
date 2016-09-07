@@ -32,6 +32,9 @@ export default class CommandDispatcher extends EventEmitter {
 		else if(this.bot.config.values.selfbot && message.author.id !== this.bot.client.user.id) return null;
 		else if(!this.bot.config.values.selfbot && message.author.id === this.bot.client.user.id) return null;
 
+		// Make sure the edit actually changed the message content
+		if(oldMessage && message.content === oldMessage.content) return null;
+
 		// Make sure the bot is allowed to run in the channel, or the user is an admin
 		if(!this.bot.config.values.selfbot && message.guild
 			&& Module.isEnabled(this.bot.storage.settings, message.guild, 'channels')
