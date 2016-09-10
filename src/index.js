@@ -74,11 +74,11 @@ export const FriendlyError = _FriendlyError;
  */
 export const CommandFormatError = _CommandFormatError;
 
-/** @external {Client} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Client */
-/** @external {User} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/User */
-/** @external {Guild} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Guild */
-/** @external {Channel} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Channel */
-/** @external {Message} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Message */
-/** @external {Role} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/indev-rewrite/class/Role */
+/** @external {Client} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/master/class/Client */
+/** @external {User} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/master/class/User */
+/** @external {Guild} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/master/class/Guild */
+/** @external {Channel} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/master/class/Channel */
+/** @external {Message} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/master/class/Message */
+/** @external {Role} http://hydrabolt.github.io/discord.js/index.html#!/docs/tag/master/class/Role */
 /** @external {Logger} https://github.com/winstonjs/winston/blob/master/README.md */
 /** @external {LocalStorage} https://developer.mozilla.org/en-US/docs/Web/API/Storage */

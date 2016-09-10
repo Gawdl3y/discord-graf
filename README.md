@@ -8,7 +8,7 @@
 **GRAF:** Great Rad-Ass Framework
 
 This is a framework for Discord bots to use that makes it stupidly easy to build a bot with Node.js.  
-It is written in ES2017 using Babel, and is built on top of the [discord.js rewrite](https://github.com/hydrabolt/discord.js/tree/indev-rewrite).
+It is written in ES2017 using Babel, and is built on top of [discord.js v9](https://github.com/hydrabolt/discord.js/).
 
 ## Features
 GRAF contains loads of functionality that any bots built on it can use.
