@@ -22,7 +22,7 @@ const bot = new Bot({
 	email: 'SomeEmail@ForAUserAccount.com',
 	password: 'SomePasswordForAUserAccount',
 	clientOptions: {
-		disableEveryone: true
+		disable_everyone: true
 	}
 });
 ```
