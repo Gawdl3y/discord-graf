@@ -4,6 +4,7 @@
 /* eslint-disable no-unused-vars */
 import util from 'util';
 import * as tags from 'common-tags';
+import escapeRegex from 'escape-string-regexp';
 import * as graf from '../..';
 import Command from '../command';
 import FriendlyError from '../../errors/friendly';
@@ -26,6 +27,12 @@ export default class EvalCommand extends Command {
 
 		this.lastResult = null;
 		this.objects = bot.evalObjects;
+
+		let pattern = '';
+		if(bot.config.values.token) pattern += escapeRegex(bot.config.values.token);
+		if(bot.config.values.email) pattern += (pattern.length > 0 ? '|' : '') + escapeRegex(bot.config.values.email);
+		if(bot.config.values.password) pattern += (pattern.length > 0 ? '|' : '') + escapeRegex(bot.config.values.password);
+		this.sensitivePattern = new RegExp(pattern, 'gi');
 	}
 
 	hasPermission(guild, user) {
@@ -78,7 +85,9 @@ export default class EvalCommand extends Command {
 	}
 
 	makeResultMessages(result, hrDiff, input = null) {
-		const inspected = util.inspect(result, { depth: 0 }).replace(nlPattern, '\n');
+		const inspected = util.inspect(result, { depth: 0 })
+			.replace(nlPattern, '\n')
+			.replace(this.sensitivePattern, '--snip--');
 		const split = inspected.split('\n');
 		const last = inspected.length - 1;
 		const prependPart = inspected[0] !== '{' && inspected[0] !== '[' && inspected[0] !== "'" ? split[0] : inspected[0];
