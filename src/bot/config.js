@@ -249,6 +249,7 @@ const defaultDefaults = {
  * @property {string} [email] - The bot account email to log in with
  * @property {string} [password] - The bot account password to log in with
  * @property {ClientOptions} [clientOptions] - The options to pass to the Client constructor
+ * @property {string} [owner] - The ID of the bot owner's Discord account
  * @property {boolean} [selfbot] - Whether or not the bot should be running as a selfbot
  * @property {boolean} [autoReconnect=true] - Whether or not the bot should automatically reconnect upon disconnection
  * @property {boolean} [logMessages=true] - Whether or not all chat messages should be printed to the console

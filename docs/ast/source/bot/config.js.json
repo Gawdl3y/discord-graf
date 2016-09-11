@@ -1,14 +1,14 @@
 {
   "type": "Program",
   "start": 0,
-  "end": 9189,
+  "end": 9264,
   "loc": {
     "start": {
       "line": 1,
       "column": 0
     },
     "end": {
-      "line": 271,
+      "line": 272,
       "column": 0
     }
   },
@@ -12940,62 +12940,62 @@
       "trailingComments": [
         {
           "type": "Block",
-          "value": "*\r\n * @typedef {Object} ConfigObject\r\n * @property {string} [name] - Name of the bot (required to create a client)\r\n * @property {string} [version] - Version of the bot (should follow semver, required to create a client)\r\n * @property {string} [about] - Text information about the bot for the about command\r\n * @property {string} [updateURL] - URL to a package.json file to check for updates with\r\n * @property {string} [token] - The bot account API token to log in with\r\n * @property {string} [email] - The bot account email to log in with\r\n * @property {string} [password] - The bot account password to log in with\r\n * @property {ClientOptions} [clientOptions] - The options to pass to the Client constructor\r\n * @property {boolean} [selfbot] - Whether or not the bot should be running as a selfbot\r\n * @property {boolean} [autoReconnect=true] - Whether or not the bot should automatically reconnect upon disconnection\r\n * @property {boolean} [logMessages=true] - Whether or not all chat messages should be printed to the console\r\n * @property {string} [storage=bot-storage] - Path to the local storage directory\r\n * @property {string} [playingGame=Message-for-help] - Text to show the bot playing\r\n * @property {number} [paginationItems=10] - Maximum number of items per page the default commands use when paginating\r\n * @property {number} [updateCheck=60] - How frequently to check for updates (in minutes)\r\n * @property {string} [commandPrefix=!] - The default command prefix (empty/null for mentions only)\r\n * @property {number} [commandEditable=30] - How long commands are editable (in seconds)\r\n * @property {boolean} [nonCommandEdit=true] - Whether or not commands will be run in messages that were edited that previously didn't have any commands\r\n * @property {string} [log=bot.log] - Path to the log file\r\n * @property {number} [logMaxSize=5242880] - Maximum size of the log file before splitting it (in bytes)\r\n * @property {number} [logMaxFiles=5] - Maximum log files to keep\r\n * @property {string} [logLevel=info] - The log level to output to the log file (error, warn, info, verbose, message, debug)\r\n * @property {string} [consoleLevel=info] - The log level to output to the console (error, warn, info, verbose, message, debug)\r\n ",
+          "value": "*\r\n * @typedef {Object} ConfigObject\r\n * @property {string} [name] - Name of the bot (required to create a client)\r\n * @property {string} [version] - Version of the bot (should follow semver, required to create a client)\r\n * @property {string} [about] - Text information about the bot for the about command\r\n * @property {string} [updateURL] - URL to a package.json file to check for updates with\r\n * @property {string} [token] - The bot account API token to log in with\r\n * @property {string} [email] - The bot account email to log in with\r\n * @property {string} [password] - The bot account password to log in with\r\n * @property {ClientOptions} [clientOptions] - The options to pass to the Client constructor\r\n * @property {string} [owner] - The ID of the bot owner's Discord account\r\n * @property {boolean} [selfbot] - Whether or not the bot should be running as a selfbot\r\n * @property {boolean} [autoReconnect=true] - Whether or not the bot should automatically reconnect upon disconnection\r\n * @property {boolean} [logMessages=true] - Whether or not all chat messages should be printed to the console\r\n * @property {string} [storage=bot-storage] - Path to the local storage directory\r\n * @property {string} [playingGame=Message-for-help] - Text to show the bot playing\r\n * @property {number} [paginationItems=10] - Maximum number of items per page the default commands use when paginating\r\n * @property {number} [updateCheck=60] - How frequently to check for updates (in minutes)\r\n * @property {string} [commandPrefix=!] - The default command prefix (empty/null for mentions only)\r\n * @property {number} [commandEditable=30] - How long commands are editable (in seconds)\r\n * @property {boolean} [nonCommandEdit=true] - Whether or not commands will be run in messages that were edited that previously didn't have any commands\r\n * @property {string} [log=bot.log] - Path to the log file\r\n * @property {number} [logMaxSize=5242880] - Maximum size of the log file before splitting it (in bytes)\r\n * @property {number} [logMaxFiles=5] - Maximum log files to keep\r\n * @property {string} [logLevel=info] - The log level to output to the log file (error, warn, info, verbose, message, debug)\r\n * @property {string} [consoleLevel=info] - The log level to output to the console (error, warn, info, verbose, message, debug)\r\n ",
           "start": 6779,
-          "end": 9029,
+          "end": 9104,
           "loc": {
             "start": {
               "line": 242,
               "column": 0
             },
             "end": {
-              "line": 267,
+              "line": 268,
               "column": 3
             }
           },
           "range": [
             6779,
-            9029
+            9104
           ]
         },
         {
           "type": "Block",
           "value": "* @external {ClientOptions} http://discordjs.readthedocs.io/en/latest/docs_client.html#parameters ",
-          "start": 9033,
-          "end": 9135,
+          "start": 9108,
+          "end": 9210,
           "loc": {
             "start": {
-              "line": 269,
+              "line": 270,
               "column": 0
             },
             "end": {
-              "line": 269,
+              "line": 270,
               "column": 102
             }
           },
           "range": [
-            9033,
-            9135
+            9108,
+            9210
           ]
         },
         {
           "type": "Block",
           "value": "* @external {Yargs} http://yargs.js.org/docs/ ",
-          "start": 9137,
-          "end": 9187,
+          "start": 9212,
+          "end": 9262,
           "loc": {
             "start": {
-              "line": 270,
+              "line": 271,
               "column": 0
             },
             "end": {
-              "line": 270,
+              "line": 271,
               "column": 50
             }
           },
           "range": [
-            9137,
-            9187
+            9212,
+            9262
           ]
         }
       ]
