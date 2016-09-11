@@ -71,7 +71,7 @@ export default class CommandDispatcher extends EventEmitter {
 		if(result) {
 			// Make sure the bot has permission to send a message
 			let hasPermission = true;
-			if(message.guild && !message.channel.permissionsFor(this.bot.client.user).hasPermission('SEND_MESSAGES')) {
+			if((result.plain || result.reply) && message.guild && !message.channel.permissionsFor(this.bot.client.user).hasPermission('SEND_MESSAGES')) {
 				hasPermission = false;
 				await message.author.sendMessage(`I don't have permission to send messages in ${message.channel}, so I'll respond directly instead:`);
 			}
