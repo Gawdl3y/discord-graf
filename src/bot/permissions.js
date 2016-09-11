@@ -57,9 +57,9 @@ export default class BotPermissions {
 		if(user.id === config.values.owner) return true;
 		const member = guild.member(user);
 		if(!member) return false;
-		const roles = member.roles.array();
-		if(roles.some(role => role.hasPermission('ADMINISTRATOR'))) return true;
-		if(!Module.isEnabled(settings, guild, 'mod-roles') || modRoles.isEmpty(guild)) return roles.some(role => role.hasPermission('MANAGE_MESSAGES'));
+		if(member.hasPermission('ADMINISTRATOR')) return true;
+		if(!Module.isEnabled(settings, guild, 'mod-roles') || modRoles.isEmpty(guild)) return member.hasPermission('MANAGE_MESSAGES');
+		const roles = member.roles;
 		return modRoles.find(guild).some(role => roles.some(role2 => role.id === role2.id));
 	}
 
@@ -90,7 +90,7 @@ export default class BotPermissions {
 		if(user.id === config.values.owner) return true;
 		const member = guild.member(user);
 		if(!member) return false;
-		return member.roles.array().some(role => role.hasPermission('ADMINISTRATOR'));
+		return member.hasPermission('ADMINISTRATOR');
 	}
 
 	/**
