@@ -36,3 +36,4 @@ You may also take a look at other bots' source code to see how they use GRAF.
 
 ## Known bots using GRAF
 - [RPBot](https://github.com/Gawdl3y/discord-rpbot)
+- [Oh Please](https://github.com/datitisev/DiscordBot-OhPlease)
