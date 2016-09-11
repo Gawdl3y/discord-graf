@@ -99,7 +99,7 @@ export default class CommandDispatcher extends EventEmitter {
 		this.bot = bot;
 
 		this._guildCommandPatterns = {};
-		this._results = {};
+		this._results = new Map();
 	}
 
 	/**
@@ -125,7 +125,7 @@ export default class CommandDispatcher extends EventEmitter {
 
 		// Parse the message, and get the old result if it exists
 		const [command, args, fromPattern, isCommandMessage] = this._parseMessage(message);
-		const oldResult = oldMessage ? this._results[oldMessage.id] : null;
+		const oldResult = oldMessage ? this._results.get(oldMessage.id) : null;
 
 		// Run the command, or make an error message result
 		let result;
@@ -150,8 +150,15 @@ export default class CommandDispatcher extends EventEmitter {
 	 */
 	async handleMessageResult(message, result, oldResult = null) {
 		if(result) {
+			// Make sure the bot has permission to send a message
+			let hasPermission = true;
+			if(message.guild &amp;&amp; !message.channel.permissionsFor(this.bot.client.user).hasPermission(&apos;SEND_MESSAGES&apos;)) {
+				hasPermission = false;
+				await message.author.sendMessage(`I don&apos;t have permission to send messages in ${message.channel}, so I&apos;ll respond directly instead:`);
+			}
+
 			// Change a plain or reply response into direct if there isn&apos;t a guild
-			if(!message.guild) {
+			if(!message.guild || !hasPermission) {
 				if(!result.direct) result.direct = result.plain || result.reply;
 				delete result.plain;
 				delete result.reply;
@@ -169,10 +176,10 @@ export default class CommandDispatcher extends EventEmitter {
 				if(result.editable) {
 					result.timeout = oldResult &amp;&amp; oldResult.timeout
 						? oldResult.timeout
-						: setTimeout(() =&gt; { delete this._results[message.id]; }, this.bot.config.values.commandEditable * 1000);
-					this._results[message.id] = result;
+						: setTimeout(() =&gt; { this._results.delete(message.id); }, this.bot.config.values.commandEditable * 1000);
+					this._results.set(message.id, result);
 				} else {
-					delete this._results[message.id];
+					this._results.delete(message.id);
 				}
 			}
 		}
