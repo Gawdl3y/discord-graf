@@ -18,7 +18,7 @@ export default class CommandDispatcher extends EventEmitter {
 		this.bot = bot;
 
 		this._guildCommandPatterns = {};
-		this._results = {};
+		this._results = new Map();
 	}
 
 	/**
@@ -44,7 +44,7 @@ export default class CommandDispatcher extends EventEmitter {
 
 		// Parse the message, and get the old result if it exists
 		const [command, args, fromPattern, isCommandMessage] = this._parseMessage(message);
-		const oldResult = oldMessage ? this._results[oldMessage.id] : null;
+		const oldResult = oldMessage ? this._results.get(oldMessage.id) : null;
 
 		// Run the command, or make an error message result
 		let result;
@@ -88,10 +88,10 @@ export default class CommandDispatcher extends EventEmitter {
 				if(result.editable) {
 					result.timeout = oldResult && oldResult.timeout
 						? oldResult.timeout
-						: setTimeout(() => { delete this._results[message.id]; }, this.bot.config.values.commandEditable * 1000);
-					this._results[message.id] = result;
+						: setTimeout(() => { this._results.delete(message.id); }, this.bot.config.values.commandEditable * 1000);
+					this._results.set(message.id, result);
 				} else {
-					delete this._results[message.id];
+					this._results.delete(message.id);
 				}
 			}
 		}
