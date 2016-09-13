@@ -107,6 +107,8 @@ export default class Bot {
 		client.on('debug', msg => { this.logger.debug(msg); });
 		client.on('disconnected', () => { this.logger.warn('Disconnected.'); });
 		client.on('reconnecting', () => { this.logger.warn('Reconnecting...'); });
+		client.on('guildCreate', guild => { this.logger.info(`Joined guild ${guild} (ID: ${guild.id}).`); });
+		client.on('guildDelete', guild => { this.logger.info(`Left guild ${guild} (ID: ${guild.id}).`); });
 		client.on('ready', () => {
 			this.logger.info(`Bot is ready; logged in as ${client.user.username}#${client.user.discriminator} (ID: ${client.user.id})`);
 			if(config.playingGame) client.user.setStatus(null, config.playingGame);
