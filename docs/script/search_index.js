@@ -1206,6 +1206,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "src/commands/module.js~module#hide",
+    "class/src/commands/module.js~Module.html#instance-member-hide",
+    "src/commands/module.js~Module#hide",
+    "member"
+  ],
+  [
     "src/commands/module.js~module#id",
     "class/src/commands/module.js~Module.html#instance-member-id",
     "src/commands/module.js~Module#id",

@@ -115,6 +115,9 @@ import DisallowChannelCommand from &apos;../commands/channels/disallow&apos;;
 import ClearAllowedChannelsCommand from &apos;../commands/channels/clear-allowed&apos;;
 import PrefixCommand from &apos;../commands/util/prefix&apos;;
 import EvalCommand from &apos;../commands/util/eval&apos;;
+import ShowBlacklistCommand from &apos;../commands/blacklist/show&apos;;
+import BlacklistUserCommand from &apos;../commands/blacklist/user&apos;;
+import BlacklistGuildCommand from &apos;../commands/blacklist/guild&apos;;
 
 /** A Discord bot that has its own command registry, storage, utilities, etc. */
 export default class Bot {
@@ -188,6 +191,8 @@ export default class Bot {
 		client.on(&apos;debug&apos;, msg =&gt; { this.logger.debug(msg); });
 		client.on(&apos;disconnected&apos;, () =&gt; { this.logger.warn(&apos;Disconnected.&apos;); });
 		client.on(&apos;reconnecting&apos;, () =&gt; { this.logger.warn(&apos;Reconnecting...&apos;); });
+		client.on(&apos;guildCreate&apos;, guild =&gt; { this.logger.info(`Joined guild ${guild} (ID: ${guild.id}).`); });
+		client.on(&apos;guildDelete&apos;, guild =&gt; { this.logger.info(`Left guild ${guild} (ID: ${guild.id}).`); });
 		client.on(&apos;ready&apos;, () =&gt; {
 			this.logger.info(`Bot is ready; logged in as ${client.user.username}#${client.user.discriminator} (ID: ${client.user.id})`);
 			if(config.playingGame) client.user.setStatus(null, config.playingGame);
@@ -204,6 +209,15 @@ export default class Bot {
 			this.dispatcher.handleMessage(newMessage, oldMessage).catch(messageErr);
 		});
 
+		// Set up guild blacklisting
+		client.on(&apos;guildCreate&apos;, guild =&gt; {
+			const guilds = this.storage.settings.getValue(null, &apos;blacklisted-guilds&apos;);
+			if(guilds &amp;&amp; guilds.includes(guild.id)) {
+				this.logger.info(&apos;Guild is blacklisted; leaving.&apos;, { name: guild.name, id: guild.id });
+				guild.leave();
+			}
+		});
+
 		// Fetch the owner
 		if(config.owner) {
 			client.once(&apos;ready&apos;, () =&gt; {
@@ -217,6 +231,13 @@ export default class Bot {
 				this._checkForUpdate();
 				if(config.updateCheck &gt; 0) setInterval(this._checkForUpdate.bind(this), config.updateCheck * 60 * 1000);
 			});
+		}
+
+		// Set up Carbon guild count updates
+		if(config.carbonUrl) {
+			client.once(&apos;ready&apos;, this._sendCarbonStats.bind(this));
+			client.on(&apos;guildCreate&apos;, this._sendCarbonStats.bind(this));
+			client.on(&apos;guildDelete&apos;, this._sendCarbonStats.bind(this));
 		}
 
 		// Log in
@@ -314,10 +335,11 @@ export default class Bot {
 	registerDefaultModules() {
 		this.registerModules([
 			[&apos;info&apos;, &apos;Information&apos;],
-			[&apos;modules&apos;, &apos;Modules&apos;],
 			[&apos;mod-roles&apos;, &apos;Moderator roles&apos;],
 			[&apos;channels&apos;, &apos;Channels&apos;],
-			[&apos;util&apos;, &apos;Utility&apos;]
+			[&apos;util&apos;, &apos;Utility&apos;],
+			[&apos;modules&apos;, &apos;Modules&apos;, true],
+			[&apos;blacklist&apos;, &apos;Blacklisting&apos;, true]
 		]);
 		return this;
 	}
@@ -328,9 +350,10 @@ export default class Bot {
 	 * @param {boolean} [options.about=true] - Whether or not to register the built-in about command
 	 * @param {boolean} [options.modRoles=true] - Whether or not to register the built-in mod roles commands
 	 * @param {boolean} [options.channels=true] - Whether or not to register the built-in channels commands
+	 * @param {boolean} [options.blacklist=true] - Whether or not to register the built-in blacklist commands
 	 * @return {Bot} This bot
 	 */
-	registerDefaultCommands({ about = true, modRoles = true, channels = true } = {}) {
+	registerDefaultCommands({ about = true, modRoles = true, channels = true, blacklist = true } = {}) {
 		this.registerCommands([
 			HelpCommand,
 			PrefixCommand,
@@ -355,6 +378,13 @@ export default class Bot {
 				AllowChannelCommand,
 				DisallowChannelCommand,
 				ClearAllowedChannelsCommand
+			]);
+		}
+		if(blacklist) {
+			this.registerCommands([
+				ShowBlacklistCommand,
+				BlacklistUserCommand,
+				BlacklistGuildCommand
 			]);
 		}
 		return this;
@@ -436,6 +466,19 @@ export default class Bot {
 	}
 
 	/**
+	 * Logs a message
+	 * @param {Message} message - The message
+	 * @param {Message} [oldMessage] - The old message if edited
+	 */
+	_logMessage(message, oldMessage = null) {
+		if(!this.config.values.logMessages) return;
+		if(oldMessage &amp;&amp; message.content === oldMessage.content) return;
+		const prefix = `${message.guild ? `[${message.guild.name}][${message.channel.name}]` : &apos;[DM]&apos;} ${message.author.username}#${message.author.discriminator}`;
+		this.logger.message(`${prefix}: ${message.content}`);
+		if(oldMessage) this.logger.message(`${prefix} EDITED FROM: ${oldMessage.content}`);
+	}
+
+	/**
 	 * Checks for an update for the bot
 	 */
 	_checkForUpdate() {
@@ -456,16 +499,23 @@ export default class Bot {
 	}
 
 	/**
-	 * Logs a message
-	 * @param {Message} message - The message
-	 * @param {Message} [oldMessage] - The old message if edited
+	 * Sends guild count to Carbon
 	 */
-	_logMessage(message, oldMessage = null) {
-		if(!this.config.values.logMessages) return;
-		if(oldMessage &amp;&amp; message.content === oldMessage.content) return;
-		const prefix = `${message.guild ? `[${message.guild.name}][${message.channel.name}]` : &apos;[DM]&apos;} ${message.author.username}#${message.author.discriminator}`;
-		this.logger.message(`${prefix}: ${message.content}`);
-		if(oldMessage) this.logger.message(`${prefix} EDITED FROM: ${oldMessage.content}`);
+	_sendCarbonStats() {
+		const config = this.config.values;
+		request({
+			method: &apos;POST&apos;,
+			uri: config.carbonUrl,
+			body: {
+				key: config.carbonKey,
+				servercount: this.client.guilds.size
+			},
+			json: true
+		}).then(() =&gt; {
+			this.logger.info(`Sent guild count to Carbon with ${this.client.guilds.size} guilds.`);
+		}).catch(err =&gt; {
+			this.logger.error(&apos;Error while sending guild count to Carbon.&apos;, err);
+		});
 	}
 }
 
