@@ -6,6 +6,7 @@ import { stripIndents } from 'common-tags';
 import escapeRegex from 'escape-string-regexp';
 import Module from './module';
 import FriendlyError from '../errors/friendly';
+import Setting from '../storage/models/setting';
 
 /** Handles parsing messages and running commands from them */
 export default class CommandDispatcher extends EventEmitter {
@@ -19,6 +20,12 @@ export default class CommandDispatcher extends EventEmitter {
 
 		this._guildCommandPatterns = {};
 		this._results = new Map();
+
+		this._blacklistedUsers = bot.storage.settings.getValue(null, 'blacklisted-users');
+		if(!this._blacklistedUsers) {
+			bot.storage.settings.save(new Setting(null, 'blacklisted-users', []));
+			this._blacklistedUsers = bot.storage.settings.getValue(null, 'blacklisted-users');
+		}
 	}
 
 	/**
@@ -41,6 +48,9 @@ export default class CommandDispatcher extends EventEmitter {
 			&& !this.bot.storage.allowedChannels.isEmpty(message.guild)
 			&& !this.bot.storage.allowedChannels.exists(message.guild, message.channel.id)
 			&& !this.bot.permissions.isAdmin(message.guild, message.author)) return null;
+
+		// Make sure the user isn't blacklisted
+		if(this._blacklistedUsers.includes(message.author.id)) return null;
 
 		// Parse the message, and get the old result if it exists
 		const [command, args, fromPattern, isCommandMessage] = this._parseMessage(message);

@@ -34,6 +34,9 @@ import DisallowChannelCommand from '../commands/channels/disallow';
 import ClearAllowedChannelsCommand from '../commands/channels/clear-allowed';
 import PrefixCommand from '../commands/util/prefix';
 import EvalCommand from '../commands/util/eval';
+import ShowBlacklistCommand from '../commands/blacklist/show';
+import BlacklistUserCommand from '../commands/blacklist/user';
+import BlacklistGuildCommand from '../commands/blacklist/guild';
 
 /** A Discord bot that has its own command registry, storage, utilities, etc. */
 export default class Bot {
@@ -123,6 +126,15 @@ export default class Bot {
 		client.on('messageUpdate', (oldMessage, newMessage) => {
 			this._logMessage(newMessage, oldMessage);
 			this.dispatcher.handleMessage(newMessage, oldMessage).catch(messageErr);
+		});
+
+		// Set up guild blacklisting
+		client.on('guildCreate', guild => {
+			const guilds = this.storage.settings.getValue(null, 'blacklisted-guilds');
+			if(guilds && guilds.includes(guild.id)) {
+				this.logger.info('Guild is blacklisted; leaving.', { name: guild.name, id: guild.id });
+				guild.leave();
+			}
 		});
 
 		// Fetch the owner
@@ -238,7 +250,8 @@ export default class Bot {
 			['modules', 'Modules'],
 			['mod-roles', 'Moderator roles'],
 			['channels', 'Channels'],
-			['util', 'Utility']
+			['util', 'Utility'],
+			['blacklist', 'Blacklisting']
 		]);
 		return this;
 	}
@@ -249,9 +262,10 @@ export default class Bot {
 	 * @param {boolean} [options.about=true] - Whether or not to register the built-in about command
 	 * @param {boolean} [options.modRoles=true] - Whether or not to register the built-in mod roles commands
 	 * @param {boolean} [options.channels=true] - Whether or not to register the built-in channels commands
+	 * @param {boolean} [options.blacklist=true] - Whether or not to register the built-in blacklist commands
 	 * @return {Bot} This bot
 	 */
-	registerDefaultCommands({ about = true, modRoles = true, channels = true } = {}) {
+	registerDefaultCommands({ about = true, modRoles = true, channels = true, blacklist = true } = {}) {
 		this.registerCommands([
 			HelpCommand,
 			PrefixCommand,
@@ -276,6 +290,13 @@ export default class Bot {
 				AllowChannelCommand,
 				DisallowChannelCommand,
 				ClearAllowedChannelsCommand
+			]);
+		}
+		if(blacklist) {
+			this.registerCommands([
+				ShowBlacklistCommand,
+				BlacklistUserCommand,
+				BlacklistGuildCommand
 			]);
 		}
 		return this;
