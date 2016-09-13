@@ -301,7 +301,7 @@ export default class CommandDispatcher extends EventEmitter {
 		const argString = message.content.substring(matches[1].length + (matches[2] ? matches[2].length : 0));
 		let args;
 		if(commands[0].argsType === 'single') {
-			args = [argString.trim()];
+			args = [argString.trim().replace(commands[0].argsSingleQuotes ? /^("|')([^]*)\1$/g : /^(")([^]*)"$/g, '$2')];
 		} else if(commands[0].argsType === 'multiple') {
 			args = this.constructor.parseArgs(argString, commands[0].argsCount, commands[0].argsSingleQuotes);
 		}
