@@ -9,9 +9,10 @@ export default class Module {
 	 * @param {Bot} bot - The bot the module is for
 	 * @param {string} id - The ID for the module
 	 * @param {string} [name=id] - The name of the module
+	 * @param {boolean} [hide=false] - Whether or not to hide from the module list, and not allow disabling
 	 * @param {Command[]} [commands] - The commands that the module contains
 	 */
-	constructor(bot, id, name, commands) {
+	constructor(bot, id, name, hide, commands) {
 		if(!bot || !id) throw new Error('A bot and ID must be specified.');
 		if(commands && !Array.isArray(commands)) throw new TypeError('Commands must be an array.');
 		if(id !== id.toLowerCase()) throw new Error('Module ID must be lowercase.');
@@ -22,6 +23,8 @@ export default class Module {
 		this.id = id;
 		/** @type {string} */
 		this.name = name || id;
+		/** @type {boolean} */
+		this.hide = hide || false;
 		/** @type {Command[]} */
 		this.commands = commands || [];
 	}

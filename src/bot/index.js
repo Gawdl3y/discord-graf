@@ -247,11 +247,11 @@ export default class Bot {
 	registerDefaultModules() {
 		this.registerModules([
 			['info', 'Information'],
-			['modules', 'Modules'],
 			['mod-roles', 'Moderator roles'],
 			['channels', 'Channels'],
 			['util', 'Utility'],
-			['blacklist', 'Blacklisting']
+			['modules', 'Modules', true],
+			['blacklist', 'Blacklisting', true]
 		]);
 		return this;
 	}

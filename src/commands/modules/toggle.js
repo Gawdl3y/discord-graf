@@ -32,7 +32,7 @@ export default class ToggleModuleCommand extends Command {
 		if(!args[0]) throw new CommandFormatError(this, message.guild);
 		const modules = this.bot.registry.findModules(args[0]);
 		if(modules.length === 1) {
-			if(modules[0].id === 'modules') return `You cannot toggle the ${modules[0].name} module.`;
+			if(modules[0].hide) return `You cannot toggle the ${modules[0].name} module.`;
 			modules[0].setEnabled(message.guild, !modules[0].isEnabled(message.guild));
 			return `${modules[0].isEnabled(message.guild) ? 'Enabled' : 'Disabled'} ${modules[0].name} module.`;
 		} else if(modules.length > 0) {

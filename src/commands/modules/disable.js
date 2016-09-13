@@ -32,7 +32,7 @@ export default class DisableModuleCommand extends Command {
 		if(!args[0]) throw new CommandFormatError(this, message.guild);
 		const modules = this.bot.registry.findModules(args[0]);
 		if(modules.length === 1) {
-			if(modules[0].id === 'modules') return `You cannot disable the ${modules[0].name} module.`;
+			if(modules[0].hide) return `You cannot disable the ${modules[0].name} module.`;
 			if(!modules[0].isEnabled(message.guild)) return `The ${modules[0].name} module is already disabled.`;
 			modules[0].setEnabled(message.guild, false);
 			return `Disabled ${modules[0].name} module.`;
