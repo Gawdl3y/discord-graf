@@ -152,6 +152,13 @@ export default class Bot {
 			});
 		}
 
+		// Set up Carbon guild count updates
+		if(config.carbonUrl) {
+			client.once('ready', this._sendCarbonStats.bind(this));
+			client.on('guildCreate', this._sendCarbonStats.bind(this));
+			client.on('guildDelete', this._sendCarbonStats.bind(this));
+		}
+
 		// Log in
 		const loginErr = err => {
 			this.logger.error('Failed to login.');
@@ -378,6 +385,19 @@ export default class Bot {
 	}
 
 	/**
+	 * Logs a message
+	 * @param {Message} message - The message
+	 * @param {Message} [oldMessage] - The old message if edited
+	 */
+	_logMessage(message, oldMessage = null) {
+		if(!this.config.values.logMessages) return;
+		if(oldMessage && message.content === oldMessage.content) return;
+		const prefix = `${message.guild ? `[${message.guild.name}][${message.channel.name}]` : '[DM]'} ${message.author.username}#${message.author.discriminator}`;
+		this.logger.message(`${prefix}: ${message.content}`);
+		if(oldMessage) this.logger.message(`${prefix} EDITED FROM: ${oldMessage.content}`);
+	}
+
+	/**
 	 * Checks for an update for the bot
 	 */
 	_checkForUpdate() {
@@ -398,16 +418,23 @@ export default class Bot {
 	}
 
 	/**
-	 * Logs a message
-	 * @param {Message} message - The message
-	 * @param {Message} [oldMessage] - The old message if edited
+	 * Sends guild count to Carbon
 	 */
-	_logMessage(message, oldMessage = null) {
-		if(!this.config.values.logMessages) return;
-		if(oldMessage && message.content === oldMessage.content) return;
-		const prefix = `${message.guild ? `[${message.guild.name}][${message.channel.name}]` : '[DM]'} ${message.author.username}#${message.author.discriminator}`;
-		this.logger.message(`${prefix}: ${message.content}`);
-		if(oldMessage) this.logger.message(`${prefix} EDITED FROM: ${oldMessage.content}`);
+	_sendCarbonStats() {
+		const config = this.config.values;
+		request({
+			method: 'POST',
+			uri: config.carbonUrl,
+			body: {
+				key: config.carbonKey,
+				servercount: this.client.guilds.size
+			},
+			json: true
+		}).then(() => {
+			this.logger.info(`Sent guild count to Carbon with ${this.client.guilds.size} guilds.`);
+		}).catch(err => {
+			this.logger.error('Error while sending guild count to Carbon.', err);
+		});
 	}
 }
 
