@@ -26,7 +26,7 @@ export default class HelpCommand extends Command {
 		if(args[0] && !showAll) {
 			if(commands.length === 1) {
 				let help = stripIndents`
-					__Command **${commands[0].name}**:__ ${commands[0].description}${commands[0].guildOnly ? ' (Usable only in guilds)' : ''}
+					__Command **${commands[0].name}**:__ ${commands[0].description}${commands[0].guildOnly ? ' (Usable only in servers)' : ''}
 
 					**Usage:** ${util.usage(commands[0].usage, message.guild)}
 				`;
