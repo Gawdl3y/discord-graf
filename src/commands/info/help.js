@@ -46,7 +46,7 @@ export default class HelpCommand extends Command {
 					${oneLine`
 						To run a command in ${message.guild || 'any server'},
 						use ${util.usage('command', message.guild, !message.guild)}.
-						For example, ${util.usage('roll d20', message.guild, !message.guild)}.
+						For example, ${util.usage('prefix', message.guild, !message.guild)}.
 					`}
 					To run a command in this DM, simply use ${util.usage('command')} with no prefix. For example, ${util.usage('roll d20')}.
 					Hyphens (\`-\`) are always optional in commands.
