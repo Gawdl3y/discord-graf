@@ -224,10 +224,30 @@ export default class BotUtil {
 	}
 
 	/**
+	 * Escapes Markdown in the string
+	 * @param {string} text - The text to escape
+	 * @returns {string} The escaped text
+	 * @see {@link BotUtil.escapeMarkdown}
+	 */
+	escapeMarkdown(text) {
+		return this.constructor.escapeMarkdown(text);
+	}
+
+	/**
+	 * Escapes Markdown in the string
+	 * @param {string} text - The text to escape
+	 * @returns {string} The escaped text
+	 * @see {@link BotUtil#escapeMarkdown}
+	 */
+	static escapeMarkdown(text) {
+		return text.replace(/([^\\]|^)(\*|_|`|~)/g, '$1\\$2');
+	}
+
+	/**
 	 * Convert spaces to non-breaking spaces
 	 * @param {string} text - The text to convert
 	 * @return {string} The converted text
-	 * @see {@link BotUtil#nbsp}
+	 * @see {@link BotUtil.nbsp}
 	 */
 	nbsp(text) {
 		return this.constructor.nbsp(text);
