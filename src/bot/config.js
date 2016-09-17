@@ -281,5 +281,5 @@ const defaultDefaults = {
  * @property {string} [carbonKey] - The Carbon key for the bot (for bot creators)
  */
 
-/** @external {ClientOptions} http://discordjs.readthedocs.io/en/latest/docs_client.html#parameters */
+/** @external {ClientOptions} https://hydrabolt.github.io/discord.js/#!/docs/tag/master/typedef/ClientOptions */
 /** @external {Yargs} http://yargs.js.org/docs/ */
