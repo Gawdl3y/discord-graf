@@ -169,6 +169,8 @@ export default class Bot {
 		if(debugConfig.email) debugConfig.email = &apos;--snip--&apos;;
 		if(debugConfig.password) debugConfig.password = &apos;--snip--&apos;;
 		if(debugConfig.token) debugConfig.token = &apos;--snip--&apos;;
+		if(debugConfig.carbonKey) debugConfig.carbonKey = &apos;--snip--&apos;;
+		if(debugConfig.bdpwKey) debugConfig.bdpwKey = &apos;--snip--&apos;;
 		for(const key of Object.keys(debugConfig)) if(key.length === 1 || key.includes(&apos;-&apos;)) delete debugConfig[key];
 		this.logger.debug(&apos;Configuration:&apos;, debugConfig);
 
@@ -234,10 +236,17 @@ export default class Bot {
 		}
 
 		// Set up Carbon guild count updates
-		if(config.carbonUrl) {
+		if(config.carbonUrl &amp;&amp; config.carbonKey) {
 			client.once(&apos;ready&apos;, this._sendCarbonStats.bind(this));
 			client.on(&apos;guildCreate&apos;, this._sendCarbonStats.bind(this));
 			client.on(&apos;guildDelete&apos;, this._sendCarbonStats.bind(this));
+		}
+
+		// Set up BDPW guild count updates
+		if(config.bdpwUrl &amp;&amp; config.bdpwKey) {
+			client.once(&apos;ready&apos;, this._sendBDPWStats.bind(this));
+			client.on(&apos;guildCreate&apos;, this._sendBDPWStats.bind(this));
+			client.on(&apos;guildDelete&apos;, this._sendBDPWStats.bind(this));
 		}
 
 		// Log in
@@ -515,6 +524,33 @@ export default class Bot {
 			this.logger.info(`Sent guild count to Carbon with ${this.client.guilds.size} guilds.`);
 		}).catch(err =&gt; {
 			this.logger.error(&apos;Error while sending guild count to Carbon.&apos;, err);
+		});
+	}
+
+	/**
+	 * Sends guild count to bots.discord.pw
+	 */
+	_sendBDPWStats() {
+		const config = this.config.values;
+
+		/* eslint-disable camelcase */
+		const body = { server_count: 42 };
+		if(this.client.options.shard_count &gt; 0) {
+			body.shard_id = this.client.options.shard_id;
+			body.shard_count = this.client.options.shard_count;
+		}
+		/* eslint-enable camelcase */
+
+		request({
+			method: &apos;POST&apos;,
+			uri: `${config.bdpwUrl}/bots/204777316621090816/stats`,
+			headers: { Authorization: config.bdpwKey },
+			body: body,
+			json: true
+		}).then(() =&gt; {
+			this.logger.info(`Sent guild count to bots.discord.pw with ${this.client.guilds.size} guilds.`);
+		}).catch(err =&gt; {
+			this.logger.error(&apos;Error while sending guild count to bots.discord.pw.&apos;, err);
 		});
 	}
 }
