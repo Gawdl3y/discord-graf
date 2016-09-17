@@ -798,6 +798,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "src/bot/util.js~botutil#escapemarkdown",
+    "class/src/bot/util.js~BotUtil.html#instance-method-escapeMarkdown",
+    "src/bot/util.js~BotUtil#escapeMarkdown",
+    "method"
+  ],
+  [
     "src/bot/util.js~botutil#nbsp",
     "class/src/bot/util.js~BotUtil.html#instance-method-nbsp",
     "src/bot/util.js~BotUtil#nbsp",
@@ -843,6 +849,12 @@ window.esdocSearchIndex = [
     "src/bot/util.js~botutil.disambiguation",
     "class/src/bot/util.js~BotUtil.html#static-method-disambiguation",
     "src/bot/util.js~BotUtil.disambiguation",
+    "method"
+  ],
+  [
+    "src/bot/util.js~botutil.escapemarkdown",
+    "class/src/bot/util.js~BotUtil.html#static-method-escapeMarkdown",
+    "src/bot/util.js~BotUtil.escapeMarkdown",
     "method"
   ],
   [
