@@ -453,7 +453,7 @@ export default class Bot {
 		const config = this.config.values;
 
 		/* eslint-disable camelcase */
-		const body = { server_count: 42 };
+		const body = { server_count: this.client.guilds.size };
 		if(this.client.options.shard_count > 0) {
 			body.shard_id = this.client.options.shard_id;
 			body.shard_count = this.client.options.shard_count;
