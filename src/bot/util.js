@@ -240,7 +240,7 @@ export default class BotUtil {
 	 * @see {@link BotUtil#escapeMarkdown}
 	 */
 	static escapeMarkdown(text) {
-		return text.replace(/([^\\]|^)(\*|_|`|~)/g, '$1\\$2');
+		return text.replace(/\\(\*|_|`|~)/g, '$1').replace(/(\*|_|`|~)/g, '\\$1');
 	}
 
 	/**
