@@ -22,6 +22,7 @@ Here's a quick list:
 - Eval command with a system for registering your own objects to make available in its scope, and some utilities
 - Lots of utility methods to simplify your logic
 - Update checking for your bot
+- Stats sending to Carbon and bots.discord.pw
 
 ## Commands
 GRAF allows bots to accept commands in multiple formats.
