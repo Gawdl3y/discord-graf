@@ -88,6 +88,8 @@ export default class Bot {
 		if(debugConfig.email) debugConfig.email = '--snip--';
 		if(debugConfig.password) debugConfig.password = '--snip--';
 		if(debugConfig.token) debugConfig.token = '--snip--';
+		if(debugConfig.carbonKey) debugConfig.carbonKey = '--snip--';
+		if(debugConfig.bdpwKey) debugConfig.bdpwKey = '--snip--';
 		for(const key of Object.keys(debugConfig)) if(key.length === 1 || key.includes('-')) delete debugConfig[key];
 		this.logger.debug('Configuration:', debugConfig);
 
@@ -153,10 +155,17 @@ export default class Bot {
 		}
 
 		// Set up Carbon guild count updates
-		if(config.carbonUrl) {
+		if(config.carbonUrl && config.carbonKey) {
 			client.once('ready', this._sendCarbonStats.bind(this));
 			client.on('guildCreate', this._sendCarbonStats.bind(this));
 			client.on('guildDelete', this._sendCarbonStats.bind(this));
+		}
+
+		// Set up BDPW guild count updates
+		if(config.bdpwUrl && config.bdpwKey) {
+			client.once('ready', this._sendBDPWStats.bind(this));
+			client.on('guildCreate', this._sendBDPWStats.bind(this));
+			client.on('guildDelete', this._sendBDPWStats.bind(this));
 		}
 
 		// Log in
@@ -434,6 +443,33 @@ export default class Bot {
 			this.logger.info(`Sent guild count to Carbon with ${this.client.guilds.size} guilds.`);
 		}).catch(err => {
 			this.logger.error('Error while sending guild count to Carbon.', err);
+		});
+	}
+
+	/**
+	 * Sends guild count to bots.discord.pw
+	 */
+	_sendBDPWStats() {
+		const config = this.config.values;
+
+		/* eslint-disable camelcase */
+		const body = { server_count: 42 };
+		if(this.client.options.shard_count > 0) {
+			body.shard_id = this.client.options.shard_id;
+			body.shard_count = this.client.options.shard_count;
+		}
+		/* eslint-enable camelcase */
+
+		request({
+			method: 'POST',
+			uri: `${config.bdpwUrl}/bots/204777316621090816/stats`,
+			headers: { Authorization: config.bdpwKey },
+			body: body,
+			json: true
+		}).then(() => {
+			this.logger.info(`Sent guild count to bots.discord.pw with ${this.client.guilds.size} guilds.`);
+		}).catch(err => {
+			this.logger.error('Error while sending guild count to bots.discord.pw.', err);
 		});
 	}
 }

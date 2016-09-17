@@ -198,16 +198,27 @@ export default class BotConfig {
 					group: 'Logging:'
 				})
 
-				// Carbon
+				// Stat sites
 				.option('carbon-url', {
 					type: 'string',
 					describe: 'The Carbon submission URL (for bot creators)',
-					group: 'Carbon:'
+					group: 'Stats:'
 				})
 				.option('carbon-key', {
 					type: 'string',
 					describe: 'The Carbon key for the bot (for bot creators)',
-					group: 'Carbon:'
+					group: 'Stats:'
+				})
+				.option('bdpw-url', {
+					type: 'string',
+					default: 'https://bots.discord.pw/api',
+					describe: 'The bots.discord.pw API URL (for bot creators)',
+					group: 'Stats:'
+				})
+				.option('bdpw-key', {
+					type: 'string',
+					describe: 'The bots.discord.pw key for the bot (for bot creators)',
+					group: 'Stats:'
 				})
 
 				.option('config', {
@@ -279,6 +290,8 @@ const defaultDefaults = {
  * @property {string} [consoleLevel=info] - The log level to output to the console (error, warn, info, verbose, message, debug)
  * @property {string} [carbonUrl] - The Carbon submission URL (for bot creators)
  * @property {string} [carbonKey] - The Carbon key for the bot (for bot creators)
+ * @property {string} [bdpwUrl=https://bots.discord.pw/api] - The bots.discord.pw API URL (for bot creators)
+ * @property {string} [bdpwKey] - The bots.discord.pw key for the bot (for bot creators)
  */
 
 /** @external {ClientOptions} https://hydrabolt.github.io/discord.js/#!/docs/tag/master/typedef/ClientOptions */
