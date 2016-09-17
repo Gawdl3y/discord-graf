@@ -462,7 +462,7 @@ export default class Bot {
 
 		request({
 			method: 'POST',
-			uri: `${config.bdpwUrl}/bots/204777316621090816/stats`,
+			uri: `${config.bdpwUrl}/bots/${this.client.user.id}/stats`,
 			headers: { Authorization: config.bdpwKey },
 			body: body,
 			json: true
