@@ -321,7 +321,7 @@ export default class BotUtil {
 	 * @see {@link BotUtil#escapeMarkdown}
 	 */
 	static escapeMarkdown(text) {
-		return text.replace(/\\(\*|_|`|~)/g, &apos;$1&apos;).replace(/(\*|_|`|~)/g, &apos;\\$1&apos;);
+		return text.replace(/\\(\*|_|`|~|\\)/g, &apos;$1&apos;).replace(/(\*|_|`|~|\\)/g, &apos;\\$1&apos;);
 	}
 
 	/**
