@@ -53,7 +53,7 @@ export default class BotUtil {
 		let prefixAddon;
 		if(!onlyMention) {
 			let prefix = this.nbsp(settings.getValue(guild, 'command-prefix', config.values.commandPrefix));
-			if(prefix.length > 1) prefix += '\xa0';
+			if(prefix.length > 1 && !prefix.endsWith('\xa0')) prefix += '\xa0';
 			prefixAddon = prefix ? `\`${prefix}${nbcmd}\` or ` : '';
 		}
 		return `${prefixAddon || ''}\`@${this.nbsp(client.user.username)}#${client.user.discriminator}\xa0${nbcmd}\``;
