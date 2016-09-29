@@ -191,7 +191,7 @@ export default class Bot {
 		client.on(&apos;error&apos;, err =&gt; { this.logger.error(err); });
 		client.on(&apos;warn&apos;, msg =&gt; { this.logger.warn(msg); });
 		client.on(&apos;debug&apos;, msg =&gt; { this.logger.debug(msg); });
-		client.on(&apos;disconnected&apos;, () =&gt; { this.logger.warn(&apos;Disconnected.&apos;); });
+		client.on(&apos;disconnect&apos;, () =&gt; { this.logger.warn(&apos;Disconnected.&apos;); });
 		client.on(&apos;reconnecting&apos;, () =&gt; { this.logger.warn(&apos;Reconnecting...&apos;); });
 		client.on(&apos;guildCreate&apos;, guild =&gt; { this.logger.info(`Joined guild ${guild} (ID: ${guild.id}).`); });
 		client.on(&apos;guildDelete&apos;, guild =&gt; { this.logger.info(`Left guild ${guild} (ID: ${guild.id}).`); });
