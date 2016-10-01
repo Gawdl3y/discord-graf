@@ -24,7 +24,7 @@ export default class ClearModRolesCommand extends Command {
 
 	async run(message, args) {
 		if(this.lastUser && message.author.id === this.lastUser.id && args[0] && args[0].toLowerCase() === 'confirm') {
-			this.bot.storage.clear(message.guild);
+			this.bot.storage.modRoles.clear(message.guild);
 			clearTimeout(this.timeout);
 			this.lastUser = null;
 			this.timeout = null;
