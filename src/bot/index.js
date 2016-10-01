@@ -139,6 +139,20 @@ export default class Bot {
 			}
 		});
 
+		// Remove channels/roles from storages upon their deletion
+		client.on('channelDelete', channel => {
+			if(channel.guild && this.storage.allowedChannels.exists(channel.guild, channel.id)) {
+				this.logger.verbose('Removing orphaned allowed channel.', { guild: channel.guild ? channel.guild.id : null, channel: channel.id });
+				this.storage.allowedChannels.delete(channel);
+			}
+		});
+		client.on('guildRoleDelete', (guild, role) => {
+			if(this.storage.modRoles.exists(guild, role.id)) {
+				this.logger.verbose('Removing orphaned mod role.', { guild: guild.id, role: role.id });
+				this.storage.modRoles.delete(role);
+			}
+		});
+
 		// Fetch the owner
 		if(config.owner) {
 			client.once('ready', () => {
