@@ -94,7 +94,7 @@ export default class Bot {
 		this.logger.debug('Configuration:', debugConfig);
 
 		// Create client and bot classes
-		const clientOptions = Object.assign({}, defaultClientOptions, config.clientOptions, { autoReconnect: config.autoReconnect });
+		const clientOptions = Object.assign({}, defaultClientOptions, config.clientOptions);
 		const client = new Discord.Client(clientOptions);
 		this.client = client;
 		this.localStorage = new LocalStorage(config.storage);
@@ -116,7 +116,7 @@ export default class Bot {
 		client.on('guildDelete', guild => { this.logger.info(`Left guild ${guild} (ID: ${guild.id}).`); });
 		client.on('ready', () => {
 			this.logger.info(`Bot is ready; logged in as ${client.user.username}#${client.user.discriminator} (ID: ${client.user.id})`);
-			if(config.playingGame) client.user.setStatus(null, config.playingGame);
+			if(config.playingGame) client.user.setGame(config.playingGame);
 		});
 
 		// Set up command handling
@@ -146,9 +146,9 @@ export default class Bot {
 				this.storage.allowedChannels.delete(channel);
 			}
 		});
-		client.on('guildRoleDelete', (guild, role) => {
-			if(this.storage.modRoles.exists(guild, role.id)) {
-				this.logger.verbose('Removing orphaned mod role.', { guild: guild.id, role: role.id });
+		client.on('roleDelete', role => {
+			if(this.storage.modRoles.exists(role.guild, role.id)) {
+				this.logger.verbose('Removing orphaned mod role.', { guild: role.guild.id, role: role.id });
 				this.storage.modRoles.delete(role);
 			}
 		});

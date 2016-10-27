@@ -106,13 +106,6 @@ export default class BotConfig {
 					describe: 'Whether or not the bot should run as a selfbot',
 					group: 'General:'
 				})
-				.option('auto-reconnect', {
-					type: 'boolean',
-					default: this.defaults.autoReconnect,
-					alias: 'a',
-					describe: 'Whether or not the bot should automatically reconnect when disconnected',
-					group: 'General:'
-				})
 				.option('storage', {
 					type: 'string',
 					default: this.defaults.storage,
@@ -253,7 +246,6 @@ const defaultDefaults = {
 	commandEditable: 30,
 	nonCommandEdit: true,
 	selfbot: false,
-	autoReconnect: true,
 	storage: 'bot-storage',
 	log: 'bot.log',
 	logMaxSize: 5242880,
@@ -274,7 +266,6 @@ const defaultDefaults = {
  * @property {ClientOptions} [clientOptions] - The options to pass to the Client constructor
  * @property {string} [owner] - The ID of the bot owner's Discord account
  * @property {boolean} [selfbot] - Whether or not the bot should be running as a selfbot
- * @property {boolean} [autoReconnect=true] - Whether or not the bot should automatically reconnect upon disconnection
  * @property {boolean} [logMessages=true] - Whether or not all chat messages should be printed to the console
  * @property {string} [storage=bot-storage] - Path to the local storage directory
  * @property {string} [playingGame=Message-for-help] - Text to show the bot playing
