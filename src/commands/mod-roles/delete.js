@@ -39,7 +39,7 @@ export default class DeleteModRoleCommand extends Command {
 					: ''}
 				`;
 			} else {
-				return `Unable to remove "${roles[0].name}" from the moderator roles. It isn\'t one.`;
+				return `Unable to remove "${roles[0].name}" from the moderator roles. It isn't one.`;
 			}
 		} else if(roles.length > 1) {
 			return this.bot.util.disambiguation(roles, 'roles');
