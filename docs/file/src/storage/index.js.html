@@ -185,7 +185,7 @@ export default class GuildStorage {
 			if(this.logger) this.logger.verbose(`Deleted entry from ${this.key} storage.`, { guild: guild, entry: entry });
 			return true;
 		} else {
-			if(this.logger) this.logger.verbose(`Not deleting entry from ${this.key} storage, because it doesn\&apos;t exist.`, { guild: guild, entry: entry });
+			if(this.logger) this.logger.verbose(`Not deleting entry from ${this.key} storage, because it doesn&apos;t exist.`, { guild: guild, entry: entry });
 			return false;
 		}
 	}
