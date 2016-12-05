@@ -482,9 +482,9 @@ export default class Bot {
 	get _stats() {
 		/* eslint-disable camelcase */
 		const body = { server_count: this.client.guilds.size };
-		if(this.client.options.shard_count > 0) {
-			body.shard_id = this.client.options.shard_id;
-			body.shard_count = this.client.options.shard_count;
+		if(this.client.options.shardCount > 0) {
+			body.shard_id = this.client.options.shardId;
+			body.shard_count = this.client.options.shardCount;
 		}
 		/* eslint-enable camelcase */
 		return body;
