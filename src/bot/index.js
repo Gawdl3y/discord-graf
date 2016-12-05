@@ -448,10 +448,7 @@ export default class Bot {
 		request({
 			method: 'POST',
 			uri: config.carbonUrl,
-			body: {
-				key: config.carbonKey,
-				servercount: this.client.guilds.size
-			},
+			body: Object.assign(this._stats, { key: config.carbonKey }),
 			json: true
 		}).then(() => {
 			this.logger.info(`Sent guild count to Carbon with ${this.client.guilds.size} guilds.`);
@@ -465,7 +462,24 @@ export default class Bot {
 	 */
 	_sendBDPWStats() {
 		const config = this.config.values;
+		request({
+			method: 'POST',
+			uri: `${config.bdpwUrl}/bots/${this.client.user.id}/stats`,
+			headers: { Authorization: config.bdpwKey },
+			body: this._stats,
+			json: true
+		}).then(() => {
+			this.logger.info(`Sent guild count to bots.discord.pw with ${this.client.guilds.size} guilds.`);
+		}).catch(err => {
+			this.logger.error('Error while sending guild count to bots.discord.pw.', err);
+		});
+	}
 
+	/**
+	 * Stats object to send to Carbon/BDPW
+	 * @type {Object}
+	 */
+	get _stats() {
 		/* eslint-disable camelcase */
 		const body = { server_count: this.client.guilds.size };
 		if(this.client.options.shard_count > 0) {
@@ -473,18 +487,7 @@ export default class Bot {
 			body.shard_count = this.client.options.shard_count;
 		}
 		/* eslint-enable camelcase */
-
-		request({
-			method: 'POST',
-			uri: `${config.bdpwUrl}/bots/${this.client.user.id}/stats`,
-			headers: { Authorization: config.bdpwKey },
-			body: body,
-			json: true
-		}).then(() => {
-			this.logger.info(`Sent guild count to bots.discord.pw with ${this.client.guilds.size} guilds.`);
-		}).catch(err => {
-			this.logger.error('Error while sending guild count to bots.discord.pw.', err);
-		});
+		return body;
 	}
 }
 
