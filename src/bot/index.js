@@ -364,6 +364,15 @@ export default class Bot {
 	/** @type {Logger} */
 	get logger() {
 		if(!this._logger) {
+			const timestamp = () => {
+				const dt = new Date();
+				const min = dt.getUTCMinutes();
+				const sec = dt.getUTCSeconds();
+				const ms = dt.getUTCMilliseconds();
+				return `${dt.getUTCFullYear()}-${dt.getUTCMonth()}-${dt.getUTCDate()} `
+					+ `${dt.getUTCHours()}:${min >= 10 ? min : `0${min}`}:${sec >= 10 ? sec : `0${sec}`}.${ms >= 100 ? ms : ms > 10 ? `0${ms}` : `00${ms}`}`;
+			};
+
 			this._logger = new winston.Logger({
 				levels: {
 					error: 0,
@@ -385,10 +394,13 @@ export default class Bot {
 					new winston.transports.Console({
 						level: this.config.values.consoleLevel,
 						colorize: true,
-						timestamp: true,
 						handleExceptions: true,
-						humanReadableUnhandledException: true
+						humanReadableUnhandledException: true,
+						timestamp
 					})
+				],
+				filters: [
+					(lvl, msg) => this.client && this.client.options.shardCount > 0 ? `[${this.client.options.shardId}] ${msg}` : msg
 				]
 			});
 			if(this.config.values.log) {
@@ -400,7 +412,8 @@ export default class Bot {
 					tailable: true,
 					json: false,
 					handleExceptions: true,
-					humanReadableUnhandledException: true
+					humanReadableUnhandledException: true,
+					timestamp
 				});
 			}
 		}
