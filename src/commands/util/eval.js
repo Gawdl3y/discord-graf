@@ -117,8 +117,6 @@ export default class EvalCommand extends Command {
 			let pattern = '';
 			if(bot.client.token) pattern += escapeRegex(bot.client.token);
 			if(bot.config.values.token) pattern += (pattern.length > 0 ? '|' : '') + escapeRegex(bot.config.values.token);
-			if(bot.config.values.email) pattern += (pattern.length > 0 ? '|' : '') + escapeRegex(bot.config.values.email);
-			if(bot.config.values.password) pattern += (pattern.length > 0 ? '|' : '') + escapeRegex(bot.config.values.password);
 			this._sensitivePattern = new RegExp(pattern, 'gi');
 		}
 		return this._sensitivePattern;
