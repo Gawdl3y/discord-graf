@@ -160,14 +160,12 @@ export default class Bot {
 		if(config.selfbot) config.clientOptions.bot = false;
 
 		// Verify some stuff
-		if(!config.token &amp;&amp; (!config.email || !config.password)) throw new Error(&apos;Invalid credentials; either &quot;token&quot; or both &quot;email&quot; and &quot;password&quot; must be specified on the config.&apos;);
+		if(!config.token) throw new Error(&apos;&quot;token&quot; must be specified on the config.&apos;);
 		if(!config.name) throw new Error(&apos;&quot;name&quot; must be specified on the config.&apos;);
 		if(!config.version) throw new Error(&apos;&quot;version&quot; must be specified on the config.&apos;);
 
 		// Output safe config
 		const debugConfig = Object.assign({}, config);
-		if(debugConfig.email) debugConfig.email = &apos;--snip--&apos;;
-		if(debugConfig.password) debugConfig.password = &apos;--snip--&apos;;
 		if(debugConfig.token) debugConfig.token = &apos;--snip--&apos;;
 		if(debugConfig.carbonKey) debugConfig.carbonKey = &apos;--snip--&apos;;
 		if(debugConfig.bdpwKey) debugConfig.bdpwKey = &apos;--snip--&apos;;
@@ -264,17 +262,11 @@ export default class Bot {
 		}
 
 		// Log in
-		const loginErr = err =&gt; {
+		this.logger.info(&apos;Logging in with token...&apos;);
+		client.login(config.token).catch(err =&gt; {
 			this.logger.error(&apos;Failed to login.&apos;);
 			this.logger.error(err);
-		};
-		if(config.token) {
-			this.logger.info(&apos;Logging in with token...&apos;);
-			client.login(config.token).catch(loginErr);
-		} else {
-			this.logger.info(&apos;Logging in with email and password...&apos;);
-			client.login(config.email, config.password).catch(loginErr);
-		}
+		});
 
 		return client;
 	}

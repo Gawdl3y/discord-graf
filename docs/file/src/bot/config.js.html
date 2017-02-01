@@ -139,19 +139,6 @@ export default class BotConfig {
 					describe: &apos;API token for the bot account&apos;,
 					group: &apos;Authentication:&apos;
 				})
-				.option(&apos;email&apos;, {
-					type: &apos;string&apos;,
-					alias: &apos;e&apos;,
-					describe: &apos;Email of the Discord account for the bot to use&apos;,
-					group: &apos;Authentication:&apos;
-				})
-				.option(&apos;password&apos;, {
-					type: &apos;string&apos;,
-					alias: &apos;p&apos;,
-					describe: &apos;Password of the Discord account for the bot to use&apos;,
-					group: &apos;Authentication:&apos;
-				})
-				.implies({ email: &apos;password&apos;, password: &apos;email&apos; })
 
 				// General
 				.option(&apos;owner&apos;, {
@@ -342,8 +329,6 @@ const defaultDefaults = {
  * @property {string} [about] - Text information about the bot for the about command
  * @property {string} [updateURL] - URL to a package.json file to check for updates with
  * @property {string} [token] - The bot account API token to log in with
- * @property {string} [email] - The bot account email to log in with
- * @property {string} [password] - The bot account password to log in with
  * @property {ClientOptions} [clientOptions] - The options to pass to the Client constructor
  * @property {string} [owner] - The ID of the bot owner&apos;s Discord account
  * @property {boolean} [selfbot] - Whether or not the bot should be running as a selfbot
